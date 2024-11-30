@@ -1,0 +1,196 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage[font=scriptsize]{caption}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{array} % Für die Spaltenbreitenanpassung
+\usepackage{booktabs} % Für schönere Tabellen
+\usepackage{geometry}
+\usepackage{arydshln}
+\usepackage{colortbl}
+\usepackage{forest}
+\usepackage{caption}
+\usepackage{pifont}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\renewcommand{\lstlistlistingname}{Programmcode}
+
+\geometry{a4paper, margin=2cm}
+\hypersetup{
+  colorlinks = true,
+  linkcolor = black,
+  urlcolor = blue,
+}
+
+% \captionsetup{justification=raggedright,singlelinecheck=false}
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+%  \titleformat{\section}[display]
+%    {\normalfont\bfseries}{}{0pt}{\huge}
+
+\lstdefinestyle{py}{
+    language=Python,
+    backgroundcolor=\color{white},
+    keywordstyle=\color{blue}\bfseries,        % Default Python keywords
+    commentstyle=\color{brown}\bfseries,         % Comments
+    stringstyle=\color{brown},                 % Strings
+    numberstyle=\tiny\color{gray},             % Line numbers
+    basicstyle=\ttfamily\small,                % Base font
+    identifierstyle=\color{black},             % Default for variable names
+    keywordstyle=[2]\color{cyan},              % Functions
+    keywordstyle=[3]\color{purple},            % Types
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b,
+    %numbers=left,
+    %numbersep=10pt,
+    frame=single
+}
+
+% Define specific keywords
+\lstset{
+    morekeywords={import, from, def, return},  % Default Python keywords
+    morekeywords=[2]{print, println, len, range, input}, % Functions
+    morekeywords=[3]{int, float, str, list, dict, bool} % Types
+}
+
+
+\lstdefinestyle{cpp}{
+    language=C,
+    backgroundcolor=\color{white},
+    keywordstyle=\color{blue}\bfseries,        % Standard Keywords
+    commentstyle=\color{green}\itshape,        % Kommentare
+    stringstyle=\color{orange},                % Strings
+    numberstyle=\tiny\color{gray},             % Zeilennummern
+    basicstyle=\ttfamily\small,                % Basis-Schriftart
+    identifierstyle=\color{black},             % Standard für Variablennamen
+    keywordstyle=[2]\color{cyan},              % Funktionen
+    keywordstyle=[3]\color{purple},            % Typen
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b,
+    %numbers=left,
+    %numbersep=10pt,
+    frame=single
+}
+
+% Spezifische Keywords definieren
+\lstset{
+    morekeywords={if, else, while, return},         % Standard C-Keywords
+    morekeywords=[2]{printf, scanf, main, malloc},  % Funktionen (inkl. malloc)
+    morekeywords=[3]{int, float, char, double}      % Typen
+}
+
+%\lstset{style=pycharm-light}
+
+  
+\usepackage{lipsum}  
+\graphicspath{ {./Bilder/} }
+\author{Oleksii Baida}
+\date{Mai 2024}
+\begin{document}
+\include{titelseite}
+
+\tableofcontents
+\pagebreak
+
+\section{Einleitung}
+
+\newpage
+
+
+\section{Quellen}
+\begin{thebibliography}{20}
+  \bibitem{pa1}
+  O. Baida,
+  \textit{Anbindung der Sensoren und Aktoren an den Arduino zur Realisierung eines Sicherheitssystems},
+  Projektarbeit 1, 2024.
+
+  \bibitem{code}
+  O. Baida, Projektordner für PA2: \url{https://github.com/oleksiibaida/PA2.git}
+  \bibitem{video}
+  O. Baida, Demo-Video: \url{https://youtu.be/-Ul_ye1KLy0}
+  \par \textbf{Links zur verwendeten Hardware:}
+  \bibitem{arduino}
+  Arduino.cc, \textit{Arduino UNO}, \url{https://docs.arduino.cc/hardware/uno-rev3/}
+  \bibitem{raspi}
+  Raspberry Pi Foundation, \textit{Raspberry Pi 1 B+}, \url{https://www.raspberrypi.com/products/raspberry-pi-1-model-b-plus/}
+  \bibitem{esp8266}
+  Espressif, \textit{ESP8266}, \url{https://www.espressif.com/}, \url{https://www.electronicwings.com/sensors-modules/esp8266-wifi-module}
+  \par \textbf{Links zur verwendeten Software:}
+  \bibitem{mqtt}
+  Dr Andy Stanford-Clark, Arlen Nipper, \textit{Message Queuing Telemetry Transport}, \url{https://mqtt.org/}
+  \bibitem{python}
+  Guido van Rossum, Python Software Foundation, \textit{Python}, \url{https://www.python.org/}
+  \bibitem{telegram}
+  Telegram FZ-LLC, \textit{Telegram Messenger}, \url{https://github.com//telegramdesktop/tdesktop}
+  \par \textbf{Linux-Packete}:
+  \bibitem{hostapd}
+  Jouni Malinen, \textit{hostapd}, \url{https://w1.fi/hostapd/}, Zugriff am: 19. September 2024.
+  \bibitem{dnsmasq}
+  Simon Kelley, \textit{dnsmasq}, \url{https://dnsmasq.org/doc.html}, Zugriff am: 20. September 2024.
+  \bibitem{mosquitto}
+  Eclipse Foundation, \textit{Eclipse Mosquitto}, \url{https://mosquitto.org/}
+  \par \textbf{ESP- und Arduino-Bibliotheken}
+  \bibitem{pubsub} 
+  Knolleary, \textit{PubSubClient}, \url{https://pubsubclient.knolleary.net/}, Zugriff am: 21. Oktober 2024.
+  \bibitem{espwifi}
+  ESPWIFI.h, \url{https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html}
+  \bibitem{eeprom}
+  EEPROM.h, \url{https://docs.arduino.cc/learn/built-in-libraries/eeprom/}
+  \bibitem{keypad}
+  Keypad.h \url{https://docs.arduino.cc/libraries/keypad/}
+  \bibitem{scholz}
+  R. Scholz, \textit{Syncloop}, Persönliche Mitteilungen
+  \par \textbf{Python-Bibliotheken}
+  \bibitem{paho}
+  Pierre Fersing, Roger Light \textit{paho-mqtt}, \url{https://pypi.org/project/paho-mqtt/}, Zugriff am: 21. Oktober 2024.
+  \bibitem{tgbot}
+  Open Source, \textit{python-telegram-bot}, \url{https://docs.python-telegram-bot.org/en/v21.6/}
+  \bibitem{json}
+  Python Software Foundation, \textit{json}, \url{https://docs.python.org/3/library/json.html}
+  \bibitem{threading}
+  Python Software Foundation, \textit{threading}, \url{https://docs.python.org/3/library/threading.html}
+  \bibitem{queue}
+  Python Software Foundation, \textit{queue}, \url{https://docs.python.org/3/library/queue.html}
+  \bibitem{sqlite}
+  Gerhard Häring, \textit{sqlite3}, \url{https://docs.python.org/3/library/sqlite3.html}
+  \bibitem{pyzbar}
+  Lawrence Hudson, \textit{pyzbar}, \url{https://github.com/NaturalHistoryMuseum/pyzbar/}
+  \bibitem{cv2}
+  Intel, \textit{OpenCV}, \url{https://github.com/opencv/opencv-python}
+  \bibitem{aiohttp}
+  Aio-Libs, \textit{aiohttp}, \url{https://github.com/aio-libs/aiohttp}
+\end{thebibliography}
+
+
+
+\listoffigures
+\addcontentsline{toc}{section}{Abbildungsverzeichnis}
+
+\listoftables
+%\addcontentsline{toc}{section}{Tabellenverzeichnis}
+\lstlistoflistings
+\addcontentsline{toc}{section}{Programmcode}
+
+
+
+\end{document}
+% „“
