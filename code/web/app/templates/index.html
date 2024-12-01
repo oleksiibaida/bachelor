@@ -1,15 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IoT Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <title>User Homepage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>IoT Sensor Data</h1>
-    <div id="data-container">
-        <!-- Data will be displayed here -->
-    </div>
+    <header>
+        <button class="button-green">Add New Device</button>
+        <div class="dropdown">
+            <button class="dropbtn">Account</button>
+            <div class="dropdown-content">
+                <a href="#">Profile</a>
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </div>
+        <span id="username"></span>
+    </header>
+
+    <h2>Sensor Data</h2>
+
+    <script>
+        // ... (JavaScript code for fetching username and sensor data - same as before) ...
+    </script>
 </body>
 </html>

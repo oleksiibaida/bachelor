@@ -1,10 +1,10 @@
 import sqlite3
 from flask import g
-from config.logger_config import logger_init
+# from config.logger_config import logger_init
 import threading
-
-_logger = logger_init()
-
+import logging
+# _logger = logger_init()
+_logger = logging.getLogger(__name__)
 DATABASE = 'database.db'
 
 class Database:
@@ -31,8 +31,10 @@ class Database:
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 username    TEXT UNIQUE NOT NULL,
                 email       TEXT UNIQUE NOT NULL,
-                password    TEXT NOT NULL    
-            
+                password    TEXT NOT NULL,
+                firstname   VARCHAR (50),
+                lastname    VARCHAR (50),
+                birthday    DATE
             )
             ''')
         self._thread_local.connection.commit()
@@ -51,7 +53,7 @@ class Database:
     def add_user(self, user_data):
         global _logger
         try:
-            if not isinstance(user_data, dict):
+            if not isinstance(user_data, dict) or user_data['username'] is None or user_data['email'] is None or user_data['password'] is None or self.username_exists(user_data['username']):
                 return 0
             sql = f'''
                 INSERT OR REPLACE INTO users (username, email, password) 
@@ -64,30 +66,116 @@ class Database:
             return 1
         except Exception as e:
             _logger.error(msg=e)
+        finally:
+            self.close()
 
     def add_userdevice(self, user_id, device_id):
         global _logger
-        sql = '''
-            INSERT OR REPLACE INTO userdevice (user_id, device_id)
-            VALUES (?, ?)
-        '''
-        _logger.debug(msg=f'SQL {sql}')
-        self.cursor.execute(sql, (user_id, device_id))
-        self.connection.commit()
-        _logger.info(msg=f"Device added for user_id {user_id}: {device_id}")
-        return 1
+
+        try:
+            sql = '''
+                INSERT OR REPLACE INTO userdevice (user_id, device_id)
+                VALUES (?, ?)
+            '''
+            _logger.debug(msg=f'SQL {sql}')
+            self.cursor.execute(sql, (user_id, device_id))
+            self.connection.commit()
+            _logger.info(msg=f"USERDEVICE ADDED {user_id}: {device_id}")
+            return 1
+        except Exception as e:
+            _logger.error(msg=e)
+            return 0
+        finally:
+            self.close()
+        
     
     def username_exists(self, username):
-        """Checks if a username already exists in the database."""
-        sql = "SELECT * FROM users WHERE username = '?'"
-        _logger.debug(msg=f"SQL {sql}")
-        self.cursor.execute(sql, (username))
-        user = self.cursor.fetchone()
-        return user is not None
+        """Checks if a username is in database."""
+        try:
+            sql = "SELECT * FROM users WHERE username = ?"
+            _logger.debug(msg=f"SQL {sql}")
+            self.cursor.execute(sql, (username,))
+            user = self.cursor.fetchone()
+            return user is not None
+        except Exception as e:
+            _logger.error(msg=e)
+            return 0
+        finally:
+            self.close()
+
+
+    def email_exists(self, email):
+        """Check if email is in database"""
+        try:
+            sql = "SELECT * FROM users WHERE email = ?"
+            _logger.debug(msg=f"SQL {sql}")
+            self.cursor.execute(sql, (email,))
+            email = self.cursor.fetchone()
+            return email is not None
+        except Exception as e:
+            _logger.error(msg=e)
+            return 0
+        finally:
+            self.close()
+
+    def get_user_data(self, username = None, email = None):
+        try:
+            sql = "SELECT * FROM users WHERE "
+            if username is not None:
+                sql += "username = ?"
+                self.cursor.execute(sql, (username,))
+            elif email is not None:
+                sql+= "email = ?"
+                self.cursor.execute(sql, (email,))
+            else:
+                return 0
+            return dict(self.cursor.fetchone())
+        except Exception as e:
+            _logger.error(msg=e)
+            return 0
+        finally:
+            self.close()
+    
+    def get_user_data_all(self):
+        sql = "SELECT * FROM users"
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        return [dict(row) for row in res]
+    
+    def user_password_check(self, password, username=None, email=None):
+        try:
+            if username is not None:
+                sql = "SELECT password FROM users WHERE username = ?"
+                self.cursor.execute(sql,(username,))
+            elif email is not None:
+                sql = "SELECT password FROM users WHERE email = ?"
+                self.cursor.execute(sql,(email,))
+            else:
+                return 0
+            pas = self.cursor.fetchone()
+            return pas == password
+        except Exception as e:
+            _logger.error(msg=e)
+            return 0
+        finally:
+            self.close()
+
     
     def close(self):
         if hasattr(self._thread_local, 'connection'):
             self._thread_local.connection.close()
             del self._thread_local.connection
-            _logger.debug("CONNECTION CLOSED; THREAD %s", threading.get_ident())
+            _logger.debug("CLOSED THREAD %s", threading.get_ident())
+
+    def delete_all_tables(self):
+        self.cursor.execute("DROP TABLE users")
+        self.cursor.execute("DROP TABLE userdevice")
+
+db = Database()
+us = db.get_user_data_all()
+for  u in us:
+    print(u)
+
+u1 = db.get_user_data('user1')
+print(u1)
         

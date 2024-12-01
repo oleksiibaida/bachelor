@@ -12,22 +12,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE username = ?', (username.data,))
-        user = cursor.fetchone()
-        if user:
+        if db.username_exists(username._value()):
             raise ValidationError('Username already exists. Please choose a different one.')
-        conn.close()
 
     def validate_email(self, email):
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email.data,))
-        user = cursor.fetchone()
-        if user:
+        if db.email_exists(email._value()):
             raise ValidationError('Email already exists. Please choose a different one.')
-        conn.close()
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
