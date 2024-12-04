@@ -1,27 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>User Homepage</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baida Bachelor</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
-    <header>
-        <button class="button-green">Add New Device</button>
-        <div class="dropdown">
-            <button class="dropbtn">Account</button>
-            <div class="dropdown-content">
-                <a href="#">Profile</a>
-                <a href="#">Settings</a>
-                <a href="#">Logout</a>
+    <div class="left-side">
+        <h1>Welcome to your Smart Home</h1>
+    </div>
+    <div class="separator"></div>
+    <div class="right-side">
+        <div class="form-container">
+            <h2>LOGIN</h2>
+            <form method="POST">
+                <div class="form-group">
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-control") }}
+                    {% for error in form.username.errors %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control") }}
+                    {% for error in form.password.errors %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {{ form.submit(class="btn btn-primary") }}
+            </form>
+            <div class="label_register">
+                New user? <a href="/register">Register now</a>
             </div>
         </div>
-        <span id="username"></span>
-    </header>
-
-    <h2>Sensor Data</h2>
-
-    <script>
-        // ... (JavaScript code for fetching username and sensor data - same as before) ...
-    </script>
+    </div>
 </body>
 </html>

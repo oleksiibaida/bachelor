@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor Data</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js"></script>
+    <title>Homepage</title>
+    <link rel="static/styles.css">
     <script src="{{ url_for('static', filename='js/mqtt.js') }}"></script>
 </head>
+
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li>My Account</li>
+                <li>My Devices</li>
+            </ul>
+        </nav>
+    </header>
+    <p id="hello">Hello, {{ username }}</p>
     <h1>Live Sensor Data</h1>
-    <div id="sensorData">Waiting for data...</div>
+    <div class="dashboard">
+        <div id="light">LIGHT</div>
+        <div id="temperature">TEMPERATURE</div>
+        <div id="alarm">ALARM</div>
+    </div>
 </body>
+
 </html>
