@@ -26,7 +26,7 @@ void setup()
 void loop()
 {
   i2c_scan(1);
-  
+  delay(500);
   // bme_printdata();
   // delay(1000);
 }
@@ -112,11 +112,11 @@ void i2c_scan(int kanal)
       Serial.println(i, HEX);
       nDevices++;
     } else{
-      Serial.print("0x");
-      if (i < 16)
-        Serial.print("0");
-      Serial.print(i,HEX);
-      Serial.print(" ");
+      // Serial.print("0x");
+      // if (i < 16)
+      //   Serial.print("0");
+      // Serial.print(i,HEX);
+      // Serial.print(" ");
     }
   }
 
