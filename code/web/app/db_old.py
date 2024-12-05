@@ -137,7 +137,7 @@ class Database:
             self.close()
     
     def get_user_data_all(self):
-        sql = "SELECT * FROM users"
+        sql = "SELECT * FROM user"
         self.cursor.execute(sql)
         res = self.cursor.fetchall()
         return [dict(row) for row in res]
@@ -160,6 +160,14 @@ class Database:
         finally:
             self.close()
 
+    def show_tables(self):
+        self.cursor.execute("""SELECT name 
+            FROM sqlite_master 
+            WHERE type='table' 
+            ORDER BY name;
+            """)
+        return [dict(row) for row in self.cursor.fetchall()]
+
     
     def close(self):
         if hasattr(self._thread_local, 'connection'):
@@ -172,10 +180,6 @@ class Database:
         self.cursor.execute("DROP TABLE userdevice")
 
 db = Database()
-us = db.get_user_data_all()
-for  u in us:
-    print(u)
-
-u1 = db.get_user_data('user1')
-print(u1)
+print(db.show_tables())
+print(db.get_user_data_all())
         

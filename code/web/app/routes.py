@@ -1,56 +1,76 @@
 from flask import render_template, redirect, url_for, flash 
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
-from .forms import RegistrationForm, LoginForm
-from .database import Database
+from app.forms import RegistrationForm, LoginForm
+from app.models import User, UserDevice
+from app import app
+from app.dbalchemy import db_session as db
+# from .services import validate_user
+from wtforms import ValidationError
 from config.logger_config import logger_init
 _logger = logger_init()
-def register_routes(app, db:Database):
 
-    @app.route('/')
-    def index():
-        form = LoginForm()
-        if form.validate_on_submit():
-            user_data = {
-                'username': form.username.data,
-                'email': form.email.data,
-                'password': form.password.data
-            }
-            _logger.debug(msg="ADDING USER")
-            db.add_user(user_data)
-        return render_template('index.html', form=form)
+@app.route('/')
+def index():
+    form = LoginForm()
+    if form.validate_on_submit():
+        _logger.info("PUNKT")
+        user_data = {
+            'username': form.username.data,
+            'password': form.password.data
+        }
+        if validate_user_login(username=user_data['username'], password=user_data['password']):
+            _logger.info(msg="User {username} LOGIN")
+            return redirect(url_for('home'), username=user_data['username'])
+    return render_template('index.html', form=form)
 
-    @app.route('/register', methods=['GET','POST'])
-    def register():
-        form = RegistrationForm()
-        if form.validate_on_submit():
-            user_data = {
-                'username': form.username.data,
-                'email': form.email.data,
-                'password': form.password.data
-            }
-            _logger.debug(msg="ADDING USER")
-            db.add_user(user_data)
-            user_data={}
+@app.route('/register', methods=['GET','POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user_data = {
+            'username': form.username.data,
+            'email': form.email.data, 
+            'password': form.password.data
+        }
+        _logger.debug(msg="ADDING USER")
+        if validate_username(username=user_data['username']) and validate_email(email=user_data['email']):
+            _logger.debug(msg=f"ADDING USER {user_data}")
+            db.add(User(user_data))
+            db.commit()
             return redirect('/')
-        return render_template('register.html', form=form)
+    return render_template('register.html', form=form)
 
-    @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        form = LoginForm()
-        if form.validate_on_submit():
-            login_data = {
-                'username': form.username.data,
-                'password': form.password.data
-            }
-            if not db.user_password_check(password=login_data['password'], username=login_data['username']):
-                flash("LOGIN or PASS wrong", "danger")
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        _logger.info("PUNKT")
+        login_data = {
+            'username': form.username.data,
+            'password': form.password.data
+        }
+        if validate_user_login(username=login_data['username'], password=login_data['password']):
+            _logger.info(msg=f"User {login_data['username']} LOGIN")
             return redirect(url_for('home'), username=login_data['username'])
-        return render_template('login.html', form=form)
+    return render_template('login.html', form=form)
 
-    # @app.route('/home')
-    # def home():
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
+def validate_username(username):
+        if db.query(User).filter(User.username == username).count() > 0:
+            raise ValidationError('Email already exists. Please choose a different one.')
+        else: return True
 
-    @app.teardown_appcontext
-    def teardown_db(exception):
-        db.close()
+def validate_email(email):
+    if db.query(User).filter(User.email == email).count() > 0:
+        raise ValidationError('Email already exists. Please choose a different one.')
+    else: return True
+
+def validate_user_login(username, password):
+    _logger.info(msg="LOGIN")
+    user = db.query(User).filter(User.username == username).first()
+    _logger.info(msg=f"USER:{user}")
+    if user:
+        return user.pasword == password

@@ -1,20 +1,24 @@
+import os
 from flask import Flask
-from .database import Database
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from config.logger_config import logger_init
+from config.app_config import FlaskConfig
+from .dbalchemy import db_session, Base, engine
 
 _logger = logger_init()
 
-def create_app():
-    
-    app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'mysecret'
-    db = Database()
-    from app.routes import register_routes
-    register_routes(app, db=db)
+app=Flask(__name__)
+app.config.from_object(FlaskConfig)
+# db = SQLAlchemy(app) 
+# migrate = Migrate(app=app, db=db)
 
-    # @app.before_request
-    # def initialize_database():
-    #     db.create_tables()
-        
-    
-    return app
+from . import routes
+from . import models
+Base.metadata.create_all(bind=engine)
+
+@app.teardown_appcontext
+def teardown_app(error):
+    db_session.remove()
+    if error is not None:
+        _logger.error(msg=error)
