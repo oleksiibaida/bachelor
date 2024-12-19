@@ -1,0 +1,2 @@
+# update output.css
+npx tailwindcss -i ./app/static/styles.css -o ./app/static/output.css --watch  

@@ -20,20 +20,28 @@
             <button class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition duration-300">Logout</button>
         </div>
     </div>
-    <div class="content mt-[5vh] p-4">
-        <p id="hello">Hello, {{ username }}</p>
-        <h1>Live Sensor Data</h1>
-        <p class="text-center font-bold text-green-500">PPppPP</p>
-    </div>
-    <div class="dashboard flex flex-col items-center p-5 border space-y-4">
-        <div id="temperature" class="flex flex-col items-center p-5 bg-blue-200 text-yellow-400 border rounded w-80">
-            <p class="text-xl font-semibold text-blue-600">TEMPERATURE</p>
+    <div class="content mt-[5vh] p-4 bg-blue-300">
+        <div class="">
+            <p id="hello">Hello, {{ username }}</p>
+            <h1>Live Sensor Data</h1>
+            <p class="text-center font-bold text-green-500">PPppPP</p>
         </div>
-        <div id="light" class="flex flex-col items-center p-5 bg-yellow-200 border rounded w-80">
-            <p class="text-xl font-semibold text-blue-600">HUMIDITY</p>
-        </div>
-        <div id="alarm" class="flex flex-col items-center p-5 bg-gray-200 border rounded w-80">
-            <p class="text-xl font-semibold text-blue-600">ALARM</p>
+        <div class="room-container border p-5">
+            <!-- <button id="toggleButton" class="mb-4 p-2 bg-blue-500 text-white rounded">Toggle Room1</button> -->
+            <!-- <p class="caption text-center font-bold text-xl mb-4">Room1</p> -->
+             <button class="btn room-btn">Room1</button>
+            <div class="dashboard flex justify-between space-x-4">
+                <div id="temperature"
+                    class="flex flex-col items-center p-5 bg-blue-200 text-yellow-400 border rounded w-80">
+                    <p class="text-xl font-semibold text-blue-600">TEMPERATURE</p>
+                </div>
+                <div id="light" class="flex flex-col items-center p-5 bg-yellow-200 border rounded w-80">
+                    <p class="text-xl font-semibold text-blue-600">HUMIDITY</p>
+                </div>
+                <div id="alarm" class="flex flex-col items-center p-5 bg-gray-200 border rounded w-80">
+                    <p class="text-xl font-semibold text-blue-600">ALARM</p>
+                </div>
+            </div>
         </div>
     </div>
 </body>
