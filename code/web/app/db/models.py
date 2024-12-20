@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
-from app.dbalchemy import Base
-from config.logger_config import logger_init
+from .base import Base
+from app.config.logger_config import logger_init
 __logger = logger_init()
 class User(Base):
     __tablename__ = 'user'
@@ -37,9 +37,3 @@ class UserDevice(Base):
 
     def __repr__(self):
         return f'<User: {self.user}; Device: {self.device}>'
-
-
-
-"""
-    
-"""

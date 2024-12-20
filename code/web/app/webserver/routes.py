@@ -1,15 +1,17 @@
-from flask import render_template, redirect, url_for, flash 
+from flask import render_template, redirect, url_for, flash, Blueprint
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
-from app.forms import RegistrationForm, LoginForm
-from app.models import User, UserDevice
-from app import app
-from app.dbalchemy import db_session as db
+from .forms import RegistrationForm, LoginForm
+from app.db.models import User, UserDevice
+from ..db import db
+from ..db.models import User, UserDevice
 # from .services import validate_user
 from wtforms import ValidationError
-from config.logger_config import logger_init
-_logger = logger_init()
+from ..config import Config
+_logger = Config.logger_init()
 
-@app.route('/')
+bp = Blueprint('webserver', __name__)
+
+@bp.route('/')
 def index():
     form = LoginForm()
     if form.validate_on_submit():
@@ -23,7 +25,7 @@ def index():
             return redirect(url_for('home'), username=user_data['username'])
     return render_template('index.html', form=form)
 
-@app.route('/register', methods=['GET','POST'])
+@bp.route('/register', methods=['GET','POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -40,7 +42,7 @@ def register():
             return redirect('/')
     return render_template('register.html', form=form)
 
-@app.route('/login', methods=['GET', 'POST'])
+@bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -54,7 +56,7 @@ def login():
             return redirect(url_for('home'), username=login_data['username'])
     return render_template('login.html', form=form)
 
-@app.route('/home')
+@bp.route('/home')
 def home():
     return render_template('home.html')
 
