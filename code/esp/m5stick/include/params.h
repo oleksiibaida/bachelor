@@ -10,3 +10,7 @@
 #define SCL2    16
 #define I2C_BME_HEX     0x77
 #define I2C_TVOC_HEX    0x58
+#define I2C_VCNL_HEX    0x60
+
+// M5.Lcd
+#define X_OFFSET 10
