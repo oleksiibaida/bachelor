@@ -1,0 +1,10 @@
+[setup]
+#===venv===#
+python3 -m venv venv
+.\venv\Scripts\activate
+pip install -r requirements.txt
+python -m app 
+
+#==ailwind==#
+# update output.css
+npx tailwindcss -i ./app/static/styles.css -o ./app/static/output.css --watch  
