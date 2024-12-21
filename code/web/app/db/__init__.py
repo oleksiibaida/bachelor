@@ -1,24 +1,29 @@
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
 from app.config import Config
 from . import models
 from .base import Base
 
 logger = Config.logger_init()
 
-db = SQLAlchemy()
+
 
 __all__=["Base", "models"]
 
-def init_db(app):
-    logger.info(msg=f"START")
-    app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = Config.SQLALCHEMY_TRACK_MODIFICATIONS
-    app.secret_key = Config.SQLALCHEMY_SECRET_KEY
-    db.init_app(app)
+async_engine = create_async_engine(Config.SQLALCHEMY_DATABASE_URI)
 
-    with app.app_context():
-        from . import models
-        db.create_all()
+async_session = sessionmaker(
+    async_engine, expire_on_commit=False, class_=AsyncSession
+)
+
+async def db_connection():
+    async with async_session() as session:
+        yield session
+
+async def init_db():
+    logger.info(msg=f"START")
+    async with async_engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all())
 """
 @app.teardown_appcontext
 def teardown_app(error):

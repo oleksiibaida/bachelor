@@ -1,15 +1,20 @@
 from flask import render_template, redirect, url_for, flash, Blueprint
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from .forms import RegistrationForm, LoginForm
-from app.db.models import User, UserDevice
-from ..db import db
+# from ..db import db
 from ..db.models import User, UserDevice
-# from .services import validate_user
+from ..db import db_connection
 from wtforms import ValidationError
 from ..config import Config
+from .services import validate_email, validate_user_login, validate_username
 _logger = Config.logger_init()
 
 bp = Blueprint('webserver', __name__)
+
+@bp.route('/')
+async def test():
+    async with db_connection as connection:
+        _logger.info("CONNECTED TO DB")
 
 @bp.route('/')
 def index():
@@ -51,7 +56,7 @@ def login():
             'username': form.username.data,
             'password': form.password.data
         }
-        if validate_user_login(username=login_data['username'], password=login_data['password']):
+        if validate_user_login(db_session=db.session, username=login_data['username'], password=login_data['password']):
             _logger.info(msg=f"User {login_data['username']} LOGIN")
             return redirect(url_for('home'), username=login_data['username'])
     return render_template('login.html', form=form)
@@ -60,19 +65,19 @@ def login():
 def home():
     return render_template('home.html')
 
-def validate_username(username):
-        if db.query(User).filter(User.username == username).count() > 0:
-            raise ValidationError('Email already exists. Please choose a different one.')
-        else: return True
+# def validate_username(username):
+#         if db.query(User).filter(User.username == username).count() > 0:
+#             raise ValidationError('Email already exists. Please choose a different one.')
+#         else: return True
 
-def validate_email(email):
-    if db.query(User).filter(User.email == email).count() > 0:
-        raise ValidationError('Email already exists. Please choose a different one.')
-    else: return True
+# def validate_email(email):
+#     if db.query(User).filter(User.email == email).count() > 0:
+#         raise ValidationError('Email already exists. Please choose a different one.')
+#     else: return True
 
-def validate_user_login(username, password):
-    _logger.info(msg="LOGIN")
-    user = db.query(User).filter(User.username == username).first()
-    _logger.info(msg=f"USER:{user}")
-    if user:
-        return user.pasword == password
+# def validate_user_login(username, password):
+#     _logger.info(msg="LOGIN")
+#     user = db.query(User).filter(User.username == username).first()
+#     _logger.info(msg=f"USER:{user}")
+#     if user:
+#         return user.pasword == password
