@@ -8,7 +8,7 @@ class UserModel(Base):
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(200), nullable=False)
-
+    session_id = Column(String(50), nullable=True)
     def __repr__(self):
         return f'<U_ID:{self.id} U_NM:{self.username}>' #{self.id, self.username, self.email, self.pasword}    
     

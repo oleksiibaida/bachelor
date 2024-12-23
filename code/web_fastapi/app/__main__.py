@@ -12,7 +12,7 @@ async def main():
     logger.info("START MAIN")
     config = Config()
     await db.create_tables()
-    
+    # init_fastapi
     uvicorn.run("app.webserver:app", host="0.0.0.0", port=8000, reload=True)
     
 
