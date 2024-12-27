@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy.orm import relationship
 from .base import Base
 from app.config.logger_config import logger_init
 __logger = logger_init()
@@ -15,20 +16,16 @@ class UserModel(Base):
     def verify_password(self, password:str):
         return self.password == password
 
-class UserDeviceModel(Base):
-    __tablename__ = 'userdevice'
-    user = Column(Integer, ForeignKey('user.id'), nullable=False)
-    device = Column(String(10), nullable=False)
-    __table_args__ = (
-        PrimaryKeyConstraint('user', 'device'),
-    )
+class HouseModel(Base):
+    __tablename__ = 'house'
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    name = Column(String(50), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    # rooms = relationship("Room", backref="house", cascade="all, delete-orphan")
 
-    # def __init__(self, user_device:dict):
-    #     if user_device['user'] is None or user_device['device'] is None:
-    #         __logger.error(msg=f"user_device with empty field: {[field for field in user_device if user_device[field] is None]}")
-    #         return
-    #     self.user = user_device['user']
-    #     self.device = user_device['device']
-
-    def __repr__(self):
-        return f'<User: {self.user}; Device: {self.device}>'
+class Room(Base):
+    __tablename__ = 'room'
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    name = Column(String(50), nullable=False)
+    house_id = Column(Integer, ForeignKey('house.id'), nullable=False)
+    # house = relationship("House", back_populates="rooms", cascade="all, delete-orphan")

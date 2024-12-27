@@ -15,7 +15,13 @@ class db:
         sql ="SELECT name FROM sqlite_master WHERE type='table'"
         res = self.cursor.execute(sql).fetchall()
         return [dict(row) for row in res]
+    
+    def get_houses(self, user_id):
+        sql = f"SELECT * FROM house WHERE user_id={user_id}"
+        res = self.cursor.execute(sql).fetchall()
+        return [dict(row) for row in res]
 
 db = db()
-us = db.get_all_users()
-print(us)
+hs = db.get_houses(1)
+for h in hs:
+    print(h)
