@@ -48,13 +48,13 @@ async def login_post(request: Request, response: Response, user_data: dict, db_s
         auth = await services.auth_user(username=username, password=password, session=db_session)
         if auth is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
-        logger.info("LOGIN SUCCESSFULL")
+        logger.info(f"LOGIN {username}")
         token = services.create_jwt_token({"user_id":auth['user_id']})
         response.set_cookie(
             key='token',
             value=token,
             httponly=True,
-            # Need HTTPS secure=True, 
+            # secure=True, # Need HTTPS
             samesite='strict',
             max_age=Config.JWT_EXPIRE_TIME
         )
