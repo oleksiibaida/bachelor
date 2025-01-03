@@ -21,6 +21,11 @@ class RoomModel(BaseModel):
     name: str
     house_id: int
 
+class DeviceModel(BaseModel):
+    dev_id: str
+    name: str
+    description: str = None
+
 def create_jwt_token(data: dict):
     payload = {**data, 'exp': time.time() + Config.JWT_EXPIRE_TIME}
     return jwt.encode(payload=payload, key=Config.JWT_SECRET_KEY, algorithm=Config.JWT_ALGORITHM)
@@ -131,6 +136,19 @@ async def delete_room(db_session, user_id, room_id, house_id):
     except HTTPException as e:
         _logger.error(e)
         raise e
+
+async def add_new_device(db_session, user_id, device_data):
+    try:
+        if device_data.room_id is not None:
+            # Verify user_id is owner of the house with room_id
+            house_id = await queries.get_house_by_room(db_session, device_data.room_id)
+            if not house_id: return False
+            owner = await queries.verify_house_owner(db_session,user_id, house_id)
+            if not owner: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
+        res = await queries.add_new_device(db_session, user_id, device_data)
+    except Exception as e:
+        return e
+
 
 def verify_token(token: str):
     try:

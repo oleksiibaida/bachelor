@@ -31,4 +31,13 @@ class RoomModel(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     name = Column(String(50), nullable=False)
     house_id = Column(Integer, ForeignKey('house.id'), nullable=False)
-    # house = relationship("House", back_populates="rooms", cascade="all, delete-orphan")
+    devices = relationship('DeviceModel', backref='room', cascade="all, delete-orphan", lazy='selectin')
+
+class DeviceUserRoomModel(Base):
+    __tablename__ = 'device'
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    dev_id = Column(String(10), nullable=False)
+    name = Column(String(50), nullable=False)
+    user_id = Column(Integer, nullable=False, unique=False)
+    room_id = Column(Integer, ForeignKey("room.id"), nullable=True)
+    desciption = Column(String(250), nullable=True)

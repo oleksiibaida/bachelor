@@ -3,7 +3,7 @@ from sqlalchemy import select, insert, update, delete, func
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
-from .models import UserModel, HouseModel, RoomModel
+from .models import UserModel, HouseModel, RoomModel, DeviceUserRoomModel
 from fastapi import Depends, HTTPException
 from . import get_session
 _logger = Config.logger_init()
@@ -106,6 +106,14 @@ async def get_houses_on_user(db_session: AsyncSession, user_id: int):
     res = await db_session.execute(stmt)
     return res.scalars().all()
 
+async def get_house_by_room(db_session: AsyncSession, room_id: int):
+    try:
+        stmt = select(HouseModel.id).join(RoomModel, RoomModel.house_id == HouseModel.id).where(RoomModel.id == 1)
+        res = await db_session.execute(stmt)
+        return res.scalar_one_or_none()
+    except NoResultFound:
+        raise HTTPException(400, 'NOT FOUND')
+
 async def verify_house_owner(db_session: AsyncSession, user_id: int, house_id: int):
     try:
         stmt = select(HouseModel).where(HouseModel.id == house_id, HouseModel.user_id == user_id)
@@ -145,6 +153,23 @@ async def delete_room(db_session: AsyncSession, room_id: int):
     except Exception as e:
         _logger.error(e)
         raise e
+    
+async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
+    try:
+        if device_data.dev_id is None or device_data.name is None or user_id is None:
+            return False
+        stmt = insert(DeviceUserRoomModel).values(
+            dev_id = device_data.dev_id,
+            name = device_data.name,
+            user_id = user_id,
+            room_id = device_data.room_id,
+            description = device_data.description
+            )
+        await db_session.execute(stmt)
+        await db_session.commit()
+        return True
+    except Exception as e:
+        return e
 
 async def verify_unique_room(db_session:AsyncSession, house_id: int, room_name: str):
     """

@@ -53,20 +53,22 @@ async function renderPage(page, data = null) {
 
 function renderSignUpPage() {
     app.innerHTML = `
-    <div class="form-container">
-        <h2>SIGN UP</h2>
+    <div class="flex items-center justify-center h-screen">
+    <div class="container login-form">
+        <h2 class="text-center text-2xl font-bold mb-4">Sign Up</h2>
         <form id="signUpForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br>
+            <label for="username" class="login-input-label">Username:</label>
+            <input type="text" id="username" name="username" class="login-input" required><br>
         
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br>
+            <label for="email" class="login-input-label">Email:</label>
+            <input type="email" id="email" name="email" class="login-input" required><br>
         
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
+            <label for="password" class="login-input-label">Password:</label>
+            <input type="password" id="password" name="password" class="login-input" required><br>
         
-            <button type="submit" class="font-bold">Sign Up</button>
+            <button type="submit" class="login-btn">Sign Up</button>
         </form>
+    </div>
     </div>
     `
 
