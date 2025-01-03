@@ -1,5 +1,6 @@
 const app = document.getElementById('app')
 
+// redicrets user to login page if no token
 function appRouter() {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -33,6 +34,7 @@ function appRouter() {
 
 }
 
+// shows defined page
 async function renderPage(page, data = null) {
     switch (page) {
         case "main":
@@ -68,6 +70,7 @@ function renderSignUpPage() {
     </div>
     `
 
+    // reaction on SignUp button click
     document.getElementById('signUpForm').addEventListener('submit', async (event) => {
         event.preventDefault();
         const username = document.getElementById('username').value;
@@ -83,6 +86,7 @@ function renderSignUpPage() {
                 },
                 body: JSON.stringify({ username, email, password })
             });
+            // error 
             if (!response.ok) {
                 console.error(response.status)
                 renderPage('login')
@@ -104,98 +108,107 @@ function renderSignUpPage() {
 
 function renderLoginForm() {
     app.innerHTML = `
-    <div class="form-container">
-        <h2>LOGIN</h2>
-        <form id="loginForm">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username"><br>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password"><br>
+    <div class="flex items-center justify-center h-screen">
+        <div class="container login-form">
+        <h2 class="text-center text-2xl font-bold mb-4">LOGIN</h2>
+        <form id="loginForm" class="space-y-4">
+            <div>
+            <label for="username" class="login-input-label">Username</label>
+            <input type="text" id="username" name="username" class="login-input">
+            </div>
+            <div>
+            <label for="password" class="login-input-label">Password</label>
+            <input type="password" id="password" name="password" class="login-input">
+            </div>
             <button type="submit" class="login-btn">LOGIN</button>
         </form>
-        <div class="label_register">
-            <button id="BTNsignup">SignUp here</button>
+        <div class="label_register mt-4 text-center">
+            <button id="BTNsignup" class="signup-btn text-blue-500 hover:underline">SignUp here</button>
+        </div>
         </div>
     </div>
     `;
 
+    // go to sign up
     document.getElementById('BTNsignup').addEventListener('click', (event) => {
         renderSignUpPage();
-    }),
+    });
 
-        document.getElementById('loginForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        alert("Invalid username or password");
-                    } else {
-                        alert(`LOGIN FAIL STATUS: ${response.status}`);
-                    }
-                    return;
-                }
-                const response_data = await response.json();
-                if (response_data['auth'] && response_data['token']) {
-                    localStorage.setItem('token', response_data['token']);
-                    // renderPage('main');
-                    // renderMainPage();
-                    appRouter();
+    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+            // error
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert("Invalid username or password");
                 } else {
-                    alert('LOGIN FAILED');
-                    renderPage('login');
-                    return;
+                    alert(`LOGIN FAIL STATUS: ${response.status}`);
                 }
-            } catch (error) {
-                console.error(error);
-                renderPage('login');
+                return;
             }
-        });
+            const response_data = await response.json();
+            if (response_data['auth'] && response_data['token']) {
+                localStorage.setItem('token', response_data['token']);
+                // renderPage('main');
+                // renderMainPage();
+                appRouter();
+            } else {
+                alert('LOGIN FAILED');
+                renderPage('login');
+                return;
+            }
+        } catch (error) {
+            console.error(error);
+            renderPage('login');
+        }
+    });
 }
 
 async function renderMainPage(data) {
     app.innerHTML = `
-        <div>
+    <div class="main_page">
+        <div class="flex flex-col justify-center items-center space-y-3">
             <h1>Hello, ${data.username}</h1>
-            <button id="BTNcreateHouse" type="button"
-                class="create_house-btn">Create New House</button>
-            <div id="MNcreateHouse" class="hidden relative bg-white shadow-md rounded-md mt-2 w-64">
-                <div class="p-4">
-                    <label for="houseName" class="block text-gray-700 text-sm font-bold mb-2">House Name:</label>
-                    <input type="text" id="houseName" value="House 1"
-                        class="w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button id="BTNcreateHouse" type="button" class="create_house-btn">Create New House</button>
+        </div>
+        <div id="MNcreateHouse" class="hidden mn-createhouse">
+            <div class="p-4">
+                <label for="houseName" class="block text-gray-700 text-sm font-bold mb-2">House Name:</label>
+                <input type="text" id="houseName" value="House 1"
+                    class="w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-                    <label for="roomName" class="block text-gray-700 text-sm font-bold mb-2">Room Name:</label>
-                    <input type="text" id="roomName"
-                        class="w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <div class="flex space-x-2">
-                        <button id="BTNaddHouse"
-                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Save</button>
-                        <button id="BTNcloseHouseMN"
-                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Close</button>
-                    </div>
+                <div class="flex justify-between">
+                    <button id="BTNaddHouse"
+                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Save</button>
+                    <button id="BTNcloseHouseMN"
+                        class="cancel-btn">Close</button>
                 </div>
             </div>
-            <div class="hidden"><p>FIND ME</p></div>
-            <div id="houseList" class="houseList"></div>
         </div>
+        <div class="hidden">
+            <p>FIND ME</p>
+        </div>
+        <div id="houseList" class="houseList"></div>
+    </div>
     `;
 
-    await loadHouses();
+    await loadHouses(); // shows user houses
     var BTNcreateHouse = document.getElementById("BTNcreateHouse");
     var MNcreateHouse = document.getElementById("MNcreateHouse");
     // MNcreateHouse.style.display = "none";
     var BTNaddHouse = document.getElementById("BTNaddHouse");
     var BTNcloseHouseMN = document.getElementById("BTNcloseHouseMN")
 
+    // Create New House click
     BTNcreateHouse.addEventListener("click", () => {
         MNcreateHouse.classList.remove("hidden");
         BTNcreateHouse.classList.add("hidden");
@@ -216,6 +229,7 @@ async function renderMainPage(data) {
         }
     });
 
+    // close form if clicked outside
     document.addEventListener("click", (event) => {
         if (!BTNcreateHouse.contains(event.target) && !MNcreateHouse.contains(event.target)) {
             // MNcreateHouse.style.display = "none";
@@ -231,6 +245,139 @@ async function renderMainPage(data) {
         // BTNcreateHouse.style.display = "block";
         MNcreateHouse.classList.add("hidden");
         BTNcreateHouse.classList.remove("hidden");
+    }
+
+    async function loadHouses() {
+        try {
+            const response = await fetch('/get_houses', {
+                method: 'GET',
+                headers: { 'auth': `Bearer ${localStorage.getItem('token')}` }
+            })
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error);
+            }
+            const response_data = await response.json()
+            if (response_data.error) {
+                console.error(response_data.error)
+                throw new Error(response_data.error)
+            }
+            displayHouses(response_data);
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    function displayHouses(house_list) {
+        const parent_div = document.getElementById('houseList');
+        parent_div.innerHTML = '';
+        if (house_list.length == 0) {
+            parent_div.innerHTML = '<p> EMPTY </p>';
+        } else {
+            for (let i = 0; i < house_list.length; i++) {
+                // create div for house
+                // let element_height = (window.innerHeight - 100)/house_list.length;
+                const house = house_list[i];
+                const house_element = document.createElement('div');
+                house_element.setAttribute('id', `house${house.id}`)
+                house_element.classList.add('house_element');
+                house_element.innerHTML = `
+                <div class="justify-start" id="header${house.id}">&#x25B7 ${house.name} </div>
+                
+                <div id="house_element_details${house.id}" class=" hidden house_element_details">
+                    <div class="">        
+                        <button id="BTNcreateRoom${house.id}" class="add_room-btn">New Room</button>
+                        <div id="create_room_element${house.id}" class="hidden create_room_element">
+                            <h1>Add New Room</h1>
+                            <label for="roomName" class="block text-gray-700 text-sm font-bold mb-2">Room Name:</label>
+                            <input type="text" id="roomName${house.id}" value=""
+                                class="required w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p id="ERRORaddroom" class="text-red-700 font-bold text-sm"></p>
+                            <div class="flex justify-between">
+                            <button id="BTNaddRoom${house.id}" class="add_room-btn">Add Room</button>
+                            <button id="BTNcancelRoom${house.id}" class="cancel-btn">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="room_list${house.id}">EMPTY</div>
+                    <div>
+                    <button id="BTNdeleteHouse${house.id}" class="cancel-btn">Delete House</button>
+                    </div>
+                </div>
+                `;
+
+                parent_div.appendChild(house_element);
+
+                displayRooms(house_element.querySelector(`#room_list${house.id}`), house);
+
+                house_element.addEventListener('click', (event) => {
+                    // await displayHouseDetails(house_element, house);
+                    if (!house_element.querySelector(`#house_element_details${house.id}`).contains(event.target)) {
+                        document.getElementById(`house_element_details${house.id}`).classList.toggle('hidden');
+                        
+                        // side arrows > or down
+                        if (document.getElementById(`house_element_details${house.id}`).classList.contains("hidden")){
+                            document.getElementById(`header${house.id}`).innerHTML = `&#x25B7 ${house.name}`;
+                        } else {
+                            document.getElementById(`header${house.id}`).innerHTML = `&#x25BD ${house.name}`;
+                        }
+                    }
+                });
+                const BTNcreateRoom = document.getElementById(`BTNcreateRoom${house.id}`);
+
+                BTNcreateRoom.addEventListener('click', () => {
+                    BTNcreateRoom.classList.toggle('hidden');
+                    document.getElementById(`create_room_element${house.id}`).classList.toggle('hidden');
+                });
+
+                // cancel event
+                document.getElementById(`BTNcancelRoom${house.id}`).addEventListener('click', () => {
+                    BTNcreateRoom.classList.remove('hidden');
+                    document.getElementById(`create_room_element${house.id}`).classList.toggle('hidden');
+                });
+
+                // add room click
+                document.getElementById(`BTNaddRoom${house.id}`).addEventListener('click', async () => {
+                    const roomName = document.getElementById(`roomName${house.id}`).value;
+                    if (roomName == '' || roomName == null) {
+                        alert("EMPTY ROOM NAME");
+                        return;
+                    }
+                    addRoom(house.id, roomName)
+                });
+
+                // delete house click
+                house_element.querySelector(`#BTNdeleteHouse${house.id}`).addEventListener('click', async () => {
+                    await delete_house(house.id);
+                });
+            }
+        }
+    }
+
+    function displayRooms(room_list_element, house_data) {
+        room_list_element.innerHTML = '';
+        if (house_data.rooms.length == 0) {
+            room_list_element.innerHTML = `${house_data.name} has no rooms. Please add a room.`;
+        } else {
+            for (let i = 0; i < house_data.rooms.length; i++) {
+                const room = house_data.rooms[i];
+                const room_element = document.createElement('div');
+                room_element.setAttribute('id', `room${room.id}`)
+                room_element.classList.add("room_element");
+                room_element.innerHTML = `
+                <p>NAME ${room.name}</p>
+                <div id="sensorList${room.id}"></div>
+                <button id="BTNdeleteRoom${room.id}" class="cancel-btn">Delete Room</button>
+                `;
+                console.info(room);
+                room_element.querySelector(`#BTNdeleteRoom${room.id}`).addEventListener('click', async () => {
+                    deleteRoom(room.id, house_data.id);
+                })
+
+                // TODO load sensor data for the room
+                room_list_element.appendChild(room_element)
+            }
+        }
     }
 
     async function addHouse() {
@@ -256,6 +403,9 @@ async function renderMainPage(data) {
             if (data.error) {
                 alert(data.error)
                 throw new Error(data.error);
+            } else {
+                // appRouter();
+                displayHouses();
             }
         } catch (error) {
             console.error(error);
@@ -265,43 +415,82 @@ async function renderMainPage(data) {
         }
     }
 
-    async function loadHouses() {
+    async function delete_house(house_id) {
+        const response = await fetch(`/delete_house/${house_id}`, {
+            method: 'DELETE',
+            headers: {
+                'auth': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) { console.error(response.status); }
+        else {
+            const data = await response.json();
+            if (data.success) {
+                // alert("HOUSE DELETED");
+                document.getElementById(`house${house_id}`).remove();
+            }
+            else {
+                console.info(data);
+                alert("HOUSE COULD NOT BE DELETED")
+            }
+            appRouter();
+        }
+
+    }
+
+    async function addRoom(house_id, room_name) {
+        const response = await fetch('/add_room', {
+            method: 'POST',
+            headers: {
+                'auth': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: room_name, house_id: house_id })
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error);
+        }
+        const response_data = await response.json()
+        if (response_data.error) {
+            console.error(response_data.error)
+            document.getElementById('ERRORaddroom').textContent = "Room with this name already exists. Please choose other name";
+            throw new Error(response_data.error)
+        }
+        else {
+            // document.getElementById(`create_room_element${house.id}`).classList.add('hidden');
+            // document.getElementById(`BTNcreateRoom${house.id}`).classList.remove('hidden');
+            appRouter();
+        }
+    }
+
+    async function deleteRoom(room_id, house_id) {
         try {
-            const response = await fetch('/get_houses', {
-                method: 'GET',
-                headers: { 'auth': `Bearer ${localStorage.getItem('token')}` }
-            })
+            const response = await fetch(`/delete_room/${house_id}/${room_id}`, {
+                method: 'DELETE',
+                headers: {
+                    'auth': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error);
             }
-            const response_data = await response.json()
-            console.info(response_data)
-            if (response_data.error) {
-                console.error(response_data.error)
-                throw new Error(response_data.error)
+            const response_data = await response.json();
+            if (response_data.eror) {
+                console.error(response_data.error);
+                alert("ERROR WHEN DELETING THE ROOM")
+            } else if (response_data.success) {
+                document.getElementById(`room${room_id}`).remove();
+                // appRouter();
             }
-            displayHouses(response_data);
         } catch (error) {
             console.error(error)
         }
     }
 
-    function displayHouses(house_list) {
-        const parent_div = document.getElementById('houseList');
-        parent_div.innerHTML = '';
-        if (house_list.length == 0) {
-            parent_div.innerHTML = '<p> EMPTY </p>';
-        } else {
-            for (let i = 0; i < house_list.length; i++) {
-                const house = house_list[i];
-                const house_element = document.createElement('div');
-                house_element.classList.add('house_element');
-                house_element.innerHTML = `<h4>${house.name}</h4>`;
-                parent_div.appendChild(house_element);
-            }
-        }
-    }
 }
 
 function renderSettingsPage() {

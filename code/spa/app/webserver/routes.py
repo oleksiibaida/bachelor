@@ -90,22 +90,25 @@ async def addHouse_post(request: Request, house_data: services.HouseModel, token
     try:
         user_id = services.verify_token(token)
         house = await services.create_new_house(db_session, user_id, house_data.name)
-        print(f"ADD HOUSE ID {house}")
+        if house:
+            print(f"ADD HOUSE ID {house}")
+            return {'data':'some data'}
+        else:
+            raise ValueError('House Name is empty')
     except HTTPException as e:
         logger.error(e)
         return {'error':e}
     except ValueError as e:
         logger.error(e)
         return {'error': 'NAME EXISTS'}
-    return {'data':'some data'}
 
 @router.get('/get_houses')
 async def get_houses(request: Request, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
-        print("GET HOUSE")
         user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         house_list = await services.get_houses(db_session, user_id)
-        print(f'HOUSE_LIST: {house_list}')
+        print(house_list)
         return JSONResponse(house_list)
     except HTTPException as e:
         logger.error(e)
@@ -113,3 +116,55 @@ async def get_houses(request: Request, token: str = Depends(get_token),db_sessio
     except ValueError as e:
         logger.error(e)
         return {'error': e}
+    
+@router.delete('/delete_house/{house_id}')
+async def delete_house(request: Request, house_id: int = Path(...), token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    try:
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+        res = await services.delete_house(db_session, user_id, house_id)
+        print("DELETE HOUSE")
+        if res:
+            return {'success': f'DELETE HOUSE_ID {house_id}'}
+        else:
+            return {'error': f'Problem on server side'}
+    except Exception as e:
+        logger.error(e)
+    return
+
+@router.post('/add_room')
+async def add_room_post(request: Request, room_data: services.RoomModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    try:
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+        res = await services.add_room(db_session, user_id, room_data.house_id, room_data.name)
+        if res:
+            logger.info(f'U_ID {user_id} HOUSE_ID {room_data.house_id} ADD ROOM {room_data.name}')
+            return {'success': f'U_ID {user_id} HOUSE_ID {room_data.house_id} ADD ROOM {room_data.name}'}
+        return {'error': 'COULD NOT ADD ROOM'}
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}
+    
+@router.delete('/delete_room/{house_id}/{room_id}')
+async def delete_room(request: Request, house_id: int = Path(...), room_id: int = Path(...), token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    try:
+        print("DELETE ROOM")
+        print(house_id, room_id)
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+        
+        res = await services.delete_room(db_session, user_id, room_id, house_id)
+        if res:
+            return {'success':f'DELETED ROOM_ID {room_id}'}
+        return {'error': f'CANNOT DELETE ROOM_ID {room_id}'}
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': f'ROOM_ID {room_id} COULD NOT BE DELETED'}
+    
+@router.post('/add_device')
+async def add_device_post(request: Request, room_data: services.RoomModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    try:
+        return
+    except HTTPException as e:
+        logger.error(e)

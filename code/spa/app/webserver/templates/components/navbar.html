@@ -6,6 +6,13 @@
     <div class="nav-links space-x-4">
         <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition duration-300">My Account</button>
         <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition duration-300">My Devices</button>
-        <a href="/logout/{{ user_id }}" class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition duration-300">Logout</a>
+        <button class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition duration-300"
+            onclick="logout()">Logout</button>
     </div>
+    <script>
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        }
+    </script>
 </div>

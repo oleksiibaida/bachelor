@@ -17,6 +17,10 @@ class SignUpModel(BaseModel):
 class HouseModel(BaseModel):
     name: str
 
+class RoomModel(BaseModel):
+    name: str
+    house_id: int
+
 def create_jwt_token(data: dict):
     payload = {**data, 'exp': time.time() + Config.JWT_EXPIRE_TIME}
     return jwt.encode(payload=payload, key=Config.JWT_SECRET_KEY, algorithm=Config.JWT_ALGORITHM)
@@ -66,6 +70,8 @@ async def validate_session_user(db_session, session_id: str, user_id: int = None
 
 async def create_new_house(db_session, user_id, houseName):
     try:
+        print(f'HOUSE NAME {houseName} sdf')
+        if houseName is None or len(houseName) < 1 or houseName=='': return False
         user_houses = await queries.get_houses_on_user(db_session, user_id)
         print(f'HOUSES: {user_houses}')
         # avoid doubling
@@ -75,16 +81,55 @@ async def create_new_house(db_session, user_id, houseName):
         return house
     except HTTPException as e:
         raise e
+    
+async def delete_house(db_session, user_id, house_id):
+    try:
+        owner = await queries.verify_house_owner(db_session, user_id, house_id)
+        if owner:
+            res = await queries.delete_house(db_session, house_id)
+            if res: return True
+        return False
+    except HTTPException as e:
+        _logger.error(e)
+        raise e
 
 async def get_houses(db_session, user_id: int):
     try:
         houses = await queries.get_houses_on_user(db_session, user_id)
+        # houses = await queries.get_houses_and_rooms(db_session, user_id)
         house_list = []
         for h in houses:
-            house_data = {'name': h.name}
+            house_data = {'id': h.id ,'name': h.name, 'rooms': [{'id': room.id, 'name': room.name} for room in h.rooms]}
             house_list.append(house_data)
         return house_list
     except HTTPException as e:
+        raise e
+    
+async def add_room(db_session, user_id, house_id, room_name):
+    try:
+        owner = await queries.verify_house_owner(db_session, user_id, house_id)
+        if owner:
+            res = await queries.add_new_room(db_session, house_id, room_name)
+            # res = await queries.verify_unique_room(db_session, house_id, room_name)
+            print(res)
+            return res
+        return False
+    except HTTPException as e:
+        _logger.error(e)
+        raise e
+    except Exception as e:
+        _logger.error(e)
+        raise e
+    
+async def delete_room(db_session, user_id, room_id, house_id):
+    try:
+        owner = await queries.verify_house_owner(db_session, user_id, house_id)
+        if owner:
+            res = await queries.delete_room(db_session, room_id)
+            if res: return True
+        return False
+    except HTTPException as e:
+        _logger.error(e)
         raise e
 
 def verify_token(token: str):
