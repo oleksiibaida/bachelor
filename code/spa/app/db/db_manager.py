@@ -52,11 +52,12 @@ class db:
         self.connection.commit()
     
     def test(self):
-        # sql = 'PRAGMA table_info(device)'
-        # sql = 'DROP TABLE device'
-        sql = 'SELECT * FROM room_device rd LEFT JOIN device d ON rd.device_id = d.id'
+    
+        sql = 'PRAGMA table_info(device)'
+        # sql = 'DROP TABLE room_device'
+        # sql = 'SELECT * FROM room_device rd LEFT JOIN device d ON rd.device_id = d.id'
         res = self.cursor.execute(sql)
-        # self.connection.commit()
+        self.connection.commit()
         res = [dict(row) for row in res]
         for _ in res:
             print(_)
@@ -69,5 +70,7 @@ hs = db.get_all_rooms()
 
 for h in hs:
     print(h)
-
-db.test()
+print("-------------------------")
+dv = db.get_all_devices()
+for d in dv:
+    print(d)

@@ -367,7 +367,7 @@ async function renderMainPage(data) {
                 room_element.setAttribute('id', `room${room.id}`)
                 room_element.classList.add("room_element");
                 room_element.innerHTML = `
-                <p id="header${room.id}" >NAME ${room.name}</p>
+                <p id="headerRoom${room.id}" >&#x25B7 ${room.name}</p>
                 <div id="room_element_details${room.id}" class="hidden">
                     <button id="BTNaddDevice${room.id}" class="add_room-btn">Add Device</button>
                     <div id="FRaddDevice${room.id}" class="hidden create_room_element">
@@ -396,7 +396,7 @@ async function renderMainPage(data) {
                 console.info(room);
 
                 // TODO load device data for the room
-                displayDevices(room_element.querySelector(`#deviceList${room.id}`), room.devices);
+                displayDevices(room_element.querySelector(`#deviceList${room.id}`), room);
 
                 room_element.addEventListener('click', (event) => {
                     // await displayHouseDetails(house_element, house);
@@ -405,9 +405,9 @@ async function renderMainPage(data) {
 
                         // side arrows > or down
                         if (document.getElementById(`room_element_details${room.id}`).classList.contains("hidden")) {
-                            document.getElementById(`header${room.id}`).innerHTML = `&#x25B7 ${room.name}`;
+                            document.getElementById(`headerRoom${room.id}`).innerHTML = `&#x25B7 ${room.name}`;
                         } else {
-                            document.getElementById(`header${room.id}`).innerHTML = `&#x25BD ${room.name}`;
+                            document.getElementById(`headerRoom${room.id}`).innerHTML = `&#x25BD ${room.name}`;
                         }
                     }
                 });
@@ -455,7 +455,8 @@ async function renderMainPage(data) {
         }
     }
 
-    function displayDevices(parent_div, dev_list) {
+    function displayDevices(parent_div, room) {
+        const dev_list = room.devices;
         parent_div.innerHTML = '';
         if (dev_list.length == 0) {
             parent_div.innerHTML = 'NO DEVICES IN THIS ROOM';
@@ -472,8 +473,12 @@ async function renderMainPage(data) {
                     <h4>TEMP</h4>
                     <h4>HUM</h4>
                 </div>
-                <button class="cancel-sm-btn"> DELETE </button>
+                <button id="deleteDevice${device.dev_id}" class="cancel-sm-btn"> DELETE </button>
                 `;
+
+                device_element.querySelector(`#deleteDevice${device.dev_id}`).addEventListener('click', async () => {
+                    deleteDeviceRoom(room.id, device.dev_id);
+                });
 
                 parent_div.appendChild(device_element);
             }
@@ -561,8 +566,9 @@ async function renderMainPage(data) {
         }
         else {
             // document.getElementById(`create_room_element${house.id}`).classList.add('hidden');
+            loadHouses();
             // document.getElementById(`BTNcreateRoom${house.id}`).classList.remove('hidden');
-            appRouter();
+            // appRouter();
         }
     }
 
@@ -606,10 +612,14 @@ async function renderMainPage(data) {
             });
             if (!response.ok) {
                 console.error(response.status);
+                throw new Error(response.status);
             }
             else {
                 const response_data = await response.json();
-                console.info(response_data)
+                if (response_data.success) {
+                    loadHouses();
+                    console.info(response_data.success);
+                }
             }
         } catch (error) {
 
@@ -618,14 +628,14 @@ async function renderMainPage(data) {
 
     async function deleteDeviceRoom(room_id, device_id) {
         try {
-            const response = await fetch('/delete_device', {
-                method: 'POST',
+            const response = await fetch('/delete_room_device', {
+                method: 'DELETE',
                 headers: {
                     'auth': `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(
-                    { dev_id: device_id, room_id: room_id }
+                    { device_id, room_id }
                 )
             });
             if (!response.ok) {
@@ -634,9 +644,19 @@ async function renderMainPage(data) {
             else {
                 const response_data = await response.json();
                 console.info(response_data)
+                if (response_data.success) {
+                    console.info(response_data.success);
+                    loadHouses();
+                }
+                else {
+                    if (response_data.error) {
+                        throw new Error(response_data.error)
+                    }
+                }
             }
         } catch (error) {
-            
+            console.error(error);
+            appRouter();
         }
     }
 }

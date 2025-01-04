@@ -69,7 +69,7 @@ async def user_get(requset: Request, token: str = Depends(get_token), db_session
         return {'error': 'TOKEN INVALID'}
     user = await queries.get_user_data(db_session, user_id)
     if user:
-        return {'user_id': user.id, 'username': user.username, 'email': user.email}
+        return {'user_id': user.primary_key, 'username': user.username, 'email': user.email}
     else:
         logger.error(f"U_ID {user_id} NOT FOUND")
         return {'error': f'U_ID {user_id} NOT FOUND'}
@@ -163,7 +163,7 @@ async def delete_room(request: Request, house_id: int = Path(...), room_id: int 
         return {'error': f'ROOM_ID {room_id} COULD NOT BE DELETED'}
     
 @router.post('/add_new_device')
-async def add_device_user_post(request: Request, device_data: services.DeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+async def add_new_device_post(request: Request, device_data: services.DeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
         print("ADD NEW DEVICE")
         print(device_data)
@@ -177,3 +177,17 @@ async def add_device_user_post(request: Request, device_data: services.DeviceMod
              return {'error': 'device not added'}
     except HTTPException as e:
         logger.error(e)
+
+@router.delete('/delete_room_device')
+async def del_room_device(request: Request, room_device: services.RoomDeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    try:
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+        res = await services.delete_room_device(db_session, user_id, room_device.room_id, room_device.device_id)
+        if res:
+            return {'success': 'Device deleted from room and database'}
+        else:
+            return {'error': 'Error on the server side'}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Error on the server side'}

@@ -27,6 +27,10 @@ class DeviceModel(BaseModel):
     room_id: int = None
     description: str = None
 
+class RoomDeviceModel(BaseModel):
+    device_id: str
+    room_id: int
+
 def create_jwt_token(data: dict):
     payload = {**data, 'exp': time.time() + Config.JWT_EXPIRE_TIME}
     return jwt.encode(payload=payload, key=Config.JWT_SECRET_KEY, algorithm=Config.JWT_ALGORITHM)
@@ -42,7 +46,7 @@ async def auth_user(username: str, password: str, session):
     auth = user.verify_password(password)
     # if auth:
     #     await queries.update_session_user(db_session=session, session_id=session_id, username=username)
-    return {"user_id": user.id, "auth": auth, "session_id": session_id}
+    return {"user_id": user.primary_key, "auth": auth, "session_id": session_id}
 
 async def signup_user(db_session, username: str, email: str, password: str):
     if not username or not email or not password:
@@ -55,7 +59,7 @@ async def signup_user(db_session, username: str, email: str, password: str):
         user_data = await queries.get_user_data(db_session, username=username)
         if not user_data:
             return False
-        token = create_jwt_token({'user_id': user_data.id})
+        token = create_jwt_token({'user_id': user_data.primary_key})
         return {'auth': True, 'token': token}
     except HTTPException as e:
         _logger.error(e)
@@ -105,13 +109,13 @@ async def get_houses(db_session, user_id: int):
         house_list = []
         for house in houses:
             house_data = {
-                "id": house.id,
+                "id": house.primary_key,
                 "name": house.name,
                 "rooms": []
             }
             for room in house.rooms:
                 room_data = {
-                    "id": room.id,
+                    "id": room.primary_key,
                     "name": room.name,
                     "devices": []
                 }
@@ -120,7 +124,7 @@ async def get_houses(db_session, user_id: int):
                     device = room_device.device
                     if device:  # Ensure device is not None
                         device_data = {
-                            "id": device.id,
+                            "id": device.primary_key,
                             "dev_id": device.dev_id,
                             "name": device.name,
                             "description": device.description,
@@ -168,18 +172,44 @@ async def add_new_device(db_session, user_id, device_data):
             house_id = await queries.get_house_by_room(db_session, device_data.room_id)
             if not house_id: return False
             owner = await queries.verify_house_owner(db_session,user_id, house_id)
-            if not owner: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
+            if not owner: 
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
         res = await queries.add_new_device(db_session, user_id, device_data)
         if device_data.room_id is not None:
             print("SERV TO ROOM")
             new_dev = await queries.get_device(db_session, user_id, dev_id=device_data.dev_id)
             if new_dev:
                 print("ADD DEV TO ROOM")
-                res = await queries.add_device_to_room(db_session, new_dev.id, device_data.room_id)
+                res = await queries.add_room_device(db_session, new_dev.primary_key, device_data.room_id)
         return res
     except Exception as e:
+        _logger.error(e)
         return e
 
+async def delete_room_device(db_session, user_id: int, room_id: int, device_id:str):
+    try:
+        house_id = await queries.get_house_by_room(db_session, room_id)
+        if not house_id: return False
+        owner = await queries.verify_house_owner(db_session,user_id, house_id)
+        if not owner: 
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
+        device_primary = await queries.get_device(db_session, user_id, dev_id=device_id)
+        if not device_primary:
+            return False
+        res = await queries.delete_room_device(db_session, room_id, device_primary.primary_key)
+        if not res:
+            return False
+        res = await queries.delete_device(db_session, device_primary_key=device_primary)
+        if not res:
+            return False        
+        return True
+    except HTTPException as http_err:
+        _logger.error(f"HTTP Exception: {http_err.detail}")
+        raise http_err
+    except Exception as e:
+        _logger.critical(f"Unexpected error: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="Unexpected error")
 
 def verify_token(token: str):
     try:
