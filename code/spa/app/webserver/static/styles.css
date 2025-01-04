@@ -12,12 +12,12 @@ html, body {
 }
 
 .app{
-    @apply mt-[5vh] w-full h-full bg-blue-200
+    @apply mt-[7vh] w-full h-full bg-blue-200
 }
 
 /*===MAIN===*/
 .main_page{
-    @apply my-5 bg-red-600;
+    @apply my-5 bg-gray-300;
 }
 
 .mn-createhouse{
@@ -44,6 +44,11 @@ html, body {
 .room_element{
     @apply my-2 px-5 py-2 bg-yellow-100 border-2 border-solid border-green-600;
 }
+
+.device_element{
+    @apply flex items-center justify-between bg-white border-2 border-solid border-green-800 px-2 py-1 my-1 rounded;
+}
+
 /*===LOGIN==*/
 .login-form {
     @apply justify-center items-center bg-white p-6 rounded shadow-md;
@@ -76,4 +81,8 @@ html, body {
 
 .cancel-btn{
     @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-1 my-1
+}
+
+.cancel-sm-btn{
+    @apply bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-1 px-2 rounded mx-1 my-1
 }

@@ -21,17 +21,53 @@ class db:
         res = self.cursor.execute(sql).fetchall()
         return [dict(row) for row in res]
     
+    def get_all_houses(self):
+        sql = f"SELECT * FROM house"
+        res = self.cursor.execute(sql).fetchall()
+        return [dict(row) for row in res]
+    
     def del_house(self, user_id, house_name):
         sql = f"DELETE FROM house WHERE user_id={user_id} AND name='{house_name}'"
         self.cursor.execute(sql)
+        self.connection.commit()
     
     def del_all_houses(self):
         sql = 'DELETE FROM house'
         self.cursor.execute(sql)
         self.connection.commit()
 
+    def get_all_rooms(self):
+        sql = 'SELECT * FROM room' 
+        res = self.cursor.execute(sql)
+        return [dict(row) for row in res]
+
+    def get_all_devices(self):
+        sql = 'SELECT * FROM device'
+        res = self.cursor.execute(sql)
+        return [dict(row) for row in res]
+    
+    def clear_device(self):
+        sql = 'DELETE FROM device, room_device'
+        self.cursor.execute(sql)
+        self.connection.commit()
+    
+    def test(self):
+        # sql = 'PRAGMA table_info(device)'
+        # sql = 'DROP TABLE device'
+        sql = 'SELECT * FROM room_device rd LEFT JOIN device d ON rd.device_id = d.id'
+        res = self.cursor.execute(sql)
+        # self.connection.commit()
+        res = [dict(row) for row in res]
+        for _ in res:
+            print(_)
+
+
+
 db = db()
 # db.del_all_houses()
-hs = db.get_houses(1)
+hs = db.get_all_rooms()
+
 for h in hs:
     print(h)
+
+db.test()

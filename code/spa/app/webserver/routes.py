@@ -163,13 +163,17 @@ async def delete_room(request: Request, house_id: int = Path(...), room_id: int 
         return {'error': f'ROOM_ID {room_id} COULD NOT BE DELETED'}
     
 @router.post('/add_new_device')
-async def add_device_user_post(request: Request, device_data: services.RoomModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+async def add_device_user_post(request: Request, device_data: services.DeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
         print("ADD NEW DEVICE")
         print(device_data)
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+        print("GO TO SERV")
         res = await services.add_new_device(db_session, user_id, device_data)
-        return
+        if res:
+            return {'success': 'device added'}
+        else:
+             return {'error': 'device not added'}
     except HTTPException as e:
         logger.error(e)

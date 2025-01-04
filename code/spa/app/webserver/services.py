@@ -24,6 +24,7 @@ class RoomModel(BaseModel):
 class DeviceModel(BaseModel):
     dev_id: str
     name: str
+    room_id: int = None
     description: str = None
 
 def create_jwt_token(data: dict):
@@ -101,21 +102,41 @@ async def delete_house(db_session, user_id, house_id):
 async def get_houses(db_session, user_id: int):
     try:
         houses = await queries.get_houses_on_user(db_session, user_id)
-        # houses = await queries.get_houses_and_rooms(db_session, user_id)
         house_list = []
-        for h in houses:
-            house_data = {'id': h.id ,'name': h.name, 'rooms': [{'id': room.id, 'name': room.name} for room in h.rooms]}
+        for house in houses:
+            house_data = {
+                "id": house.id,
+                "name": house.name,
+                "rooms": []
+            }
+            for room in house.rooms:
+                room_data = {
+                    "id": room.id,
+                    "name": room.name,
+                    "devices": []
+                }
+                for room_device in room.devices:
+                    # Extract the related DeviceModel object
+                    device = room_device.device
+                    if device:  # Ensure device is not None
+                        device_data = {
+                            "id": device.id,
+                            "dev_id": device.dev_id,
+                            "name": device.name,
+                            "description": device.description,
+                        }
+                        room_data["devices"].append(device_data)
+                house_data["rooms"].append(room_data)
             house_list.append(house_data)
         return house_list
     except HTTPException as e:
         raise e
-    
+
 async def add_room(db_session, user_id, house_id, room_name):
     try:
         owner = await queries.verify_house_owner(db_session, user_id, house_id)
         if owner:
             res = await queries.add_new_room(db_session, house_id, room_name)
-            # res = await queries.verify_unique_room(db_session, house_id, room_name)
             print(res)
             return res
         return False
@@ -139,13 +160,23 @@ async def delete_room(db_session, user_id, room_id, house_id):
 
 async def add_new_device(db_session, user_id, device_data):
     try:
+        if device_data.dev_id is None or device_data.name is None:
+            return False
         if device_data.room_id is not None:
+            print("SERV ROOM_ID")
             # Verify user_id is owner of the house with room_id
             house_id = await queries.get_house_by_room(db_session, device_data.room_id)
             if not house_id: return False
             owner = await queries.verify_house_owner(db_session,user_id, house_id)
             if not owner: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
         res = await queries.add_new_device(db_session, user_id, device_data)
+        if device_data.room_id is not None:
+            print("SERV TO ROOM")
+            new_dev = await queries.get_device(db_session, user_id, dev_id=device_data.dev_id)
+            if new_dev:
+                print("ADD DEV TO ROOM")
+                res = await queries.add_device_to_room(db_session, new_dev.id, device_data.room_id)
+        return res
     except Exception as e:
         return e
 

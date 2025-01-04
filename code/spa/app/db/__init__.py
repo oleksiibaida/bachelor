@@ -19,7 +19,7 @@ async def create_tables():
     async with async_engine.begin() as connection:
         await connection.run_sync(Base.metadata.create_all)
         await connection.commit()
-        logger.info("TABLES CREATED")
+        logger.debug("TABLES CREATED")
 
 async def get_session():
     async with async_session() as session:

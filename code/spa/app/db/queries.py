@@ -1,9 +1,9 @@
 from app.config import Config
 from sqlalchemy import select, insert, update, delete, func
-from sqlalchemy.exc import IntegrityError, NoResultFound
+from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
-from .models import UserModel, HouseModel, RoomModel, DeviceUserRoomModel
+from .models import UserModel, HouseModel, RoomModel, DeviceModel, RoomDeviceModel
 from fastapi import Depends, HTTPException
 from . import get_session
 _logger = Config.logger_init()
@@ -102,10 +102,30 @@ async def delete_house(db_session: AsyncSession, house_id):
         raise e
 
 async def get_houses_on_user(db_session: AsyncSession, user_id: int):
-    stmt = select(HouseModel).where(HouseModel.user_id == user_id)
-    res = await db_session.execute(stmt)
-    return res.scalars().all()
-
+    try:
+        # stmt = select(HouseModel).where(HouseModel.user_id == user_id)
+        # res = await db_session.execute(stmt)
+        # return res.scalars().all()
+        stmt = (
+            select(HouseModel)
+            .options(
+                joinedload(HouseModel.rooms)
+                .joinedload(RoomModel.devices)
+                .joinedload(RoomDeviceModel.device)
+                .joinedload(DeviceModel.dev_rooms)
+            )
+            .filter(HouseModel.user_id == user_id)
+        )
+        print(str(stmt))
+        houses = await db_session.execute(stmt)
+        houses = houses.scalars().unique().all()
+        return houses
+    except NoResultFound:
+        _logger.error(f'U_ID {user_id} NO HOUSE FOUND')
+        raise HTTPException(status_code=404, detail='NO HOUSE FOUND')
+    except Exception as e:
+        _logger.error(e)
+        raise e
 async def get_house_by_room(db_session: AsyncSession, room_id: int):
     try:
         stmt = select(HouseModel.id).join(RoomModel, RoomModel.house_id == HouseModel.id).where(RoomModel.id == 1)
@@ -158,18 +178,80 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
     try:
         if device_data.dev_id is None or device_data.name is None or user_id is None:
             return False
-        stmt = insert(DeviceUserRoomModel).values(
+        # new_dev = DeviceModel(
+        #     dev_id = device_data.dev_id,
+        #     name = device_data.name,
+        #     user_id = user_id,
+        #     description = device_data.description
+        # )
+        # await db_session.add(new_dev)
+        stmt = insert(DeviceModel).values(
             dev_id = device_data.dev_id,
             name = device_data.name,
             user_id = user_id,
-            room_id = device_data.room_id,
             description = device_data.description
             )
         await db_session.execute(stmt)
         await db_session.commit()
         return True
+    except SQLAlchemyError as e:
+        await db_session.rollback()
+        _logger(f"SQLAlchemyError: {e}")
+    except IntegrityError:
+        await db_session.rollback()
+        _logger.error(f"IntegrityError: {e.orig}")
     except Exception as e:
-        return e
+        await db_session.rollback()
+        _logger.error(e)
+    
+async def add_device_to_room(db_session: AsyncSession, device_id, room_id):
+    try:
+        # rd = RoomDeviceModel(room_id = room_id, device_id = device_id)
+        # await db_session.add(rd)
+        stmt = insert(RoomDeviceModel).values(room_id = room_id, device_id = device_id)
+        await db_session.execute(stmt)
+        await db_session.commit()
+        _logger.info(f'DEV_ID {device_id} ADDED TO ROOM_ID {room_id}')
+        return True
+    except IntegrityError as e:
+        await db_session.rollback()
+        _logger.error(f"IntegrityError: {e.orig}")
+    except SQLAlchemyError as e:
+        await db_session.rollback()
+        _logger(f"SQLAlchemyError: {e}")
+    except Exception as e:
+        await db_session.rollback()
+        _logger(f"An unexpected error occurred: {e}")
+    finally: 
+        return False
+    
+async def get_device(db_session:AsyncSession, user_id: int, id: int = None, dev_id: str = None, name: str = None):
+    """
+    Get Device data
+    :param db_session: AsyncSession to access DB
+    :param user_id: Owner of the Sensor
+    :param id: Optional; device.id in DB
+    :param dev_id: Optional; device.dev_id (Factory ID)
+    :param name: OPtional Device Name
+    """
+    
+    if not id and not dev_id and not name:
+        return None
+    stmt = select(DeviceModel)
+    if id:
+        stmt = stmt.where(DeviceModel.id == id, DeviceModel.user_id == user_id)
+    if dev_id:
+        stmt = stmt.where(DeviceModel.dev_id == dev_id, DeviceModel.user_id == user_id)
+    if name:
+        stmt = stmt.where(DeviceModel.name == name, DeviceModel.user_id == user_id)
+    try:
+        res = await db_session.execute(stmt)
+        return res.scalars().one()
+    except NoResultFound:
+        return None
+    except Exception as e:
+        _logger.error(e)
+        return HTTPException(400, e)
 
 async def verify_unique_room(db_session:AsyncSession, house_id: int, room_name: str):
     """

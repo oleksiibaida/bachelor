@@ -15,10 +15,10 @@ class Config:
     JWT_EXPIRE_TIME = 3600 # in seconds
 
     def logger_init(name=__name__, debug = True):
-        logging.basicConfig(level=logging.DEBUG,  # Set the minimum logging level to DEBUG
+        logging.basicConfig(level=logging.INFO, 
                         format='%(asctime)s - %(filename)s -  %(funcName)s - %(levelname)s - %(message)s')        
         logging.getLogger("sqlalchemy").setLevel(logging.ERROR)
         logger = logging.getLogger(__name__)
         if debug:
-            logger.setLevel(logging.DEBUG)
+            logger.setLevel(logging.INFO)
         return logger  
