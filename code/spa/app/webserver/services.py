@@ -42,17 +42,15 @@ async def auth_user(username: str, password: str, session):
     user = await queries.get_user_data(db_session=session,username=username)
     if user is None:
         return None
-    session_id = secrets.token_hex(32)
     auth = user.verify_password(password)
-    # if auth:
-    #     await queries.update_session_user(db_session=session, session_id=session_id, username=username)
-    return {"user_id": user.primary_key, "auth": auth, "session_id": session_id}
+    return {"user_id": user.primary_key, "auth": auth}
 
 async def signup_user(db_session, username: str, email: str, password: str):
     if not username or not email or not password:
         _logger.error("EMPTY DATA")
         raise ValueError("All user data mus be provided")
     try:
+        print("SIGNUP")
         reg = await queries.add_user(db_session, username, email, password)
         if not reg:
             return False
@@ -178,13 +176,13 @@ async def add_new_device(db_session, user_id, device_data):
             if not house_id: return False
             owner = await queries.verify_house_owner(db_session,user_id, house_id)
             if not owner: 
-                _logger.error(f'U_ID {user_id} UNAUTORIZED ACCESS TO HOUSE_ID {house_id}')
+                _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house_id}')
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
         res = await queries.add_new_device(db_session, user_id, device_data)
+        if not res:
+            return False
         if device_data.room_id is not None:
-            new_dev = await queries.get_device(db_session, user_id, dev_id=device_data.dev_id)
-            if new_dev:
-                res = await queries.add_room_device(db_session, new_dev.primary_key, device_data.room_id)
+            res = await queries.add_room_device(db_session, res.primary_key, device_data.room_id)
         return res
     except Exception as e:
         _logger.error(e)
@@ -196,16 +194,18 @@ async def delete_room_device(db_session, user_id: int, room_id: int, device_id:s
         if not house_id: return False
         owner = await queries.verify_house_owner(db_session,user_id, house_id)
         if not owner: 
+            _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house_id}')
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
         device_primary = await queries.get_device(db_session, user_id, dev_id=device_id)
         if not device_primary:
             return False
+        print(f"DEVICE PRIM {device_primary.primary_key}")
         res = await queries.delete_room_device(db_session, room_id, device_primary.primary_key)
         if not res:
             return False
-        res = await queries.delete_device(db_session, device_primary_key=device_primary)
-        if not res:
-            return False        
+        # res = await queries.delete_device(db_session, device_primary_key=device_primary)
+        # if not res:
+        #     return False        
         return True
     except HTTPException as http_err:
         _logger.error(f"HTTP Exception: {http_err.detail}")

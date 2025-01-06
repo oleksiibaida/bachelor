@@ -44,9 +44,9 @@ async def login_post(request: Request, response: Response, user_data: dict, db_s
         username = user_data['username']
         password = user_data['password']
         auth = await services.auth_user(username=username, password=password, session=db_session)
-        if auth is None:
+        if auth is None or not auth['auth']:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
-        logger.info(f"LOGIN {username}")
+        logger.info(f"U_ID {auth['user_id']} LOGIN")
         token = services.create_jwt_token({"user_id":auth['user_id']})
 
         return {'auth': auth['auth'], 'token': token}
@@ -67,9 +67,10 @@ async def user_get(requset: Request, token: str = Depends(get_token), db_session
         return {'error': f'U_ID {user_id} NOT FOUND'}
 
 @router.post('/sign_up')
-async def register_post(request: Request, user_data: services.SignUpModel, db_session: AsyncSession = Depends(get_session)):
+async def signup_post(request: Request, user_data: services.SignUpModel, db_session: AsyncSession = Depends(get_session)):
     if not user_data.username or not user_data.email or not user_data.password:
-        raise HTTPException("EMPTY SET")    
+        raise HTTPException("EMPTY SET")  
+    print(user_data)  
     res = await services.signup_user(db_session, user_data.username, user_data.email, user_data.password)
     if not res:
         logger.error('SIGNUP ERROR')

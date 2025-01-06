@@ -19,9 +19,12 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
         _logger.error("All user data must be provided")
         return False
     try:
-        query = insert(UserModel).values(username=username, email=email, password=password)
-        await db_session.execute(query)
+        new_user = UserModel(username=username, email=email, password=password)
+        _logger.debug(f'ADD U_NAME {new_user.username} START')
+        db_session.add(new_user)
         await db_session.commit()
+        await db_session.refresh(new_user)
+        _logger.debug(f'ADD U_NAME {new_user.username} COMPLETED')
         return True
     except IntegrityError as e:
         await db_session.rollback()
@@ -30,17 +33,13 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
         await db_session.rollback()
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
-async def get_all_users(db_session: AsyncSession):
-    res = await db_session.execute(select(UserModel))
-    return res.scalars().all()
-
-async def get_user_data(db_session: AsyncSession, user_id: int = None, username: str = None, email: str = None):
-    if not user_id and not username and not email:
+async def get_user_data(db_session: AsyncSession, user_primary: int = None, username: str = None, email: str = None):
+    if not user_primary and not username and not email:
         _logger.error(msg="EMPTY SET")
         raise ValueError()
     query = select(UserModel)
-    if user_id:
-        query = query.where(UserModel.primary_key == user_id)
+    if user_primary:
+        query = query.where(UserModel.primary_key == user_primary)
     if username:
         query = query.where(UserModel.username == username)
     if email:
@@ -49,7 +48,7 @@ async def get_user_data(db_session: AsyncSession, user_id: int = None, username:
         res = await db_session.execute(query)
         return res.scalars().one()
     except NoResultFound:
-        _logger.info(msg=f"NO USER DATA FOUND FOR {user_id if user_id else username}")    
+        _logger.info(msg=f"NO USER DATA FOUND FOR {user_primary if user_primary else username}")    
         return None
     except Exception as e:
         _logger.error(f"Error fetching user data: {e}")
@@ -71,16 +70,14 @@ async def auth_user(db_session:AsyncSession, username:str, password:str):
         raise
 
 
-async def add_new_house(db_session: AsyncSession, user_id: int, house_name: str):
-    stmt = insert(HouseModel).values(name = house_name, user_id = user_id)
+async def add_new_house(db_session: AsyncSession, user_primary: int, house_name: str):
     try:
-        await db_session.execute(stmt)
+        new_house = HouseModel(user_id=user_primary, name=house_name)
+        db_session.add(new_house)
         await db_session.commit()
-        stmt = select(HouseModel).where(HouseModel.user_id == user_id, HouseModel.name == house_name)
-        res = await db_session.execute(stmt)
-        house = res.scalars().one()
-        _logger.info(f"ADD HOUSE_ID {house.primary_key}")
-        return house
+        await db_session.refresh(new_house)
+        _logger.info(f"ADD HOUSE_ID {new_house.primary_key}")
+        return new_house
     except IntegrityError as e:
         await db_session.rollback()
         raise HTTPException(status_code=400, detail="House Name already exists")
@@ -90,9 +87,8 @@ async def add_new_house(db_session: AsyncSession, user_id: int, house_name: str)
 
 async def delete_house(db_session: AsyncSession, house_id):
     try:
-        # stmt = delete(RoomModel).where(RoomModel.house_id == house_id)
-        stmt = delete(HouseModel).where(HouseModel.primary_key == house_id)
-        await db_session.execute(stmt)
+        house = await db_session.get(HouseModel, house_id)
+        await db_session.delete(house)
         await db_session.commit()
         return True
     except IntegrityError as e:
@@ -102,11 +98,8 @@ async def delete_house(db_session: AsyncSession, house_id):
         _logger.error(e)
         raise e
 
-async def get_houses_on_user(db_session: AsyncSession, user_id: int):
+async def get_houses_on_user(db_session: AsyncSession, user_primary: int):
     try:
-        # stmt = select(HouseModel).where(HouseModel.user_id == user_id)
-        # res = await db_session.execute(stmt)
-        # return res.scalars().all()
         stmt = (
             select(HouseModel)
             .options(
@@ -115,14 +108,14 @@ async def get_houses_on_user(db_session: AsyncSession, user_id: int):
                 .joinedload(RoomDeviceModel.device)
                 .joinedload(DeviceModel.dev_rooms)
             )
-            .filter(HouseModel.user_id == user_id)
+            .filter(HouseModel.user_id == user_primary)
         )
         # print(str(stmt))
         houses = await db_session.execute(stmt)
         houses = houses.scalars().unique().all()
         return houses
     except NoResultFound:
-        _logger.error(f'U_ID {user_id} NO HOUSE FOUND')
+        _logger.error(f'U_ID {user_primary} NO HOUSE FOUND')
         raise HTTPException(status_code=404, detail='NO HOUSE FOUND')
     except Exception as e:
         _logger.error(e)
@@ -137,11 +130,15 @@ async def get_house_by_room(db_session: AsyncSession, room_id: int):
     except NoResultFound:
         raise HTTPException(400, 'NOT FOUND')
 
-async def verify_house_owner(db_session: AsyncSession, user_id: int, house_id: int):
+async def verify_house_owner(db_session: AsyncSession, user_primary: int, house_id: int):
     try:
-        stmt = select(HouseModel).where(HouseModel.primary_key == house_id, HouseModel.user_id == user_id)
-        res = await db_session.execute(stmt)
-        return res
+        # stmt = select(HouseModel).where(HouseModel.primary_key == house_id, HouseModel.user_id == user_id)
+        # res = await db_session.execute(stmt)
+        house = await db_session.get(HouseModel, house_id)
+        print(house.primary_key)
+        if house:
+            return house.user_id == user_primary
+        
     except NoResultFound:
         return None
     except Exception as e:
@@ -152,8 +149,8 @@ async def add_new_room(db_session: AsyncSession, house_id: int, room_name: str):
     try:
         unique = await verify_unique_room(db_session, house_id, room_name)
         if unique:
-            stmt = insert(RoomModel).values(house_id=house_id, name=room_name)
-            await db_session.execute(stmt)
+            new_room = RoomModel(name = room_name, house_id = house_id)
+            db_session.add(new_room)
             await db_session.commit()
             _logger.info(f"ADD ROOM_NAME {room_name} HOUSE_ID {house_id}")
             return True
@@ -181,22 +178,16 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
     try:
         if device_data.dev_id is None or device_data.name is None or user_id is None:
             return False
-        # new_dev = DeviceModel(
-        #     dev_id = device_data.dev_id,
-        #     name = device_data.name,
-        #     user_id = user_id,
-        #     description = device_data.description
-        # )
-        # await db_session.add(new_dev)
-        stmt = insert(DeviceModel).values(
+        new_dev = DeviceModel(
             dev_id = device_data.dev_id,
             name = device_data.name,
             user_id = user_id,
             description = device_data.description
-            )
-        await db_session.execute(stmt)
+        )
+        db_session.add(new_dev)
         await db_session.commit()
-        return True
+        await db_session.refresh(new_dev)
+        return new_dev
     except SQLAlchemyError as e:
         await db_session.rollback()
         _logger(f"SQLAlchemyError: {e}")
@@ -210,51 +201,11 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
         _logger.error(e)
         return False
     
-async def add_room_device(db_session: AsyncSession, device_primary, room_id):
+async def delete_device(db_session: AsyncSession, device_primary_key: int = None, device_id: str = None):
     try:
-        # rd = RoomDeviceModel(room_id = room_id, device_id = device_id)
-        # await db_session.add(rd)
-        stmt = insert(RoomDeviceModel).values(room_id = room_id, device_primary = device_primary)
-        await db_session.execute(stmt)
-        await db_session.commit()
-        _logger.info(f'DEV_ID {device_primary} ADDED TO ROOM_ID {room_id}')
-        return True
-    except IntegrityError as e:
-        await db_session.rollback()
-        _logger.error(f"IntegrityError: {e.orig}")
-        return False
-    except SQLAlchemyError as e:
-        await db_session.rollback()
-        _logger(f"SQLAlchemyError: {e}")
-        return False
-    except Exception as e:
-        await db_session.rollback()
-        _logger(f"An unexpected error occurred: {e}")
-        return False
-
-async def delete_all_devices_in_room(db_session: AsyncSession, room_id: int):
-    try:
-        stmt = delete(RoomDeviceModel).where(RoomDeviceModel.room_id == room_id)
-        await db_session.execute(stmt)
-        await db_session.commit()
-        return True
-    except IntegrityError as e:
-        _logger.error(f"IntegrityError occurred: {e}")
-        await db_session.rollback()
-        return False
-    except SQLAlchemyError as e:
-        _logger.error(f"SQLAlchemyError occurred: {e}")
-        await db_session.rollback()
-        return False
-    except Exception as e:
-        _logger.error(f"An unexpected error occurred: {e}")
-        await db_session.rollback()
-        return False
-
-async def delete_room_device(db_session: AsyncSession, room_id: int, device_primary_key: int):
-    try:
-        stmt = delete(RoomDeviceModel).where(RoomDeviceModel.room_id == room_id, RoomDeviceModel.device_primary == device_primary_key)
-        await db_session.execute(stmt)
+        if not device_id and not device_primary_key:
+            return False
+        del_device = DeviceModel(primary_key = device_primary_key, dev_id = device_id)
         await db_session.commit()
         return True
     except IntegrityError as e:
@@ -270,20 +221,41 @@ async def delete_room_device(db_session: AsyncSession, room_id: int, device_prim
         await db_session.rollback()
         return False
     
-async def delete_device(db_session: AsyncSession, device_primary_key: int = None, device_id: str = None):
+async def add_room_device(db_session: AsyncSession, device_primary, room_id):
     try:
-        if not device_id and not device_primary_key:
-            return False
-        stmt = delete(DeviceModel)
-        
-        if device_primary_key:
-            stmt = stmt.where(DeviceModel.primary_key == device_primary_key)
-        if device_id:
-            stmt = stmt.where(DeviceModel.dev_id == device_id)
-        
-        await db_session.execute(stmt)
+        rd = RoomDeviceModel(room_id = room_id, device_primary = device_primary)
+        db_session.add(rd)
         await db_session.commit()
+        _logger.info(f'DEV_ID {device_primary} ADDED TO ROOM_ID {room_id}')
         return True
+    except IntegrityError as e:
+        await db_session.rollback()
+        _logger.error(f"IntegrityError: {e.orig}")
+        return False
+    except SQLAlchemyError as e:
+        await db_session.rollback()
+        _logger.error(f"SQLAlchemyError: {e}")
+        return False
+    except Exception as e:
+        await db_session.rollback()
+        _logger.error(f"An unexpected error occurred: {e}")
+        return False
+
+async def delete_room_device(db_session: AsyncSession, room_id: int, device_primary_key: int):
+    try:
+        # get room_device from DB
+        del_rd = await db_session.execute(
+            select(RoomDeviceModel).where(
+                RoomDeviceModel.room_id==room_id,
+                RoomDeviceModel.device_primary==device_primary_key
+            )
+        )
+        del_rd = del_rd.scalars().first()
+        if del_rd:
+            await db_session.delete(del_rd)
+            await db_session.commit()
+            return True
+        return False
     except IntegrityError as e:
         _logger.error(f"IntegrityError occurred: {e}")
         await db_session.rollback()
