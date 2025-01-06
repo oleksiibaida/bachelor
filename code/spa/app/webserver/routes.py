@@ -2,7 +2,7 @@ import os
 import asyncio
 import jwt
 from app.config import Config
-from fastapi import APIRouter, Request, Response, Form, Depends, status, Path, Cookie, HTTPException
+from fastapi import APIRouter, Request, Response, Form, Depends, status, Path, Cookie, HTTPException, Query
 from fastapi.responses import JSONResponse, RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2AuthorizationCodeBearer
@@ -33,13 +33,12 @@ async def get_token(request: Request):
     token = auth[7:]
     return token    
 
-@router.post('/')
 @router.get('/')
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
  
 #=====LOGIN=====#
-@router.post('/login')
+@router.post('/login', response_class=JSONResponse)
 async def login_post(request: Request, response: Response, user_data: dict, db_session: AsyncSession = Depends(get_session)):
     try:
         username = user_data['username']
@@ -54,13 +53,6 @@ async def login_post(request: Request, response: Response, user_data: dict, db_s
     except Exception as e:
         logger.error(e)
         return RedirectResponse("/")
-
-@router.get("/logout/{user_id}")
-async def logout_get(request: Request, user_id: int = Path(...), session_id: str = Cookie(None), db_session: AsyncSession = Depends(get_session)):
-    await services.logout_user(db_session=db_session, user_id=user_id)
-    response = RedirectResponse('/')
-    response.set_cookie("session_id", "logout")
-    return response
 
 @router.get('/user')
 async def user_get(requset: Request, token: str = Depends(get_token), db_session: AsyncSession = Depends(get_session)):
@@ -123,7 +115,6 @@ async def delete_house(request: Request, house_id: int = Path(...), token: str =
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         res = await services.delete_house(db_session, user_id, house_id)
-        print("DELETE HOUSE")
         if res:
             return {'success': f'DELETE HOUSE_ID {house_id}'}
         else:
@@ -149,8 +140,6 @@ async def add_room_post(request: Request, room_data: services.RoomModel, token: 
 @router.delete('/delete_room/{house_id}/{room_id}')
 async def delete_room(request: Request, house_id: int = Path(...), room_id: int = Path(...), token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
-        print("DELETE ROOM")
-        print(house_id, room_id)
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         
@@ -165,11 +154,9 @@ async def delete_room(request: Request, house_id: int = Path(...), room_id: int 
 @router.post('/add_new_device')
 async def add_new_device_post(request: Request, device_data: services.DeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
-        print("ADD NEW DEVICE")
-        print(device_data)
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
-        print("GO TO SERV")
+
         res = await services.add_new_device(db_session, user_id, device_data)
         if res:
             return {'success': 'device added'}

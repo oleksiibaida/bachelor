@@ -97,7 +97,8 @@ async def delete_house(db_session, user_id, house_id):
         owner = await queries.verify_house_owner(db_session, user_id, house_id)
         if owner:
             res = await queries.delete_house(db_session, house_id)
-            if res: return True
+            if not res: return False
+            return True
         return False
     except HTTPException as e:
         _logger.error(e)
@@ -156,7 +157,10 @@ async def delete_room(db_session, user_id, room_id, house_id):
         owner = await queries.verify_house_owner(db_session, user_id, house_id)
         if owner:
             res = await queries.delete_room(db_session, room_id)
-            if res: return True
+            if not res: return False
+            res = await queries.delete_all_devices_in_room(db_session, room_id)
+            if not res: return False
+            return True
         return False
     except HTTPException as e:
         _logger.error(e)
@@ -164,22 +168,22 @@ async def delete_room(db_session, user_id, room_id, house_id):
 
 async def add_new_device(db_session, user_id, device_data):
     try:
+        print("DEV DATA")
+        print(device_data)
         if device_data.dev_id is None or device_data.name is None:
             return False
         if device_data.room_id is not None:
-            print("SERV ROOM_ID")
             # Verify user_id is owner of the house with room_id
             house_id = await queries.get_house_by_room(db_session, device_data.room_id)
             if not house_id: return False
             owner = await queries.verify_house_owner(db_session,user_id, house_id)
             if not owner: 
+                _logger.error(f'U_ID {user_id} UNAUTORIZED ACCESS TO HOUSE_ID {house_id}')
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
         res = await queries.add_new_device(db_session, user_id, device_data)
         if device_data.room_id is not None:
-            print("SERV TO ROOM")
             new_dev = await queries.get_device(db_session, user_id, dev_id=device_data.dev_id)
             if new_dev:
-                print("ADD DEV TO ROOM")
                 res = await queries.add_room_device(db_session, new_dev.primary_key, device_data.room_id)
         return res
     except Exception as e:

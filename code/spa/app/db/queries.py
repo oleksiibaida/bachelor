@@ -89,8 +89,9 @@ async def add_new_house(db_session: AsyncSession, user_id: int, house_name: str)
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
 
 async def delete_house(db_session: AsyncSession, house_id):
-    stmt = delete(HouseModel).where(HouseModel.primary_key == house_id)
     try:
+        # stmt = delete(RoomModel).where(RoomModel.house_id == house_id)
+        stmt = delete(HouseModel).where(HouseModel.primary_key == house_id)
         await db_session.execute(stmt)
         await db_session.commit()
         return True
@@ -116,7 +117,7 @@ async def get_houses_on_user(db_session: AsyncSession, user_id: int):
             )
             .filter(HouseModel.user_id == user_id)
         )
-        print(str(stmt))
+        # print(str(stmt))
         houses = await db_session.execute(stmt)
         houses = houses.scalars().unique().all()
         return houses
@@ -129,7 +130,8 @@ async def get_houses_on_user(db_session: AsyncSession, user_id: int):
     
 async def get_house_by_room(db_session: AsyncSession, room_id: int):
     try:
-        stmt = select(HouseModel.primary_key).join(RoomModel, RoomModel.house_id == HouseModel.primary_key).where(RoomModel.primary_key == 1)
+        stmt = select(HouseModel.primary_key).join(RoomModel, RoomModel.house_id == HouseModel.primary_key).where(RoomModel.primary_key == room_id)
+        print(str(stmt))
         res = await db_session.execute(stmt)
         return res.scalar_one_or_none()
     except NoResultFound:
@@ -230,6 +232,25 @@ async def add_room_device(db_session: AsyncSession, device_primary, room_id):
         _logger(f"An unexpected error occurred: {e}")
         return False
 
+async def delete_all_devices_in_room(db_session: AsyncSession, room_id: int):
+    try:
+        stmt = delete(RoomDeviceModel).where(RoomDeviceModel.room_id == room_id)
+        await db_session.execute(stmt)
+        await db_session.commit()
+        return True
+    except IntegrityError as e:
+        _logger.error(f"IntegrityError occurred: {e}")
+        await db_session.rollback()
+        return False
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError occurred: {e}")
+        await db_session.rollback()
+        return False
+    except Exception as e:
+        _logger.error(f"An unexpected error occurred: {e}")
+        await db_session.rollback()
+        return False
+
 async def delete_room_device(db_session: AsyncSession, room_id: int, device_primary_key: int):
     try:
         stmt = delete(RoomDeviceModel).where(RoomDeviceModel.room_id == room_id, RoomDeviceModel.device_primary == device_primary_key)
@@ -237,15 +258,15 @@ async def delete_room_device(db_session: AsyncSession, room_id: int, device_prim
         await db_session.commit()
         return True
     except IntegrityError as e:
-        print(f"IntegrityError occurred: {e}")
+        _logger.error(f"IntegrityError occurred: {e}")
         await db_session.rollback()
         return False
     except SQLAlchemyError as e:
-        print(f"SQLAlchemyError occurred: {e}")
+        _logger.error(f"SQLAlchemyError occurred: {e}")
         await db_session.rollback()
         return False
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        _logger.error(f"An unexpected error occurred: {e}")
         await db_session.rollback()
         return False
     
@@ -264,15 +285,15 @@ async def delete_device(db_session: AsyncSession, device_primary_key: int = None
         await db_session.commit()
         return True
     except IntegrityError as e:
-        print(f"IntegrityError occurred: {e}")
+        _logger.error(f"IntegrityError occurred: {e}")
         await db_session.rollback()
         return False
     except SQLAlchemyError as e:
-        print(f"SQLAlchemyError occurred: {e}")
+        _logger.error(f"SQLAlchemyError occurred: {e}")
         await db_session.rollback()
         return False
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        _logger.error(f"An unexpected error occurred: {e}")
         await db_session.rollback()
         return False
     

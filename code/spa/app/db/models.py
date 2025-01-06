@@ -22,7 +22,7 @@ class HouseModel(Base):
     __tablename__ = 'house'
     primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     name = Column(String(50), nullable=False)
-    user_id = Column(Integer, ForeignKey("user.primary_key"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.primary_key", ondelete='CASCADE'), nullable=False)
     rooms = relationship("RoomModel", backref="house", cascade="all, delete-orphan", lazy='selectin')
 
     __table_args__ = (UniqueConstraint('name', 'user_id'),)
@@ -31,7 +31,7 @@ class RoomModel(Base):
     __tablename__ = 'room'
     primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     name = Column(String(50), nullable=False)
-    house_id = Column(Integer, ForeignKey('house.primary_key'), nullable=False)
+    house_id = Column(Integer, ForeignKey('house.primary_key', ondelete='CASCADE'), nullable=False)
     devices = relationship("RoomDeviceModel", back_populates="room", cascade="all, delete-orphan", lazy='selectin')
 
     __table_args = (UniqueConstraint('name', 'house_id'))
@@ -41,7 +41,7 @@ class DeviceModel(Base):
     primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     dev_id = Column(String(10), nullable=False)
     name = Column(String(50), nullable=False)
-    user_id = Column(Integer, nullable=False, unique=False)
+    user_id = Column(Integer, ForeignKey('user.primary_key', ondelete='CASCADE'), nullable=False, unique=False)
     description = Column(String(250), nullable=True)
     dev_rooms = relationship("RoomDeviceModel", back_populates="device", cascade="all, delete-orphan", lazy='selectin')
 
@@ -50,8 +50,8 @@ class DeviceModel(Base):
 class RoomDeviceModel(Base):
     __tablename__ = 'room_device'
     primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    room_id = Column(Integer, ForeignKey('room.primary_key'), nullable=False)
-    device_primary = Column(Integer, ForeignKey('device.primary_key'), nullable=False)
+    room_id = Column(Integer, ForeignKey('room.primary_key', ondelete='CASCADE'), nullable=False)
+    device_primary = Column(Integer, ForeignKey('device.primary_key', ondelete='CASCADE'), nullable=False)
 
     room = relationship("RoomModel", back_populates="devices")
     device = relationship("DeviceModel", back_populates="dev_rooms")

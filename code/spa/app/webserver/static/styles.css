@@ -17,7 +17,7 @@ html, body {
 
 /*===MAIN===*/
 .main_page{
-    @apply my-5 bg-gray-300;
+    @apply p-1 my-5 h-full bg-gray-300;
 }
 
 .mn-createhouse{
@@ -25,11 +25,11 @@ html, body {
 }
 
 .houseList {
-    @apply my-5 p-3 w-full h-full bg-blue-400
+    @apply m-5 p-3 h-full bg-blue-400
 }
 
 .house_element {
-    @apply h-20 px-5 py-1 mx-5 my-3 border-2 border-green-600 bg-amber-100 rounded-md shadow-md flex flex-col justify-center items-start text-center;
+    @apply  min-h-10 px-5 py-1 mx-5 my-3 border-2 border-green-600 bg-amber-100 rounded-md shadow-md flex flex-col justify-center items-start text-center;
     height: auto;
 }
 

@@ -5,7 +5,8 @@
     </div>
     <div class="nav-links space-x-4">
         <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition duration-300">My Account</button>
-        <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition duration-300">My Devices</button>
+        <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
+            onclick="my_devices()">My Devices</button>
         <button class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition duration-300"
             onclick="logout()">Logout</button>
     </div>
@@ -13,6 +14,22 @@
         function logout() {
             localStorage.removeItem('token');
             window.location.href = '/';
+        }
+        async function my_devices() {
+            try {
+                const response = await fetch('/my_devices',
+                    {
+                        method: 'GET',
+                        headers: {
+                            'auth': `Bearer ${localStorage.getItem('token')}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                )
+                
+            } catch (error) {
+
+            }
         }
     </script>
 </div>

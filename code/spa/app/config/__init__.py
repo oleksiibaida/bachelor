@@ -20,5 +20,5 @@ class Config:
         logging.getLogger("sqlalchemy").setLevel(logging.ERROR)
         logger = logging.getLogger(__name__)
         if debug:
-            logger.setLevel(logging.INFO)
+            logger.setLevel(logging.DEBUG)
         return logger  

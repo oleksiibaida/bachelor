@@ -46,6 +46,11 @@ class db:
         res = self.cursor.execute(sql)
         return [dict(row) for row in res]
     
+    def get_all_room_device(self):
+        sql = 'SELECT * FROM room_device'
+        res = self.cursor.execute(sql)
+        return [dict(row) for row in res]
+    
     def clear_device(self):
         sql = 'DELETE FROM device, room_device'
         self.cursor.execute(sql)
@@ -53,8 +58,8 @@ class db:
     
     def test(self):
     
-        sql = 'PRAGMA table_info(device)'
-        # sql = 'DROP TABLE room_device'
+        # sql = 'PRAGMA table_info(device)'
+        sql = 'DROP TABLE room_device'
         # sql = 'SELECT * FROM room_device rd LEFT JOIN device d ON rd.device_id = d.id'
         res = self.cursor.execute(sql)
         self.connection.commit()
@@ -65,12 +70,24 @@ class db:
 
 
 db = db()
+# db.test()
 # db.del_all_houses()
-hs = db.get_all_rooms()
-
+print('====HOUSES====')
+hs = db.get_all_houses()
 for h in hs:
     print(h)
-print("-------------------------")
+
+print("====ROOMS====")
+
+hs = db.get_all_rooms()
+for h in hs:
+    print(h)
+
+print("====DEVICES====")
 dv = db.get_all_devices()
+for d in dv:
+    print(d)
+print("====ROOM_DEVICE====")
+dv = db.get_all_room_device()
 for d in dv:
     print(d)
