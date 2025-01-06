@@ -43,59 +43,52 @@ async def login_post(request: Request, response: Response, user_data: dict, db_s
     try:
         username = user_data['username']
         password = user_data['password']
-        auth = await services.auth_user(username=username, password=password, session=db_session)
-        if auth is None or not auth['auth']:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
+        auth = await services.auth_user(db_session=db_session, username=username, password=password)
+        if not auth['user_id']: return auth
         logger.info(f"U_ID {auth['user_id']} LOGIN")
         token = services.create_jwt_token({"user_id":auth['user_id']})
-
-        return {'auth': auth['auth'], 'token': token}
+        if token:
+            return {'token': token}
+        else:
+            return {'error': 'Cannot create token'}
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e.detail}
     except Exception as e:
         logger.error(e)
         return RedirectResponse("/")
 
 @router.get('/user')
 async def user_get(requset: Request, token: str = Depends(get_token), db_session: AsyncSession = Depends(get_session)):
-    user_id = services.verify_token(token)
-    if not user_id:
-        return {'error': 'TOKEN INVALID'}
-    user = await queries.get_user_data(db_session, user_id)
-    if user:
-        return {'user_id': user.primary_key, 'username': user.username, 'email': user.email}
-    else:
-        logger.error(f"U_ID {user_id} NOT FOUND")
-        return {'error': f'U_ID {user_id} NOT FOUND'}
+    try:
+        user_id = services.verify_token(token)
+        if not user_id:
+            return {'error': 'TOKEN INVALID'}
+        user = await queries.get_user_data(db_session, user_id)
+        if user:
+            return {'user_id': user.primary_key, 'username': user.username, 'email': user.email}
+        else:
+            logger.error(f"U_ID {user_id} NOT FOUND")
+            return {'error': f'USER NOT FOUND'}
+    except HTTPException as e:
+        return {'error': e.detail}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}
 
 @router.post('/sign_up')
 async def signup_post(request: Request, user_data: services.SignUpModel, db_session: AsyncSession = Depends(get_session)):
-    if not user_data.username or not user_data.email or not user_data.password:
-        raise HTTPException("EMPTY SET")  
-    print(user_data)  
     res = await services.signup_user(db_session, user_data.username, user_data.email, user_data.password)
-    if not res:
-        logger.error('SIGNUP ERROR')
-        return {'error': 'SIGNUP ERROR'}
     return res
 
 @router.post('/add_house')
-async def addHouse_post(request: Request, house_data: services.HouseModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
-    print("ADD HOUSE")
-    try:
-        user_id = services.verify_token(token)
-        house = await services.create_new_house(db_session, user_id, house_data.name)
-        if house:
-            print(f"ADD HOUSE ID {house}")
-            return {'data':'some data'}
-        else:
-            raise ValueError('House Name is empty')
-    except HTTPException as e:
-        logger.error(e)
-        return {'error':e}
-    except ValueError as e:
-        logger.error(e)
-        return {'error': 'NAME EXISTS'}
+async def add_house_post(request: Request, house_data: services.HouseModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    user_id = services.verify_token(token)
+    house = await services.create_new_house(db_session, user_id, house_data.name)
+    return house
 
-@router.get('/get_houses')
+
+@router.get('/get_houses', response_class=JSONResponse)
 async def get_houses(request: Request, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
         user_id = services.verify_token(token)
@@ -109,12 +102,17 @@ async def get_houses(request: Request, token: str = Depends(get_token),db_sessio
     except ValueError as e:
         logger.error(e)
         return {'error': e}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}
     
-@router.delete('/delete_house/{house_id}')
-async def delete_house(request: Request, house_id: int = Path(...), token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+@router.delete('/delete_house')
+async def delete_house(request: Request, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+        body = await request.json()
+        house_id = body.get('house_id')
         res = await services.delete_house(db_session, user_id, house_id)
         if res:
             return {'success': f'DELETE HOUSE_ID {house_id}'}
@@ -122,35 +120,29 @@ async def delete_house(request: Request, house_id: int = Path(...), token: str =
             return {'error': f'Problem on server side'}
     except Exception as e:
         logger.error(e)
-    return
+        return {'error': 'Unexpected error'}
 
 @router.post('/add_room')
 async def add_room_post(request: Request, room_data: services.RoomModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
-    try:
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         res = await services.add_room(db_session, user_id, room_data.house_id, room_data.name)
-        if res:
-            logger.info(f'U_ID {user_id} HOUSE_ID {room_data.house_id} ADD ROOM {room_data.name}')
-            return {'success': f'U_ID {user_id} HOUSE_ID {room_data.house_id} ADD ROOM {room_data.name}'}
-        return {'error': 'COULD NOT ADD ROOM'}
-    except HTTPException as e:
-        logger.error(e)
-        return {'error': e}
+        if not res:
+            return {'error': 'COULD NOT ADD ROOM'}
+        logger.info(f'U_ID {user_id} HOUSE_ID {room_data.house_id} ADD ROOM {room_data.name}')
+        return res
+        
     
-@router.delete('/delete_room/{house_id}/{room_id}')
-async def delete_room(request: Request, house_id: int = Path(...), room_id: int = Path(...), token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
-    try:
+    
+@router.delete('/delete_room')
+async def delete_room(request: Request, room_data: services.RoomModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         
-        res = await services.delete_room(db_session, user_id, room_id, house_id)
-        if res:
-            return {'success':f'DELETED ROOM_ID {room_id}'}
-        return {'error': f'CANNOT DELETE ROOM_ID {room_id}'}
-    except HTTPException as e:
-        logger.error(e)
-        return {'error': f'ROOM_ID {room_id} COULD NOT BE DELETED'}
+        res = await services.delete_room(db_session, user_id, room_data.room_id, room_data.house_id)
+        if not res:
+            return {'error': f'CANNOT DELETE ROOM_ID {room_data.name}'}
+        return res
     
 @router.post('/add_new_device')
 async def add_new_device_post(request: Request, device_data: services.DeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
@@ -159,10 +151,9 @@ async def add_new_device_post(request: Request, device_data: services.DeviceMode
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
 
         res = await services.add_new_device(db_session, user_id, device_data)
-        if res:
-            return {'success': 'device added'}
-        else:
-             return {'error': 'device not added'}
+        if not res:
+            return {'error': 'device not added'}
+        return res        
     except HTTPException as e:
         logger.error(e)
 

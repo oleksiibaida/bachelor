@@ -94,13 +94,15 @@ function renderSignUpPage() {
                 renderPage('login')
             }
             const response_data = await response.json();
-            if (response_data['auth'] && response_data['token']) {
-                localStorage.setItem('token', response_data['token']);
-                appRouter();
-            } else {
-                alert('LOGIN FAILED');
+            if (response_data['error']) {
+                // TODO tell to change username or email
+                // alert(response_data['error']);
+                console.error(response_data.error.detail)
                 renderPage('login');
                 return;
+            } else {
+                localStorage.setItem('token', response_data['token']);
+                appRouter();
             }
         } catch (error) {
             console.error(error);
@@ -158,13 +160,14 @@ function renderLoginForm() {
                 return;
             }
             const response_data = await response.json();
-            if (response_data['auth'] && response_data['token']) {
+            if (response_data['token']) {
                 localStorage.setItem('token', response_data['token']);
                 // renderPage('main');
                 // renderMainPage();
                 appRouter();
             } else {
-                alert('LOGIN FAILED');
+                alert(response_data.error);
+                console.error(response_data.error)
                 renderPage('login');
                 return;
             }
@@ -522,12 +525,13 @@ async function renderMainPage(data) {
     }
 
     async function delete_house(house_id) {
-        const response = await fetch(`/delete_house/${house_id}`, {
+        const response = await fetch(`/delete_house`, {
             method: 'DELETE',
             headers: {
                 'auth': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({house_id})
         });
         if (!response.ok) { console.error(response.status); }
         else {
@@ -574,12 +578,13 @@ async function renderMainPage(data) {
 
     async function deleteRoom(room_id, house_id) {
         try {
-            const response = await fetch(`/delete_room/${house_id}/${room_id}`, {
+            const response = await fetch(`/delete_room`, {
                 method: 'DELETE',
                 headers: {
                     'auth': `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({room_id, house_id})
             });
             if (!response.ok) {
                 const errorData = await response.json();
@@ -659,10 +664,6 @@ async function renderMainPage(data) {
             appRouter();
         }
     }
-}
-
-function renderSettingsPage() {
-
 }
 
 appRouter();
