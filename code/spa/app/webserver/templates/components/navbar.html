@@ -6,7 +6,7 @@
     <div class="nav-links space-x-4">
         <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition duration-300">My Account</button>
         <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
-            onclick="my_devices()">My Devices</button>
+            onclick="window.location.href = '/my_device'">My Devices</button>
         <button class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition duration-300"
             onclick="logout()">Logout</button>
     </div>
@@ -17,7 +17,7 @@
         }
         async function my_devices() {
             try {
-                const response = await fetch('/my_devices',
+                const response = await fetch('/my_device',
                     {
                         method: 'GET',
                         headers: {
@@ -26,6 +26,9 @@
                         }
                     }
                 )
+                if(response.ok){
+                    window.location.href = '/my_device';
+                }
                 
             } catch (error) {
 

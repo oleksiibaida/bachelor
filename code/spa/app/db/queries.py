@@ -106,6 +106,25 @@ async def delete_house(db_session: AsyncSession, house_id):
         await db_session.rollback()
         raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
 
+async def get_house(db_session: AsyncSession, house_primary: int):
+    try:
+        return await db_session.get(HouseModel, house_primary)
+    except NoResultFound:
+        _logger.error(f'HOUSE_ID {house_primary} HOUSE NOT FOUND')
+        raise HTTPException(status_code=404, detail='NOT FOUND')
+    except IntegrityError as e:
+        _logger.error(f"IntegrityError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except Exception as e:
+        _logger.error(f"Exception: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+
 async def get_houses_on_user(db_session: AsyncSession, user_primary: int):
     try:
         stmt = (
@@ -140,8 +159,7 @@ async def get_houses_on_user(db_session: AsyncSession, user_primary: int):
     
 async def get_house_by_room(db_session: AsyncSession, room_id: int):
     try:
-        stmt = select(HouseModel.primary_key).join(RoomModel, RoomModel.house_id == HouseModel.primary_key).where(RoomModel.primary_key == room_id)
-        print(str(stmt))
+        stmt = select(HouseModel).join(RoomModel, RoomModel.house_id == HouseModel.primary_key).where(RoomModel.primary_key == room_id)
         res = await db_session.execute(stmt)
         return res.scalar_one_or_none()
     except NoResultFound as e:
@@ -163,7 +181,6 @@ async def get_house_by_room(db_session: AsyncSession, room_id: int):
 async def verify_house_owner(db_session: AsyncSession, user_primary: int, house_id: int):
     try:
         house = await db_session.get(HouseModel, house_id)
-        print(house.primary_key)
         if house:
             return house.user_id == user_primary
     except NoResultFound as e:
@@ -264,15 +281,125 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
         _logger.error(f"An unexpected error: {e}")
         raise HTTPException(status_code=500, detail="DATABASE ERROR")
     
-async def delete_device(db_session: AsyncSession, device_primary_key: int = None, device_id: str = None):
+
+async def get_device(db_session:AsyncSession, user_id: int, primary_key: int = None, dev_id: str = None, name: str = None):
+    """
+    Get Device data
+    :param db_session: AsyncSession to access DB
+    :param user_id: Owner of the Sensor
+    :param id: Optional; device.primary_key in DB
+    :param dev_id: Optional; device.dev_id (Factory ID)
+    :param name: OPtional Device Name
+    """
+    
+    if not primary_key and not dev_id and not name:
+        return None
+    stmt = select(DeviceModel)
+    if primary_key:
+        stmt = stmt.where(DeviceModel.primary_key == primary_key, DeviceModel.user_id == user_id)
+    if dev_id:
+        stmt = stmt.where(DeviceModel.dev_id == dev_id, DeviceModel.user_id == user_id)
+    if name:
+        stmt = stmt.where(DeviceModel.name == name, DeviceModel.user_id == user_id)
+    try:
+        res = await db_session.execute(stmt)
+        return res.scalar_one_or_none()
+    except NoResultFound:
+        return None
+    except IntegrityError as e:
+        await db_session.rollback()
+        _logger.error(f"IntegrityError: {e.orig}")
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        await db_session.rollback()
+        _logger.error(f"SQLAlchemyError: {e}")
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except Exception as e:
+        await db_session.rollback()
+        _logger.error(f"An unexpected error: {e}")
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+    
+async def get_devices_on_user(db_session: AsyncSession, user_primary: int):
+    try:
+        stmt = (
+            select(DeviceModel)
+            .options(
+                joinedload(DeviceModel.dev_rooms)
+                .joinedload(RoomDeviceModel.room)
+                .joinedload(RoomModel.devices)
+            )
+            .filter(DeviceModel.user_id == user_primary)
+        )        
+        
+        devices = await db_session.execute(stmt)
+        return devices.scalars().unique().all()
+    except NoResultFound:
+        _logger.error(f'U_ID {user_primary} HOUSE NOT FOUND')
+        raise HTTPException(status_code=404, detail='NOT FOUND')
+    except IntegrityError as e:
+        _logger.error(f"IntegrityError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except Exception as e:
+        _logger.error(f"Exception: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+    
+async def update_device(db_session: AsyncSession, user_id:int, new_device_data):
+    try:
+        # TODO also change room
+        if new_device_data.primary is None:
+            _logger.error("DEVICE_PRIMARY IS NOT PROVIDED")
+            raise HTTPException(status_code=400, detail="DEVICE_PRIMARY IS NOT PROVIDED")
+        if new_device_data.name is None and new_device_data.description is None:
+            _logger.error("NEW DATA IS NOT PROVIDED")
+            raise HTTPException(status_code=400, detail="NEW DATA IS NOT PROVIDED")
+        device = await db_session.get(DeviceModel, new_device_data.primary)
+        if device:
+            if device.user_id != user_id:
+                _logger.critical(f"UNAUTHORIZED ACCESS U_ID {user_id} ON DEVICE {device.primary_key}")
+                raise HTTPException(status_code=401, detail="User is not owner of this device")
+            if new_device_data.name:
+                device.name = new_device_data.name
+            if new_device_data.description:
+                device.description = new_device_data.description
+            await db_session.commit()
+        return device
+    except NoResultFound:
+        _logger.error(f'{new_device_data.primary} DEVICE NOT FOUND')
+        raise HTTPException(status_code=404, detail='NOT FOUND')
+    except IntegrityError as e:
+        _logger.error(f"IntegrityError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        _logger.error(f"Exception: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+    
+async def delete_device(db_session: AsyncSession, device_primary_key: int, device_id: str = None):
     try:
         if not device_id and not device_primary_key:
             _logger.error("EMPTY SET")
             raise HTTPException(status_code=400, detail="NO DEVICE DATA PROVIDED")
-        del_device = DeviceModel(primary_key = device_primary_key, dev_id = device_id)
-        await db_session.delete(del_device)
-        await db_session.commit()
-        return True
+        # del_device = DeviceModel(primary_key = device_primary_key, dev_id = device_id)
+        del_device = await db_session.get(DeviceModel, device_primary_key)
+        if del_device:
+            await db_session.delete(del_device)
+            await db_session.commit()
+            return True
+        else:
+            raise HTTPException(404, 'NOT FOUND')
     except NoResultFound as e:
         _logger.error(f"NoResultFound:{e}")
         raise HTTPException(404, 'NOT FOUND')
@@ -323,7 +450,7 @@ async def delete_room_device(db_session: AsyncSession, room_id: int, device_prim
             await db_session.delete(del_rd)
             await db_session.commit()
             return True
-        return False
+        raise HTTPException(status_code=422, detail="NOT FOUND")
     except IntegrityError as e:
         await db_session.rollback()
         _logger.error(f"IntegrityError: {e.orig}")
@@ -337,39 +464,3 @@ async def delete_room_device(db_session: AsyncSession, room_id: int, device_prim
         _logger.error(f"An unexpected error: {e}")
         raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
     
-async def get_device(db_session:AsyncSession, user_id: int, primary_key: int = None, dev_id: str = None, name: str = None):
-    """
-    Get Device data
-    :param db_session: AsyncSession to access DB
-    :param user_id: Owner of the Sensor
-    :param id: Optional; device.primary_key in DB
-    :param dev_id: Optional; device.dev_id (Factory ID)
-    :param name: OPtional Device Name
-    """
-    
-    if not primary_key and not dev_id and not name:
-        return None
-    stmt = select(DeviceModel)
-    if primary_key:
-        stmt = stmt.where(DeviceModel.primary_key == primary_key, DeviceModel.user_id == user_id)
-    if dev_id:
-        stmt = stmt.where(DeviceModel.dev_id == dev_id, DeviceModel.user_id == user_id)
-    if name:
-        stmt = stmt.where(DeviceModel.name == name, DeviceModel.user_id == user_id)
-    try:
-        res = await db_session.execute(stmt)
-        return res.scalars().first()
-    except NoResultFound:
-        return None
-    except IntegrityError as e:
-        await db_session.rollback()
-        _logger.error(f"IntegrityError: {e.orig}")
-        raise HTTPException(status_code=422, detail="NOT FOUND")
-    except SQLAlchemyError as e:
-        await db_session.rollback()
-        _logger.error(f"SQLAlchemyError: {e}")
-        raise HTTPException(status_code=500, detail="DATABASE ERROR")
-    except Exception as e:
-        await db_session.rollback()
-        _logger.error(f"An unexpected error: {e}")
-        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")

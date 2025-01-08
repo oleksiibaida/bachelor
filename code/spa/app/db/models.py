@@ -32,6 +32,7 @@ class RoomModel(Base):
     primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     name = Column(String(50), nullable=False)
     house_id = Column(Integer, ForeignKey('house.primary_key', ondelete='CASCADE'), nullable=False)
+    
     devices = relationship("RoomDeviceModel", back_populates="room", cascade="all, delete-orphan", lazy='selectin')
 
     __table_args__ = (UniqueConstraint('name', 'house_id'),)
@@ -45,7 +46,7 @@ class DeviceModel(Base):
     description = Column(String(250), nullable=True)
     dev_rooms = relationship("RoomDeviceModel", back_populates="device", cascade="all, delete-orphan", lazy='selectin')
 
-    __table_args__ = (UniqueConstraint('user_id', 'dev_id', 'name'),)
+    __table_args__ = (UniqueConstraint('user_id', 'dev_id'),)
 
 class RoomDeviceModel(Base):
     __tablename__ = 'room_device'

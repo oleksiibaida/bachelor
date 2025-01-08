@@ -36,7 +36,10 @@ async def get_token(request: Request):
 @router.get('/')
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
- 
+
+@router.get('/my_device')
+async def my_device_get(request: Request, response: Response, db_session: AsyncSession = Depends(get_session)):
+    return templates.TemplateResponse("my_device.html", {"request": request})
 #=====LOGIN=====#
 @router.post('/login', response_class=JSONResponse)
 async def login_post(request: Request, response: Response, user_data: dict, db_session: AsyncSession = Depends(get_session)):
@@ -44,7 +47,9 @@ async def login_post(request: Request, response: Response, user_data: dict, db_s
         username = user_data['username']
         password = user_data['password']
         auth = await services.auth_user(db_session=db_session, username=username, password=password)
-        if not auth['user_id']: return auth
+        if not 'user_id' in auth: 
+            logger.info(f"U_ID {auth['user_id']} LOGIN FAILED")
+            return auth
         logger.info(f"U_ID {auth['user_id']} LOGIN")
         token = services.create_jwt_token({"user_id":auth['user_id']})
         if token:
@@ -52,10 +57,10 @@ async def login_post(request: Request, response: Response, user_data: dict, db_s
         else:
             return {'error': 'Cannot create token'}
     except HTTPException as e:
-        logger.error(e)
+        logger.error(f'HTTP {e}')
         return {'error': e.detail}
     except Exception as e:
-        logger.error(e)
+        logger.error(f'UNEX {e}')
         return RedirectResponse("/")
 
 @router.get('/user')
@@ -157,16 +162,52 @@ async def add_new_device_post(request: Request, device_data: services.DeviceMode
     except HTTPException as e:
         logger.error(e)
 
-@router.delete('/delete_room_device')
+@router.post('/update_device')
+async def update_device(request: Request, device_data: services.DeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    user_id = services.verify_token(token)
+    if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+    try:
+        # TODO also change room
+        res = await queries.update_device(db_session, user_id, device_data)
+        if res:
+            return {'primary': res.primary_key, 'name': res.name, 'description': res.description}
+    except HTTPException as e:
+        logger.error(f'HTTPException:{e.status_code}.{e.detail}')
+        return {'error': e.detail}
+    except Exception as e:
+        logger.error(e)
+        return {'error': e}
+     
+
+@router.get('/get_devices')
+async def get_devices(request: Request, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    try:
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER UNAUTHORIZED")
+        device_list = await services.get_devices(db_session, user_id)
+        print(device_list)
+        return JSONResponse(device_list)
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}
+    except ValueError as e:
+        logger.error(e)
+        return {'error': e}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}
+
+@router.delete('/delete_device')
 async def del_room_device(request: Request, room_device: services.RoomDeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
-        res = await services.delete_room_device(db_session, user_id, room_device.room_id, room_device.device_id)
-        if res:
-            return {'success': 'Device deleted from room and database'}
-        else:
+        print("DEV DATA", room_device)
+        res = await services.delete_device(db_session, user_id, room_id=room_device.room_id, device_id=room_device.device_id)
+        print("RES:", res)
+        if not res:
             return {'error': 'Error on the server side'}
+        return res
     except Exception as e:
         logger.error(e)
-        return {'error': 'Error on the server side'}
+        return {'error': 'Unexpected Error on the server side'}

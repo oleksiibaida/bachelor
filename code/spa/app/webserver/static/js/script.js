@@ -39,8 +39,6 @@ async function renderPage(page, data = null) {
     switch (page) {
         case "main":
             renderMainPage(data);
-        case "settings":
-            renderSettingsPage(data);
             break;
         case "signup":
             renderSignUpPage();
@@ -119,6 +117,7 @@ function renderLoginForm() {
             <div>
             <label for="username" class="login-input-label">Username</label>
             <input type="text" id="username" name="username" class="login-input">
+            <p id="ERRORusername" class=""></p>
             </div>
             <div>
             <label for="password" class="login-input-label">Password</label>
@@ -160,7 +159,10 @@ function renderLoginForm() {
                 return;
             }
             const response_data = await response.json();
-            if (response_data['token']) {
+            if (response_data == null){
+                throw new Error('Response is Null');
+            }
+            if ('token' in response_data) {
                 localStorage.setItem('token', response_data['token']);
                 // renderPage('main');
                 // renderMainPage();
@@ -467,7 +469,6 @@ async function renderMainPage(data) {
         else {
             for (let i = 0; i < dev_list.length; i++) {
                 const device = dev_list[i];
-                console.info(device);
                 const device_element = document.createElement('div');
                 device_element.classList.add('device_element');
                 device_element.innerHTML = `
@@ -633,7 +634,7 @@ async function renderMainPage(data) {
 
     async function deleteDeviceRoom(room_id, device_id) {
         try {
-            const response = await fetch('/delete_room_device', {
+            const response = await fetch('/delete_device', {
                 method: 'DELETE',
                 headers: {
                     'auth': `Bearer ${localStorage.getItem('token')}`,
