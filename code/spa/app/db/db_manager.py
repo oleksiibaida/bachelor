@@ -59,7 +59,7 @@ class db:
     def test(self):
     
         # sql = 'PRAGMA table_info(device)'
-        sql = 'DROP TABLE room_device'
+        sql = 'DROP TABLE device'
         # sql = 'SELECT * FROM room_device rd LEFT JOIN device d ON rd.device_id = d.id'
         res = self.cursor.execute(sql)
         self.connection.commit()
@@ -70,7 +70,7 @@ class db:
 
 
 db = db()
-# db.test()
+db.test()
 # db.del_all_houses()
 print('====HOUSES====')
 hs = db.get_all_houses()

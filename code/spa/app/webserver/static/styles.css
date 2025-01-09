@@ -21,7 +21,7 @@ html, body {
 }
 
 .mn-createhouse{
-    @apply relative m-5 bg-stone-300 shadow-md rounded-md mt-2 w-64 border border-solid border-black
+    @apply relative m-5 bg-stone-300 shadow-md rounded-md mt-2 w-64 p-2 border border-solid border-black
 }
 
 .houseList {
