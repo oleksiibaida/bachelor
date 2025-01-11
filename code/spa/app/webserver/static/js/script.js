@@ -467,15 +467,47 @@ async function renderMainPage(data) {
                 for (let i = 0; i < dev_list.length; i++) {
                     const device = dev_list[i];
                     const device_element = document.createElement('div');
+                    device_element.id = `device${device.dev_id}`;
                     device_element.classList.add('device_element');
                     device_element.innerHTML = `
                     <div>
                         <h1>DEVICE_ID ${device.dev_id} NAME ${device.name}</h1>
-                        <h4>TEMP</h4>
-                        <h4>HUM</h4>
+                        <div id="deviceData${device.dev_id}" class="device_data">
+                            Waiting for data from device
+                        </div>
                     </div>
                     <button id="deleteDevice${device.dev_id}" class="cancel-sm-btn"> DELETE </button>
                     `;
+
+                    const ws = new WebSocket(`ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`);
+
+                    ws.onopen = () => {
+                        ws.send("WS OPEN");
+                    };
+
+                    ws.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+                        console.info(data);
+                        const parent_div = device_element.querySelector(`#deviceData${device.dev_id}`)
+                        for (const key in data) {
+                            if (data.hasOwnProperty(key)) {
+                                let dataField = device_element.querySelector(`#${key}${device.dev_id}`);
+                                if (!dataField) {
+                                    dataField = document.createElement('p');
+                                    dataField.id = `${key}${device.dev_id}`;
+                                    parent_div.appendChild(dataField);
+                                }
+                                dataField.innerHTML = `${key}: ${data[key]}`
+                            }
+                        }
+                        // document.getElementById(`devTemp${device.dev_id}`).textContent = `TEMP: ${data.id}`;
+                        // document.getElementById(`devHum${device.dev_id}`).textContent = `HUM: ${data.humidity}`;
+                        // document.getElementById(`ambient${device.dev_id}`).textContent = `AMBIENT: ${data.ambient}`;
+                    };
+
+                    ws.onclose = () => {
+                        console.error(`WebSocket for device ${device.dev_id} closed`);
+                    };
 
                     device_element.querySelector(`#deleteDevice${device.dev_id}`).addEventListener('click', async () => {
                         deleteDeviceRoom(room.id, device.dev_id);

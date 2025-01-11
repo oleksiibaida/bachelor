@@ -5,7 +5,9 @@ from app.db import queries
 import secrets
 import time
 import jwt
-from fastapi import HTTPException, status
+import json
+from app.mqtt.client import MQTTClient
+from fastapi import HTTPException, status, WebSocket
 from pydantic import BaseModel
 _logger = Config.logger_init()
 
@@ -33,6 +35,54 @@ class RoomDeviceModel(BaseModel):
     device_id: str
     room_id: int = None
 
+class WebsocketHandler:
+    active_connections = []  # Store active WebSocket connections with device_id
+
+    @classmethod
+    async def connect(cls, ws: WebSocket, device_id: str):
+        """Add a new WebSocket connection."""
+        new_connection = {
+            'device_id': device_id,
+            'websocket': ws
+        }
+        cls.active_connections.append(new_connection)
+        await ws.accept()
+        _logger.info(f"CONNECTED WEBSOCKET DEVICE {device_id}")
+
+        try:
+            while True:
+                await ws.receive_text()
+        except Exception as e:
+            _logger.warning(e)
+        finally:
+            await cls.disconnect(ws)
+    
+    @classmethod
+    async def disconnect(cls, ws: WebSocket):
+        """Remove a WebSocket connection."""
+        cls.active_connections = [
+            con for con in cls.active_connections if con['websocket'] != ws
+        ]
+        _logger.info("DISCONNECTED WEBSOCKET")
+
+    @classmethod
+    async def send_data(cls, device_id: str, data):
+        for con in cls.active_connections:
+            if con['device_id'] == device_id:
+                try:
+                    await con['websocket'].send_json(data)
+                    _logger.debug(f"SENT TO WEBSOCKET DEV_ID {device_id}: {data}")
+                except Exception as e:
+                    _logger.error(f"ERROR SEND TO WEBSOCKET DEV_ID {device_id}: {e}")
+                    await cls.disconnect(con['websocket'])
+                # break
+
+    @classmethod
+    def test(cls):
+        
+        print(cls.active_connections)
+
+
 def create_jwt_token(data: dict):
     """
     Creates jwt token based on data
@@ -59,7 +109,15 @@ def verify_token(token: str):
         _logger.exception(f"{e}") # Use logger.exception for full traceback
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Server error")
 
-
+async def mqtt_handler():
+    async for message in MQTTClient.subscribe(Config.MQTT_SUBSCRIBE_TOPICS_LIST):
+        _logger.info(f"PROCESSING {message}")    
+        device_id = 'id1'
+        msg=message.payload.decode()
+        # msg=json.dumps(msg)
+        print(f'DECODE: {msg}')
+        # msg = {'id':'IIIDDD', 'humidity': 'HUMMMMM'}
+        await WebsocketHandler.send_data(device_id, json.loads(msg))
 
 async def auth_user(db_session, username: str, password: str):
     """

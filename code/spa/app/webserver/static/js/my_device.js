@@ -135,12 +135,43 @@ async function renderMainPage() {
                     <h1>DEV_ID: ${device.dev_id}</h1>
                     <p id="device_desc${device.dev_id}" class="flex mx-2">DESC: ${device.description ? device.description : ""}</p>
                     <p>ROOM: ${room_name}</p>
+                    <div id="deviceData${device.dev_id}">Waiting for data from device...</div>
                 </div>
                 <div class="grid place-items-center m-1 p-2">
                     <button id="BTNeditDevice${device.dev_id}" class="add_room-btn my-1">Edit</button>
                     <button id="BTNdeleteDevice${device.dev_id}" class="cancel-sm-btn my-1">Delete</button>
                 </div>
                 `;
+
+                const ws = new WebSocket(`ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`);
+
+                ws.onopen = () => {
+                    ws.send("WS OPEN");
+                };
+
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    console.info(data);
+                    const parent_div = device_element.querySelector(`#deviceData${device.dev_id}`)
+                    for (const key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            let dataField = device_element.querySelector(`#${key}${device.dev_id}`);
+                            if (!dataField) {
+                                dataField = document.createElement('p');
+                                dataField.id = `${key}${device.dev_id}`;
+                                parent_div.appendChild(dataField);
+                            }
+                            dataField.innerHTML = `${key}: ${data[key]}`
+                        }
+                    }
+                    // document.getElementById(`devTemp${device.dev_id}`).textContent = `TEMP: ${data.id}`;
+                    // document.getElementById(`devHum${device.dev_id}`).textContent = `HUM: ${data.humidity}`;
+                    // document.getElementById(`ambient${device.dev_id}`).textContent = `AMBIENT: ${data.ambient}`;
+                };
+
+                ws.onclose = () => {
+                    console.error(`WebSocket for device ${device.dev_id} closed`);
+                };
 
                 const BTNeditDevice = device_element.querySelector(`#BTNeditDevice${device.dev_id}`);
 

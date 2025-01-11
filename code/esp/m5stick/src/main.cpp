@@ -206,8 +206,13 @@ void bme_sendmqtt()
     Serial.println("Failed to perform reading!");
     return;
   }
-  char json[64]; // Allocate a buffer for the JSON string
-  snprintf(json, sizeof(json), "{\"id\":\"BME\", \"temperature\":%.1f,\"humidity\":%.2f,\"pressure\":%.2f}", bme_sensor.temperature, bme_sensor.humidity, bme_sensor.gas_resistance);
+  char json[128]; // Allocate a buffer for the JSON string
+  snprintf(
+      json,
+      sizeof(json),
+      "{\"id\":\"BME\", \"temperature\":%.1f,\"humidity\":%.2f,\"pressure\":%.2f}",
+      bme_sensor.temperature, bme_sensor.humidity, bme_sensor.gas_resistance);
+
   if (mqttClient.connected())
   {
     mqttClient.publish(PUBLISH_TOPIC, json);
@@ -346,7 +351,10 @@ void vcnl_sendmqtt()
   float ambient = vcnl4040.getLux();
   float white_light = vcnl4040.getWhiteLight();
   char json[128]; // Allocate a buffer for the JSON string
-  snprintf(json, sizeof(json), "{\"id\":\"vcnl\",\"proximity\":%.1f,\"ambient\":%.1f,\"white\":%.1f}", prox, ambient, white_light);
+  snprintf(json,
+           sizeof(json),
+           "{\"id\":\"vcnl\",\"proximity\":%.1f,\"ambient\":%.1f,\"white\":%.1f}",
+           prox, ambient, white_light);
   if (mqttClient.connected())
   {
     mqttClient.publish(PUBLISH_TOPIC, json);

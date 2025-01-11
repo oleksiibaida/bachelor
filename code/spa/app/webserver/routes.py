@@ -1,12 +1,9 @@
 import os
 import asyncio
-import jwt
 from app.config import Config
-from fastapi import APIRouter, Request, Response, Form, Depends, status, Path, Cookie, HTTPException, Query
+from fastapi import APIRouter, Request, Response, Form, Depends, status, Path, Cookie, HTTPException, Query, WebSocket, WebSocketDisconnect, WebSocketException
 from fastapi.responses import JSONResponse, RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.security import OAuth2AuthorizationCodeBearer
-from .forms import LoginForm
 from . import services
 # from .services import auth_user, logout_user, validate_session_user, create_new_house
 from app.db import get_session, queries
@@ -20,9 +17,9 @@ templates_path = os.path.join(os.path.dirname(__file__), "templates")
 templates = Jinja2Templates(directory=templates_path)
 
 @router.on_event("startup")
-async def startup():
-    logger.info("MQTT SUBSCRIBE")
-    # asyncio.create_task(MQTTClient.subscribe(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
+def startup():
+    logger.info(f"Startup called in process: {os.getpid()}")
+    asyncio.create_task(services.mqtt_handler())
 
 async def get_token(request: Request):
     # print(f"HEADE: {request.headers}")
@@ -211,3 +208,26 @@ async def del_room_device(request: Request, room_device: services.RoomDeviceMode
     except Exception as e:
         logger.error(e)
         return {'error': 'Unexpected Error on the server side'}
+
+@router.websocket('/mqtt/device/{device_id}')
+async def websocket_mqtt(ws: WebSocket, device_id: str = Path(...)):
+    print("WEBSOCKET")
+    print(device_id)
+    await services.WebsocketHandler.connect(ws, device_id)
+    counter = 10
+    # try:
+        
+    #     while True:
+            
+    # except WebSocketDisconnect:
+        
+    #     print(f"WebSocket connection for device {device_id} closed.")
+
+
+
+# Simulate sending MQTT data to WebSocket clients
+            # Replace this with actual MQTT subscription forwarding
+            # await asyncio.sleep(1)
+            # counter += 1
+            # data = {"temp": 22.5, "hum": counter}  # Example data
+            # await ws.send_json(data)
