@@ -112,10 +112,59 @@
 \pagebreak
 
 \section{Einleitung}
+\par In einer Welt, die zunehmend von vernetzten Geräten und dem Internet der Dinge geprägt ist, wird die Entwicklung effizienter und benutzerfreundlicher Systeme zur Steuerung und Überwachung von Gebäuden immer relevanter. Im Jahr 2024 wurde in Deutschland die Anzahl von über 19 Millionen Haushalten, die ein oder mehrere smarte Geräte besaßen, verzeichnet. Es wird prognostiziert, dass sich diese Zahl innerhalb der nächsten drei Jahre verdoppeln wird \cite{statita_smhomes}.
+\par Moderne Steuerungs- und Sicherheitssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Laut Günther Ohland, Vorstandsmitglied des Branchenverbands "Smarthome Initiative Deutschland", ermöglichen diese Systeme eine Reduktion des Heizenergieverbrauchs um 20 bis 30 Prozent \cite{spiegel_heizung}. Die Kosten für die smarte Technik rechnen sich in der Regel nach zwei Jahren. Die Systeme übernehmen ein Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Reglung der Raumtemperatur oder das Aufräumen des Hauses etc. Der Aufgabenbereich der Systeme ist dabei nur nach den Bedürfnissen der Benutzerinnen und Benutzer abgegrenzt.
+\par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Das Ziel dieser Arbeit ist die Erstellung einer Schnittstelle, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht und den Benutzer über gefährliche Vorgänge in seinem Haus informiert. 
+\par Im Rahmen der Entwicklung dieses Systems wurden die aktuellen Technologien zur Erstellung eines Webinterfaces und zur Kommunikation zwischen den Geräten eingesetzt. \textbf{TODO Kurz erklären was in Kapitel 2,3,4,5 ... erklärt wird}
 
 \newpage
+\section{Grundlagen \& Theorie}
 
+  \subsection{Hardware}
+    \subsubsection{Arduino}
+    \subsubsection{ESP8266}
+    \subsubsection{Raspberry Pi}
+    \subsubsection{M5Stick}
+    \subsubsection{ESP32}
 
+  \subsection{Kommunikationsprotokolle}
+  \subsubsection{HTTP}
+  \subsubsection{MQTT}
+    
+  \subsection{Software}
+    \subsubsection{Asyncio}
+    \subsubsection{FastAPI}
+    \subsubsection{SQLAlchemy}
+    \subsubsection{Uvicorn}
+    \subsubsection{HTML \& TailwindCSS}
+    \subsubsection{Javascript}
+    \subsubsection{WebSocket}
+    \subsubsection{Linux-Pakete für Raspberry Pi}
+
+\newpage
+\section{Konzeption das Systems}
+\par Übersicht über das Gesamtsystem, Systearchitektur und DAtenflus, Anfoderungen und Ziele
+
+\newpage
+\section{Implementierung und praktische Umsetzung}
+\subsection{Einrichtung der Hardwarekomponenten}
+  \subsubsection{Arduino}
+  \subsubsection{ESP8266}
+  \subsubsection{Raspberry Pi}
+  \subsubsection{M5Stick}
+  \subsubsection{ESP32}
+
+\subsection{Softwareentwicklung}
+  \subsubsection{Webserver}
+  \subsection{Datenbank}
+  \subsection{Frontend}
+  \subsection{Integration der Komponenten}
+  \par MQtt client, erhalten Daten von Broker etc
+
+\newpage
+\section{Ergebnisse und Diskussion}
+
+\newpage
 \section{Quellen}
 \begin{thebibliography}{20}
   \bibitem{pa1}
@@ -127,6 +176,12 @@
   O. Baida, Projektordner für PA2: \url{https://github.com/oleksiibaida/PA2.git}
   \bibitem{video}
   O. Baida, Demo-Video: \url{https://youtu.be/-Ul_ye1KLy0}
+  \bibitem{statita_smhomes}
+  Statista, \textit{„Smart Home - Anzahl der Haushalte in Deutschland 2028“}, Zugegriffen: 13. Januar 2025. [Online]. Verfügbar unter \url{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}
+  \bibitem{spiegel_heizung}
+  J. Breithut, \textit{„Strom und Heizung: Wann ein Smart Home wirklich beim Energiesparen hilft“}, Der Spiegel, 17. Juli 2022. Zugegriffen: 13. Januar 2025. [Online]. Verfügbar unter: \url{https://www.spiegel.de/netzwelt/gadgets/strom-und-heizung-wann-ein-smart-home-wirklich-beim-energiesparen-hilft-a-ffb4b710-0cec-40e4-a2c4-6c5d4a3feb92}
+
+
   \par \textbf{Links zur verwendeten Hardware:}
   \bibitem{arduino}
   Arduino.cc, \textit{Arduino UNO}, \url{https://docs.arduino.cc/hardware/uno-rev3/}
