@@ -119,13 +119,14 @@
 
 \newpage
 \section{Grundlagen \& Theorie}
-
+\par In diesem Abschnitt erfolgt die detaillierte Darstellung der technischen Informationen zu den verwendeten Komponenten und Technologien. 
   \subsection{Hardware}
     \subsubsection{Arduino}
     \subsubsection{ESP8266}
     \subsubsection{Raspberry Pi}
-    \subsubsection{M5Stick}
     \subsubsection{ESP32}
+    \subsubsection{M5Stick}
+    
 
   \subsection{Kommunikationsprotokolle}
   \subsubsection{HTTP}
@@ -143,8 +144,32 @@
 
 \newpage
 \section{Konzeption das Systems}
-\par Übersicht über das Gesamtsystem, Systearchitektur und DAtenflus, Anfoderungen und Ziele
+\par Im Rahmen dieses Projektes wurde ein System entwickelt, welches die Funktionalitäten eines Kontroll- und Verwaltungssystems mit denen eines IoT-Systems vereint. Die Integration von Sensordaten und Benutzerinteraktionen stellt einen wesentlichen Aspekt des Systems dar. Die Realisierung erfolgt durch die Kombination verschiedener Technologien und Teilsysteme, darunter eine Webanwendung auf FastAPI, eine MQTT-Kommunikationsschicht und verschiedene Aktoren und Sensoren, die auf Arduino- oder ESP-Module basieren.
 
+\subsection{Komponenten des Systems}
+\par Das entwickelte System basiert auf einer modularen Architektur, die mehrere Komponenten integriert. Jede dieser Komponenten erfüllt eine spezifische Rolle im Gesamtsystem: 
+\begin{itemize} 
+  \item \textbf{Raspberry Pi:} Der zentrale Server, der das lokale WLAN-Netzwerk bereitstellt, den MQTT-Broker hostet und die Webanwendung ausführt. 
+  \item \textbf{Arduino:} Ausgestattet mit mehreren Sensoren, die Gefahren wie Feuer und Gas erkennen und den Zugang zum Haus sichern. Entsprechende Meldungen werden an den Server gesendet.
+  \item \textbf{M5Stick:} Angeschlossen an die Temperatur- und Lichtsensoren und sendet die aufgezeichneten Daten auf den Server. 
+  \item \textbf{ESP32:} TTTOOOOODDDDOOOO 
+  \item \textbf{Webserver:} Eine auf FastAPI basierende RESTful API, die Benutzern den Zugriff auf das System und die Steuerung von Geräten ermöglicht. 
+  \item \textbf{Datenbank:} Eine lokale Datenbank zur Speicherung von Benutzerinformationen und Gerätekonfigurationen.
+  \item \textbf{Web-Anwendung:} Eine browserbasierte Benutzeroberfläche, die den Benutzern eine intuitive Steuerung und Visualisierung der Daten ermöglicht. 
+\end{itemize}
+
+\subsection{Architektur und Datenfluss}
+\par Der Raspberry Pi dient als zentraler Server des Systems. Der Minicomputer stellt ein WLAN-Netzwerk zur Verfügung und hostet den Webserver mit der Datenbank sowie den MQTT-Broker. Alle Benutzerinteraktionen, Sensordaten, Datenflüsse und Datenverarbeitungen finden auf dem Server statt. Somit ist das System stark zentralisiert. Das System ist somit stark zentralisiert und arbeitet nur lokal. Das bedeutet, dass sich alle Benutzer in einem lokalen Netzwerk mit dem Raspberry Pi befinden müssen. 
+\par Die Geräte verbinden sich mit dem WLAN, das vom Raspberry Pi zur Verfügung gestellt wird. Die Sensoren senden ihre Daten an den MQTT-Broker, der auf dem Raspberry Pi läuft. Die Aktoren abonnieren die Command-Topics mit der entsprechenden "Geräte-ID".
+\par Im Kern des Systems befindet sich ein Webserver, der auf dem Raspberry Pi ausgeführt wird. Dieser Webserver stellt eine RESTful-API zur Verfügung. Für den Zugriff zu der API wurde eine Webseite aufgebaut. Die API bietet folgende Funktionen an:
+\begin{itemize}
+  \item Authentifizierung und Autorisierung der Benutzer
+  \item Verwaltung der Gerätekonfigurationen und Benutzerprofile
+  \item Bereitstellung von Endpunkten zur Abfrage und Steuerung von IoT-Geräten
+  \item Bidirektionale Kommunikation mit den IoT-Geräten
+\end{itemize}
+\par Die Benutzerdaten und Konfigurationen werden in der lokalen Datenbank auf dem Server gespeichert. 
+\par 
 \newpage
 \section{Implementierung und praktische Umsetzung}
 \subsection{Einrichtung der Hardwarekomponenten}
