@@ -1,12 +1,14 @@
 #include <params.h>
 #include <PubSubClient.h>
 #include <Adafruit_VCNL4040.h>
-
+#include <ArduinoJson.h>
+#define DEVICE_ID "m5bmevcnl"
 // Functions
 void m5_setup();
 void wifi_connect();
 void mqtt_connect();
-void set_subscribe_topic();
+void send_mqtt_data();
+void set_topics();
 void bme_setup();
 void bme_displaydata();
 void bme_sendmqtt();
@@ -14,7 +16,7 @@ void vcnl_setup();
 void vcnl_displaydata();
 void vcnl_sendmqtt();
 void i2c_scan(int kanal);
-// wifi
+// wifi Raspberry Pi
 const char *WIFI_SSID = "RaspEsp";
 const char *WIFI_PASSWORD = "mqtt1234";
 // MQTT
@@ -23,9 +25,7 @@ const int MQTT_PORT = 1883;
 const char *CLIENT_ID = "m5";
 const char *TOPIC_COMMAND = "command";
 char *SUBSCRIBE_TOPIC;
-const char *PUBLISH_TOPIC = "data/m5";
-const char *TOPIC_HUM = "data/m5/hum";
-const char *TOPIC_PRES = "data/m5/pres";
+char *PUBLISH_TOPIC;
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 // i2c
@@ -55,8 +55,9 @@ void loop()
   delay(500);
   bme_displaydata();
   vcnl_displaydata();
-  bme_sendmqtt();
-  vcnl_sendmqtt();
+  send_mqtt_data();
+  // bme_sendmqtt();
+  // vcnl_sendmqtt();
   // delay(1000);
 }
 
@@ -108,7 +109,7 @@ void callback(char *topic, byte *payload, unsigned int length)
 
 void mqtt_connect()
 {
-  set_subscribe_topic();
+  set_topics();
   mqttClient.setServer(WiFi.gatewayIP(), MQTT_PORT);
   mqttClient.setCallback(callback);
   // Loop bis verbunden
@@ -135,20 +136,66 @@ void mqtt_connect()
   }
 }
 
-void set_subscribe_topic()
+void set_topics()
 {
-  SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(CLIENT_ID) + 2);
+  SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(DEVICE_ID) + 2);
+  // PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
+  PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
   if (SUBSCRIBE_TOPIC == NULL)
   {
     // Serial.print("Konnte nicht abonnieren. Default topic");
-    SUBSCRIBE_TOPIC = "command/#";
+    // SUBSCRIBE_TOPIC = "command/m5bmevcnl#";
   }
   else
   {
     strcpy(SUBSCRIBE_TOPIC, TOPIC_COMMAND);
     strcat(SUBSCRIBE_TOPIC, "/");
-    strcat(SUBSCRIBE_TOPIC, CLIENT_ID);
+    strcat(SUBSCRIBE_TOPIC, DEVICE_ID);
+
+    strcpy(PUBLISH_TOPIC, "data");
+    strcat(PUBLISH_TOPIC, "/");
+    strcat(PUBLISH_TOPIC, DEVICE_ID);
   }
+}
+
+void send_mqtt_data()
+{
+  if (!bme_sensor.performReading())
+  {
+    Serial.println("Failed to perform reading!");
+    return;
+  }
+
+  char json[256]; // Allocate a buffer for the JSON string
+  JsonDocument sensor_data;
+  // Sensor data
+  // BME
+  float temperature = round(bme_sensor.temperature * 10) / 10;
+  float humidity = round(bme_sensor.humidity);
+  float pressure = bme_sensor.pressure;
+  float gas_resistance = bme_sensor.gas_resistance;
+  // VCNL
+  float proximity = vcnl4040.getProximity();
+  float ambient = vcnl4040.getLux();
+  float white_light = vcnl4040.getWhiteLight();
+
+  sensor_data["temperature"] = temperature;
+  sensor_data["humidity"] = humidity;
+  sensor_data["pressure"] = pressure;
+  sensor_data["gas_resistance"] = gas_resistance;
+  sensor_data["proximity"] = proximity;
+  sensor_data["ambient"] = ambient;
+  sensor_data["white_light"] = white_light;
+  serializeJson(sensor_data, json, sizeof(json));
+
+  if (mqttClient.connected())
+  {
+    mqttClient.publish(PUBLISH_TOPIC, json);
+    Serial.println("\nMQTT SENT:");
+  }
+  else
+    Serial.println("\nNO MQTT SENT:");
+  Serial.print(json);
 }
 
 /*===BME===*/
@@ -206,12 +253,13 @@ void bme_sendmqtt()
     Serial.println("Failed to perform reading!");
     return;
   }
+
   char json[128]; // Allocate a buffer for the JSON string
   snprintf(
       json,
       sizeof(json),
       "{\"id\":\"BME\", \"temperature\":%.1f,\"humidity\":%.2f,\"pressure\":%.2f}",
-      bme_sensor.temperature, bme_sensor.humidity, bme_sensor.gas_resistance);
+      bme_sensor.temperature, bme_sensor.humidity, bme_sensor.pressure / 100);
 
   if (mqttClient.connected())
   {
