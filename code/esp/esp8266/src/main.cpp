@@ -1,10 +1,35 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <ESPAsyncWebServer.h>
+#include <EEPROM.h>
 
-// Hotspot ist Raspberry PI
-const char WIFI_SSID[] = "RaspEsp";
-const char WIFI_PASSWORD[] = "mqtt1234";
-const char MQTT_BROKER_ADRRESS[] = "192.144.1.1"; // IP von Raspberry
+// Access Point (AP) konfigurieren
+const char AP_SSID[] = "ESP8266";
+const char AP_PASSWORD[] = "setupesp";
+IPAddress ap_ip(10, 0, 0, 1);
+IPAddress ap_gateway(10, 0, 0, 1);
+IPAddress ap_subnet(255, 255, 255, 0);
+AsyncWebServer server(80);
+// maximale Laenge fuer WLAN-Zugangsdaten
+const uint8_t MAX_SSID_LENGTH = 32;
+const uint8_t MAX_PASSWORD_LENGTH = 32;
+const uint8_t wifi_repeat = 10; // Anzahl der Versuche bis WLAN-Verbindung abgebrochen wird
+const String html_page = R"rawliteral(
+    <html>
+    <body>
+      <h2>Wi-Fi Configuration</h2>
+      <form action="/save" method="POST">
+        SSID:<br>
+        <input type="text" name="ssid" required><br>
+        Password:<br>
+        <input type="password" name="password" required><br><br>
+        <input type="submit" value="Submit">
+      </form>
+    </body>
+    </html>
+  )rawliteral";
+
+const char MQTT_BROKER_ADRRESS[] = "192.144.1.1"; // IP von MQTT-Broker
 const int MQTT_PORT = 1883;
 const int buss_serial = 50; // Buffer Groesse fuer UAR-Verbindung
 const char *CLIENT_ID = "DT04";
@@ -18,6 +43,16 @@ unsigned long lastMsg = 0;
 #define MSG_BUFFER_SIZE (50)
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
+
+void clear_eeprom()
+{
+  EEPROM.begin(128);
+  for (int i = 0; i < 128; i++)
+  {
+    EEPROM.write(i, 0xFF);
+  }
+  EEPROM.commit();
+}
 
 void setup_subscribe()
 {
@@ -35,34 +70,69 @@ void setup_subscribe()
   }
 }
 
-void connect_wifi()
+boolean connect_wifi(char *ssid, char *password)
 {
   delay(10);
-  // We start by connecting to a WiFi network
-  // Serial.println();
-  // Serial.print("Connecting to ");
-  // Serial.println(WIFI_SSID);
 
   WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.begin(ssid, password);
 
-  while (WiFi.status() != WL_CONNECTED)
+  for (uint8_t i = 0; i < wifi_repeat; i++)
   {
-    delay(500);
-    // Serial.print(".");
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      Serial.print("\nCONNECTED WIFI");
+      Serial.print(WiFi.localIP());
+      return true;
+    }
+    delay(1000);
   }
+  return false;
+}
 
-  // Serial.println("");
-  // Serial.println("WiFi connected");
-  // Serial.println("IP address: ");
-  // Serial.println(WiFi.localIP());
+void setup_ap()
+{
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(AP_SSID, AP_PASSWORD);
+  WiFi.softAPConfig(ap_ip, ap_gateway, ap_subnet);
+
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/html", html_page); });
+
+  server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request)
+            {
+              // get input data
+              String ssid = request->getParam("ssid", true)->value();
+              String password = request->getParam("password", true)->value();
+              if (ssid.length() > MAX_SSID_LENGTH - 1 || password.length() > MAX_PASSWORD_LENGTH - 1)
+              {
+                return;
+              }
+              Serial.print("\nGOT WIFI DATA");
+              Serial.print(ssid);
+              Serial.print(password);
+              // String in char[]
+              char new_ssid[MAX_SSID_LENGTH] = {0};
+              strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
+              char new_password[MAX_PASSWORD_LENGTH] = {0};
+              strncpy(new_password, password.c_str(), MAX_PASSWORD_LENGTH - 1);
+
+              // in EEPROM speichern
+              EEPROM.begin(128);
+              // TODO clear EEPROM
+              EEPROM.put(0, new_ssid);
+              EEPROM.put(32, new_password);
+              EEPROM.commit();
+              EEPROM.end();
+
+              request->send(200, "text/html", "WiFi saved. Rebooting...");
+              ESP.restart(); });
+
+  server.begin();
 }
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  // Serial.print("Nacricht erhalten. Topic: ");
-  // Serial.print(topic);
-  // Serial.print(" Text: ");
   String id = String(topic).substring(String(topic).indexOf('/') + 1);
   if (id == CLIENT_ID)
   {
@@ -161,18 +231,48 @@ void readSerialData()
 void setup()
 {
   Serial.begin(9600);
+  // turn on LED while setting up
+  pinMode(1, OUTPUT);
+  digitalWrite(1, LOW);
   setup_subscribe();
-  connect_wifi();
-  mqttClient.setServer(WiFi.gatewayIP(), MQTT_PORT);
-  mqttClient.setCallback(callback);
-  connect_mqtt();
+  // clear_eeprom();
+  // GET WiFi Daten aus EEPROM
+  EEPROM.begin(128);
+  char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+  char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+  EEPROM.get(0, eeprom_ssid);
+  EEPROM.get(32, eeprom_password);
+  EEPROM.end();
+  Serial.print("\nREAD FROM EEPROM");
+  Serial.print(eeprom_ssid);
+  Serial.print(eeprom_password);
+  // Daten gefunden
+  if (strlen(eeprom_ssid) > 0 && strlen(eeprom_password) > 0)
+  {
+    if (connect_wifi(eeprom_ssid, eeprom_password))
+    {
+      mqttClient.setServer(WiFi.gatewayIP(), MQTT_PORT);
+      mqttClient.setCallback(callback);
+      connect_mqtt();
+      digitalWrite(1, HIGH);
+    }
+    else
+    {
+      setup_ap();
+    }
+  }
+  else
+  { // keine WLAN-DAten gefunden
+    setup_ap();
+    // digitalWrite(2, LOW);
+  }
 }
 
 void loop()
 {
   if (WiFi.status() != WL_CONNECTED)
   {
-    connect_wifi();
+    // connect_wifi();
   }
   if (!mqttClient.connected())
   {

@@ -2,10 +2,14 @@
 #include <PubSubClient.h>
 #include <Adafruit_VCNL4040.h>
 #include <ArduinoJson.h>
+#include <ESPAsyncWebServer.h>
+#include <EEPROM.h>
 #define DEVICE_ID "m5bmevcnl"
 // Functions
 void m5_setup();
-void wifi_connect();
+bool wifi_connect(char *ssid, char *password);
+void setup_ap();
+bool is_valid_string(char *data, int max_length);
 void mqtt_connect();
 void send_mqtt_data();
 void set_topics();
@@ -16,11 +20,34 @@ void vcnl_setup();
 void vcnl_displaydata();
 void vcnl_sendmqtt();
 void i2c_scan(int kanal);
-// wifi Raspberry Pi
-const char *WIFI_SSID = "RaspEsp";
-const char *WIFI_PASSWORD = "mqtt1234";
+
+// Access Point (AP) konfigurieren
+const char AP_SSID[] = "M5Stick";
+const char AP_PASSWORD[] = "setupm5stick";
+IPAddress ap_ip(10, 0, 0, 1);
+IPAddress ap_gateway(10, 0, 0, 1);
+IPAddress ap_subnet(255, 255, 255, 0);
+AsyncWebServer server(80);
+// maximale Laenge fuer WLAN-Zugangsdaten
+const uint8_t MAX_SSID_LENGTH = 32;
+const uint8_t MAX_PASSWORD_LENGTH = 32;
+const uint8_t wifi_repeat = 10; // Anzahl der Versuche bis WLAN-Verbindung abgebrochen wird
+const String html_page = R"rawliteral(
+    <html>
+    <body>
+      <h2>Wi-Fi Configuration</h2>
+      <form action="/save" method="POST">
+        SSID:<br>
+        <input type="text" name="ssid" required><br>
+        Password:<br>
+        <input type="password" name="password" required><br><br>
+        <input type="submit" value="Submit">
+      </form>
+    </body>
+    </html>
+  )rawliteral";
 // MQTT
-const char MQTT_BROKER_ADRRESS[] = "192.168.1.10"; // IP von Raspberry
+const char MQTT_BROKER_ADRRESS[] = "192.168.1.10"; // IP von MQTT-BROKER
 const int MQTT_PORT = 1883;
 const char *CLIENT_ID = "m5";
 const char *TOPIC_COMMAND = "command";
@@ -35,59 +62,7 @@ Adafruit_BME680 bme_sensor;
 // VCNL4040
 Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
 
-void setup()
-{
-  Serial.begin(115200);
-  Serial.println("Starting M5Stick");
-  Wire.begin();
-  m5_setup();
-  wifi_connect();
-  mqtt_connect();
-  vcnl_setup();
-  bme_setup();
-  i2cScan.begin(SDA2, SCL2, 400000);
-}
-
-void loop()
-{
-  // i2c_scan(1);
-
-  delay(500);
-  bme_displaydata();
-  vcnl_displaydata();
-  send_mqtt_data();
-  // bme_sendmqtt();
-  // vcnl_sendmqtt();
-  // delay(1000);
-}
-
-void m5_setup()
-{
-  M5.begin();
-  M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Lcd.setRotation(1);
-  M5.Lcd.setTextSize(2);
-  M5.Lcd.setCursor(0, 0);
-}
-
-void wifi_connect()
-{
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    M5.Lcd.setCursor(X_OFFSET, 0);
-    M5.Lcd.println("CONNECTING WIFI");
-    delay(500);
-  }
-  Serial.println(WiFi.localIP());
-  M5.Lcd.fillRect(0, 0, M5.Lcd.width(), 20, TFT_BLACK);
-  M5.Lcd.setCursor(X_OFFSET, 0);
-  M5.Lcd.println("WIFI OK");
-}
-
-/*===MQTT===*/
+/*Wird beim Empfang der MQTT-Nachricht aufgerufen*/
 void callback(char *topic, byte *payload, unsigned int length)
 {
   // Serial.print("Nacricht erhalten. Topic: ");
@@ -107,6 +82,183 @@ void callback(char *topic, byte *payload, unsigned int length)
   }
 }
 
+void setup()
+{
+  Serial.begin(115200);
+  Serial.println("START");
+  Wire.begin();
+  m5_setup();
+  Serial.println("CHECK");
+  // clear_eeprom();
+  //
+  // GET WiFi Daten aus EEPROM
+  EEPROM.begin(128);
+
+  char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+  char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+  EEPROM.get(0, eeprom_ssid);
+  EEPROM.get(32, eeprom_password);
+  EEPROM.end();
+  Serial.print("\nREAD FROM EEPROM");
+  for (int i = 0; i < 128; i++)
+  {
+    byte value = EEPROM.read(i); // Read each byte
+    Serial.print(value, HEX);    // Print in hexadecimal format
+    Serial.print(" ");
+    if ((i + 1) % 16 == 0)
+    { // Format: new line every 16 bytes
+      Serial.println();
+    }
+  }
+  Serial.print(eeprom_ssid);
+  Serial.print(eeprom_password);
+  // Daten gefunden
+  if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
+  {
+    Serial.println("STRING VALID");
+    if (wifi_connect(eeprom_ssid, eeprom_password))
+    {
+      i2cScan.begin(SDA2, SCL2, 400000);
+      mqtt_connect();
+    }
+    else
+    {
+      setup_ap();
+    }
+    vcnl_setup();
+    bme_setup();
+  }
+  else
+  { // keine WLAN-DAten gefunden
+    setup_ap();
+  }
+}
+
+void loop()
+{
+  // i2c_scan(1);
+
+  delay(500);
+  Serial.println("LOOP");
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    setup_ap();
+    // Reconnect to WiFi with credentials from EEPROM
+    EEPROM.begin(128);
+    char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+    char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+    EEPROM.get(0, eeprom_ssid);
+    EEPROM.get(32, eeprom_password);
+    EEPROM.end();
+    // Daten gefunden
+    if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
+      wifi_connect(eeprom_ssid, eeprom_password);
+  }
+  else if (!mqttClient.connected())
+  {
+    mqtt_connect();
+  }
+  bme_displaydata();
+  vcnl_displaydata();
+  if (mqttClient.connected())
+    send_mqtt_data();
+  delay(1000);
+}
+
+void m5_setup()
+{
+  M5.begin();
+  delay(100);
+  M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+  M5.Lcd.setRotation(1);
+  M5.Lcd.setTextSize(2);
+  M5.Lcd.setCursor(0, 0);
+}
+
+/*===WIFI===*/
+bool wifi_connect(char *ssid, char *password)
+{
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
+  for (uint8_t i = 0; i < wifi_repeat; i++)
+  {
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      Serial.println(WiFi.localIP());
+      M5.Lcd.fillRect(0, 0, M5.Lcd.width(), 20, TFT_BLACK);
+      M5.Lcd.setCursor(X_OFFSET, 0);
+      M5.Lcd.println("WIFI OK");
+      return true;
+    }
+    delay(500);
+  }
+  return false;
+}
+
+void setup_ap()
+{
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(AP_SSID, AP_PASSWORD);
+  WiFi.softAPConfig(ap_ip, ap_gateway, ap_subnet);
+
+  M5.Lcd.fillRect(0, 0, M5.Lcd.width(), M5.Lcd.height(), TFT_RED);
+  M5.Lcd.setCursor(X_OFFSET, 0);
+  M5.Lcd.println("SET UP WIFI ");
+  M5.Lcd.setCursor(X_OFFSET, 20);
+  M5.Lcd.println("GO TO 10.0.0.1");
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/html", html_page); });
+
+  server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request)
+            {
+              // get input data
+              String ssid = request->getParam("ssid", true)->value();
+              String password = request->getParam("password", true)->value();
+              if (ssid.length() > MAX_SSID_LENGTH - 1 || password.length() > MAX_PASSWORD_LENGTH - 1)
+              {
+                return;
+              }
+              Serial.print("\nGOT WIFI DATA");
+              Serial.print(ssid);
+              Serial.print(password);
+              // String in char[]
+              char new_ssid[MAX_SSID_LENGTH] = {0};
+              strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
+              char new_password[MAX_PASSWORD_LENGTH] = {0};
+              strncpy(new_password, password.c_str(), MAX_PASSWORD_LENGTH - 1);
+
+              // in EEPROM speichern
+              EEPROM.begin(128);
+              // TODO clear EEPROM
+              
+              EEPROM.put(0, new_ssid);
+              EEPROM.put(32, new_password);
+              EEPROM.commit();
+              EEPROM.end();
+
+              request->send(200, "text/html", "WiFi saved. Rebooting...");
+              delay(1000);
+              ESP.restart(); });
+
+  server.begin();
+}
+
+bool is_valid_string(char *data, int max_length)
+{
+  if (strlen(data) == 0 or strlen(data) > max_length)
+    return false;
+  for (int i = 0; i < max_length; i++)
+  {
+    if (data[i] == '\0')
+      return true; // End of valid String
+    if (data[i] == 0xFF)
+      return false;
+  }
+  return false;
+}
+
+/*===MQTT===*/
 void mqtt_connect()
 {
   set_topics();

@@ -14,3 +14,6 @@
 
 // M5.Lcd
 #define X_OFFSET 10
+
+// M5.Buttons
+#define BTN_RESET 32
