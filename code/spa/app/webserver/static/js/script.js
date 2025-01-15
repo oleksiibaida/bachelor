@@ -488,7 +488,8 @@ async function renderMainPage(data) {
                     ws.onmessage = (event) => {
                         const data = JSON.parse(event.data);
                         console.info(data);
-                        const parent_div = device_element.querySelector(`#deviceData${device.dev_id}`)
+                        const parent_div = device_element.querySelector(`#deviceData${device.dev_id}`);
+                        parent_div.innerHTML = "";
                         for (const key in data) {
                             if (data.hasOwnProperty(key)) {
                                 let dataField = device_element.querySelector(`#${key}${device.dev_id}`);

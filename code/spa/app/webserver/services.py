@@ -111,12 +111,10 @@ def verify_token(token: str):
 
 async def mqtt_handler():
     async for message in MQTTClient.subscribe(Config.MQTT_SUBSCRIBE_TOPICS_LIST):
-        _logger.info(f"PROCESSING {message}")    
-        device_id = 'id1'
+        _logger.info(f"PROCESSING {message}")
+        # get device_id from topic
+        main_topic, device_id = str(message.topic).split('/')    
         msg=message.payload.decode()
-        # msg=json.dumps(msg)
-        print(f'DECODE: {msg}')
-        # msg = {'id':'IIIDDD', 'humidity': 'HUMMMMM'}
         await WebsocketHandler.send_data(device_id, json.loads(msg))
 
 async def auth_user(db_session, username: str, password: str):
