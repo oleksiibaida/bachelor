@@ -86,6 +86,10 @@ html, body {
     @apply bg-green-500 font-bold text-white hover:bg-green-700 py-1 px-4 rounded mx-1 my-1
 }
 
+.add_room-sm-btn{
+    @apply bg-green-500 font-bold text-white hover:bg-green-700 py-1 px-2 rounded mx-1 my-1
+}
+
 .cancel-btn{
     @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-1 my-1
 }

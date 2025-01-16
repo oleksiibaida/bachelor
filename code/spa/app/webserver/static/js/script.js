@@ -381,8 +381,10 @@ async function renderMainPage(data) {
                         <p id="ERRORaddDeviceId${room.id}" class="text-red-700 font-bold text-sm"></p>
                         <div class="flex items-center">
                             <label for="deviceName${room.id}" class="block text-gray-700 text-sm font-bold mb-2 mr-2">Name:</label>
+                            <button id="BTNnameSameId${room.id}" class = "add_room-sm-btn">Same to ID</button>
                             <input type="text" id="deviceName${room.id}" value=""
                                 class="required flex-1 w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            
                         </div>
                         <p id="ERRORaddDeviceName${room.id}" class="text-red-700 font-bold text-sm"></p>
                         <div class="flex justify-between">
@@ -411,6 +413,10 @@ async function renderMainPage(data) {
                             document.getElementById(`headerRoom${room.id}`).innerHTML = `&#x25BD ${room.name}`;
                         }
                     }
+                });
+
+                room_element.querySelector(`#BTNnameSameId${room.id}`).addEventListener('click', () => {
+                    room_element.querySelector(`#deviceName${room.id}`).value = room_element.querySelector(`#deviceID${room.id}`).value;
                 });
 
                 room_element.querySelector(`#BTNdeleteRoom${room.id}`).addEventListener('click', async () => {
@@ -443,11 +449,12 @@ async function renderMainPage(data) {
                         room_element.querySelector(`#ERRORaddDeviceId${room.id}`).textContent = '';
                         room_element.querySelector(`#ERRORaddDeviceName${room.id}`).textContent = '';
                         const res = addDeviceRoom(room.id, dev_id, dev_name);
-                        if (res == true) {
-                            // close form
-                        } else {
-                            // give error message
-                        }
+                        // if (res == true) {
+                        //     room_element.querySelector(`#FRaddDevice${room.id}`).classList.add('hidden');
+                        //     appRouter();
+                        // } else {
+                        //     // give error message
+                        // }
                     }
                 });
 

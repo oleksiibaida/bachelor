@@ -8,7 +8,7 @@ from . import services
 # from .services import auth_user, logout_user, validate_session_user, create_new_house
 from app.db import get_session, queries
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.mqtt.client import MQTTClient
+from app.mqtt.mqtt import MQTTHandler
 logger = Config.logger_init()
 router = APIRouter()
 templates_path = os.path.join(os.path.dirname(__file__), "templates")
@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory=templates_path)
 @router.on_event("startup")
 def startup():
     logger.info(f"Startup called in process: {os.getpid()}")
-    asyncio.create_task(services.mqtt_handler())
+    asyncio.create_task(MQTTHandler.listen_topics())
 
 async def get_token(request: Request):
     # print(f"HEADE: {request.headers}")

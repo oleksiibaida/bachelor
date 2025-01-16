@@ -14,84 +14,11 @@ async function renderMainPage() {
     app.innerHTML = `
     <div class="main_page">
     <div class="mx-10 justify-center items-center">
-        <button id="BTNaddDevice" class="create_house-btn">Add new Device</button>
-        <div id="MNaddDevice" class="hidden mn-createhouse">
-            
-                 <h1>Add New Device</h1>
-                <div class="flex items-center">
-                    <label for="deviceID" class="block text-gray-700 text-sm font-bold mb-2 mr-2 w-10">ID:</label>
-                    <input type="text" id="deviceID" value="" autocomplete="off"
-                        class="required flex-1 w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <p id="ERRORaddDeviceId" class="text-red-700 font-bold text-sm"></p>
-                <div class="flex items-center">
-                    <label for="deviceName" class="block text-gray-700 text-sm font-bold mb-2 mr-2">Name:</label>
-                    <input type="text" id="deviceName" value="" autocomplete="off"
-                        class="required flex-1 w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="flex items-center">
-                    <label for="deviceDesc" class="block text-gray-700 text-sm font-bold mb-2 mr-2">Description:</label>
-                    <input type="text" id="deviceDesc" value="" autocomplete="off"
-                        class="flex-1 w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <p id="ERRORaddDeviceName" class="text-red-700 font-bold text-sm"></p>
-                <div class="flex justify-between">
-                    <button id="BTNsaveAddDevice" class="add_room-btn">Save</button>
-                    <button id="BTNcancelAddDevice" class="cancel-btn">CancelCCC</button>
-                </div>
-            
-        </div>
+        
     </div>
     <div id="deviceList" class="device_list"></div>
     </div>
     `;
-
-    document.getElementById('BTNaddDevice').addEventListener('click', () => {
-        document.getElementById('MNaddDevice').classList.toggle('hidden');
-    });
-
-    document.getElementById('BTNcancelAddDevice').addEventListener('click', () => {
-        document.getElementById('MNaddDevice').classList.toggle('hidden');
-        document.getElementById('deviceID').value = "";
-        document.getElementById('deviceName').value = "";
-        document.getElementById('deviceDesc').value = "";
-    });
-
-    document.getElementById('BTNsaveAddDevice').addEventListener('click', async () => {
-
-        // addNewDevice(document.getElementById('deviceID').value, document.getElementById('deviceName').value);
-        // TODO Check if fields are filled
-        try {
-            const response = await fetch('/add_new_device', {
-                method: 'POST',
-                headers: {
-                    'auth': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    dev_id: document.getElementById('deviceID').value,
-                    name: document.getElementById('deviceName').value,
-                    description: document.getElementById('deviceDesc').value
-                })
-            });
-            if (!response.ok) {
-                console.error(response.status);
-                throw new Error(response.status);
-            }
-            else {
-                const response_data = await response.json();
-                if (response_data.success) {
-                    await loadDevices();
-                    console.info(response_data.success);
-                }
-            }
-        } catch (error) {
-            errorHandler(error);
-        }
-        document.getElementById('MNaddDevice').classList.add('hidden');
-        document.getElementById('deviceID').value = "";
-        document.getElementById('deviceName').value = "";
-    });
 
     await loadDevices();
 

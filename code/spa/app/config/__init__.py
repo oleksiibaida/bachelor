@@ -14,7 +14,7 @@ class Config:
     JWT_ALGORITHM = 'HS256'
     JWT_EXPIRE_TIME = 3600 # in seconds
 
-    def logger_init(name=__name__, debug = True):
+    def logger_init(name=__name__, debug = False):
         logging.basicConfig(level=logging.INFO, 
                         format='%(asctime)s - %(filename)s -  %(funcName)s - %(levelname)s - %(message)s')        
         logging.getLogger("sqlalchemy").setLevel(logging.ERROR)

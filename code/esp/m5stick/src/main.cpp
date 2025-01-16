@@ -88,7 +88,6 @@ void setup()
   Serial.println("START");
   Wire.begin();
   m5_setup();
-  Serial.println("CHECK");
   // clear_eeprom();
   //
   // GET WiFi Daten aus EEPROM
@@ -318,7 +317,7 @@ void send_mqtt_data()
     return;
   }
 
-  char json[256]; // Allocate a buffer for the JSON string
+  char json[256]; // Buffer JSON
   JsonDocument sensor_data;
   // Sensor data
   // BME
