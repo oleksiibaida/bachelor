@@ -126,6 +126,8 @@
     \subsubsection{Raspberry Pi}
     \subsubsection{ESP32}
     \subsubsection{M5Stick}
+    \subsubsection{BME680}
+    \subsubsection{VCNL}
     
 
   \subsection{Kommunikationsprotokolle}
@@ -175,9 +177,222 @@
 \section{Implementierung und praktische Umsetzung}
 \subsection{Einrichtung der Hardwarekomponenten}
   \subsubsection{Arduino}
-  \subsubsection{ESP8266}
+  \par Der Arduino mit den angeschlossenen Sensoren stellt das Sichterheitskomponente des Systems dar. Dieses Teilsystem erkennt die Gefahren von Gas und Feuer und alarmiert den Benutzer. Außerdem stellt der Arduino der gesicherte Zugang zu dem Haus durch die Eingabe einer PIN. Die Anschließung der Sensoren und Aktoren an Arduino ist in der PA1 \cite{pa1} beschrieben. 
+  \par Der Arduino kann nicht direkt mit einem WLAN verbunden werden, da er kein WLAN-Modul besitzt. Für diesen Zweck habe ich ein ESP8266-Modul verwendet. Der wird mit dem Arduino durch eine UART-Schnittstelle angeschlossenen und mit dem WLAN verbunden. Die Kommunikation zwischen Arduino und ESP8266 erfolgt über die serielle Schnittstelle. Der Arduino gibt die entsprechenden Kommanden durch Serial an ESP8266 weiter und der ESP8266 führt die Befehle aus. Die detaillierte Beschreibung zur Verbindung von Arduino und ESP8266 ist in dem Bericht zu meiner Projektarbeit 2 \cite{pa2} Kapitel 4.1 zu finden.
+  \par Der Arduino sendet und empfängt die MQTT-Nachrichten via ESP8266. Ein Mal pro Sekunde sendet der Arduino eine MQTT-Nachricht in das Topic "status/<ID>/" in dem die Bereitschaft der angeschlossenen Sensoren geteilt wird. Bei der Erkennung einer Gefahr wird sofort der Alarm ausgelöst und eine MQTT-Nachricht in das Topic "alarm/<ID>" mit dem entsprechenden Text gesendet.
   \subsubsection{Raspberry Pi}
+  \subsubsection{Setup der ESP-Module}
+  \par In diesem Projekt werden drei verschiedene ESP-Module verwendet: ESP8266, ESP32 und der auf dem ESP32 basierende M5Stick.  Jedes Modul erfüllt spezifische Aufgaben, aber alle Module müssen sowohl mit dem WLAN als auch mit dem MQTT-Broker verbunden sein. Daher ist die Implementierung der Funktion \texttt{setup()} für alle drei Module ähnlich aufgebaut.
+  \par Beim Start des ESP-Moduls wird die Funktion \texttt{setup()} (Listing \ref{lst:esp8266setup}) aufgerufen. Zunächst wird es versucht, die WLAN-Zugangsdaten aus dem EEPROM auszulesen (Zeile 5-10). Das EEPROM wird mit einer Größe von 128 Byte initialisiert. Dies ist notwendig, bevor Daten aus dem Speicher gelesen werden können. Es werden zwei Felder vom Typ \texttt{char} wurden mit den in den eckigen Klammern angegebenen Längen erstellt (Zeile 6-7), um die aus dem EEPROM gelesenen Daten zu speichern. Beide Felder sind zunächst mit Nullen gefüllt. Der Name des WLAN-Netzes (SSID) wird ab Adresse 0 des EEPROM ausgelesen und mit der Funktion \texttt{EEPROM.get(0, eeprom\_ssid)} im Char-Feld gespeichert. Das Passwort wird ab Adresse 32 aus dem EEPROM ausgelesen.
+  \par Anschließend prft die Boolean-Funktion \texttt{is\_valid\_string()} (Listing \ref{lst:esp8266validstring}), ob der übergebene String-Parameter eine Länge größer als 0 und kleiner als \texttt{max\_length}, sowie eine korrekte Terminierung hat. Zusätzlich gibt die Funktion den Wert \texttt{False} zurück, wenn der String ein Standard-EEPROM-Zeichen mit dem Wert \texttt{0xFF} enthält.
+  \par Sind die gültigen Werte im EEPROM gespeichert, versucht das Modul, sich mit diesen Zugangsdaten mit dem WLAN zu verbinden (Zeile 14). Die Funktion \texttt{connect\_wifi} (Listing \ref{lst:espconnectwifi}) schaltet das WLAN-Modul in den Modus "Station" um, was die Verbindung mit anderen WLAN-Netzwerken erlaubt. Danach wird es versucht mit dem WLAN mit übergebenen Zugangsdaten zu verbinden. In der Variable \texttt{wifi\_repeat} ist die Anzahl der Versuche zur Erstellung der Verbindung gespeichert. Jede Sekunde wird den Status der Verbindung überprüft. Wenn die Verbindung erfolgreich erstellt wurde, gibt die Funktion \texttt{True} aus. 
+  \par Nach erfolgreicher Verbindung mit dem WLAN, wird die Funktion \texttt{connect\_mqtt} (Listing \ref{lst:espconnectmqtt}) aufgerufen. Zunächst wird die Funktion \texttt{set\_topics} aufgerufen, die die Topics zum Senden und Empfangen der Nachrichten erstellt. Dabei werden die Topics mit \texttt{DEVICE\_ID} für jedes Gerät individuell formuliert. Der \texttt{mqttClient} ist ein Objekt der Klasse \texttt{PubSubClient}. Die Funktion \texttt{setServer()} erhält als Parameter die IP-Adresse des MQTT-Brokers sowie den Port, auf dem der Broker lauscht. Diese Parameter sind als Konstanten definiert. Die Callback-Funktion wird beim Empfang einer MQTT-Nachricht ausgeführt und ist für jedes Modul unterschiedlich aufgebaut. Anschließend verbindet sich das Modul mit dem MQTT-Broker und abonniert das \texttt{SUBSCRIBE\_TOPIC}.
+  \par Falls die aus dem EEPROM ausgelesenen Daten ungültig sind oder keine erfolgreiche WLAN-Verbindung aufgebaut werden kann, wird die Funktion setup\_ap() (Listing \ref{lst:esp8266setupap}) aufgerufen. Diese Funktion versetzt das WLAN-Modul in den Modus „Access Point“ und stellt einen Webserver bereit. Die Konfiguration des Access Points erfolgt über die Befehle WiFi.softAP() und WiFi.softAPConfig(), wobei die Parameter des Access Points in Listing \ref{lst:esp8266defap} definiert sind. 
+  \par Der Webserver wird durch das Objekt \texttt{server} der Klasse \texttt{AsyncWebServer} zur Verfügung gestellt. Der Webserver wird mit dem Befehl \texttt{server.begin()} gestartet. Die HTTP-Route wird innerhalb der Funktion server.on() festgelegt. Beim Aufruf der Root-Route ("/") wird eine HTTP-GET-Anfrage bearbeitet, die mit einer HTML-Seite beantwortet wird. Diese Seite, deren Inhalt in der Variablen \texttt{html\_page} (Listing \ref{lst:esp8266defap}) gespeichert ist, enthält ein Formular zur Eingabe der WLAN-Zugangsdaten.
+  \par Wenn der Benutzer auf die Taste „Submit“ drückt, wird eine HTTP-POST-Anfrage an den Server gesendet. Die Zugangsdaten werden aus dem request-Objekt ausgelesen und auf ihre maximale Länge überprüft. Wenn die Daten gültig sind, werden sie im EEPROM gespeichert. Der EEPROM wird initialisiert, die neuen Zugangsdaten werden gespeichert, und die Änderungen mit \texttt{EEPROM.commit()} übernommen. Anschließend wird das ESP-Modul mit \texttt{ESP.restart()} neu gestartet, um die neuen WLAN-Daten zu verwenden.
+  \par Diese Setup-Konfiguration wird bei allen ESP-Modulen verwendet. Je nach Modul kann diese Funktion erweitert sein. Beispielsweise wird bei Modulen mit Display angezeigt, ob die Verbindung aufgebaut wurde.
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266setup}, caption={ESP: setup}]
+  void setup()
+  {
+    Serial.begin(9600);
+    // GET WiFi Daten aus EEPROM
+    EEPROM.begin(128);
+    char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+    char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+    EEPROM.get(0, eeprom_ssid);
+    EEPROM.get(32, eeprom_password);
+    EEPROM.end();
+    // Daten gefunden
+    if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
+    {
+      if (connect_wifi(eeprom_ssid, eeprom_password))
+      {
+        connect_mqtt();
+        return;
+      }
+    }
+    // keine WLAN-DAten gefunden
+    setup_ap();
+  }
+\end{lstlisting}
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266validstring}, caption={ESP: is\_valid\_string}]
+  bool is_valid_string(char *data, int max_length)
+  {
+    if (strlen(data) == 0 or strlen(data) > max_length)
+      return false;
+    for (int i = 0; i < max_length; i++)
+    {
+      if (data[i] == '\0')
+        return true; // End of valid String
+      if (data[i] == 0xFF) // Default EEPROM
+        return false;
+    }
+    return false;
+  }
+\end{lstlisting}
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnectwifi}, caption={ESP: connect\_wifi}]
+  bool connect_wifi(char *ssid, char *password)
+  {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+  
+    for (uint8_t i = 0; i < wifi_repeat; i++)
+    {
+      if (WiFi.status() == WL_CONNECTED)
+      {
+        Serial.println(WiFi.localIP());
+        return true;
+      }
+      delay(1000);
+    }
+    return false;
+  }
+\end{lstlisting}
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnectmqtt}, caption={ESP: connect\_mqtt}]
+  void mqtt_connect()
+  {
+    set_topics();
+    mqttClient.setServer(MQTT_BROKER_ADRRESS, MQTT_PORT);
+    mqttClient.setCallback(callback);
+    for (int i = 0; i < wifi_repeat; i++)
+    {
+      if (mqttClient.connect(DEVICE_ID))
+        mqttClient.subscribe(SUBSCRIBE_TOPIC);
+        return;
+      else
+        delay(1000);
+    }
+  }
+\end{lstlisting}
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espsettopics}, caption={ESP: set\_topics}]
+  void set_topics()
+  {
+    SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(DEVICE_ID) + 2);
+    PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
+  
+    strcpy(SUBSCRIBE_TOPIC, TOPIC_COMMAND);
+    strcat(SUBSCRIBE_TOPIC, "/");
+    strcat(SUBSCRIBE_TOPIC, DEVICE_ID);
+  
+    strcpy(PUBLISH_TOPIC, "data");
+    strcat(PUBLISH_TOPIC, "/");
+    strcat(PUBLISH_TOPIC, DEVICE_ID);
+  }
+\end{lstlisting}
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266defap}, caption={ESP8266: ap\_konfiguration}]
+  const char AP_SSID[] = "ESP8266";
+  const char AP_PASSWORD[] = "setupesp";
+  IPAddress ap_ip(10, 0, 0, 1);
+  IPAddress ap_gateway(10, 0, 0, 1);
+  IPAddress ap_subnet(255, 255, 255, 0);
+  AsyncWebServer server(80);
+  const String html_page = R"rawliteral(
+    <html>
+    <body>
+      <h2>Wi-Fi Configuration</h2>
+      <form action="/save" method="POST">
+        SSID:<br>
+        <input type="text" name="ssid" required><br>
+        Password:<br>
+        <input type="password" name="password" required><br><br>
+        <input type="submit" value="Submit">
+      </form>
+    </body>
+    </html>
+  )rawliteral";
+\end{lstlisting}
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266setupap}, caption={ESP: setup\_up}]
+  void setup_ap()
+  {
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP(AP_SSID, AP_PASSWORD);
+    WiFi.softAPConfig(ap_ip, ap_gateway, ap_subnet);
+  
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/html", html_page); });
+  
+    server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                // get input data
+                String ssid = request->getParam("ssid", true)->value();
+                String password = request->getParam("password", true)->value();
+                if (ssid.length() > MAX_SSID_LENGTH - 1 || password.length() > MAX_PASSWORD_LENGTH - 1)
+                {
+                  return;
+                }
+                // String in char[]
+                char new_ssid[MAX_SSID_LENGTH] = {0};
+                strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
+                char new_password[MAX_PASSWORD_LENGTH] = {0};
+                strncpy(new_password, password.c_str(), MAX_PASSWORD_LENGTH - 1);
+  
+                // in EEPROM speichern
+                EEPROM.begin(128);
+                EEPROM.put(0, new_ssid);
+                EEPROM.put(32, new_password);
+                EEPROM.commit();
+                EEPROM.end();
+  
+                request->send(200, "text/html", "WiFi saved. Rebooting...");
+                ESP.restart(); });
+  
+    server.begin();
+  }
+\end{lstlisting}
+  \paragraph{ESP8266}
+  \par Der ESP8266 wird für die Verbindung des Arduinos mit dem WLAN verwendet. Zu seinem Aufgaben gehört das Senden und Empfangen der MQTT-Nachrichten in entsprechenden Topics. Wie in meinem Bericht zur Projektarbeit 2 \cite{pa2} Kapitel 4.1 beschrieben, ist der ESP8266 über eine UART-Schnittstelle mit dem Arduino verbunden.
+  \par Nach der Einrichtung ist das Modul betriebsbereit. Bei jedem Pogrammdurchlauf wird die Funktion \texttt{readSerialData} aufgerufen. Diese liest die vom Arduino gesendeten Daten ab und formuliert die MQTT-Nachricht sowie das Topic. Die detaillierte Beschreibung ist in Projektarbeit 2 \cite{pa2} Kapitel 4.1 zu finden. 
+  
   \subsubsection{M5Stick}
+  \par Der M5Stick wird zur Überwachung der Licht- und Luftbedingungen eingesetzt. Die Idee ist, dass der Sensor die aktuelle Wetterbedingungen überwacht und diese an dem Server sendet. Für diesen Zweck soll der Sensor an dem Fenster draußen positioniert werden.
+  \par Am Modul sind die Sensoren BME680 und VCNL4040 angebunden. Der BME680 erfasst Umweltdaten wie Temperatur, Luftfeuchtigkeit und Gaswiderstand. Der VCNL4040 dient als Lichtsensor und misst Lichtbedingungen wie Umgebungshelligkeit, weißes Licht sowie Annäherung. Diese Daten werden an dem Server via MQTT-Nachrichten gesendet.
+  \par Für die Verwendung der beiden Sensoren im Programmcode müssen die entsprechenden Bibliotheken importiert werden und die Klassenobjekten für die Sensoren erstellt werden (Listing \ref{lst:m5sensoren}). 
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5sensoren}, caption={M5Stick: Sensoren}]
+  #include <Adafruit_BME680.h>
+  #include <Adafruit_VCNL4040.h>
+  Adafruit_BME680 bme_sensor;
+  Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
+\end{lstlisting}
+
+\paragraph{Setup}
+\par Beim Starten des Moduls wird die Funktion \texttt{setup()} (Listing \ref{lst:m5setup}) aufgerufen. Nach der Initialisierung der seriellen und I2C-Verbindung wird es versucht, die WLAN-Zugangsdaten aus dem EEPROM abzulesen. 
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5setup}, caption={M5Stick: setup}]
+  void setup()
+  {
+    Serial.begin(115200);
+    Wire.begin();
+    m5_setup();
+    EEPROM.begin(128);
+  
+    char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+    char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+    EEPROM.get(0, eeprom_ssid);
+    EEPROM.get(32, eeprom_password);
+    EEPROM.end();
+    // Daten gefunden
+    if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
+    {
+      Serial.println("STRING VALID");
+      if (wifi_connect(eeprom_ssid, eeprom_password))
+      {
+        i2cScan.begin(SDA2, SCL2, 400000);
+        mqtt_connect();
+      }
+      else
+      {
+        setup_ap();
+      }
+      vcnl_setup();
+      bme_setup();
+    }
+    else
+    { // keine WLAN-DAten gefunden
+      setup_ap();
+    }
+  }
+\end{lstlisting}
+
+
   \subsubsection{ESP32}
 
 \subsection{Softwareentwicklung}
@@ -198,10 +413,10 @@
   \textit{Anbindung der Sensoren und Aktoren an den Arduino zur Realisierung eines Sicherheitssystems},
   Projektarbeit 1, 2024.
 
-  \bibitem{code}
-  O. Baida, Projektordner für PA2: \url{https://github.com/oleksiibaida/PA2.git}
+  \bibitem{pa2}
+  O. Baida, Projektarbeit 2 \textit{Sicherheitssystem fur das Haus basierend auf Arduino, ESP8266 \& Raspberry Pi} \url{https://github.com/oleksiibaida/PA2.git}
   \bibitem{video}
-  O. Baida, Demo-Video: \url{https://youtu.be/-Ul_ye1KLy0}
+  
   \bibitem{statita_smhomes}
   Statista, \textit{„Smart Home - Anzahl der Haushalte in Deutschland 2028“}, Zugegriffen: 13. Januar 2025. [Online]. Verfügbar unter \url{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}
   \bibitem{spiegel_heizung}
