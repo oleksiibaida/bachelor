@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 from .models import UserModel, HouseModel, RoomModel, DeviceModel, RoomDeviceModel
 from fastapi import Depends, HTTPException
-from . import get_session
+
 _logger = Config.logger_init()
 
 async def add_user(db_session: AsyncSession, username: str, email: str, password: str):
@@ -283,7 +283,6 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
         _logger.error(f"An unexpected error: {e}")
         raise HTTPException(status_code=500, detail="DATABASE ERROR")
     
-
 async def get_device(db_session:AsyncSession, user_id: int, primary_key: int = None, dev_id: str = None, name: str = None):
     """
     Get Device data

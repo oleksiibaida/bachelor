@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.25)  24 JAN 2025 09:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.25)  24 JAN 2025 18:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -805,7 +805,7 @@ Package hyperref Info: Link coloring ON on input line 108.
 \openout2 = `titelseite.aux'.
 
  (titelseite.tex
-<./Bilder/FHDO.jpg, id=184, 316.18124pt x 210.7875pt>
+<./Bilder/FHDO.jpg, id=189, 316.18124pt x 210.7875pt>
 File: ./Bilder/FHDO.jpg Graphic file (type jpg)
 <use ./Bilder/FHDO.jpg>
 Package pdftex.def Info: ./Bilder/FHDO.jpg  used on input line 2.
@@ -825,7 +825,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.46 ...ine {section}{Programmcode}{17}{section.6}
+l.50 ...ion}{Abbildungsverzeichnis}{17}{section.6}
                                                   % [1
 
 
@@ -834,8 +834,22 @@ l.46 ...ine {section}{Programmcode}{17}{section.6}
 \openout7 = `ba_bericht.toc'.
 
  [2] [3] [4] [5] [6] [7]
-Overfull \hbox (1.76907pt too wide) in paragraph at lines 192--193
+Overfull \hbox (1.76907pt too wide) in paragraph at lines 194--195
 []\OT1/cmr/m/n/12 Falls die aus dem EE-PROM aus-ge-le-se-nen Da-ten ung[]ultig sind oder kei-ne er-folg-rei-che WLAN-
+ []
+
+
+Overfull \hbox (0.30138pt too wide) in paragraph at lines 201--203
+[]\OT1/cmr/m/n/12 Beim Start des Mo-duls wird die Funk-ti-on \OT1/cmtt/m/n/12 setup() \OT1/cmr/m/n/12 (Lis-ting [][]4[][]) aus-gef[]uhrt. Zus[]atzlich l[]auchtet
+ []
+
+[8]
+
+LaTeX Warning: Reference `lst:espcallback' on page 9 undefined on input line 208.
+
+
+Overfull \hbox (0.26204pt too wide) in paragraph at lines 213--214
+\OT1/cmr/m/n/12 Um-welt-da-ten: Tem-pe-ra-tur, Luft-feuch-tig-keit und Gas-wi-der-stand. Der VCNL4040 dient als Licht-
  []
 
 (E:\Soft\MikTex\tex/latex/listings\lstlang1.sty
@@ -843,65 +857,83 @@ File: lstlang1.sty 2023/02/27 1.9 listings language file
 ) (E:\Soft\MikTex\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
 )
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 196.
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 215.
+ [9] [10]
+<./Bilder/datenbank.png, id=324, 754.31813pt x 400.49625pt>
+File: ./Bilder/datenbank.png Graphic file (type png)
+<use ./Bilder/datenbank.png>
+Package pdftex.def Info: ./Bilder/datenbank.png  used on input line 278.
+(pdftex.def)             Requested size: 483.69687pt x 256.81172pt.
+ [11 <./Bilder/datenbank.png>] (E:\Soft\MikTex\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2023/02/27 1.9 listings language file
+)
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 197.
- [8] [9] [10]
-Overfull \hbox (0.30138pt too wide) in paragraph at lines 346--348
-[]\OT1/cmr/m/n/12 Beim Start des Mo-duls wird die Funk-ti-on \OT1/cmtt/m/n/12 setup() \OT1/cmr/m/n/12 (Lis-ting [][]1[][]) aus-gef[]uhrt. Zus[]atzlich l[]auchtet
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 326.
+ [12]
+Overfull \hbox (8.47261pt too wide) in paragraph at lines 332--333
+[]\OT1/cmr/m/n/12 Die Klas-sen \OT1/cmtt/m/n/12 RoomModel \OT1/cmr/m/n/12 und \OT1/cmtt/m/n/12 DeviceModel \OT1/cmr/m/n/12 ha-ben ei-ne Be-zie-hung zur Klas-se \OT1/cmtt/m/n/12 RoomDeviceModel\OT1/cmr/m/n/12 ,
  []
 
-[11]
 
-LaTeX Warning: Reference `lst:espcallback' on page 12 undefined on input line 353.
-
-[12]
-Overfull \hbox (0.26204pt too wide) in paragraph at lines 416--417
-\OT1/cmr/m/n/12 Um-welt-da-ten: Tem-pe-ra-tur, Luft-feuch-tig-keit und Gas-wi-der-stand. Der VCNL4040 dient als Licht-
+Overfull \hbox (11.54436pt too wide) in paragraph at lines 337--338
+[]\OT1/cmr/m/n/12 ubergebenen Pa-ra-me-tern er-zeugt. Die-ses Ob-jekt wird mit dem Be-fehl \OT1/cmtt/m/n/12 db[]session.add(new[]user)
  []
+
+
+Overfull \hbox (40.95003pt too wide) in paragraph at lines 339--340
+[]\OT1/cmr/m/n/12 Ein \OT1/cmtt/m/n/12 IntegrityError \OT1/cmr/m/n/12 wird aus-gel[]ost, wenn ei-ne Da-ten-ban-k-ope-ra-ti-on ge-gen ei-ne In-te-grit[]atsbedingung
+ []
+
+
+Overfull \hbox (5.92574pt too wide) in paragraph at lines 341--342
+[]\OT1/cmr/m/n/12 Alle an-de-ren m[]oglichen Feh-ler, die kei-ne \OT1/cmtt/m/n/12 SQLAlchemy\OT1/cmr/m/n/12 -Fehler sind, wer-den im Block \OT1/cmtt/m/n/12 Exception
+ []
+
+
+LaTeX Warning: Reference `lst:dbinit' on page 13 undefined on input line 345.
 
 [13] [14] [15]
-Underfull \hbox (badness 2452) in paragraph at lines 459--460
+Underfull \hbox (badness 2452) in paragraph at lines 369--370
 []\OT1/cmr/m/n/12 J. Breit-hut, []\OT1/cmr/m/it/12 Strom und Hei-zung: Wann ein Smart Ho-me wirk-lich beim Ener-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 459--460
+Underfull \hbox (badness 10000) in paragraph at lines 369--370
 \OT1/cmr/m/it/12 gie-spa-ren hilft\\OT1/cmr/m/n/12 , Der Spie-gel, 17. Ju-li 2022. Zu-ge-grif-fen: 13. Ja-nu-ar 2025.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 459--460
+Underfull \hbox (badness 10000) in paragraph at lines 369--370
 \OT1/cmr/m/n/12 [On-li-ne]. Verf[]ugbar un-ter: [][]$\OT1/cmtt/m/n/12 https : / / www . spiegel . de / netzwelt / gadgets /
  []
 
 
-Overfull \hbox (227.706pt too wide) in paragraph at lines 459--460
+Overfull \hbox (227.706pt too wide) in paragraph at lines 369--370
 \OT1/cmtt/m/n/12 strom-[]und-[]heizung-[]wann-[]ein-[]smart-[]home-[]wirklich-[]beim-[]energiesparen-[]hilft-[]a-[]ffb4b710-[]0cec-[]40e4-[]a2c4-[]6c5d4a3feb92$[][] 
  []
 
 
-Underfull \hbox (badness 3635) in paragraph at lines 466--467
+Underfull \hbox (badness 3635) in paragraph at lines 376--377
 []\OT1/cmr/m/n/12 Raspberry Pi Foun-da-ti-on, \OT1/cmr/m/it/12 Raspber-ry Pi 1 B+\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . raspberrypi . com /
  []
 
 
-Underfull \hbox (badness 1072) in paragraph at lines 468--469
+Underfull \hbox (badness 1072) in paragraph at lines 378--379
 []\OT1/cmr/m/n/12 Espressif, \OT1/cmr/m/it/12 ESP8266\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . espressif . com/$[][]\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . electronicwings .
  []
 
 
-Underfull \hbox (badness 3965) in paragraph at lines 475--476
+Underfull \hbox (badness 3965) in paragraph at lines 385--386
 []\OT1/cmr/m/n/12 Telegram FZ-LLC, \OT1/cmr/m/it/12 Te-le-gram Mes-sen-ger\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / github . com / /telegramdesktop /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 487--488
+Underfull \hbox (badness 10000) in paragraph at lines 397--398
 []\OT1/cmr/m/n/12 ESPWIFI.h, [][]$\OT1/cmtt/m/n/12 https : / / arduino-[]esp8266 . readthedocs . io / en / latest / esp8266wifi /
  []
 
 [16]
-Underfull \hbox (badness 10000) in paragraph at lines 502--503
+Underfull \hbox (badness 10000) in paragraph at lines 412--413
 []\OT1/cmr/m/n/12 Python Soft-wa-re Foun-da-ti-on, \OT1/cmr/m/it/12 threa-ding\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / docs . python . org / 3 / library /
  []
 
@@ -913,11 +945,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 502--503
 \tf@lot=\write9
 \openout9 = `ba_bericht.lot'.
 
- (ba_bericht.lol)
-\tf@lol=\write10
-\openout10 = `ba_bericht.lol'.
-
- [17] (ba_bericht.aux (titelseite.aux))
+ [17] [18] [19] [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] (ba_bericht.aux (titelseite.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -927,20 +955,20 @@ L3 programming layer <2024-01-04>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `ba_bericht.out' has not changed.
-(rerunfilecheck)             Checksum: 4295545C1DCDA04FC66A2C6BD8B6A429;5781.
+(rerunfilecheck)             Checksum: CCB611B5D3E777B311960B138792FF31;5880.
  ) 
 Here is how much of TeX's memory you used:
- 36936 strings out of 474486
- 774942 string characters out of 5757825
- 2223542 words of memory out of 5000000
- 58396 multiletter control sequences out of 15000+600000
- 567311 words of font info for 70 fonts, out of 8000000 for 9000
+ 37982 strings out of 474486
+ 789992 string characters out of 5757825
+ 2310542 words of memory out of 5000000
+ 58862 multiletter control sequences out of 15000+600000
+ 567670 words of font info for 71 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 98i,6n,101p,1650b,2075s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\baida\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmitt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr6.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr8.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmti12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on ba_bericht.pdf (18 pages, 282436 bytes).
+ 98i,7n,101p,1650b,2100s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\baida\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmitt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr6.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr8.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmti12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on ba_bericht.pdf (35 pages, 481743 bytes).
 PDF statistics:
- 712 PDF objects out of 1000 (max. 8388607)
- 292 named destinations out of 1000 (max. 500000)
- 378 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1468 PDF objects out of 1728 (max. 8388607)
+ 872 named destinations out of 1000 (max. 500000)
+ 391 words of extra memory for PDF output out of 10000 (max. 10000000)
 
