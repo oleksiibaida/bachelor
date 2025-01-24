@@ -1,3 +1,4 @@
+import bcrypt
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
@@ -16,7 +17,7 @@ class UserModel(Base):
     #     return f'<U_ID:{self.primary_key} U_NM:{self.username}>' #{self.primary_key, self.username, self.email, self.pasword}    
     
     def verify_password(self, password:str):
-        return self.password == password
+        return bcrypt.checkpw(password.encode('utf-8'), self.password)
 
 class HouseModel(Base):
     __tablename__ = 'house'

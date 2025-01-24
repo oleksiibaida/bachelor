@@ -4,10 +4,12 @@
 #include <stdio.h>
 #include <Keypad.h>
 #include <EEPROM.h>
+#include <ArduinoJson.h>
 
 // MQTT-Topics
 #define TOPIC_ALARM "alarm"
 #define TOPIC_PIN "pin"
+#define TOPIC_STATUS "status"
 
 // MQTT-Nachrichten
 #define PIN_WRONG "pin_wrong"
@@ -42,6 +44,7 @@ static const uint8_t lockOpen = 2;      // Zeit in Sekunden wie lange das Schlos
 static uint8_t lockOpenTimeCounter = 0; // Zählt wie lange der Schloss auf ist in Takte (1/16 Sekunde)
 static bool alarm_free = false;
 // Keypad
+static String pin_status = "";
 static const int8_t pinInputDelay = 5;   // Zeit in Sekunden fuer die Eingabe naechstes Zeichens
 static const int8_t pinChangeDelay = 10; // Zeit in Sekunden fuer das Wechseln der PIN
 static int8_t pinInputTimeCounter = 0;
@@ -117,7 +120,8 @@ void pinEingabe()
         // PIN-Aenderung unterbrochen
         else if (changePas && checkOldPin)
         {
-          send_mqtt_message(TOPIC_PIN, PIN_CHANGE_STOP);
+          // send_mqtt_message(TOPIC_PIN, PIN_CHANGE_STOP);
+          pin_status = PIN_CHANGE_STOP;
           // Serial.println("Aenderung der PIN unterbrochen");
           changePas = false;
           checkOldPin = false;
@@ -131,7 +135,8 @@ void pinEingabe()
           // Serial.print(lockOpen);
           // Serial.print(" Sekunden geoeffnet \n");
           lock = false; // Schloss oeffnen
-          send_mqtt_message(TOPIC_PIN, PIN_CORRECT);
+          // send_mqtt_message(TOPIC_PIN, PIN_CORRECT);
+          pin_status = PIN_CORRECT;
         }
         for (int i = 0; i < passLength; i++) // passInput leeren
           passInput[i] = -1;
@@ -148,7 +153,8 @@ void pinEingabe()
       else
       {
         // Serial.println("Falsches PIN! Versuchen Sie es nochmal!");
-        send_mqtt_message(TOPIC_PIN, PIN_WRONG);
+        // send_mqtt_message(TOPIC_PIN, PIN_WRONG);
+        pin_status = PIN_WRONG;
         changePas = false;
         pinChangeTimeCounter = 0;
         for (int i = 0; i < passLength; i++)
@@ -161,7 +167,8 @@ void pinEingabe()
       if (!changePas)
       {
         // Serial.print("\nGeben Sie die alte PIN ein und bestaetigen mit # ");
-        send_mqtt_message(TOPIC_PIN, PIN_CHANGE_START);
+        // send_mqtt_message(TOPIC_PIN, PIN_CHANGE_START);
+        pin_status = PIN_CHANGE_START;
         changePas = true;
       }
       else if (changePas && checkOldPin)
@@ -191,7 +198,8 @@ void pinEingabe()
             passInput[i] = -1;
           }
           // Serial.println("In EEPROM gespeichert ");
-          send_mqtt_message(TOPIC_PIN, PIN_CHANGE_SUC);
+          // send_mqtt_message(TOPIC_PIN, PIN_CHANGE_SUC);
+          pin_status = PIN_CHANGE_SUC;
         }
         pinChangeTimeCounter = 0;
         changePas = false;
@@ -409,7 +417,31 @@ void readSerialData()
   }
 }
 
+void send_status_mqtt()
+{
+  JsonDocument json;
+  if (flameState == 0)
+    json["fire"] = "OK";
+  else
+    json["fire"] = FIRE_GO;
 
+  if (gasState == 0)
+    json["gas"] = "OK";
+  else
+    json["gas"] = GAS_GO;
+
+  if (lock)
+    json["lock"] = "Closed";
+  else
+    json["lock"] = "Opened";
+
+  json["pin"] = pin_status;
+
+  String message_text;
+  serializeJson(json, message_text);
+  String message = "status:" + message_text;
+  Serial.println(message);
+}
 
 // Initialisierung
 void setup()
@@ -506,5 +538,6 @@ void loop()
   {
     count = 0;
     seconds++;
+    send_status_mqtt();
   }
 }

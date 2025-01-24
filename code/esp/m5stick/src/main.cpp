@@ -1,10 +1,5 @@
 #include <params.h>
-#include <PubSubClient.h>
-#include <Adafruit_VCNL4040.h>
-#include <ArduinoJson.h>
-#include <ESPAsyncWebServer.h>
-#include <EEPROM.h>
-#define DEVICE_ID "m5bmevcnl"
+
 // Functions
 void m5_setup();
 bool wifi_connect(char *ssid, char *password);
@@ -99,16 +94,6 @@ void setup()
   EEPROM.get(32, eeprom_password);
   EEPROM.end();
   Serial.print("\nREAD FROM EEPROM");
-  for (int i = 0; i < 128; i++)
-  {
-    byte value = EEPROM.read(i); // Read each byte
-    Serial.print(value, HEX);    // Print in hexadecimal format
-    Serial.print(" ");
-    if ((i + 1) % 16 == 0)
-    { // Format: new line every 16 bytes
-      Serial.println();
-    }
-  }
   Serial.print(eeprom_ssid);
   Serial.print(eeprom_password);
   // Daten gefunden
@@ -190,7 +175,7 @@ bool wifi_connect(char *ssid, char *password)
       M5.Lcd.println("WIFI OK");
       return true;
     }
-    delay(500);
+    delay(1000);
   }
   return false;
 }

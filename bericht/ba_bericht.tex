@@ -133,6 +133,8 @@
   \subsection{Kommunikationsprotokolle}
   \subsubsection{HTTP}
   \subsubsection{MQTT}
+  \subsubsection{UART}
+  \subsubsection{I2C}
     
   \subsection{Software}
   \subsubsection{PlatformIO}
@@ -301,7 +303,7 @@
     </html>
   )rawliteral";
 \end{lstlisting}
-\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266setupap}, caption={ESP: setup\_up}]
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266setupap}, caption={ESP: setup\_ap}]
   void setup_ap()
   {
     WiFi.mode(WIFI_AP);
@@ -339,13 +341,79 @@
     server.begin();
   }
 \end{lstlisting}
-  \paragraph{ESP8266}
+  \subsubsection{ESP8266}
   \par Der ESP8266 wird für die Verbindung des Arduinos mit dem WLAN verwendet. Zu seinem Aufgaben gehört das Senden und Empfangen der MQTT-Nachrichten in entsprechenden Topics. Wie in meinem Bericht zur Projektarbeit 2 \cite{pa2} Kapitel 4.1 beschrieben, ist der ESP8266 über eine UART-Schnittstelle mit dem Arduino verbunden.
-  \par Nach der Einrichtung ist das Modul betriebsbereit. Bei jedem Pogrammdurchlauf wird die Funktion \texttt{readSerialData} aufgerufen. Diese liest die vom Arduino gesendeten Daten ab und formuliert die MQTT-Nachricht sowie das Topic. Die detaillierte Beschreibung ist in Projektarbeit 2 \cite{pa2} Kapitel 4.1 zu finden. 
+  \par Beim Start des Moduls wird die Funktion \texttt{setup()} (Listing \ref{lst:esp8266setup}) ausgeführt. Zusätzlich läuchtet der blaue LED während der Einrichtung des Moduls. Der Diode läuchtet, wenn es keine Spannung auf dem GPIO 1 fällt.
+  % \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266led}, caption={ESP: LED}]
+  \begin{Verbatim}[frame=single]
+    digitalWrite(1, LOW);   // Diode einschalten
+    digitalWrite(1, HIGH);  // Diode ausschalten
+  \end{Verbatim}
+  \par Nach der erfolgreichen Einrichtung und Verbindung mit dem WLAN sowie MQTT-Broker, schaltet der Diode aus. Bei jedem Pogrammdurchlauf wird die Funktion \texttt{readSerialData} (Listing \ref{lst:esp8266readserial}) aufgerufen. Stehen die Daten in der seriellen Schnittstelle zur Verfügung, werden diese zunächst als String ausgelesen und gespeichert. Der String wird auf ihre maximale Länge geprüft. Anschließend muss der String in ein char-Feld konvertiert werden. Um das Topic und den Text der Nachrichten zuzuordnen, wird nach der Position von „:“ gesucht. Alle Zeichen rechts von „:“ gehören zum Text der Nachricht und werden in der Variablen „\texttt{message}“ gespeichert. Aus den Zeichen links von „:“ wird das Topic gebildet. Arduino überträgt nur die Namen der Haupttopics. Das ESP8266 erweitert das von Arduino übergebene Topic mit der ID des Gerätes und formuliert das \texttt{PUBLISH\_TOPIC} (Zeile 22-32). Wenn das Topic aus irgendeinem Grund nicht korrekt formuliert werden kann, wird die Nachricht im Haupttopic gesendet. Damit ist sichergestellt, dass die Nachricht versendet wird. Sobald das ESP8266 die Daten von dem Arduino empfängt, wird die MQTT-Nachricht an den MQTT-Broker mit dem Befehl „\texttt{mqttClient.publish(topic, message)}“ versandt.
+  \par Die Verarbeitung der empfangenen Nachricht erfolgt in der Funktion \texttt{callback} (Listing \ref{lst:espcallback}). Der ESP8266 abonniert nur das Topic, das in der Variablen \texttt{SUBSCRIBE\_TOPIC} definiert ist. Beim Empfang der Nachricht aus dem Topic wird geprüft, ob die Nachricht aus dem dem Gerät zugewiesenen Topic stammt. Wenn dies der Fall ist, wird der Text der Nachricht über Serial an Arduino gesendet.
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266readserial}, caption={ESP8266: readSerialData}]
+    void readSerialData()
+    {
+      if (Serial.available() > 0)
+      {
+        String readString = "";
+        // Lese Daten aus Serial als String ab
+        readString = Serial.readStringUntil('\n');
+        if (sizeof(readString) > buss_serial)
+          return;
+        // String in char-Feld konvertieren
+        char readSerialChar[readString.length() + 1];
+        readString.toCharArray(readSerialChar, readString.length() + 1);    
+        // Suche Position von ':'
+        char *delim_pos = strchr(readSerialChar, ':');
+        if (delim_pos != NULL)
+        {
+          size_t topic_length = delim_pos - readSerialChar;
+          char topic[topic_length + 1];
+          strncpy(topic, readSerialChar, topic_length);
+          topic[topic_length] = '\0';
+          char *message = delim_pos + 1;
+          PUBLISH_TOPIC = (char *)malloc(strlen(CLIENT_ID) + strlen(topic) + 2);
+          if (PUBLISH_TOPIC == NULL)
+          {
+            PUBLISH_TOPIC = topic;
+          }
+          else
+          {
+            strcpy(PUBLISH_TOPIC, topic);
+            strcat(PUBLISH_TOPIC, "/");
+            strcat(PUBLISH_TOPIC, CLIENT_ID);
+          }
+          // MQTT-Nachricht senden
+          mqttClient.publish(PUBLISH_TOPIC, message);
+        }
+        else // kein : gefunden
+          return;
+      }
+    }
+  \end{lstlisting}
+
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266callback}, caption={ESP8266: callback}]
+    void callback(char *topic, byte *payload, unsigned int length)
+    {
+      String id = String(topic).substring(String(topic).indexOf('/') + 1);
+      if (id == CLIENT_ID)
+      {
+        String text = "";
+        for (int i = 0; i < length; i++)
+        {
+          text += (char)payload[i];
+        }
+        text.trim();
+        // Print in Arduino
+        Serial.println(text);
+      }
+    }
+  \end{lstlisting}
   
   \subsubsection{M5Stick}
   \par Der M5Stick wird zur Überwachung der Licht- und Luftbedingungen eingesetzt. Die Idee ist, dass der Sensor die aktuelle Wetterbedingungen überwacht und diese an dem Server sendet. Für diesen Zweck soll der Sensor an dem Fenster draußen positioniert werden.
-  \par Am Modul sind die Sensoren BME680 und VCNL4040 angebunden. Der BME680 erfasst Umweltdaten wie Temperatur, Luftfeuchtigkeit und Gaswiderstand. Der VCNL4040 dient als Lichtsensor und misst Lichtbedingungen wie Umgebungshelligkeit, weißes Licht sowie Annäherung. Diese Daten werden an dem Server via MQTT-Nachrichten gesendet.
+  \par Am Modul sind die Sensoren BME680 und VCNL4040 angebunden. Der BME680 erfasst Umweltdaten: Temperatur, Luftfeuchtigkeit und Gaswiderstand. Der VCNL4040 dient als Lichtsensor und misst Lichtbedingungen: Umgebungshelligkeit (Ambient Light), weißes Licht sowie Annäherung (Proximity). Diese Daten werden an dem Server via MQTT-Nachrichten gesendet.
   \par Für die Verwendung der beiden Sensoren im Programmcode müssen die entsprechenden Bibliotheken importiert werden und die Klassenobjekten für die Sensoren erstellt werden (Listing \ref{lst:m5sensoren}). 
 \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5sensoren}, caption={M5Stick: Sensoren}]
   #include <Adafruit_BME680.h>
@@ -354,46 +422,13 @@
   Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
 \end{lstlisting}
 
-\paragraph{Setup}
-\par Beim Starten des Moduls wird die Funktion \texttt{setup()} (Listing \ref{lst:m5setup}) aufgerufen. Nach der Initialisierung der seriellen und I2C-Verbindung wird es versucht, die WLAN-Zugangsdaten aus dem EEPROM abzulesen. 
-\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5setup}, caption={M5Stick: setup}]
-  void setup()
-  {
-    Serial.begin(115200);
-    Wire.begin();
-    m5_setup();
-    EEPROM.begin(128);
-  
-    char eeprom_ssid[MAX_SSID_LENGTH] = {0};
-    char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
-    EEPROM.get(0, eeprom_ssid);
-    EEPROM.get(32, eeprom_password);
-    EEPROM.end();
-    // Daten gefunden
-    if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
-    {
-      Serial.println("STRING VALID");
-      if (wifi_connect(eeprom_ssid, eeprom_password))
-      {
-        i2cScan.begin(SDA2, SCL2, 400000);
-        mqtt_connect();
-      }
-      else
-      {
-        setup_ap();
-      }
-      vcnl_setup();
-      bme_setup();
-    }
-    else
-    { // keine WLAN-DAten gefunden
-      setup_ap();
-    }
-  }
+\par Beim Start des Moduls wird die Funktion \texttt{setup()} aufgerufen. Zusätzlich zu der im Listing \ref{lst:esp8266setup} duchgeführte Einrichtungen müssen noch die beiden Sensoren eingerichted und im Betriebszustand gebracht werden. Dacher werden im Setup die Funktionen \texttt{vcnl\_setup()} und \texttt{bme\_setup()} für die Einrichtung der Sensoren aufgerufen.
+
+\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5vcnlsetup}, caption={M5Stick: vcnl\_setup}]
+
 \end{lstlisting}
 
-
-  \subsubsection{ESP32}
+\subsubsection{ESP32}
 
 \subsection{Softwareentwicklung}
   \subsubsection{Webserver}

@@ -31,7 +31,7 @@ const String html_page = R"rawliteral(
 
 const char MQTT_BROKER_ADRRESS[] = "192.144.1.1"; // IP von MQTT-Broker
 const int MQTT_PORT = 1883;
-const int buss_serial = 50; // Buffer Groesse fuer UAR-Verbindung
+const int buss_serial = 512; // Buffer Groesse fuer UAR-Verbindung
 const char *CLIENT_ID = "DT04";
 const char *TOPIC_COMMAND = "command";
 char *SUBSCRIBE_TOPIC;
@@ -43,16 +43,6 @@ unsigned long lastMsg = 0;
 #define MSG_BUFFER_SIZE (50)
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
-
-void clear_eeprom()
-{
-  EEPROM.begin(128);
-  for (int i = 0; i < 128; i++)
-  {
-    EEPROM.write(i, 0xFF);
-  }
-  EEPROM.commit();
-}
 
 void setup_subscribe()
 {
@@ -228,6 +218,20 @@ void readSerialData()
   }
 }
 
+bool is_valid_string(char *data, int max_length)
+{
+  if (strlen(data) == 0 or strlen(data) > max_length)
+    return false;
+  for (int i = 0; i < max_length; i++)
+  {
+    if (data[i] == '\0')
+      return true; // End of valid String
+    if (data[i] == 0xFF)
+      return false;
+  }
+  return false;
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -247,7 +251,7 @@ void setup()
   Serial.print(eeprom_ssid);
   Serial.print(eeprom_password);
   // Daten gefunden
-  if (strlen(eeprom_ssid) > 0 && strlen(eeprom_password) > 0)
+  if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
   {
     if (connect_wifi(eeprom_ssid, eeprom_password))
     {

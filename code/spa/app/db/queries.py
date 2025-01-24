@@ -1,3 +1,4 @@
+import bcrypt
 from app.config import Config
 from sqlalchemy import select, insert, update, delete, func
 from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
@@ -19,6 +20,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
         _logger.error("All user data must be provided")
         return False
     try:
+        password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         new_user = UserModel(username=username, email=email, password=password)
         _logger.debug(f'ADD U_NAME {new_user.username} START')
         db_session.add(new_user)

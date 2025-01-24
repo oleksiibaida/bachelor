@@ -4,6 +4,12 @@
 #include <Adafruit_BME680.h>
 #include <WiFi.h>
 #include <bsec.h>
+#include <PubSubClient.h>
+#include <Adafruit_VCNL4040.h>
+#include <ArduinoJson.h>
+#include <ESPAsyncWebServer.h>
+#include <EEPROM.h>
+#define DEVICE_ID "m5bmevcnl"
 
 //I2C
 #define SDA2    17

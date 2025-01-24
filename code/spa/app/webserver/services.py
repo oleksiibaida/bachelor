@@ -106,16 +106,8 @@ def verify_token(token: str):
         _logger.error(k)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token missing required claim")
     except Exception as e:
-        _logger.exception(f"{e}") # Use logger.exception for full traceback
+        _logger.exception(f"{e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Server error")
-
-async def mqtt_handler():
-    async for message in MQTTClient.subscribe(Config.MQTT_SUBSCRIBE_TOPICS_LIST):
-        _logger.info(f"PROCESSING {message}")
-        # get device_id from topic
-        main_topic, device_id = str(message.topic).split('/')    
-        msg=message.payload.decode()
-        await WebsocketHandler.send_data(device_id, json.loads(msg))
 
 async def auth_user(db_session, username: str, password: str):
     """

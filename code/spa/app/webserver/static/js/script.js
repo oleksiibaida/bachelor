@@ -1,4 +1,5 @@
-const app = document.getElementById('app')
+const app = document.getElementById('app');
+
 
 // redicrets user to login page if no token
 function appRouter() {
@@ -75,6 +76,7 @@ function renderSignUpPage() {
         event.preventDefault();
         const username = document.getElementById('username').value;
         const email = document.getElementById('email').value;
+        // const password = await hashPassword(document.getElementById('password').value);
         const password = document.getElementById('password').value;
 
         try {
@@ -138,7 +140,9 @@ function renderLoginForm() {
     document.getElementById('loginForm').addEventListener('submit', async (event) => {
         event.preventDefault();
         const username = document.getElementById('username').value;
+        // const password = await hashPassword(document.getElementById('password').value, salt_rounds);
         const password = document.getElementById('password').value;
+
         try {
             const response = await fetch('/login', {
                 method: 'POST',
