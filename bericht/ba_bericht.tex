@@ -119,17 +119,133 @@
 
 \newpage
 \section{Grundlagen \& Theorie}
-\par In diesem Abschnitt erfolgt die detaillierte Darstellung der technischen Informationen zu den verwendeten Komponenten und Technologien. 
+\par In diesem Abschnitt werden die technischen Spezifikationen der verwendeten Komponenten und Technologien detailliert beschrieben.
   \subsection{Hardware}
-    \subsubsection{Arduino}
-    \subsubsection{ESP8266}
-    \subsubsection{Raspberry Pi}
-    \subsubsection{ESP32}
-    \subsubsection{M5Stick}
-    \subsubsection{BME680}
-    \subsubsection{VCNL}
-    
+  \par Das Projekt umfasst verschiedene Hardware-Komponenten, darunter Mikrocontroller, Sensoren und einen Einplatinencomputer.
+  \subsubsection{Arduino Uno}
+    \par Der Arduino Uno ist ein Mikrocontroller-Board, das sich besonders für die Erfassung und Verarbeitung von Sensordaten eignet. Aufgrund seiner einfachen Programmierbarkeit und vielseitigen Schnittstellen wird es häufig in eingebetteten Systemen sowie in IoT-Anwendungen eingesetzt.
+    \par Das Herz des Boards bildet der Mikrocontroller ATmega328P, der über Flash-Speicher und EEPROM{Electrically Erasable Programmable Read-Only Memory} verfügt. Das EEPROM ermöglicht die nichtflüchtige Speicherung von Daten, so dass diese auch nach dem Ausschalten des Gerätes erhalten bleiben.
+    \par Die technischen Spezifikationen des Arduino Uno sind in Tabelle \ref{tab:arduinounotd} dargestellt.
+    \begin{table}[h]
+      \centering
+      \begin{tabular}{|l|l|}
+          \hline
+          Modell                         & Arduino Uno                \\ \hline
+          Mikrocontroller                & ATmega328P                      \\ \hline
+          Taktfrequenz                   & 16 MHz                          \\ \hline
+          Eingangsspannung               & 12 V                          \\ \hline
+          Digital Pins                   & 14           \\ \hline
+          Analoge Eingänge               & 6                               \\ \hline
+          Flash-Speicher                 & 32 KB                           \\ \hline
+          SRAM                           & 2 KB                            \\ \hline
+          EEPROM                         & 1 KB                            \\ \hline
+          Kommunikationsschnittstellen   & UART, SPI, I2C                  \\ \hline
+          USB-Schnittstelle              & USB-B  \\ \hline
+      \end{tabular}
+      \caption{Technische Daten des Arduino Uno}
+      \label{tab:arduinounotd}
+  \end{table}
+  \par Im Rahmen dieses Projekts wird der Arduino Uno zur Erfassung und Verarbeitung von Sensordaten für die Branderkennung eingesetzt. Darüber hinaus übernimmt er die Steuerung des kontrollierten Zugangs zum Gebäude. Durch die Anbindung an verschiedene Sensoren ermöglicht er eine kontinuierliche Überwachung der Umgebung und kann im Gefahrenfall entsprechende Meldungen auslösen.
+  \subsubsection{ESP8266}
+  \par Der ESP8266 ist ein kompakter Mikrocontroller mit integriertem WLAN-Modul. Aufgrund seiner kompakten Größe, seines geringen Stromverbrauchs und seiner integrierten WLAN-Schnittstelle eignet er sich besonders für drahtlose Sensornetzwerke und eingebettete Systeme.
+  \par Ein zentrales Funktionsmerkmal des ESP8266 ist seine integrierte WLAN-Funktionalität. Das Modul kann direkt mit einem WLAN-Netzwerk verbunden werden oder als Access Point ein WLAN-Netzwerk zur Verfügung stellen. Zusätzlich kann auf dem Mikrocontroller ein einfacher Webserver eingerichtet werden. Damit kann es sowohl als eigenständiger Mikrocontroller als auch als Wi-Fi-Erweiterung für andere Mikrocontroller, z.B. einen Arduino, verwendet werden. 
+  \par Das Modul basiert auf dem ESP8266 Chip von Espressif Systems. Es verfügt über Flash, SRAM und EEPROM Speicher. Außerdem unterstützt es das UART-Kommunikationsprotokoll.
+  \par Die technischen Spezifikationen des ESP8266-01 sind in der Tabelle \ref{tab:esp8266td} dargestellt.
 
+  \begin{table}[h]
+  \centering
+  \begin{tabular}{|l|l|}
+  \hline
+  Modell & ESP8266-01 \\ \hline
+  Chip & ESP8266EX \\ \hline
+  Architektur & 32-Bit \\ \hline
+  Taktfrequenz & 80 MHz \\ \hline
+  Eingangsspannung & 5 V \\ \hline
+  Flash-Speicher & 1 MB \\ \hline
+  SRAM & 80 KB \\ \hline
+  Kommunikationsschnittstellen & UART \\ \hline
+  WLAN-Standard & IEEE 802.11 \\ \hline
+  Sicherheitsmechanismen & WEP, WPA, WPA2 \\ \hline
+  \end{tabular}
+  \caption{Technische Daten des ESP8266}
+  \label{tab:esp8266td}
+  \end{table}
+  \par In meinem Projekt wird der ESP8266 als Schnittstelle zwischen dem Arduino und dem zentralen Server verwendet. Er ermöglicht die drahtlose Übertragung von Sensordaten an das Backend und kann auch Steuerbefehle empfangen, um entsprechende Aktionen auszulösen. Durch die direkte WLAN-Anbindung trägt der ESP8266 wesentlich zur flexiblen und ortsunabhängigen Systemsteuerung bei.
+  \subsubsection{ESP32}
+  \par Das ESP32 ist ein leistungsstarker Mikrocontroller von Espressif Systems. In der Literatur wird das Modul auch als SoC\footnote{Eng. System-on-a-Chip, Deutsch: Ein-Chip-System} bezeichnet, was bedeutet, dass alle Funktionen des Moduls auf einem Chip integriert sind.
+  \par Das ESP32 unterstützt WLAN und Bluetooth. Außerdem verfügt es über Schnittstellen wie I2C, UART, GPIOs, die eine flexible Integration mit Sensoren und anderen Peripheriegeräten ermöglichen.
+  \par Die technischen Spezifikationen des ESP32 sind in der Tabelle \ref{tab:esp32td} dargestellt.
+
+    \begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    Modell & ESP32-WROOM-32 \\ \hline
+    Architektur & 32-Bit Dual-Core \\ \hline
+    Taktfrequenz & Bis zu 240 MHz \\ \hline
+    Betriebsspannung & 3,3 V \\ \hline
+    Digitale GPIO-Pins & 34 \\ \hline
+    Analoge Eingänge & 18 \\ \hline
+    Flash-Speicher & 4 MB \\ \hline
+    SRAM & 520 KB \\ \hline
+    Kommunikationsschnittstellen & UART, SPI, I2C, CAN, I2S \\ \hline
+    USB-Schnittstelle & Mikro-USB \\ \hline
+    WLAN-Standard & IEEE 802.11 b/g/n \\ \hline
+    Bluetooth & BLE 4.2, Classic \\ \hline
+    Energiesparmodi & Deep-Sleep, Light-Sleep \\ \hline
+    \end{tabular}
+    \caption{Technische Daten des ESP32}
+    \label{tab:esp32td}
+    \end{table}
+
+  \paragraph{M5StickC}
+  \par \textbf{}
+  \par Der M5StickC ist eine kompakte Entwicklungsplattform, die auf dem ESP32 basiert. Er verfügt über ein integriertes Display, eine Batterie und zusätzliche integrierte Sensoren.
+  \par Der M5StickC verfügt über ein 1,14-Zoll großes LCD-Display, das die visuelle Ausgabe von Sensordaten oder Statusmeldungen ermöglicht. Außerdem enthält er eine integrierte IMU (Inertial Measurement Unit) zur Bewegungs- und Lageerkennung. Eine integrierte Lipo-Batterie ermöglicht den kabellosen Betrieb über einen längeren Zeitraum.
+  \par Aufgrund seiner kompakten Größe und der langen Batterielaufzeit eignet er sich besonders für IoT-Systeme. 
+  \par In diesem Projekt dient der M5StickC als tragbare Steuerungs- und Überwachungseinheit. An das Modul werden Temperatur- und Lichtsensoren angeschlossen. Das Modul wird über WLAN mit dem Server verbunden. Auf dem integrierten Display werden die Daten der Sensoren sowie Verbindungszustände und Meldungen angezeigt. 
+  \subsubsection{BME680}
+  \par Der BME680 ist ein kompakter Umweltsensor von Bosh, der mehrere Funktionen in einem Modul vereint. Das Modul ist mit einem Gassensor, einem Feuchtesensor, einem Luftdrucksensor und einem Temperatursensor ausgestattet. Aufgrund seiner kompakten Größe und hohen Genauigkeit wird das Modul häufig im Bereich der Umweltsensorik eingesetzt.
+  \par Mit Hilfe des eingebauten Gassensors und einer vom Hersteller speziell entwickelten Software kann die Luftqualität (IAQ - Eng. Index of Air Quality) gemessen werden. Grundsätzlich handelt es sich um eine Zahl von 0 bis 500, wobei 0 die beste und 500 die schlechteste Luftqualität darstellt. Eine detaillierte Beschreibung des Sensors sowie der Bestimmung der IAQ ist im Datenblatt zum Modul BME680 \cite{bme680} unter Kapitel 1.2 zu finden. Die Tabelle \ref{tab:bme680td} enthält die wichtigsten technischen Daten des Moduls.
+  \par Der BME680 verfügt über I2C- und SPI- Schnittstellen für die Kommunikation mit anderen Geräten. 
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    Modell & BME680 \\ \hline
+    Versorgungsspannung & 3,3 V \\ \hline
+    Schnittstellen & I2C, SPI \\ \hline
+    Temperaturbereich & -40 bis +85 °C \\ \hline
+    Luftfeuchtigkeitsbereich & 0 – 100 \% \\ \hline
+    Druckbereich & 300 – 1100 hPa \\ \hline
+    Luftqualität & 0 - Gute Qualität \\ & 500 - schlechte Qualität \\ \hline
+    \end{tabular}
+    \caption{Technische Daten des BME680}
+    \label{tab:bme680td}
+    \end{table}
+  \par In meinem Projekt wird das Modul BME680 zur Messung von Temperatur und Luftqualität eingesetzt.
+  \subsubsection{VCNL4040}
+  \par Der VCNL4040 ist ein hochpräzises optisches Modul. Das Modul enthält einen Näherungssensor (Proximity Sensor PR), einen Lichtsensor (Ambient Light Sensor) und eine Infrarot-Leuchtdiode (IRED). 
+  \par Mit Hilfe des Näherungssensors und der IRED kann das Modul den Abstand zu einem Objekt bis zu einer Entfernung von 200 mm in Echtzeit messen. Der Lichtsensor misst die Helligkeit der Umgebung. 
+  \par Das VCNL4040 verfügt über eine I2C-Schnittstelle zur Kommunikation mit anderen Geräten. 
+  \par Eine detaillierte Beschreibung des Moduls sowie die technischen Daten sind dem Datenblatt \cite{vcnl4040} zu entnehmen. In der Tabelle \ref{tab:vcnl4040td} sind die wichtigsten Daten aufgelistet.
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    Modell & VCNL4040 \\ \hline
+    Messprinzip & Infrarot-Näherungssensor \\ \hline
+    Versorgungsspannung & 3,3 V \\ \hline
+    Schnittstellen & I2C \\ \hline
+    Erfassungsbereich & 0 – 200 mm \\
+    Maximale Abtastrate & 20 Hz \\ \hline
+    \end{tabular}
+    \caption{Technische Daten des VCNL4040}
+    \label{tab:vcnl4040td}
+    \end{table}
+
+  \par In diesem Projekt wird das Modul als Lichtsensor zur Bestimmung der Umgebungshelligkeit eingesetzt. Außerdem wird es zur Näherungserkennung verwendet, um berührungslose Steuerungen zu ermöglichen.
+  \subsubsection{Raspberry Pi}
   \subsection{Kommunikationsprotokolle}
   \subsubsection{HTTP}
   \subsubsection{MQTT}
@@ -333,7 +449,7 @@
   \paragraph{Interaktionen mit der Datenbank}
   \textbf{}
   \par In der Datei \texttt{queries.py} (Listing \ref{lst:dbqueries}) sind die benötigten Funktionen für die Interaktion mit der Datenbank definiert. Diese Funktionen ermöglichen das Einfügen, Löschen, Abrufen und Aktualisieren der Daten in der Datenbank.
-  \par Jede Funktion bekommt ein \texttt{AsyncSession} als erster Parameter. Über diese Session werden die Operationen in der Datenbank duchgeführt. Das erlaubt auch asynchroner Zugriff zur Datenbank. Das Erzeugen der Sessions wird im nächsten Paragraph beschrieben. 
+  \par Jede Funktion bekommt ein \texttt{AsyncSession} als erster Parameter. Über diese Session werden die Operationen in der Datenbank duchgeführt. Das erlaubt auch asynchroner Zugriff zur Datenbank.
   \par Als Beispiel werde ich die Struktur der Funktion \texttt{add\_user()} näher erläutern. Diese Funktion fügt einen neuen Benutzer in die Datenbank ein. Die Funktion erhält als Parameter \texttt{AsyncSession} und die Benutzerdaten, d.h. Benutzername, Email und Passwort. Zuerst wird das Passwort verschlüsselt. Anschließend wird ein Objekt \texttt{new\_user} der Klasse \texttt{UserModel} mit den übergebenen Parametern erzeugt. Dieses Objekt wird mit dem Befehl \texttt{db\_session.add(new\_user)} in die Datenbank eingefügt. Nach dem Einfügen muss der Befehl \texttt{db\_session.commit()} aufgerufen werden, um die Änderungen in der Datenbank zu speichern. Anschließend wird das \texttt{new\_user} aktualisiert und der Primärschlüssel zurückgegeben.
   \par Beim Arbeiten mit der Datenbank müssen mögliche Fehler behandelt werden. Deshalb enthält jede Funktion einen \texttt{Try-Catch-Block}. 
   \par Ein \texttt{IntegrityError} wird ausgelöst, wenn eine Datenbankoperation gegen eine Integritätsbedingung der Datenbank verletzt. Er wird bei Verletzung einer Fremdschlüsselbeziehung, der Unique Constraints oder beim Einfügen von Daten des falschen Typs erzeugt. 
@@ -342,10 +458,12 @@
   \par Bei jedem Fehler wird der Fehler geloggt und die Session zurückgesetzt, damit keine unvollständigen Daten in der Datenbank gespeichert werden. Anschließend wird eine \texttt{HTTPException} mit Status und Beschreibung des Fehlers zurückgegeben.
   \paragraph{Initialisierung der Datenbank}
   \par \textbf{}
-  \par Beim Import des Moduls \texttt{db} wird die Klasse \texttt{\_\_init\_\_} (Listing \ref{lst:dbinit}) aufgerufen. In dieser Klasse wird zunächst der Logger initialisiert. Anschließend wird eine asynchrone Engine \texttt{async\_engine} für die Verbindung zur Datenbank erzeugt. Mit dem Parameter \texttt{async\_engine} wird das Objekt \texttt{async\_session} der Klasse \texttt{Sessionmaker} erzeugt. Die Funktion \texttt{create\_tables()} initialisiert alle Tabellen in den Klassenmodellen, die von der Klasse \texttt{Base} erben. Die Funktion \texttt{get\_session()} gibt eine asynchrone Session aus der \texttt{async\_session} zurück. Mit dieser Session wird dann auf die Datenbank zugegriffen.
+  \par Beim Import des Moduls \texttt{db} wird die Klasse \texttt{\_\_init\_\_} (Listing \ref{lst:dbinit}) aufgerufen. In dieser Klasse wird zunächst der Logger initialisiert. Anschließend wird eine asynchrone Engine \texttt{async\_engine} für die Verbindung zur Datenbank erzeugt. Mit dem Parameter \texttt{async\_engine} wird das Objekt \texttt{async\_session} der Klasse \texttt{Sessionmaker} erzeugt. Die Funktion \texttt{create\_tables()} initialisiert alle Tabellen in den Klassenmodellen, die von der Klasse \texttt{Base} erben. Die Funktion \texttt{get\_session()} gibt eine asynchrone Session aus der \texttt{async\_session} zurück. Mit dieser Session wird dann auf die Datenbank zugegriffen. 
+% 
   \subsubsection{Webbasierte Schnittstelle (API)} 
   \par Um die Benutzerinteraktionen mit dem System zu ermöglichen, muss eine Schnittstelle gebaut werden. Diese Schnittstelle muss den gesicherten Zugriff zu dem System bieten, die notwendigen Informationen bereitstellen, auf die Benutzerinteraktionen reagieren und die Daten verwalten. Nach sorgfältiger Abwägung verschiedener Optionen habe ich mich für die Implementierung einer webbasierten Schnittstelle auf Basis von \texttt{FastAPI} entschieden.
   \par Ein entscheidender Vorteil von \texttt{FastAPI} gegenüber anderen Frameworks wie \texttt{Flask} oder \texttt{Django} in diesem Projekt ist die native Unterstützung asynchroner Programmierung. Dadurch kann \texttt{FastAPI} Anfragen effizient bearbeiten, indem sie mehrere Tasks gleichzeitig ausführt, anstatt blockierend auf das Ende einzelner Prozesse zu warten. Dies ist für mein System besonders vorteilhaft, da mehrere Benutzerinteraktionen, Datenverarbeitung und auch MQTT-Kommunikation parallel ablaufen müssen. Darüber hinaus bietet \texttt{FastAPI} automaisch generierte Dokumentation für die API.
+  \par Die zentrale Idee hinter der Entwicklung der API besteht darin, dem Benutzer eine effiziente und sichere Möglichkeit zu bieten, IoT-Geräte in einer strukturierten Umgebung zu verwalten. Dies umfasst das Hinzufügen neuer Geräte, die Gruppierung dieser Geräte in Räumen sowie die Verwaltung mehrerer Räume innerhalb eines Hauses. Darüber hinaus ermöglicht die API die kontinuierliche Überwachung und Steuerung der hinzugefügten Geräte.
   \par Der Webserver ist, wie auch anderen Komponenten, in einem Paket namens \texttt{webserver} srukturiert. Die Struktur des Packets ist wie folgt aufgebaut:
   \begin{Verbatim}[frame=single]
     bachelor/code/spa/webserver
@@ -369,6 +487,7 @@
   \par Zur besseren Strukturierung und Modularisierung des Codes wurden die Hilfsfunktionen in das Skript \texttt{services.py} ausgelagert. Diese Funktionen enthalten die Anwendungslogik, verarbeiten die Daten und stellen sie zur Verfügung, verwalten die Verbindungen zum WebSocket.
   \par Nach dem Import der erforderlichen Module wird ein Router mit \texttt{APIRouter()} erstellt, um die API-Endpunkte zu definieren. Der Router wird anschließend mit der Methode \texttt{include\_router()} in das Hauptobjekt der FastAPI-Anwendung integriert.
   \par Um auf Anfragen mit HTML-Dateien zu antworten, wird ein \texttt{Jinja2Templates}-Objekt erstellt. Dabei wird der Pfad zum Ordner \texttt{templates/} angegeben, der die HTML-Vorlagen enthält. Dieses Objekt ermöglicht es, dynamische HTML-Antworten zu generieren, indem Daten aus den Endpunkten in die Vorlagen eingebunden werden.
+  \par Jede Funktion, die auf die Datenbank zugreift, benötigt als Parameter eine Instanz der Klasse \texttt{AsyncSession}. Im Modul \texttt{routes.py} wird dazu die Funktion \texttt{get\_session()} aus dem Paket \texttt{db} importiert, die für die Erstellung und Verwaltung von Datenbanksitzungen zuständig ist. Durch die Verwendung des Abhängigkeitsmechanismus \texttt{Depends(get\_session)} wird bei jedem Aufruf einer Router-Funktion automatisch eine neue Datenbanksitzung erzeugt und an die entsprechenden Unterfunktionen weitergegeben. Dies ermöglicht eine effiziente und asynchrone Kommunikation mit der Datenbank, wodurch mehrere Anfragen gleichzeitig ohne blockierende Wartezeiten bearbeitet werden können.
   \par Durch die Verwendung von FastAPI-Routern und einer klar strukturierten Modulanordnung bleibt die API übersichtlich, leicht wartbar und erweiterbar. Die Trennung von Präsentationslogik (HTML, CSS) und Daten (API) wird ebenfalls gewährleistet.
   \paragraph{Sicherheit}
   \par \textbf{}
@@ -382,13 +501,44 @@
     }
   \end{Verbatim}
   \par Das Request-Objekt wird an die Funktion \texttt{routes.get\_token()} übergeben, die das JWT-Token aus dem HTTP-Header extrahiert. Dabei wird geprüft, ob der Header das Feld „\texttt{auth}“ enthält und ob dessen Wert mit dem Schlüsselwort "Bearer" beginnt. Ist dies nicht der Fall, wird eine Exception ausgelöst, da das Token in einem ungültigen Format vorliegt. Im normalen Ablauf wird das Token aus dem Header extrahiert und zur weiteren Verarbeitung zurückgegeben.
+  \par Die Verifizierung des Tokens stellt eine grundlegende Voraussetzung für alle API-Funktionen dar. Nur gültige und nicht abgelaufene Tokens ermöglichen den Zugriff auf geschützte Ressourcen der API.
   \par Nach der Extraktion wird das Token als Parameter an die Funktion \texttt{services.verify\_token()} übergeben, um seine Gültigkeit zu überprüfen. Zunächst wird das Token entschlüsselt, und die darin enthaltene Benutzer-ID wird extrahiert.  Ist das Token abgelaufen, ungültig, fehlerhaft oder fehlen notwendige Informationen, wird eine entsprechende Fehlermeldung ausgegeben und eine HTTP-Exception mit dem entsprechenden Statuscode ausgelöst. Andernfalls wird die Benutzerkennung für nachfolgende Verarbeitungsschritte zur Verfügung gestellt.
   \paragraph{Anmeldung}
   \par \textbf{}
   \par Damit ein Benutzer die Funktionen der API nutzen kann, muss zunächst ein Konto erstellt werden. Dies erfolgt durch Senden eines \texttt{POST}-Requests an die Route \texttt{/sign\_up}. Der Request muss die erforderlichen Parameter \texttt{username}, \texttt{email} und \texttt{password} enthalten. Nach Erhalt der Anfrage wird die Funktion \texttt{signup\_post()} aufgerufen, die die eingegebenen Daten verarbeitet und die Benutzerregistrierung durchführt.
-  \par Die Registrierungsdaten werden als \texttt{SignUpModel}-Objekt entgegengenommen und an die Funktion \texttt{services.signup\_user()} weitergeleitet. Diese Funktion übernimmt die Validierung der Eingaben, indem sie prüft, ob alle erforderlichen Felder ausgefüllt wurden. Wenn ein Wert fehlt, wird eine entsprechende Fehlermeldung geloggt und eine Fehlermeldung wird zurückgegeben. Sind alle Daten vollständig, werden die Daten mit der Funktion \texttt{queries.add\_user()} in der Datenbank gespeichert. 
+  \par Die Registrierungsdaten werden als \texttt{SignUpModel}-Objekt entgegengenommen und an die Funktion \texttt{services.signup\_user()} weitergeleitet. Diese Funktion übernimmt die Validierung der Eingaben, indem sie prüft, ob alle erforderlichen Felder ausgefüllt wurden. Wenn ein Wert fehlt, wird die entsprechende Fehlermeldung geloggt und zurückgegeben. Sind alle Daten vollständig, wird der Benutzer mit der Funktion \texttt{queries.add\_user()} in der Datenbank gespeichert. 
   \par Nach erfolgreicher Speicherung wird ein JWT-Token generiert und zurückgegeben, das die Benutzer-ID enthält. Mit diesem Token kann der Benutzer direkt angemeldet werden. Tritt während des Prozesses eine Exception auf, so wird diese geloggt und eine entsprechende Fehlermeldung ausgegeben.
-
+  \paragraph{Einloggen}
+  \par Um einem bereits registrierten Benutzer den Zugriff auf die API zu ermöglichen, ist eine Authentifizierung erforderlich. Diese erfolgt durch das Senden eines \texttt{POST}-Requests an die Route \texttt{/login}. Der Request muss die Parameter \texttt{username} und \texttt{password} enthalten, die im \texttt{user\_data}-Objekt übergeben werden. Nach Erhalt der Anfrage wird die Funktion \texttt{login\_post()} aufgerufen, die die Authentifizierung des Benutzers vornimmt.
+  \par Die Benutzerdaten werden als \texttt{UserLoginModel} entgegengenommen und an die Funktion \texttt{services.auth\_user()} übergeben. Diese Funktion überprüft, ob die erforderlichen Felder \texttt{username} und \texttt{password} ausgefüllt wurden. Ist es nicht der Fall, wird eine entsprechende Fehlermeldung ausgegeben. Anschließend wird mit der Funktion \texttt{queries.get\_user\_data()} geprüft, ob ein Benutzer mit dem angegebenen \texttt{username} in der Datenbank existiert. Wird kein entsprechender Datensatz gefunden, wird eine \texttt{HTTPException} mit dem Statuscode \texttt{401} und der Meldung „Invalid username“ ausgelöst.
+  \par Wenn der Benutzer existiert, wird das eingegebene Passwort mit der gespeicherten verschlüsselten Version verglichen. Ist die Prüfung erfolgreich, gibt die Funktion den Primärschlüssel zurück. Andernfalls wird die Fehlermeldung „Wrong password“ zurückgegeben.
+  \par Nach erfolgreicher Authentifizierung wird in der Funktion \texttt{loin\_post()} ein JWT-Token erzeugt und zurückgegeben, das die Benutzerkennung enthält. Tritt während des Prozesses eine Exception auf, wird diese protokolliert und eine entsprechende Fehlermeldung ausgegeben.
+  \par Nach dem erfolgreichen Eingloggen und Erhalt des Tokens, kann der Benutzer zu den Funktionen der API zugreifen. 
+  \paragraph{Haus und Raum}
+  \par \textbf{}
+  \par Der Benutzer kann seine Geräte nach Räumen und die Räume nach Häusern gruppieren. Dies erleichtert die Verwaltung und Überwachung der Geräte. Besonders im Frontend ist dies sehr nützlich, da es eine klare Strukturierung des Hauses geschaffen wird. Dabei kann ein Benutzer mehrere Häuser besitzen.
+  \par Um ein Haus zu anzulegen, muss ein \texttt{POST}-Request an die Route \texttt{add\_house} gesendet werden. Der Request muss im Header ein Bearer-Token und im Body den Namen des Hauses enthalten. Nach Erhalt des Requests wird die Funktion \texttt{add\_house\_post()} aufgerufen. Standardmäßig wird das Token validiert, und die Benutzer-ID wird aus dem Token extrahiert, um das Haus dem entsprechenden Benutzer zuzuordnen. Wenn eine gültige Benutzer-ID aus dem Token erzeugt wurde, wird diese zusammen mit der Instanz der Klasse \texttt{AsyncSession} und dem Namen des Hauses an die Funktion \texttt{services.create\_new\_house()} übergeben.
+  \par Die Funktion \texttt{services.create\_new\_house()} prüft zunächst, ob ein gültiger Hausname übergeben wurde. Anschließend wird mit der Funktion \texttt{queries.add\_new\_house()} ein neuer Eintrag in der Datenbank angelegt und dem Benutzer zugeordnet. Wenn die Erstellung erfolgreich war, gibt die Funktion eine Bestätigung zurück. Andernfalls oder im Fehlerfall wird eine entsprechende Fehlermeldung generiert und geloggt.
+  \par Das Verfahren zum Hinzufügen eines Raumes zu einem House ist im Wesentlichen dasselbe wie bei der Erstellung eines House. An die Route \texttt{add\_room} wird ein \texttt{POST}-Request mit dem Token im Header und mit dem Namen des Raumes sowie der zugehörigen House-ID als \texttt{RoomModel} im Inhalt gesendet. Auch hier wird das JWT-Token standardmäßig validiert, und die Benutzer-ID daraus extrahiert. 
+  \par Die Daten des Raumes und die Benutzer-ID werden an die Funktion \texttt{services.add\_room()} übergeben. Diese Funktion holt zunächst mit dem Befehl \texttt{queries.get\_house()} die Daten des Hauses aus der Datenbank, um den Besitzer des Hauses zu bestätigen. Stimmt die übergebene Benutzer-ID mit der in der Datenbank gespeicherten Benutzer-ID des Hausbesitzers überein, wird mit der Funktion \texttt{queries.add\_new\_room()} ein neuer Eintrag in der Datenbank erstellt. Im Erfolgsfall wird eine Bestätigung zurückgegeben. 
+  \par Wenn der Benutzer nicht berechtigt ist, einen Raum zu dem angegebenen Haus hinzuzufügen, wird eine Meldung über unberechtigten Zugriff geloggt und als Fehlerantwort zurückgegeben.
+  Das Löschen eines Hauses oder Raumes erfolgt ähnlich wie das Hinzufügen: Es wird ein \texttt{POST}-Request an die entsprechenden Routen (\texttt{/delete\_house} bzw. \texttt{delete\_room}) gesendet, wobei im Header das Bearer-Token und im Inhalt des Requests die zu löschende Haus- bzw. Raum-ID übermittelt wird. Dabei ist zu beachten, dass beim Löschen eines Hauses auch alle zugehörigen Räume gelöscht werden. Dies wird durch die Beziehung \texttt{rooms} in \texttt{HouseModel} in der Datenbank definiert. 
+  \par Beim Löschen eines Hauses wird ein Request mit den Benutzer- und House-ID an die Route \texttt{/delete\_house} gesenden. Nach der Validierung des Tokens und Erzeugeung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_house()} übergeben. Diese Funktion prüft, ob das Haus dem Benutzer gehört und löscht mit dem Befehl \texttt{queries.delete\_house()} den zugehörigen Eintrag aus der Datenbank. Die zugehörigen Räume werden ebenfalls gelöscht. Im Fehlerfall wird der entsprechende Fehler geloggt und ausgegeben. 
+  \par Das Löschen eines Raumes ist ähnlich dem Löschen eines Hauses. Ein Request mit der Raum- und Haus-ID wird an die Route \texttt{delete\_room} gesendet. Nach der Validierung des Tokens und Erzeugeung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_room()} übergeben. Wenn der Benutzer der Eigentümer des Hauses mit der übergebenen House-ID ist, wird der Raum aus der Datenbank gelöscht. Tritt ein Fehler auf, wird dieser geloggt und die entsprechende Meldung wird ausgegeben.
+  \par Die Route \texttt{/get\_houses} gibt alle Häuser des Benutzers im JSON-Format zurück. Der Request muss im Header nur das Token enthalten, aus dem die Benutzer-ID erzeugt wird. Die Benutzer-ID wird an die Funktion \texttt{services.get\_houses()} übergeben, die Benutzer-ID an die Funktion \texttt{queries.get\_houses\_on\_user()} übergibt. Diese Funktion gibt eine Liste von \texttt{HouseModel} zurück, die dem Benutzer gehören. Diese Liste wird in eine „List of Dictionaries“ umgewandelt, die alle Häuser, die zugehörigen Räume und die Geräte enthält. Anschließend wird ein JSONResponse-Objekt zurückgegeben.
+  \paragraph{Device}
+  \par \textbf{}
+  \par Die zentrale Aufgabe der API ist die Überwachung der angeschlossenen Geräte und die Benachrichtigung der Benutzer über erkannte Gefahren. Damit dieses System genutzt werden kann, muss der Benutzer die Möglichkeit haben, seine Geräte in das System einzubinden.
+  \par Jedes Gerät verfügt über eine eindeutige Geräte-ID, die im Programmcode des Gerätes fest hinterlegt ist und zur Identifikation innerhalb des Systems dient. Die Speicherung der Geräte erfolgt in der Datenbank innerhalb der Tabelle \texttt{device} in Form von \texttt{DeviceModel}-Objekten.
+  \par Die Integration eines neuen Gerätes erfolgt durch das Senden eines \texttt{POST}-Requests an die Route \texttt{/add\_new\_device}. Der Header des Requests muss ein gültiges JWT-Token enthalten, aus dem die Benutzer-ID ausgelesen wird. Im Body des Requests muss die eindeutige Geräte-ID angegeben werden.  Optional kann ein vom Benutzer erstellter Name und eine Beschreibung des Gerätes sowie die Raum-ID für die Zuordnung des Gerätes zum Raum übergeben werden. Der Name dient ausschließlich der Benutzerfreundlichkeit, indem er eine eindeutige Identifikation des Gerätes ermöglicht. Die übergebenen Daten werden innerhalb der API als Instanz \texttt{services.DeviceModel} entgegengenommen und verarbeitet.
+  \par Nach Erhalt des Requests wird die Funktion \texttt{add\_new\_device\_post} aufgerufen. Zuerst wird das Token validiert und die Benutzer-ID aus dem Token erzeugt. Anschließend werden die Gerätedaten an die Funktion \texttt{services.add\_new\_device} übergeben. Diese prüft zunächst, ob sowohl die Geräte-ID als auch der Gerätename im Request enthalten sind. Fehlt eine dieser Angaben, wird der Vorgang abgebrochen und eine Fehlermeldung zurückgegeben.
+  \par Zusätzlich hat der Benutzer die Möglichkeit, das Gerät direkt einem bestimmten Raum innerhalb des Hauses zuzuordnen. Dazu muss im Body des Requests die entsprechende Raum-ID angegeben werden. Die Funktion \texttt{services.add\_new\_device} sucht in diesem Fall, mit dem Befehl \texttt{queries.get\_house\_by\_room} nach dem entsprechenden Haus. Anschließend wird geprüft, ob die aus dem Token extrahierte Benutzer-ID mit der des Hauseigentümers übereinstimmt. Ist dies nicht der Fall, wird der Zugriff verweigert, der Vorgang abgebrochen und eine entsprechende Fehlermeldung zurückgegeben.
+  \par Anschließend wird mit dem Befehl \texttt{queries.add\_new\_device} das Gerät zunächst ohne direkte Raumzuordnung in der Datenbank gespeichert. Ist eine Raum-ID vorhanden, wird mit dem Befehl \texttt{queries.add\_room\_device} ein Eintrag in der Tabelle \texttt{roomdevice} erzeugt, der den Primärschlüssel des Gerätes mit der Raum-ID verknüpft.
+  \par Diese strukturierte Vorgehensweise gewährleistet nicht nur eine sichere und konsistente Registrierung neuer Geräte, sondern bietet dem Benutzer auch die Möglichkeit, seine Smart-Home-Geräte flexibel zu verwalten und eindeutig zu identifizieren.
+ \paragraph{MQTT-Client}
+ \par Die Geräte senden ihre Daten über die MQTT-Verbindung an dem MQTT-Broker. Dabei hat jedes Gerät ein separates Topic, das sich auf die Geräte-ID bezieht. Um die Daten von dem Gerät zu erhalten muss ein MQTT-Client das Topic abonnieren.
+ \par Der MQTT-Client für den Webserver ist im Paket \texttt{mqtt} eingepackt. 
+ \par Der MQTT-Client 
   \subsubsection{Frontend}
   \subsubsection{Integration der Komponenten}
   \par MQtt client, erhalten Daten von Broker etc
@@ -423,6 +573,13 @@
   Raspberry Pi Foundation, \textit{Raspberry Pi 1 B+}, \url{https://www.raspberrypi.com/products/raspberry-pi-1-model-b-plus/}
   \bibitem{esp8266}
   Espressif, \textit{ESP8266}, \url{https://www.espressif.com/}, \url{https://www.electronicwings.com/sensors-modules/esp8266-wifi-module}
+
+  \bibitem{bme680}
+  Bosh, \textit{BME680 - Datasheet}, \url{https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf}, Zugriff: 4. Februar 2025.
+
+  \bibitem{vcnl4040}
+  Vishay, \textit{VCNL4040 - Datasheet}, \url{https://www.vishay.com/docs/84274/vcnl4040.pdf}, Zugriff: 5. Februar 2025.
+
   \par \textbf{Links zur verwendeten Software:}
   \bibitem{mqtt}
   Dr Andy Stanford-Clark, Arlen Nipper, \textit{Message Queuing Telemetry Transport}, \url{https://mqtt.org/}
@@ -690,562 +847,8 @@
 %   }
 % \end{lstlisting}
 
-% \begin{lstlisting}[frame=single, style=py, numbers=left, label={lst:dbmodels}, caption={db: models.py}]
-%   import bcrypt
-%   from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
-%   from sqlalchemy.orm import relationship
-%   from sqlalchemy.schema import UniqueConstraint
-%   from .base import Base
-%   from app.config import Config
-%   __logger = Config.logger_init()
-  
-  
-%   class UserModel(Base):
-%       __tablename__ = 'user'
-%       primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-%       username = Column(String(50), unique=True, nullable=False)
-%       email = Column(String(100), unique=True, nullable=False)
-%       password = Column(String(200), nullable=False)
-      
-%       def verify_password(self, password:str):
-%           return bcrypt.checkpw(password.encode('utf-8'), self.password)
-  
-%   class HouseModel(Base):
-%       __tablename__ = 'house'
-%       primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-%       name = Column(String(50), nullable=False)
-%       user_id = Column(Integer, ForeignKey("user.primary_key", ondelete='CASCADE'), nullable=False)
-%       rooms = relationship("RoomModel", backref="house", cascade="all, delete-orphan", lazy='selectin')
-  
-%       __table_args__ = (UniqueConstraint('name', 'user_id'),)
-  
-%   class RoomModel(Base):
-%       __tablename__ = 'room'
-%       primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-%       name = Column(String(50), nullable=False)
-%       house_id = Column(Integer, ForeignKey('house.primary_key', ondelete='CASCADE'), nullable=False)
-      
-%       devices = relationship("RoomDeviceModel", back_populates="room", cascade="all, delete-orphan", lazy='selectin')
-  
-%       __table_args__ = (UniqueConstraint('name', 'house_id'),)
-  
-%   class DeviceModel(Base):
-%       __tablename__ = 'device'
-%       primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-%       dev_id = Column(String(10), nullable=False)
-%       name = Column(String(50), nullable=False)
-%       user_id = Column(Integer, ForeignKey('user.primary_key', ondelete='CASCADE'), nullable=False, unique=False)
-%       description = Column(String(250), nullable=True)
-%       dev_rooms = relationship("RoomDeviceModel", back_populates="device", cascade="all, delete-orphan", lazy='selectin')
-  
-%       __table_args__ = (UniqueConstraint('user_id', 'dev_id'),)
-  
-%   class RoomDeviceModel(Base):
-%       __tablename__ = 'room_device'
-%       primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-%       room_id = Column(Integer, ForeignKey('room.primary_key', ondelete='CASCADE'), nullable=False)
-%       device_primary = Column(Integer, ForeignKey('device.primary_key', ondelete='CASCADE'), nullable=False)
-  
-%       room = relationship("RoomModel", back_populates="devices")
-%       device = relationship("DeviceModel", back_populates="dev_rooms")
-  
-%       __table_args__ = (UniqueConstraint('room_id', 'device_primary'),)
-%     \end{lstlisting}
-% \begin{lstlisting}[frame=single, style=py, numbers=left, label={lst:dbqueries}, caption={db: queries.py}]
-%   import bcrypt
-%   from app.config import Config
-%   from sqlalchemy import select, insert, update, delete, func
-%   from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
-%   from sqlalchemy.ext.asyncio import AsyncSession
-%   from sqlalchemy.orm import joinedload
-%   from .models import UserModel, HouseModel, RoomModel, DeviceModel, RoomDeviceModel
-%   from fastapi import Depends, HTTPException
-%   _logger = Config.logger_init()
-  
-%   async def add_user(db_session: AsyncSession, username: str, email: str, password: str):
-%       """
-%       Adds new user to Database. SIGNUP.
-%       :param db_session: SQLAlchemy AsyncSession
-%       :param username, email, password: user data
-%       :return: True -> user added; IntegityError -> username or email already in DB; HTTPExcepion
-%       """
-%       if username is None or email is None or password is None:
-%           _logger.error("All user data must be provided")
-%           return False
-%       try:
-%           password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-%           new_user = UserModel(username=username, email=email, password=password)
-%           _logger.debug(f'ADD U_NAME {new_user.username} START')
-%           db_session.add(new_user)
-%           await db_session.commit()
-%           await db_session.refresh(new_user)
-%           _logger.debug(f'ADD U_NAME {new_user.username} COMPLETED')
-%           return new_user.primary_key
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="ALREADY EXISTS")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-  
-%   async def get_user_data(db_session: AsyncSession, user_primary: int = None, username: str = None, email: str = None):
-%       if not user_primary and not username and not email:
-%           _logger.error(msg="EMPTY SET")
-%           raise ValueError()
-%       query = select(UserModel)
-%       if user_primary:
-%           query = query.where(UserModel.primary_key == user_primary)
-%       if username:
-%           query = query.where(UserModel.username == username)
-%       if email:
-%           query = query.where(UserModel.email == email)
-%       try:
-%           res = await db_session.execute(query)
-%           return res.scalars().first()
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-  
-%   async def add_new_house(db_session: AsyncSession, user_primary: int, house_name: str):
-%       try:
-%           new_house = HouseModel(user_id=user_primary, name=house_name)
-%           db_session.add(new_house)
-%           await db_session.commit()
-%           await db_session.refresh(new_house)
-%           _logger.info(f"U_ID: {user_primary} ADD HOUSE_ID {new_house.primary_key}")
-%           return new_house
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="ALREADY EXISTS")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-  
-%   async def delete_house(db_session: AsyncSession, house_id):
-%       try:
-%           house = await db_session.get(HouseModel, house_id)
-%           await db_session.delete(house)
-%           await db_session.commit()
-%           return True
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-  
-%   async def get_house(db_session: AsyncSession, house_primary: int):
-%       try:
-%           return await db_session.get(HouseModel, house_primary)
-%       except NoResultFound:
-%           _logger.error(f'HOUSE_ID {house_primary} HOUSE NOT FOUND')
-%           raise HTTPException(status_code=404, detail='NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-  
-%   async def get_houses_on_user(db_session: AsyncSession, user_primary: int):
-%       try:
-%           stmt = (
-%               select(HouseModel)
-%               .options(
-%                   joinedload(HouseModel.rooms)
-%                   .joinedload(RoomModel.devices)
-%                   .joinedload(RoomDeviceModel.device)
-%                   .joinedload(DeviceModel.dev_rooms)
-%               )
-%               .filter(HouseModel.user_id == user_primary)
-%           )
-%           # print(str(stmt))
-%           houses = await db_session.execute(stmt)
-%           houses = houses.scalars().unique().all()
-%           return houses
-%       except NoResultFound:
-%           _logger.error(f'U_ID {user_primary} HOUSE NOT FOUND')
-%           raise HTTPException(status_code=404, detail='NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-      
-%   async def get_house_by_room(db_session: AsyncSession, room_id: int):
-%       try:
-%           stmt = select(HouseModel).join(RoomModel, RoomModel.house_id == HouseModel.primary_key).where(RoomModel.primary_key == room_id)
-%           res = await db_session.execute(stmt)
-%           return res.scalar_one_or_none()
-%       except NoResultFound as e:
-%           _logger.error(f"NoResultFound:{e}")
-%           raise HTTPException(404, 'NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-      
-%   async def verify_house_owner(db_session: AsyncSession, user_primary: int, house_id: int):
-%       try:
-%           house = await db_session.get(HouseModel, house_id)
-%           if house:
-%               return house.user_id == user_primary
-%       except NoResultFound as e:
-%           _logger.error(f"NoResultFound: {e}")
-%           raise HTTPException(404, 'NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-  
-%   async def add_new_room(db_session: AsyncSession, house_id: int, room_name: str):
-%       try:
-%           new_room = RoomModel(name = room_name, house_id = house_id)
-%           db_session.add(new_room)
-%           await db_session.commit()
-%           _logger.info(f"ADD ROOM_NAME {room_name} HOUSE_ID {house_id}")
-%           return True
-%       except NoResultFound as e:
-%           _logger.error(f"NoResultFound:{e}")
-%           raise HTTPException(404, 'NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="ALREADY EXISTS")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-  
-%   async def delete_room(db_session: AsyncSession, room_id: int):
-%       try:
-%           # get RoomModel from DB
-%           del_room = await db_session.execute(
-%               select(RoomModel)
-%               .where(RoomModel.primary_key == room_id)
-%           )
-%           # fetch result
-%           del_room = del_room.scalars().one()
-  
-%           await db_session.delete(del_room)
-%           await db_session.commit()
-%           return True
-%       except NoResultFound as e:
-%           _logger.error(f"NoResultFound:{e}")
-%           raise HTTPException(404, 'NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"An unexpected error: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-      
-%   async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
-%       try:
-%           if device_data.dev_id is None or device_data.name is None or user_id is None:
-%               return False
-%           new_dev = DeviceModel(
-%               dev_id = device_data.dev_id,
-%               name = device_data.name,
-%               user_id = user_id,
-%               description = device_data.description
-%           )
-%           db_session.add(new_dev)
-%           await db_session.commit()
-%           await db_session.refresh(new_dev)
-%           return new_dev
-%       except NoResultFound as e:
-%           _logger.error(f"NoResultFound:{e}")
-%           raise HTTPException(404, 'NOT FOUND')
-%       except IntegrityError as e:
-%           await db_session.rollback()
-%           _logger.error(f"IntegrityError: {e}")
-%           raise HTTPException(status_code=422, detail="ALREADY EXISTS")
-%       except SQLAlchemyError as e:
-%           await db_session.rollback()
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           await db_session.rollback()
-%           _logger.error(f"An unexpected error: {e}")
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-      
-%   async def get_device(db_session:AsyncSession, user_id: int, primary_key: int = None, dev_id: str = None, name: str = None):
-%       """
-%       Get Device data
-%       :param db_session: AsyncSession to access DB
-%       :param user_id: Owner of the Sensor
-%       :param id: Optional; device.primary_key in DB
-%       :param dev_id: Optional; device.dev_id (Factory ID)
-%       :param name: OPtional Device Name
-%       """
-      
-%       if not primary_key and not dev_id and not name:
-%           return None
-%       stmt = select(DeviceModel)
-%       if primary_key:
-%           stmt = stmt.where(DeviceModel.primary_key == primary_key, DeviceModel.user_id == user_id)
-%       if dev_id:
-%           stmt = stmt.where(DeviceModel.dev_id == dev_id, DeviceModel.user_id == user_id)
-%       if name:
-%           stmt = stmt.where(DeviceModel.name == name, DeviceModel.user_id == user_id)
-%       try:
-%           res = await db_session.execute(stmt)
-%           return res.scalar_one_or_none()
-%       except NoResultFound:
-%           return None
-%       except IntegrityError as e:
-%           await db_session.rollback()
-%           _logger.error(f"IntegrityError: {e.orig}")
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           await db_session.rollback()
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           await db_session.rollback()
-%           _logger.error(f"An unexpected error: {e}")
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-      
-%   async def get_devices_on_user(db_session: AsyncSession, user_primary: int):
-%       try:
-%           stmt = (
-%               select(DeviceModel)
-%               .options(
-%                   joinedload(DeviceModel.dev_rooms)
-%                   .joinedload(RoomDeviceModel.room)
-%                   .joinedload(RoomModel.devices)
-%               )
-%               .filter(DeviceModel.user_id == user_primary)
-%           )        
-          
-%           devices = await db_session.execute(stmt)
-%           return devices.scalars().unique().all()
-%       except NoResultFound:
-%           _logger.error(f'U_ID {user_primary} HOUSE NOT FOUND')
-%           raise HTTPException(status_code=404, detail='NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-      
-%   async def update_device(db_session: AsyncSession, user_id:int, new_device_data):
-%       try:
-%           # TODO also change room
-%           if new_device_data.primary is None:
-%               _logger.error("DEVICE_PRIMARY IS NOT PROVIDED")
-%               raise HTTPException(status_code=400, detail="DEVICE_PRIMARY IS NOT PROVIDED")
-%           if new_device_data.name is None and new_device_data.description is None:
-%               _logger.error("NEW DATA IS NOT PROVIDED")
-%               raise HTTPException(status_code=400, detail="NEW DATA IS NOT PROVIDED")
-%           device = await db_session.get(DeviceModel, new_device_data.primary)
-%           if device:
-%               if device.user_id != user_id:
-%                   _logger.critical(f"UNAUTHORIZED ACCESS U_ID {user_id} ON DEVICE {device.primary_key}")
-%                   raise HTTPException(status_code=401, detail="User is not owner of this device")
-%               if new_device_data.name:
-%                   device.name = new_device_data.name
-%               if new_device_data.description:
-%                   device.description = new_device_data.description
-%               await db_session.commit()
-%           return device
-%       except NoResultFound:
-%           _logger.error(f'{new_device_data.primary} DEVICE NOT FOUND')
-%           raise HTTPException(status_code=404, detail='NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except HTTPException as e:
-%           raise e
-%       except Exception as e:
-%           _logger.error(f"Exception: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-      
-%   async def delete_device(db_session: AsyncSession, device_primary_key: int, device_id: str = None):
-%       try:
-%           if not device_id and not device_primary_key:
-%               _logger.error("EMPTY SET")
-%               raise HTTPException(status_code=400, detail="NO DEVICE DATA PROVIDED")
-%           # del_device = DeviceModel(primary_key = device_primary_key, dev_id = device_id)
-%           del_device = await db_session.get(DeviceModel, device_primary_key)
-%           if del_device:
-%               await db_session.delete(del_device)
-%               await db_session.commit()
-%               return True
-%           else:
-%               raise HTTPException(404, 'NOT FOUND')
-%       except NoResultFound as e:
-%           _logger.error(f"NoResultFound:{e}")
-%           raise HTTPException(404, 'NOT FOUND')
-%       except IntegrityError as e:
-%           _logger.error(f"IntegrityError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           _logger.error(f"An unexpected error: {e}")
-%           await db_session.rollback()
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-      
-%   async def add_room_device(db_session: AsyncSession, device_primary, room_id):
-%       try:
-%           rd = RoomDeviceModel(room_id = room_id, device_primary = device_primary)
-%           db_session.add(rd)
-%           await db_session.commit()
-%           _logger.info(f'DEV_ID {device_primary} ADDED TO ROOM_ID {room_id}')
-%           return True
-%       except IntegrityError as e:
-%           await db_session.rollback()
-%           _logger.error(f"IntegrityError: {e.orig}")
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           await db_session.rollback()
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           await db_session.rollback()
-%           _logger.error(f"An unexpected error: {e}")
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-  
-%   async def delete_room_device(db_session: AsyncSession, room_id: int, device_primary_key: int):
-%       try:
-%           # get room_device from DB
-%           del_rd = await db_session.execute(
-%               select(RoomDeviceModel).where(
-%                   RoomDeviceModel.room_id==room_id,
-%                   RoomDeviceModel.device_primary==device_primary_key
-%               )
-%           )
-%           del_rd = del_rd.scalars().first()
-%           if del_rd:
-%               await db_session.delete(del_rd)
-%               await db_session.commit()
-%               return True
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except IntegrityError as e:
-%           await db_session.rollback()
-%           _logger.error(f"IntegrityError: {e.orig}")
-%           raise HTTPException(status_code=422, detail="NOT FOUND")
-%       except SQLAlchemyError as e:
-%           await db_session.rollback()
-%           _logger.error(f"SQLAlchemyError: {e}")
-%           raise HTTPException(status_code=500, detail="DATABASE ERROR")
-%       except Exception as e:
-%           await db_session.rollback()
-%           _logger.error(f"An unexpected error: {e}")
-%           raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
-      
-% \end{lstlisting}
-\begin{lstlisting}[frame=single, style=py, numbers=left, label={lst:dbinit}, caption={db: \_\_init\_\_.py}]
-  from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-  from sqlalchemy.orm import sessionmaker
-  from app.config import Config
-  from fastapi import Depends
-  from . import models
-  from .base import Base
-  
-  logger = Config.logger_init()
-  logger.info("START DB")
-  __all__=["Base", "models"]
-  
-  async_engine = create_async_engine(Config.SQLALCHEMY_DATABASE_URL)
-  
-  async_session = sessionmaker(
-      async_engine, expire_on_commit=False, class_=AsyncSession
-  )
-  
-  async def create_tables():
-      async with async_engine.begin() as connection:
-          await connection.run_sync(Base.metadata.create_all)
-          await connection.commit()
-          logger.debug("TABLES CREATED")
-  
-  async def get_session():
-      async with async_session() as session:
-          yield session
-\end{lstlisting}
+%
+
+
 \end{document}
 % „“ 
