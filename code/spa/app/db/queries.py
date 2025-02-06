@@ -206,8 +206,9 @@ async def add_new_room(db_session: AsyncSession, house_id: int, room_name: str):
         new_room = RoomModel(name = room_name, house_id = house_id)
         db_session.add(new_room)
         await db_session.commit()
+        await db_session.refresh(new_room)
         _logger.info(f"ADD ROOM_NAME {room_name} HOUSE_ID {house_id}")
-        return True
+        return new_room
     except NoResultFound as e:
         _logger.error(f"NoResultFound:{e}")
         raise HTTPException(404, 'NOT FOUND')

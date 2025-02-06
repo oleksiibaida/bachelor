@@ -7,9 +7,14 @@ import time
 import jwt
 import json
 from app.mqtt.client import MQTTClient
-from fastapi import HTTPException, status, WebSocket
+from fastapi import HTTPException, status, WebSocket, WebSocketException
+from fastapi.websockets import WebSocketDisconnect
 from pydantic import BaseModel
 _logger = Config.logger_init()
+
+class UserLoginModel(BaseModel):
+    username: str
+    password: str
 
 class SignUpModel(BaseModel):
     username: str
@@ -39,19 +44,47 @@ class WebsocketHandler:
     active_connections = []  # Store active WebSocket connections with device_id
 
     @classmethod
+    async def auth_websocket(cls, db_session, ws: WebSocket, device_id):
+        try:
+            await ws.accept()
+            auth_message = await ws.receive_json()
+            token = auth_message.get("auth")
+            if not token or not token.startswith("Bearer "):
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="AUTH HEADER MISSING")
+            # Token starts at index 7
+            user_id = verify_token(token[7:])
+            if not user_id:
+                _logger.error("USER NOT FOUND")
+                ws.close()
+                return False
+            user_devices = await get_devices(db_session, user_id)
+            if not any(device["dev_id"] == device_id for device in user_devices):
+                ws.close()
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"U_ID {user_id} is not owner of DEV_ID {device_id}")
+            return True
+        except HTTPException as e:
+            _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
+            raise e
+        except Exception as e:
+            _logger.error(e)
+
+    @classmethod
     async def connect(cls, ws: WebSocket, device_id: str):
-        """Add a new WebSocket connection."""
         new_connection = {
             'device_id': device_id,
             'websocket': ws
         }
         cls.active_connections.append(new_connection)
-        await ws.accept()
+        
         _logger.info(f"CONNECTED WEBSOCKET DEVICE {device_id}")
 
         try:
             while True:
                 await ws.receive_text()
+        except WebSocketDisconnect:
+            _logger.warning("Connection closed by the client")
+        except WebSocketException as e:
+            _logger.warning(f"WebSocketException: Reason: {e.reason}")
         except Exception as e:
             _logger.warning(e)
         finally:
@@ -59,7 +92,7 @@ class WebsocketHandler:
     
     @classmethod
     async def disconnect(cls, ws: WebSocket):
-        """Remove a WebSocket connection."""
+        """Remove WebSocket connection."""
         cls.active_connections = [
             con for con in cls.active_connections if con['websocket'] != ws
         ]
@@ -86,6 +119,7 @@ class WebsocketHandler:
 def create_jwt_token(data: dict):
     """
     Creates jwt token based on data
+    :param data: {"user_id": user_id} 
     :return: encoded jwt token
     """
     payload = {**data, 'exp': time.time() + Config.JWT_EXPIRE_TIME}
@@ -113,7 +147,7 @@ async def auth_user(db_session, username: str, password: str):
     """
     Authenticates user
     :param username:
-    :param password
+    :param password:
     """
     try:
         if not username or not password:
@@ -170,11 +204,12 @@ async def delete_house(db_session, user_id, house_id):
     try:
         house = await queries.get_house(db_session, house_id)
         # owner = await queries.verify_house_owner(db_session, user_id, house_id)
-        if house.user_id == user_id:
-            res = await queries.delete_house(db_session, house_id)
-            if not res: return False
-            return True
-        return False
+        if house.user_id != user_id:
+            _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house.primary_key}')
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
+        res = await queries.delete_house(db_session, house_id)
+        if not res: return False
+        return True
     except HTTPException as e:
         _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
         return {'error': e.detail}
@@ -224,11 +259,11 @@ async def add_room(db_session, user_id, house_id, room_name):
     try:
         house = await queries.get_house(db_session, house_id)
         # verify user owns the house
-        if house.user_id == user_id:
-            res = await queries.add_new_room(db_session, house_id, room_name)
-            if res:
-                return {'success': f'Room {room_name} added'}
-        return False
+        if house.user_id != user_id:
+            _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house.primary_key}')
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
+        res = await queries.add_new_room(db_session, house_id, room_name)
+        return res if res else False
     except HTTPException as e:
         _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
         return {'error': e.detail}
@@ -239,9 +274,11 @@ async def add_room(db_session, user_id, house_id, room_name):
 async def delete_room(db_session, user_id, room_id, house_id):
     try:
         house = await queries.get_house(db_session, house_id)
-        if house.user_id == user_id:
-            res = await queries.delete_room(db_session, room_id)
-            if not res: return False
+        if house.user_id != user_id:
+            _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house.primary_key}')
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
+        res = await queries.delete_room(db_session, room_id)
+        if res: 
             return {'success': 'Room deleted'}
         return False
     except HTTPException as e:
@@ -253,8 +290,11 @@ async def delete_room(db_session, user_id, room_id, house_id):
     
 async def add_new_device(db_session, user_id, device_data):
     try:
-        if device_data.dev_id is None or device_data.name is None:
+        if device_data.dev_id is None:
             return False
+        # If name not given => name = ID
+        if device_data.name is None:
+            device_data.name = device_data.dev_id
         if device_data.room_id is not None:
             # Verify user_id is owner of the house with room_id
             house = await queries.get_house_by_room(db_session, device_data.room_id)
@@ -263,13 +303,14 @@ async def add_new_device(db_session, user_id, device_data):
             if house.user_id != user_id: 
                 _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house.primary_key}')
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
-        res = await queries.add_new_device(db_session, user_id, device_data)
-        if not res:
+        new_device = await queries.add_new_device(db_session, user_id, device_data)
+        if not new_device:
             return False
         if device_data.room_id is not None:
-            res = await queries.add_room_device(db_session, res.primary_key, device_data.room_id)
-            return {'success': f'Device {device_data.name} added to room {device_data.room_id}'}
-        return {'success': f'Device {device_data.name} added'}
+            new_room_device = await queries.add_room_device(db_session, new_device.primary_key, device_data.room_id)
+            _logger.debug(f'Device {device_data.name} added to room {device_data.room_id}')
+            return [new_device, new_room_device]
+        return new_device
     except HTTPException as e:
         _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
         return {'error': e.detail}

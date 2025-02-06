@@ -1,24 +1,38 @@
 import aiomqtt
 import os
+import json
 from app.config import Config
+
 logger = Config.logger_init()
 
-class MQTTClient:
-    async def subscribe(topics: list):
+class MQTTClient():
+    @classmethod
+    async def start_client(cls, topics: list):
+        """Receives MQTT-messages """
+        while True:
+            try:
+                async with aiomqtt.Client(hostname=Config.MQTT_BROKER_ADDRESS, port=Config.MQTT_PORT) as client:
+                    for t in topics:
+                        await client.subscribe(t)
+                        logger.info(f'SUBSCRIBED TOPIC {t}')
+                    async for message in client.messages:
+                        await cls.process_message(message)
+            except aiomqtt.MqttError as e:
+                logger.error(e)
+                
+
+    @classmethod
+    async def process_message(cls, message):
+        """ Work with received message"""
         try:
-            async with aiomqtt.Client(hostname=Config.MQTT_BROKER_ADDRESS) as client:
-                for t in topics:
-                    await client.subscribe(t)
-                    logger.info(f'SUBSCRIBED TO {t} PROCESS {os.getpid()}')
-                async for mes in client.messages:
-                    logger.info(f"RECEIVED MESSAGE: T:{mes.topic} P:{mes.payload}")
-                    # if mes.topic.matches("alarm/"):
-                    #     await MQTTClient.publish("publish", "ALARM")
-                    yield mes
-        except aiomqtt.exceptions.MqttError as e:
+            # get device_id from topic
+            main_topic, device_id = str(message.topic).split('/')
+            msg = message.payload.decode()
+            data = json.loads(msg)      
+            
+            from app.webserver.services import WebsocketHandler
+            await WebsocketHandler.send_data(device_id, data)
+
+        except Exception as e:
             logger.error(e)
 
-    async def publish(topic: str, message):
-        async with aiomqtt.Client(hostname=Config.MQTT_BROKER_ADDRESS) as client:
-            await client.publish(topic=topic, payload=message)
-            logger.info(f"PUB {topic}:{message}")

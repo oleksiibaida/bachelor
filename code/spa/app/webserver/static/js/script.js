@@ -491,9 +491,10 @@ async function renderMainPage(data) {
                     `;
 
                     const ws = new WebSocket(`ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`);
-
+                    
+                    
                     ws.onopen = () => {
-                        ws.send("WS OPEN");
+                        ws.send(JSON.stringify({auth:"Bearer " + localStorage.getItem("token")})) ;
                     };
 
                     ws.onmessage = (event) => {

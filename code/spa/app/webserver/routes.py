@@ -8,7 +8,7 @@ from . import services
 # from .services import auth_user, logout_user, validate_session_user, create_new_house
 from app.db import get_session, queries
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.mqtt.mqtt import MQTTHandler
+from app.mqtt import client as mqtt
 logger = Config.logger_init()
 router = APIRouter()
 templates_path = os.path.join(os.path.dirname(__file__), "templates")
@@ -17,9 +17,10 @@ templates_path = os.path.join(os.path.dirname(__file__), "templates")
 templates = Jinja2Templates(directory=templates_path)
 
 @router.on_event("startup")
-def startup():
+async def startup():
     logger.info(f"Startup called in process: {os.getpid()}")
-    asyncio.create_task(MQTTHandler.listen_topics())
+    mqtt_client = mqtt.MQTTClient()
+    asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
 
 async def get_token(request: Request):
     # print(f"HEADE: {request.headers}")
@@ -30,22 +31,34 @@ async def get_token(request: Request):
     token = auth[7:]
     return token    
 
-@router.get('/')
+@router.get('/', response_class=HTMLResponse)
 async def index(request: Request):
+    """
+    Default root link
+    :params: NoneDi
+    :return: Basic HTML-Page index.html
+    """
     return templates.TemplateResponse("index.html", {"request": request})
 
-@router.get('/my_device')
+@router.get('/my_device', response_class=HTMLResponse)
 async def my_device_get(request: Request, response: Response, db_session: AsyncSession = Depends(get_session)):
+    """
+    Provides HTML-Page with list of devices
+    """
     return templates.TemplateResponse("my_device.html", {"request": request})
+
 #=====LOGIN=====#
 @router.post('/login', response_class=JSONResponse)
-async def login_post(request: Request, response: Response, user_data: dict, db_session: AsyncSession = Depends(get_session)):
+async def login_post(request: Request, response: Response, user_data: services.UserLoginModel, db_session: AsyncSession = Depends(get_session)):
+    """
+    Authenticate user
+    - **username**: Requiered String
+    - **password**: Required String
+    """
     try:
-        username = user_data['username']
-        password = user_data['password']
-        auth = await services.auth_user(db_session=db_session, username=username, password=password)
+        auth = await services.auth_user(db_session=db_session, username=user_data.username, password=user_data.password)
         if not 'user_id' in auth: 
-            logger.info(f"U_ID {auth['user_id']} LOGIN FAILED")
+            logger.error(f"USERNAME {user_data.username} LOGIN FAILED")
             return auth
         logger.info(f"U_ID {auth['user_id']} LOGIN")
         token = services.create_jwt_token({"user_id":auth['user_id']})
@@ -57,7 +70,7 @@ async def login_post(request: Request, response: Response, user_data: dict, db_s
         logger.error(f'HTTP {e}')
         return {'error': e.detail}
     except Exception as e:
-        logger.error(f'UNEX {e}')
+        logger.error(f'UNEXPECTED {e}')
         return RedirectResponse("/")
 
 @router.get('/user')
@@ -80,15 +93,31 @@ async def user_get(requset: Request, token: str = Depends(get_token), db_session
 
 @router.post('/sign_up')
 async def signup_post(request: Request, user_data: services.SignUpModel, db_session: AsyncSession = Depends(get_session)):
+    """
+    Sign up new user
+    - **username**: Required String
+    - **password**: Required String
+    - **email**: Required String
+    """
     res = await services.signup_user(db_session, user_data.username, user_data.email, user_data.password)
     return res
 
 @router.post('/add_house')
 async def add_house_post(request: Request, house_data: services.HouseModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
-    user_id = services.verify_token(token)
-    house = await services.create_new_house(db_session, user_id, house_data.name)
-    return house
-
+    try:
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+        house = await services.create_new_house(db_session, user_id, house_data.name)
+        return house
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}
+    except ValueError as e:
+        logger.error(e)
+        return {'error': e}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}
 
 @router.get('/get_houses', response_class=JSONResponse)
 async def get_houses(request: Request, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
@@ -120,12 +149,19 @@ async def delete_house(request: Request, token: str = Depends(get_token),db_sess
             return {'success': f'DELETE HOUSE_ID {house_id}'}
         else:
             return {'error': f'Problem on server side'}
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}
+    except ValueError as e:
+        logger.error(e)
+        return {'error': e}
     except Exception as e:
         logger.error(e)
         return {'error': 'Unexpected error'}
 
 @router.post('/add_room')
 async def add_room_post(request: Request, room_data: services.RoomModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    try:
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         res = await services.add_room(db_session, user_id, room_data.house_id, room_data.name)
@@ -133,11 +169,19 @@ async def add_room_post(request: Request, room_data: services.RoomModel, token: 
             return {'error': 'COULD NOT ADD ROOM'}
         logger.info(f'U_ID {user_id} HOUSE_ID {room_data.house_id} ADD ROOM {room_data.name}')
         return res
-        
-    
-    
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}
+    except ValueError as e:
+        logger.error(e)
+        return {'error': e}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}  
+          
 @router.delete('/delete_room')
 async def delete_room(request: Request, room_data: services.RoomModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    try:
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         
@@ -145,7 +189,16 @@ async def delete_room(request: Request, room_data: services.RoomModel, token: st
         if not res:
             return {'error': f'CANNOT DELETE ROOM_ID {room_data.name}'}
         return res
-    
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}
+    except ValueError as e:
+        logger.error(e)
+        return {'error': e}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}  
+
 @router.post('/add_new_device')
 async def add_new_device_post(request: Request, device_data: services.DeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
@@ -158,6 +211,13 @@ async def add_new_device_post(request: Request, device_data: services.DeviceMode
         return res        
     except HTTPException as e:
         logger.error(e)
+        return {'error': e}
+    except ValueError as e:
+        logger.error(e)
+        return {'error': e}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}  
 
 @router.post('/update_device')
 async def update_device(request: Request, device_data: services.DeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
@@ -210,18 +270,23 @@ async def del_room_device(request: Request, room_device: services.RoomDeviceMode
         return {'error': 'Unexpected Error on the server side'}
 
 @router.websocket('/mqtt/device/{device_id}')
-async def websocket_mqtt(ws: WebSocket, device_id: str = Path(...)):
-    print("WEBSOCKET")
-    print(device_id)
-    await services.WebsocketHandler.connect(ws, device_id)
-    counter = 10
-    # try:
-        
-    #     while True:
-            
-    # except WebSocketDisconnect:
-        
-    #     print(f"WebSocket connection for device {device_id} closed.")
+async def websocket_mqtt(ws: WebSocket,  device_id: str = Path(...), db_session: AsyncSession = Depends(get_session)):
+    try:
+        print("WEBSOCKET")
+        print(device_id)
+        auth = await services.WebsocketHandler.auth_websocket(db_session, ws, device_id)
+        if auth:
+            await services.WebsocketHandler.connect(ws, device_id)
+        counter = 10
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}
+    except ValueError as e:
+        logger.error(e)
+        return {'error': e}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}
 
 
 
