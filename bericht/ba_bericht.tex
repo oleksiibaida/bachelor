@@ -535,10 +535,19 @@
   \par Zusätzlich hat der Benutzer die Möglichkeit, das Gerät direkt einem bestimmten Raum innerhalb des Hauses zuzuordnen. Dazu muss im Body des Requests die entsprechende Raum-ID angegeben werden. Die Funktion \texttt{services.add\_new\_device} sucht in diesem Fall, mit dem Befehl \texttt{queries.get\_house\_by\_room} nach dem entsprechenden Haus. Anschließend wird geprüft, ob die aus dem Token extrahierte Benutzer-ID mit der des Hauseigentümers übereinstimmt. Ist dies nicht der Fall, wird der Zugriff verweigert, der Vorgang abgebrochen und eine entsprechende Fehlermeldung zurückgegeben.
   \par Anschließend wird mit dem Befehl \texttt{queries.add\_new\_device} das Gerät zunächst ohne direkte Raumzuordnung in der Datenbank gespeichert. Ist eine Raum-ID vorhanden, wird mit dem Befehl \texttt{queries.add\_room\_device} ein Eintrag in der Tabelle \texttt{roomdevice} erzeugt, der den Primärschlüssel des Gerätes mit der Raum-ID verknüpft.
   \par Diese strukturierte Vorgehensweise gewährleistet nicht nur eine sichere und konsistente Registrierung neuer Geräte, sondern bietet dem Benutzer auch die Möglichkeit, seine Smart-Home-Geräte flexibel zu verwalten und eindeutig zu identifizieren.
- \paragraph{MQTT-Client}
- \par Die Geräte senden ihre Daten über die MQTT-Verbindung an dem MQTT-Broker. Dabei hat jedes Gerät ein separates Topic, das sich auf die Geräte-ID bezieht. Um die Daten von dem Gerät zu erhalten muss ein MQTT-Client das Topic abonnieren.
- \par Der MQTT-Client für den Webserver ist im Paket \texttt{mqtt} eingepackt. 
- \par Der MQTT-Client 
+  \paragraph{MQTT-Client}
+  \par Die Geräte senden kontinuierlich ihre Daten über die MQTT-Verbindung an den MQTT-Broker. Jedes Gerät nutzt sein separates Topic, das sich auf die Geräte-ID bezieht. Um die Daten eines bestimmten Geräts zu empfangen, muss ein MQTT-Client das entsprechende Topic abonnieren.
+  \par Der MQTT-Client für den Webserver ist im Paket \texttt{mqtt} enthalten. In der Datei \texttt{client.py} ist die Klasse \texttt{MQTTClient} implementiert, die eine asynchrone Schnittstelle zur Verarbeitung von MQTT-Nachrichten bereitstellt. 
+  \par Die Implementierung basiert auf der Bibliothek \texttt{aiomqtt}. Durch die asynchrone Architektur kann der Client effizient auf die eingehenden MQTT-Nachrichten reagieren, ohne blockierende Operationen auszuführen.
+  \par Die asynchrone Funktion \texttt{start\_client()} enthält eine Endlosschleife und erwartet als Parameter eine Liste von Topics, die der Client abonnieren soll. Diese Funktion wird beim Start des Webservers mit dem Befehl \texttt{asyncio.create\_task()} als asynchrone Aufgabe gestartet. Dadurch wird sichergestellt, dass die MQTT-Verbindung parallel zu anderen asynchronen Aufgaben läuft. Zudem stellt die Endlosschleife sicher, dass die Verbindung nach einer Unterbrechung oder einem Fehler automatisch wiederhergestellt wird.
+  \par Innerhalb der asynchronen Schleife wird zunächst mit dem Befehl \texttt{async with aiomqtt.Client(...)} die Verbindung zu dem MQTT-Broker aufgebaut. Anschließend werden die übergebenen Topics abonniert. Danach empfängt der Client die MQTT-Nachrichten asynchron über die async for-Schleife, die auf client.messages lauscht. Jede eingehende Nachricht wird an die Funktion \texttt{process\_message()} weitergeleitet, die für die weitere Verarbeitung verantwortlich ist.
+  \par Die Funktion \texttt{process\_message()} extrahiert zunächst die Geräte-ID aus dem Topic. Anschließend wird der Payload der Nachricht dekodiert und in ein JSON-Objekt data umgewandelt. Diese Daten werden dann über WebSockets an den Webserver weitergeleitet. Dazu wird die Klasse WebsocketHandler aus der Datei \texttt{services.py} importiert, und die Daten werden an die Funktion \texttt{send\_data()} dieser Klasse übergeben.
+  \par Durch diese Architektur kann der Webserver in Echtzeit auf neue MQTT-Nachrichten reagieren und die empfangenen Daten effizient an verbundene Clients weiterleiten.
+  \paragraph{WebSocket}
+  \par \textbf{}
+  \par Die Geräte senden kontinuierlich Daten über die MQTT-Verbindung an dem MQTT-Broker, die verarbeitet und dem Benutzer in Echtzeit angezeigt werden müssen.  
+  \par Die Route \texttt{mqtt/device/device\_id} stellt eine WebSocket zur Verfügung, wobei .
+
   \subsubsection{Frontend}
   \subsubsection{Integration der Komponenten}
   \par MQtt client, erhalten Daten von Broker etc
