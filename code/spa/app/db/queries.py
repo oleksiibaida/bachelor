@@ -351,6 +351,25 @@ async def get_devices_on_user(db_session: AsyncSession, user_primary: int):
         await db_session.rollback()
         raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
     
+async def verify_user_device(db_session: AsyncSession, user_id: int, device_id):
+    try:
+        stmt = select(DeviceModel).where(DeviceModel.dev_id == device_id, DeviceModel.user_id == user_id)
+        res = await db_session.execute(stmt)
+        return res.scalars().one()
+    except NoResultFound:
+        _logger.error(f' U_ID {user_id} IS NOT OWNER OF DEV_ID {device_id}')
+        raise HTTPException(status_code=404, detail='NOT FOUND')
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        _logger.error(f"Exception: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+
 async def update_device(db_session: AsyncSession, user_id:int, new_device_data):
     try:
         # TODO also change room

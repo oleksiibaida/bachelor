@@ -57,11 +57,12 @@ class WebsocketHandler:
                 _logger.error("USER NOT FOUND")
                 ws.close()
                 return False
-            user_devices = await get_devices(db_session, user_id)
-            if not any(device["dev_id"] == device_id for device in user_devices):
-                ws.close()
-                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"U_ID {user_id} is not owner of DEV_ID {device_id}")
-            return True
+            # user_devices = await get_devices(db_session, user_id)
+            # if not any(device["dev_id"] == device_id for device in user_devices):
+            #     ws.close()
+            #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"U_ID {user_id} is not owner of DEV_ID {device_id}")
+            owner = await queries.verify_user_device(db_session, user_id, device_id)
+            return True if owner else False
         except HTTPException as e:
             _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
             raise e
