@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.25)  6 FEB 2025 22:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.25)  12 FEB 2025 02:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -825,7 +825,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.58 ...on}{\numberline {7}Quellen}{24}{section.7}
+l.58 ...on}{\numberline {7}Quellen}{25}{section.7}
                                                   % [1
 
 
@@ -850,44 +850,44 @@ Overfull \hbox (2.48145pt too wide) in paragraph at lines 230--231
 
 [6] [7] [8] [9]
 
-LaTeX Warning: Reference `lst:esp8266setup' on page 10 undefined on input line 307.
+LaTeX Warning: Reference `lst:esp8266setup' on page 10 undefined on input line 314.
 
 
-LaTeX Warning: Reference `lst:esp8266validstring' on page 10 undefined on input line 308.
+LaTeX Warning: Reference `lst:esp8266validstring' on page 10 undefined on input line 315.
 
 
-LaTeX Warning: Reference `lst:espconnectwifi' on page 10 undefined on input line 309.
+LaTeX Warning: Reference `lst:espconnectwifi' on page 10 undefined on input line 316.
 
 [10]
 
-LaTeX Warning: Reference `lst:espconnectmqtt' on page 11 undefined on input line 310.
+LaTeX Warning: Reference `lst:espconnectmqtt' on page 11 undefined on input line 317.
 
 
-LaTeX Warning: Reference `lst:esp8266setupap' on page 11 undefined on input line 311.
+LaTeX Warning: Reference `lst:esp8266setupap' on page 11 undefined on input line 318.
 
 
-LaTeX Warning: Reference `lst:esp8266defap' on page 11 undefined on input line 311.
+LaTeX Warning: Reference `lst:esp8266defap' on page 11 undefined on input line 318.
 
 
-Overfull \hbox (1.76907pt too wide) in paragraph at lines 311--312
+Overfull \hbox (1.76907pt too wide) in paragraph at lines 318--319
 []\OT1/cmr/m/n/12 Falls die aus dem EE-PROM aus-ge-le-se-nen Da-ten ung[]ultig sind oder kei-ne er-folg-rei-che WLAN-
  []
 
 
-LaTeX Warning: Reference `lst:esp8266defap' on page 11 undefined on input line 312.
+LaTeX Warning: Reference `lst:esp8266defap' on page 11 undefined on input line 319.
 
 
-LaTeX Warning: Reference `lst:esp8266setup' on page 11 undefined on input line 318.
+LaTeX Warning: Reference `lst:esp8266setup' on page 11 undefined on input line 325.
 
 
-LaTeX Warning: Reference `lst:esp8266readserial' on page 11 undefined on input line 324.
+LaTeX Warning: Reference `lst:esp8266readserial' on page 11 undefined on input line 331.
 
 [11]
 
-LaTeX Warning: Reference `lst:espcallback' on page 12 undefined on input line 325.
+LaTeX Warning: Reference `lst:espcallback' on page 12 undefined on input line 332.
 
 
-Overfull \hbox (0.26204pt too wide) in paragraph at lines 330--331
+Overfull \hbox (0.26204pt too wide) in paragraph at lines 337--338
 \OT1/cmr/m/n/12 Um-welt-da-ten: Tem-pe-ra-tur, Luft-feuch-tig-keit und Gas-wi-der-stand. Der VCNL4040 dient als Licht-
  []
 
@@ -896,135 +896,145 @@ File: lstlang1.sty 2023/02/27 1.9 listings language file
 ) (E:\Soft\MikTex\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
 )
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 332.
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 339.
 
 
-LaTeX Warning: Reference `lst:esp8266setup' on page 12 undefined on input line 339.
+LaTeX Warning: Reference `lst:esp8266setup' on page 12 undefined on input line 346.
 
 [12] [13]
-<./Bilder/datenbank.png, id=344, 754.31813pt x 400.49625pt>
+<./Bilder/datenbank.png, id=346, 754.31813pt x 400.49625pt>
 File: ./Bilder/datenbank.png Graphic file (type png)
 <use ./Bilder/datenbank.png>
-Package pdftex.def Info: ./Bilder/datenbank.png  used on input line 394.
+Package pdftex.def Info: ./Bilder/datenbank.png  used on input line 401.
 (pdftex.def)             Requested size: 483.69687pt x 256.81172pt.
  [14 <./Bilder/datenbank.png>]
 
-LaTeX Warning: Reference `lst:dbmodels' on page 15 undefined on input line 439.
+LaTeX Warning: Reference `lst:dbmodels' on page 15 undefined on input line 446.
 
 (E:\Soft\MikTex\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
 )
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 442.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 449.
  [15]
-Overfull \hbox (8.47261pt too wide) in paragraph at lines 448--449
+Overfull \hbox (8.47261pt too wide) in paragraph at lines 455--456
 []\OT1/cmr/m/n/12 Die Klas-sen \OT1/cmtt/m/n/12 RoomModel \OT1/cmr/m/n/12 und \OT1/cmtt/m/n/12 DeviceModel \OT1/cmr/m/n/12 ha-ben ei-ne Be-zie-hung zur Klas-se \OT1/cmtt/m/n/12 RoomDeviceModel\OT1/cmr/m/n/12 ,
  []
 
 
-LaTeX Warning: Reference `lst:dbqueries' on page 16 undefined on input line 451.
+LaTeX Warning: Reference `lst:dbqueries' on page 16 undefined on input line 458.
 
 
-Overfull \hbox (11.54436pt too wide) in paragraph at lines 453--454
+Overfull \hbox (11.54436pt too wide) in paragraph at lines 460--461
 []\OT1/cmr/m/n/12 ubergebenen Pa-ra-me-tern er-zeugt. Die-ses Ob-jekt wird mit dem Be-fehl \OT1/cmtt/m/n/12 db[]session.add(new[]user)
  []
 
 
-Overfull \hbox (40.95003pt too wide) in paragraph at lines 455--456
+Overfull \hbox (40.95003pt too wide) in paragraph at lines 462--463
 []\OT1/cmr/m/n/12 Ein \OT1/cmtt/m/n/12 IntegrityError \OT1/cmr/m/n/12 wird aus-gel[]ost, wenn ei-ne Da-ten-ban-k-ope-ra-ti-on ge-gen ei-ne In-te-grit[]atsbedingung
  []
 
 
-Overfull \hbox (5.92574pt too wide) in paragraph at lines 457--458
+Overfull \hbox (5.92574pt too wide) in paragraph at lines 464--465
 []\OT1/cmr/m/n/12 Alle an-de-ren m[]oglichen Feh-ler, die kei-ne \OT1/cmtt/m/n/12 SQLAlchemy\OT1/cmr/m/n/12 -Fehler sind, wer-den im Block \OT1/cmtt/m/n/12 Exception
  []
 
 [16]
 
-LaTeX Warning: Reference `lst:dbinit' on page 17 undefined on input line 461.
+LaTeX Warning: Reference `lst:dbinit' on page 17 undefined on input line 468.
 
 [17]
-Overfull \hbox (23.68523pt too wide) in paragraph at lines 488--489
+Overfull \hbox (23.68523pt too wide) in paragraph at lines 495--496
 \OT1/cmr/m/n/12 die API-Endpunkte zu de-fi-nie-ren. Der Rou-ter wird an-schlie-^^Yend mit der Me-tho-de \OT1/cmtt/m/n/12 include[]router()
  []
 
 
-Overfull \hbox (5.57178pt too wide) in paragraph at lines 491--492
+Overfull \hbox (5.57178pt too wide) in paragraph at lines 498--499
 \OT1/cmr/m/n/12 bleibt die API []ubersichtlich, leicht wart-bar und er-weiter-bar. Die Tren-nung von Pr[]asentationslogik
  []
 
 
-Overfull \hbox (37.50783pt too wide) in paragraph at lines 496--497
+Overfull \hbox (37.50783pt too wide) in paragraph at lines 503--504
 \OT1/cmr/m/n/12 ver-schl[]usselter Form, be-sitzt ei-ne in der Kon-fi-gu-ra-ti-on de-fi-nier-te Ab-lauf-zeit (\OT1/cmtt/m/n/12 Config.JWT[]EXPIRE[]TIME\OT1/cmr/m/n/12 )
  []
 
 [18]
-Overfull \hbox (12.64275pt too wide) in paragraph at lines 505--506
+Overfull \hbox (12.64275pt too wide) in paragraph at lines 512--513
 []\OT1/cmr/m/n/12 Nach der Ex-trak-ti-on wird das To-ken als Pa-ra-me-ter an die Funk-ti-on \OT1/cmtt/m/n/12 services.verify[]token()
  []
 
 
-Overfull \hbox (2.96199pt too wide) in paragraph at lines 514--515
+Overfull \hbox (2.96199pt too wide) in paragraph at lines 521--522
 \OT1/cmr/m/n/12 schl[]usselten Ver-si-on ver-gli-chen. Ist die Pr[]ufung er-folg-reich, gibt die Funk-ti-on den Prim[]arschl[]ussel
  []
 
 [19]
-Overfull \hbox (27.64505pt too wide) in paragraph at lines 524--526
+Overfull \hbox (27.64505pt too wide) in paragraph at lines 531--533
 \OT1/cmr/m/n/12 zuf[]ugen, wird ei-ne Mel-dung []uber un-be-rech-tig-ten Zu-griff ge-loggt und als Feh-lerant-wort zur[]uckgegeben.
  []
 
 [20] [21]
-Overfull \hbox (49.1149pt too wide) in paragraph at lines 543--544
+Overfull \hbox (49.1149pt too wide) in paragraph at lines 551--552
 []\OT1/cmr/m/n/12 Innerhalb der asyn-chro-nen Schlei-fe wird zun[]achst mit dem Be-fehl \OT1/cmtt/m/n/12 async with aiomqtt.Client(...)
  []
 
-[22] [23]
-Underfull \hbox (badness 2452) in paragraph at lines 575--576
+
+Overfull \hbox (5.48123pt too wide) in paragraph at lines 558--559
+\OT1/cmr/m/n/12 folgt []uber die Funk-ti-on \OT1/cmtt/m/n/12 auth[]websocket()\OT1/cmr/m/n/12 . Die-se ak-zep-tiert zun[]achst die WebSocket-Verbindung
+ []
+
+
+Overfull \hbox (1.72173pt too wide) in paragraph at lines 564--565
+[]\OT1/cmr/m/n/12 Die Kom-mu-ni-ka-ti-on []uber das WebSocket-Protokoll er-folgt in ei-ner End-los-schlei-fe, die st[]andig
+ []
+
+[22] [23] [24]
+Underfull \hbox (badness 2452) in paragraph at lines 592--593
 []\OT1/cmr/m/n/12 J. Breit-hut, []\OT1/cmr/m/it/12 Strom und Hei-zung: Wann ein Smart Ho-me wirk-lich beim Ener-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 575--576
+Underfull \hbox (badness 10000) in paragraph at lines 592--593
 \OT1/cmr/m/it/12 gie-spa-ren hilft\\OT1/cmr/m/n/12 , Der Spie-gel, 17. Ju-li 2022. Zu-ge-grif-fen: 13. Ja-nu-ar 2025.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 575--576
+Underfull \hbox (badness 10000) in paragraph at lines 592--593
 \OT1/cmr/m/n/12 [On-li-ne]. Verf[]ugbar un-ter: [][]$\OT1/cmtt/m/n/12 https : / / www . spiegel . de / netzwelt / gadgets /
  []
 
 
-Overfull \hbox (227.706pt too wide) in paragraph at lines 575--576
+Overfull \hbox (227.706pt too wide) in paragraph at lines 592--593
 \OT1/cmtt/m/n/12 strom-[]und-[]heizung-[]wann-[]ein-[]smart-[]home-[]wirklich-[]beim-[]energiesparen-[]hilft-[]a-[]ffb4b710-[]0cec-[]40e4-[]a2c4-[]6c5d4a3feb92$[][] 
  []
 
 
-Underfull \hbox (badness 3635) in paragraph at lines 582--583
+Underfull \hbox (badness 3635) in paragraph at lines 599--600
 []\OT1/cmr/m/n/12 Raspberry Pi Foun-da-ti-on, \OT1/cmr/m/it/12 Raspber-ry Pi 1 B+\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . raspberrypi . com /
  []
 
 
-Underfull \hbox (badness 1072) in paragraph at lines 584--585
+Underfull \hbox (badness 1072) in paragraph at lines 601--602
 []\OT1/cmr/m/n/12 Espressif, \OT1/cmr/m/it/12 ESP8266\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . espressif . com/$[][]\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . electronicwings .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 587--588
+Underfull \hbox (badness 10000) in paragraph at lines 604--605
 []\OT1/cmr/m/n/12 Bosh, \OT1/cmr/m/it/12 BME680 - Da-tas-heet\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . bosch-[]sensortec . com / media /
  []
 
 
-Underfull \hbox (badness 3965) in paragraph at lines 598--599
+Underfull \hbox (badness 3965) in paragraph at lines 615--616
 []\OT1/cmr/m/n/12 Telegram FZ-LLC, \OT1/cmr/m/it/12 Te-le-gram Mes-sen-ger\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / github . com / /telegramdesktop /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 610--611
+Underfull \hbox (badness 10000) in paragraph at lines 627--628
 []\OT1/cmr/m/n/12 ESPWIFI.h, [][]$\OT1/cmtt/m/n/12 https : / / arduino-[]esp8266 . readthedocs . io / en / latest / esp8266wifi /
  []
 
-[24]
-Underfull \hbox (badness 10000) in paragraph at lines 625--626
+[25]
+Underfull \hbox (badness 10000) in paragraph at lines 642--643
 []\OT1/cmr/m/n/12 Python Soft-wa-re Foun-da-ti-on, \OT1/cmr/m/it/12 threa-ding\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / docs . python . org / 3 / library /
  []
 
@@ -1036,7 +1046,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 625--626
 \tf@lot=\write9
 \openout9 = `ba_bericht.lot'.
 
- [25] [26] (ba_bericht.aux (titelseite.aux))
+ [26] [27] (ba_bericht.aux (titelseite.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -1049,17 +1059,17 @@ Package rerunfilecheck Info: File `ba_bericht.out' has not changed.
 (rerunfilecheck)             Checksum: 86CECCD58F3CBA7884FD2E80D1847D81;6226.
  ) 
 Here is how much of TeX's memory you used:
- 36721 strings out of 474486
- 771899 string characters out of 5757825
+ 36724 strings out of 474486
+ 771928 string characters out of 5757825
  1958542 words of memory out of 5000000
  58340 multiletter control sequences out of 15000+600000
  569201 words of font info for 78 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  98i,12n,101p,1650b,1367s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\baida\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr6.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr8.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmti12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on ba_bericht.pdf (27 pages, 349911 bytes).
+Output written on ba_bericht.pdf (28 pages, 358495 bytes).
 PDF statistics:
- 568 PDF objects out of 1000 (max. 8388607)
- 132 named destinations out of 1000 (max. 500000)
+ 577 PDF objects out of 1000 (max. 8388607)
+ 135 named destinations out of 1000 (max. 500000)
  399 words of extra memory for PDF output out of 10000 (max. 10000000)
 

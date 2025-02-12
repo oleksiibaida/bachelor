@@ -246,6 +246,7 @@
 
   \par In diesem Projekt wird das Modul als Lichtsensor zur Bestimmung der Umgebungshelligkeit eingesetzt. Außerdem wird es zur Näherungserkennung verwendet, um berührungslose Steuerungen zu ermöglichen.
   \subsubsection{Raspberry Pi}
+  \par 
   \subsection{Kommunikationsprotokolle}
   \subsubsection{HTTP}
   \subsubsection{MQTT}
@@ -282,17 +283,23 @@
 \end{itemize}
 
 \subsection{Architektur und Datenfluss}
-\par Der Raspberry Pi dient als zentraler Server des Systems. Der Minicomputer stellt ein WLAN-Netzwerk zur Verfügung und hostet den Webserver mit der Datenbank sowie den MQTT-Broker. Alle Benutzerinteraktionen, Sensordaten, Datenflüsse und Datenverarbeitungen finden auf dem Server statt. Somit ist das System stark zentralisiert. Das System ist somit stark zentralisiert und arbeitet nur lokal. Das bedeutet, dass sich alle Benutzer in einem lokalen Netzwerk mit dem Raspberry Pi befinden müssen. 
+\par Der Raspberry Pi dient als zentraler Server des Systems. Der Minicomputer stellt ein WLAN-Netzwerk zur Verfügung und hostet den Webserver mit der Datenbank sowie den MQTT-Broker. Alle Benutzerinteraktionen, Sensordaten, Datenflüsse und Datenverarbeitungen finden auf dem Server statt. Das System ist somit stark zentralisiert und arbeitet nur lokal. Das bedeutet, dass sich alle Benutzer in einem lokalen Netzwerk mit dem Raspberry Pi befinden müssen. 
 \par Die Geräte verbinden sich mit dem WLAN, das vom Raspberry Pi zur Verfügung gestellt wird. Die Sensoren senden ihre Daten an den MQTT-Broker, der auf dem Raspberry Pi läuft. Die Aktoren abonnieren die Command-Topics mit der entsprechenden "Geräte-ID".
 \par Im Kern des Systems befindet sich ein Webserver, der auf dem Raspberry Pi ausgeführt wird. Dieser Webserver stellt eine RESTful-API zur Verfügung. Für den Zugriff zu der API wurde eine Webseite aufgebaut. Die API bietet folgende Funktionen an:
 \begin{itemize}
   \item Authentifizierung und Autorisierung der Benutzer
   \item Verwaltung der Gerätekonfigurationen und Benutzerprofile
   \item Bereitstellung von Endpunkten zur Abfrage und Steuerung von IoT-Geräten
+  \item Bereitstellung der Daten von den Geräten in Echtzeit
   \item Bidirektionale Kommunikation mit den IoT-Geräten
 \end{itemize}
-\par Die Benutzerdaten und Konfigurationen werden in der lokalen Datenbank auf dem Server gespeichert. 
-\par \textbf{TOOODOOOO} wird noch erweitert
+\par Die Benutzerauthentifizierung erfolgt über JSON Web Tokens (JWT). Bei der Anmeldung wird ein JWT erzeugt, das eine verschlüsselte Benutzer-ID enthält. Dieses Token wird auf der Seite des Benutzers gespeichert und bei jeder Anfrage an den Server gesendet, um die Identität des Benutzers zu verifizieren. JWTs haben eine festgelegte Lebensdauer, nach deren Ablauf eine erneute Anmeldung oder eine Token-Erneuerung erforderlich ist. Die Verwendung von JWT ermöglicht eine sichere, zustandslose Authentifizierung ermöglicht, da der Server keine Sitzungsdaten speichern muss.
+\par Die Benutzerdaten und Gerätekonfigurationen werden in einer lokalen Datenbank gespeichert, die mit \texttt{SQLite} implementiert wird. \texttt{SQLite} hat den Vorteil, dass die gesamte Datenbank in einer einzigen Datei gespeichert wird, wodurch der Ressourcenverbrauch des Servers minimiert wird. Der Zugriff auf die Datenbank erfolgt über \texttt{SQLAlchemy}, eine leistungsfähige ORM-Bibliothek für Python. \texttt{SQLAlchemy} ermöglicht asynchrone Datenbankzugriffe, was die Leistung und Skalierbarkeit der Anwendung verbessert.
+\par Die Geräte senden ihre Daten an den zentralen MQTT-Broker. Um die eingehenden Nachrichten effizient verarbeiten zu können, wird ein MQTT-Client mit Hilfe der Bibliothek \texttt{aiomqtt} implementiert. Diese Bibliothek verwendet Python \texttt{asyncio}, was eine nicht-blockierende, asynchrone Verarbeitung ermöglicht. Dadurch können Nachrichten empfangen und verarbeitet werden, ohne den Hauptprozess zu blockieren, was die Reaktionsfähigkeit des Systems verbessert. Es ermöglicht auch die parallele Verwendung mehrerer MQTT-Clients, was die Skalierbarkeit des Systems optimiert, was besonders für Systeme mit mehreren Geräten wichtig ist.
+\par Die Gerätedaten müssen den Benutzern in Echtzeit zur Verfügung gestellt werden. Zu diesem Zweck wird \texttt{WebSocket} verwendet. Es ermöglicht eine kontinuierliche und bidirektionale Datenübertragung zwischen Server und Client. Dadurch wird sichergestellt, dass die Daten sofort und ohne wiederholte Anfragen an den Benutzer übermittelt werden.
+\par Der Benutzer benötigt eine Schnittstelle, um auf das System zugreifen zu können. Dazu wird eine Webseite in Form einer SPA\footnote{engl. Single Page Application} entwickelt. Eine SPA lädt einmal die grundlegende HTML-, CSS- und JavaScript-Struktur und aktualisiert dann dynamisch nur die relevanten Inhalte, ohne die gesamte Seite neu zu laden. Der Hauptvorteil einer SPA liegt in der verbesserten Nutzererfahrung, da Seitenwechsel nahezu verzögerungsfrei erfolgen. Außerdem wird die Serverlast reduziert, da nur die benötigten Daten über eine API geladen werden, anstatt komplette HTML-Dokumente zu übertragen. Dies führt zu einer schnelleren und reaktionsfähigeren Anwendung, was insbesondere bei Anwendungen mit Echtzeitanforderungen von Vorteil ist. 
+\par Die für die SPA entwickelte API kann auch von anderen Anwendungen, z. B. mobilen Anwendungen, genutzt werden. Dadurch können die Anwendungen auf einer gemeinsamen Backend-Struktur aufbauen, was die Wartung vereinfacht und die Wiederverwendbarkeit des Codes erhöht.
+\par Die vorgestellte Architektur bietet eine effiziente, skalierbare und reaktionsfähige Struktur. Der Zugriff auf das System erfolgt über die API. Durch die Verwendung asynchroner Methoden werden Blockierungen vermieden. \texttt{WebSocket} stellt die empfangenen Daten ohne serverseitige Speicherung sofort zur Verfügung. Die SPA bietet eine schnelle und benutzerfreundliche Schnittstelle mit direktem Zugriff auf die API-Endpunkte. Diese Architektur garantiert eine hohe Performance und vereinfacht sowohl die Wartung als auch zukünftige Erweiterungen des Systems.
 \newpage
 \section{Implementierung und praktische Umsetzung}
 \subsection{Einrichtung der Hardwarekomponenten}
@@ -536,6 +543,7 @@
   \par Anschließend wird mit dem Befehl \texttt{queries.add\_new\_device} das Gerät zunächst ohne direkte Raumzuordnung in der Datenbank gespeichert. Ist eine Raum-ID vorhanden, wird mit dem Befehl \texttt{queries.add\_room\_device} ein Eintrag in der Tabelle \texttt{roomdevice} erzeugt, der den Primärschlüssel des Gerätes mit der Raum-ID verknüpft.
   \par Diese strukturierte Vorgehensweise gewährleistet nicht nur eine sichere und konsistente Registrierung neuer Geräte, sondern bietet dem Benutzer auch die Möglichkeit, seine Smart-Home-Geräte flexibel zu verwalten und eindeutig zu identifizieren.
   \paragraph{MQTT-Client}
+  \par \textbf{}
   \par Die Geräte senden kontinuierlich ihre Daten über die MQTT-Verbindung an den MQTT-Broker. Jedes Gerät nutzt sein separates Topic, das sich auf die Geräte-ID bezieht. Um die Daten eines bestimmten Geräts zu empfangen, muss ein MQTT-Client das entsprechende Topic abonnieren.
   \par Der MQTT-Client für den Webserver ist im Paket \texttt{mqtt} enthalten. In der Datei \texttt{client.py} ist die Klasse \texttt{MQTTClient} implementiert, die eine asynchrone Schnittstelle zur Verarbeitung von MQTT-Nachrichten bereitstellt. 
   \par Die Implementierung basiert auf der Bibliothek \texttt{aiomqtt}. Durch die asynchrone Architektur kann der Client effizient auf die eingehenden MQTT-Nachrichten reagieren, ohne blockierende Operationen auszuführen.
@@ -545,10 +553,19 @@
   \par Durch diese Architektur kann der Webserver in Echtzeit auf neue MQTT-Nachrichten reagieren und die empfangenen Daten effizient an verbundene Clients weiterleiten.
   \paragraph{WebSocket}
   \par \textbf{}
-  \par Die Geräte senden kontinuierlich Daten über die MQTT-Verbindung an dem MQTT-Broker, die verarbeitet und dem Benutzer in Echtzeit angezeigt werden müssen.  
-  \par Die Route \texttt{mqtt/device/device\_id} stellt eine WebSocket zur Verfügung, wobei .
-
+  \par Die Geräte senden kontinuierlich Daten über die MQTT-Verbindung an den MQTT-Broker. Diese Daten müssen verarbeitet und dem Benutzer in Echtzeit angezeigt werden. Zu diesem Zweck wird eine WebSocket-Schnittstelle bereitgestellt, die eine direkte und effiziente bidirektionale Kommunikation ermöglicht.
+  \par Die Route \texttt{mqtt/device/<device\_id>} stellt eine WebSocket-Verbindung zur Verfügung, wobei \texttt{device\_id} für die eindeutige Geräte-ID steht. Die Klasse \texttt{WebsocketHandler} in der Datei \texttt{services.py} verwaltet sämtliche WebSocket-Verbindungen und deren Lebenszyklus. Das Feldattribut \texttt{active\_connections} speichert alle aktiven WebSocket-Verbindungen in Form einer „List of Dictionaries“, wobei jedes Dictionary eine bestehende Verbindung mit der zugehörigen \texttt{device\_id} sowie dem WebSocket-Objekt enthält.
+  \par Die Autorisierung des Benutzers, der eine Verbindung zum WebSocket aufbauen möchte, erfolgt über die Funktion \texttt{auth\_websocket()}. Diese akzeptiert zunächst die WebSocket-Verbindung und wartet asynchron auf die erste Nachricht. Die erste Nachricht, die an dem WebSocket gesendet wird, dient als Initialisierungsnachricht und muss ein Token erhalten, das ähnlich wie ein HTTP-Header aufgebaut ist:
+  \begin{Verbatim}[frame=single]
+    "auth": "Bearer <TOKEN>"
+  \end{Verbatim}
+  \par Aus dem übergebenen Token wird die Benutzer-ID extrahiert. Anschließend wird mit dem Befehl \texttt{queries.verify\_user\_device(...)} geprüft, ob der authentifizierte Benutzer berechtigt ist, auf das angegebene Gerät zuzugreifen. Fehlt das Token oder besitzt der Benutzer keine Zugriffsrechte auf das Gerät, wird eine entsprechende Fehlermeldung ausgegeben und geloggt.
+  \par Nach erfolgreicher Autorisierung des Benutzers wird die Funktion \texttt{connect()} aus der Klasse \texttt{WebsocketHandler} aufgerufen. Diese fügt die neue Verbindung in die Liste von aktiven Verbindungen hinzu. Die Verbindung bleibt bestehen, bis sie entweder vom Benutzer geschlossen oder durch einen Netzwerkfehler unterbrochen wird.
+  \par Die Kommunikation über das WebSocket-Protokoll erfolgt in einer Endlosschleife, die ständig auf eingehende Nachrichten wartet. Wird die Verbindung vom Benutzer oder durch andere Ereignisse unterbrochen, wird diese mit der Funktion \texttt{disconnect} aus der Liste der aktiven Verbindungen entfernt.
+  \par Die Funktion \texttt{send\_data()} ermöglicht das gezielte Senden von Daten über die WebSocket-Schnittstelle. Dabei wird geprüft, ob eine aktive WebSocket-Verbindung mit der entsprechenden \texttt{device\_id} existiert. Falls ja, werden die zu sendenden Daten als JSON-Objekt über die WebSocket-Schnittstelle an das Gerät übertragen. Tritt ein Übertragungsfehler auf, wird die Verbindung geschlossen und aus der Liste der aktiven Verbindungen entfernt.
+  \par Die Implementierung dieser WebSocket-Schnittstelle ermöglicht eine effiziente und latenzarme Datenübertragung zwischen dem MQTT-Broker und den angebundenen Geräten.
   \subsubsection{Frontend}
+  \par Das Frontend ist im Form einer Einseitigerapplikation (SPA\footnote{Eng. Single Page Applicaiton}) implementiert. 
   \subsubsection{Integration der Komponenten}
   \par MQtt client, erhalten Daten von Broker etc
 
