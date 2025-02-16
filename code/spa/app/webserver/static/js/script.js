@@ -9,7 +9,7 @@ function appRouter() {
         return;
     }
 
-    fetch('/user', {
+    fetch('/get_user', {
         headers: {
             'auth': `Bearer ${token}`
         }
@@ -384,6 +384,13 @@ async function renderMainPage(data) {
                         </div>
                         <p id="ERRORaddDeviceId${room.id}" class="text-red-700 font-bold text-sm"></p>
                         <div class="flex items-center">
+                            <label for="deviceType${room.id}" class="block text-gray-700 text-sm font-bold mb-2 mr-2 w-10">Type:</label>
+                            <select id="deviceType${room.id}">
+                                <option value="default">Choose type</option>
+                            </select>
+                        </div>
+                        <p id="ERRORaddDeviceType${room.id}" class="text-red-700 font-bold text-sm"></p>
+                        <div class="flex items-center">
                             <label for="deviceName${room.id}" class="block text-gray-700 text-sm font-bold mb-2 mr-2">Name:</label>
                             <button id="BTNnameSameId${room.id}" class = "add_room-sm-btn">Same to ID</button>
                             <input type="text" id="deviceName${room.id}" value=""
@@ -430,6 +437,13 @@ async function renderMainPage(data) {
                 room_element.querySelector(`#BTNaddDevice${room.id}`).addEventListener('click', () => {
                     room_element.querySelector(`#FRaddDevice${room.id}`).classList.remove('hidden'); // open form
                     room_element.querySelector(`#BTNaddDevice${room.id}`).classList.add('hidden'); // hide button
+                    dev_types = ['Temperature & Humidity Sensor', 'Ligh Sensor', 'Alarming System'];
+                    for (dt in dev_types) {
+                        type_element = document.createElement('option');
+                        type_element.setAttribute("value", dev_types[dt]);
+                        type_element.innerHTML = dev_types[dt];
+                        room_element.querySelector(`#deviceType${room.id}`).appendChild(type_element);
+                    }
                 });
 
                 room_element.querySelector(`#BTNcancelDevice${room.id}`).addEventListener('click', () => {
@@ -443,23 +457,29 @@ async function renderMainPage(data) {
                 room_element.querySelector(`#BTNaddNewDevice${room.id}`).addEventListener('click', async () => {
                     const dev_id = room_element.querySelector(`#deviceID${room.id}`).value;
                     const dev_name = room_element.querySelector(`#deviceName${room.id}`).value;
+                    const dev_type = room_element.querySelector(`#deviceType${room.id}`).value;
                     if (dev_id == "") {
                         room_element.querySelector(`#ERRORaddDeviceId${room.id}`).textContent = 'ID cannot be empty';
                         return;
-                    } else if (dev_name == "") {
+                    } else { room_element.querySelector(`#ERRORaddDeviceId${room.id}`).textContent = ''; }
+                    if (dev_type == "default") {
+                        room_element.querySelector(`#ERRORaddDeviceType${room.id}`).textContent = 'U must choose a type';
+                        return;
+                    } else { room_element.querySelector(`#ERRORaddDeviceType${room.id}`).textContent = ''; }
+                    if (dev_name == "") {
                         room_element.querySelector(`#ERRORaddDeviceName${room.id}`).textContent = 'Name cannot be empty';
                         return;
-                    } else {
-                        room_element.querySelector(`#ERRORaddDeviceId${room.id}`).textContent = '';
-                        room_element.querySelector(`#ERRORaddDeviceName${room.id}`).textContent = '';
-                        const res = addDeviceRoom(room.id, dev_id, dev_name);
-                        // if (res == true) {
-                        //     room_element.querySelector(`#FRaddDevice${room.id}`).classList.add('hidden');
-                        //     appRouter();
-                        // } else {
-                        //     // give error message
-                        // }
-                    }
+                    } else { room_element.querySelector(`#ERRORaddDeviceName${room.id}`).textContent = ''; }
+                    room_element.querySelector(`#ERRORaddDeviceId${room.id}`).textContent = '';
+                    room_element.querySelector(`#ERRORaddDeviceName${room.id}`).textContent = '';
+                    const res = addDeviceRoom(room.id, dev_id, dev_name, dev_type);
+                    // if (res == true) {
+                    //     room_element.querySelector(`#FRaddDevice${room.id}`).classList.add('hidden');
+                    //     appRouter();
+                    // } else {
+                    //     // give error message
+                    // }
+
                 });
 
                 room_list_element.appendChild(room_element)
@@ -482,19 +502,24 @@ async function renderMainPage(data) {
                     device_element.classList.add('device_element');
                     device_element.innerHTML = `
                     <div>
-                        <h1>DEVICE_ID ${device.dev_id} NAME ${device.name}</h1>
+                        <p class="text-4xl">NAME: ${device.name}</p>
+                        <p class="text-base"> ID: ${device.dev_id} </p>
+                        <p class="text-2xl"> Type: ${device.dev_type} </p>
                         <div id="deviceData${device.dev_id}" class="device_data">
                             Waiting for data from device
+                        </div>
+                        <div>
+                            <button id="wstest${device.dev_id}">TEST</button>
                         </div>
                     </div>
                     <button id="deleteDevice${device.dev_id}" class="cancel-sm-btn"> DELETE </button>
                     `;
 
                     const ws = new WebSocket(`ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`);
-                    
-                    
+
+
                     ws.onopen = () => {
-                        ws.send(JSON.stringify({auth:"Bearer " + localStorage.getItem("token")})) ;
+                        ws.send(JSON.stringify({ auth: "Bearer " + localStorage.getItem("token") }));
                     };
 
                     ws.onmessage = (event) => {
@@ -522,6 +547,10 @@ async function renderMainPage(data) {
                         console.error(`WebSocket for device ${device.dev_id} closed`);
                     };
 
+                    device_element.querySelector(`#wstest${device.dev_id}`).addEventListener('click', async () => {
+                        ws.send(`TEST MESSAGE from dev ${device.dev_id}`);
+                    });
+
                     device_element.querySelector(`#deleteDevice${device.dev_id}`).addEventListener('click', async () => {
                         deleteDeviceRoom(room.id, device.dev_id);
                     });
@@ -530,7 +559,6 @@ async function renderMainPage(data) {
                 }
             }
         } catch (error) { errorHandler(error); }
-
     }
 
     async function addHouse() {
@@ -646,7 +674,7 @@ async function renderMainPage(data) {
         } catch (error) { errorHandler(error); }
     }
 
-    async function addDeviceRoom(room_id, device_id, device_name) {
+    async function addDeviceRoom(room_id, device_id, device_name, device_type) {
         try {
             const response = await fetch('/add_new_device', {
                 method: 'POST',
@@ -655,7 +683,7 @@ async function renderMainPage(data) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(
-                    { dev_id: device_id, name: device_name, room_id: room_id }
+                    { dev_id: device_id, name: device_name, dev_type: device_type, room_id: room_id}
                 )
             });
             if (!response.ok) {

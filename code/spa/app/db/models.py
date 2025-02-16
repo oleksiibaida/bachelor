@@ -45,6 +45,7 @@ class DeviceModel(Base):
     name = Column(String(50), nullable=False)
     user_id = Column(Integer, ForeignKey('user.primary_key', ondelete='CASCADE'), nullable=False, unique=False)
     description = Column(String(250), nullable=True)
+    dev_type = Column(String(30), nullable=True)
     dev_rooms = relationship("RoomDeviceModel", back_populates="device", cascade="all, delete-orphan", lazy='selectin')
 
     __table_args__ = (UniqueConstraint('user_id', 'dev_id'),)

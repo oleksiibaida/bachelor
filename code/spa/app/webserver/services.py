@@ -35,6 +35,7 @@ class DeviceModel(BaseModel):
     primary: int = None
     room_id: int = None
     description: str = None
+    dev_type: str = None
 
 class RoomDeviceModel(BaseModel):
     device_id: str
@@ -81,7 +82,8 @@ class WebsocketHandler:
 
         try:
             while True:
-                await ws.receive_text()
+                ws_data = await ws.receive_text()
+                await cls.received_data(ws, ws_data)
         except WebSocketDisconnect:
             _logger.warning("Connection closed by the client")
         except WebSocketException as e:
@@ -110,6 +112,19 @@ class WebsocketHandler:
                     _logger.error(f"ERROR SEND TO WEBSOCKET DEV_ID {device_id}: {e}")
                     await cls.disconnect(con['websocket'])
                 # break
+    
+    @classmethod
+    async def received_data(cls, ws:WebSocket, data):
+            for con in cls.active_connections:
+                if con['websocket'].headers.get("sec-websocket-key") == ws.headers.get("sec-websocket-key"):
+                    
+                    topic = f'command/{con['device_id']}'
+                    
+                    from app.mqtt.client import MQTTClient
+                    await MQTTClient.publish(topic, data) 
+                    
+                    break
+
 
     @classmethod
     def test(cls):
@@ -244,6 +259,7 @@ async def get_houses(db_session, user_id: int):
                             "dev_id": device.dev_id,
                             "name": device.name,
                             "description": device.description,
+                            "dev_type": device.dev_type
                         }
                         room_data["devices"].append(device_data)
                 house_data["rooms"].append(room_data)

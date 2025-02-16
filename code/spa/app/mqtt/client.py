@@ -36,3 +36,7 @@ class MQTTClient():
         except Exception as e:
             logger.error(e)
 
+    @classmethod
+    async def publish(cls, topic, message):
+        print(f'PUBLISH {topic}:{message}')
+

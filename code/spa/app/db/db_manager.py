@@ -58,8 +58,8 @@ class db:
     
     def test(self):
     
-        # sql = 'PRAGMA table_info(device)'
-        sql = 'DROP TABLE device'
+        sql = 'PRAGMA table_info(device)'
+        # sql = 'DROP TABLE device'
         # sql = 'SELECT * FROM room_device rd LEFT JOIN device d ON rd.device_id = d.id'
         res = self.cursor.execute(sql)
         self.connection.commit()

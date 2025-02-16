@@ -258,11 +258,13 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
     try:
         if device_data.dev_id is None or device_data.name is None or user_id is None:
             return False
+        print(DeviceModel.__table__.columns.keys())
         new_dev = DeviceModel(
             dev_id = device_data.dev_id,
             name = device_data.name,
             user_id = user_id,
-            description = device_data.description
+            description = device_data.description,
+            dev_type = device_data.dev_type
         )
         db_session.add(new_dev)
         await db_session.commit()

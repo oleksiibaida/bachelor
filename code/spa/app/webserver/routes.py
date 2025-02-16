@@ -19,8 +19,8 @@ templates = Jinja2Templates(directory=templates_path)
 @router.on_event("startup")
 async def startup():
     logger.info(f"Startup called in process: {os.getpid()}")
-    mqtt_client = mqtt.MQTTClient()
-    asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
+    # mqtt_client = mqtt.MQTTClient()
+    # asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
 
 async def get_token(request: Request):
     # print(f"HEADE: {request.headers}")
@@ -38,7 +38,8 @@ async def index(request: Request):
     :params: NoneDi
     :return: Basic HTML-Page index.html
     """
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {'request': request})
+   
 
 @router.get('/my_device', response_class=HTMLResponse)
 async def my_device_get(request: Request, response: Response, db_session: AsyncSession = Depends(get_session)):
@@ -73,7 +74,7 @@ async def login_post(request: Request, response: Response, user_data: services.U
         logger.error(f'UNEXPECTED {e}')
         return RedirectResponse("/")
 
-@router.get('/user')
+@router.get('/get_user')
 async def user_get(requset: Request, token: str = Depends(get_token), db_session: AsyncSession = Depends(get_session)):
     try:
         user_id = services.verify_token(token)
@@ -287,12 +288,3 @@ async def websocket_mqtt(ws: WebSocket,  device_id: str = Path(...), db_session:
     except Exception as e:
         logger.error(e)
         return {'error': 'Unexpected error'}
-
-
-
-# Simulate sending MQTT data to WebSocket clients
-            # Replace this with actual MQTT subscription forwarding
-            # await asyncio.sleep(1)
-            # counter += 1
-            # data = {"temp": 22.5, "hum": counter}  # Example data
-            # await ws.send_json(data)
