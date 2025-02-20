@@ -41,6 +41,14 @@ class RoomDeviceModel(BaseModel):
     device_id: str
     room_id: int = None
 
+class ScenarioModel(BaseModel):
+    source_dev: str
+    data_field: str    
+    condition: str
+    value: int
+    target_dev: str
+    command: str
+
 class WebsocketHandler:
     active_connections = []  # Store active WebSocket connections with device_id
 
@@ -391,4 +399,30 @@ async def delete_device(db_session, user_id: int, device_id: str, room_id: int =
         return {'error': e.detail}
     except Exception as e:
         _logger.critical(f"Unexpected error: {e}")
+        return {'error': e}
+    
+async def add_new_scenario(db_session, user_id, scenario_data: ScenarioModel):
+    try:
+        # Check if user has provided devices
+        device_owner = await queries.verify_user_device(db_session, user_id, scenario_data.source_dev)
+        if device_owner:
+            device_owner = await queries.verify_user_device(db_session, user_id, scenario_data.target_dev)
+        if not device_owner:
+            _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO DEVICE')
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this device')
+        res = await queries.add_scenario(
+            db_session, 
+            user_id=user_id, 
+            source_dev=scenario_data.source_dev,
+            data_field=scenario_data.data_field,
+            condition=scenario_data.condition,
+            value=scenario_data.value,
+            target_dev=scenario_data.target_dev,
+            command=scenario_data.command
+        )
+    except HTTPException as e:
+        _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
+        return {'error': e.detail}
+    except Exception as e:
+        _logger.error(e)
         return {'error': e}

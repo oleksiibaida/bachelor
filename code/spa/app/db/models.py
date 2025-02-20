@@ -1,9 +1,11 @@
 import bcrypt
-from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
+import enum
+from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
 from .base import Base
 from app.config import Config
+
 __logger = Config.logger_init()
 
 
@@ -38,7 +40,28 @@ class RoomModel(Base):
 
     __table_args__ = (UniqueConstraint('name', 'house_id'),)
 
+class ScenarioModel(Base):
+    class ScenarioConditionsEnum(enum.Enum):
+        greater = ">"
+        less = "<"
+        equal = "=="
+
+    __tablename__ = "scenario"
+
+    primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    user_id = Column(Integer, ForeignKey("user.primary_key", ondelete='CASCADE'), nullable=False)
+    source_dev = Column(Integer, ForeignKey("device.dev_id", ondelete='CASCADE'), nullable=False)
+    data_field = Column(String(20), nullable=False)  # Trigger value (e.g., temperature)
+    condition = Column(Enum(ScenarioConditionsEnum), nullable=False)
+    value = Column(Integer, nullable=False)
+    target_dev = Column(Integer, ForeignKey("device.dev_id", ondelete='CASCADE'), nullable=False)
+    command = Column(String(50), nullable=False)
+
+    if_device = relationship("DeviceModel", foreign_keys=[source_dev], lazy='selectin')
+    then_device = relationship("DeviceModel", foreign_keys=[target_dev], lazy='selectin')
+
 class DeviceModel(Base):
+
     __tablename__ = 'device'
     primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     dev_id = Column(String(10), nullable=False)
@@ -46,8 +69,11 @@ class DeviceModel(Base):
     user_id = Column(Integer, ForeignKey('user.primary_key', ondelete='CASCADE'), nullable=False, unique=False)
     description = Column(String(250), nullable=True)
     dev_type = Column(String(30), nullable=True)
-    dev_rooms = relationship("RoomDeviceModel", back_populates="device", cascade="all, delete-orphan", lazy='selectin')
 
+    dev_rooms = relationship("RoomDeviceModel", back_populates="device", cascade="all, delete-orphan", lazy='selectin')
+    
+    scenarios_if = relationship("ScenarioModel", foreign_keys=[ScenarioModel.source_dev], back_populates="if_device", cascade="all, delete-orphan", lazy="selectin")
+    scenarios_then = relationship("ScenarioModel", foreign_keys=[ScenarioModel.target_dev], back_populates="then_device", cascade="all, delete-orphan", lazy="selectin")
     __table_args__ = (UniqueConstraint('user_id', 'dev_id'),)
 
 class RoomDeviceModel(Base):

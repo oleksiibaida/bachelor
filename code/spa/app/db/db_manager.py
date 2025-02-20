@@ -55,10 +55,15 @@ class db:
         sql = 'DELETE FROM device, room_device'
         self.cursor.execute(sql)
         self.connection.commit()
+
+    def get_all_scenarios(self):
+        sql = 'SELECT * from scenario'
+        res = self.cursor.execute(sql)
+        return [dict(row) for row in res]
     
     def test(self):
     
-        sql = 'PRAGMA table_info(device)'
+        sql = 'PRAGMA table_info(scenario)'
         # sql = 'DROP TABLE device'
         # sql = 'SELECT * FROM room_device rd LEFT JOIN device d ON rd.device_id = d.id'
         res = self.cursor.execute(sql)
@@ -89,5 +94,10 @@ for d in dv:
     print(d)
 print("====ROOM_DEVICE====")
 dv = db.get_all_room_device()
+for d in dv:
+    print(d)
+
+print("====SCENARIO====")
+dv = db.get_all_scenarios()
 for d in dv:
     print(d)

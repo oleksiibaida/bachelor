@@ -188,6 +188,7 @@ async function renderMainPage(data) {
         <div class="flex flex-col justify-center items-center space-y-3">
             <h1>Hello, ${data.username}</h1>
             <button id="BTNcreateHouse" type="button" class="create_house-btn">Create New House</button>
+            <button id="BTNcreateScenario" type="button" class="create_house-btn">Create Scenario</button>
         </div>
         <div id="MNcreateHouse" class="hidden mn-createhouse">
             <div class="p-4">
@@ -197,15 +198,22 @@ async function renderMainPage(data) {
 
                 <div class="flex justify-between">
                     <button id="BTNaddHouse"
-                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Save</button>
+                        class="create_house-btn">Save</button>
                     <button id="BTNcloseHouseMN"
                         class="cancel-btn">Close</button>
                 </div>
             </div>
         </div>
-        <div class="hidden">
-            <p>FIND ME</p>
+        <div id="MNcreateScenario" class="hidden mn-createhouse">
+            <input type="text" id="sourceDevice" placeholder="if">
+            <input type="text" id="data_field" placeholder="data_field">
+            <input type="text" id="condition" placeholder="condition">
+            <input type="number" id="value" placeholder="value">
+            <input type="text" id="targetDevice" placeholder="thenDevice">
+            <input type="text" id="command" placeholder="command">
+            <button id="BTNaddScenario" class="create_house-btn">Save</button>
         </div>
+
         <div id="houseList" class="houseList"></div>
     </div>
     `;
@@ -216,6 +224,21 @@ async function renderMainPage(data) {
     // MNcreateHouse.style.display = "none";
     var BTNaddHouse = document.getElementById("BTNaddHouse");
     var BTNcloseHouseMN = document.getElementById("BTNcloseHouseMN")
+
+    document.getElementById("BTNcreateScenario").addEventListener('click', () => {
+        document.getElementById("MNcreateScenario").classList.toggle('hidden');
+    });
+
+    document.getElementById("BTNaddScenario").addEventListener('click', async () => {
+        const source_dev = document.getElementById("sourceDevice").value;
+        const data_field = document.getElementById("data_field").value;
+        const condition = document.getElementById("condition").value;
+        const value = document.getElementById("value").value;
+        const target_dev = document.getElementById("targetDevice").value;
+        const command = document.getElementById("command").value;
+        await createScenario(source_dev, data_field, condition, value, target_dev, command);
+        document.getElementById("MNcreateScenario").classList.add('hidden');
+    });
 
     // Create New House click
     BTNcreateHouse.addEventListener("click", () => {
@@ -256,12 +279,40 @@ async function renderMainPage(data) {
         BTNcreateHouse.classList.remove("hidden");
     }
 
+    async function createScenario(source_dev, data_field, condition, value, target_dev, command) {
+        try {
+            const response = await fetch(
+                '/add_scenario',
+                {
+                    method: 'POST',
+                    headers: {
+                        'auth': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ source_dev, data_field, condition, value, target_dev, command })
+                }
+            );
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error);
+            }
+            const response_data = await response.json()
+            if (response_data.error) {
+                console.error(response_data.error)
+                throw new Error(response_data.error)
+            }
+            appRouter();
+        } catch (error) {
+            errorHandler(error);
+        }
+    }
+
     async function loadHouses() {
         try {
             const response = await fetch('/get_houses', {
                 method: 'GET',
                 headers: { 'auth': `Bearer ${localStorage.getItem('token')}` }
-            })
+            });
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error);
@@ -683,7 +734,7 @@ async function renderMainPage(data) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(
-                    { dev_id: device_id, name: device_name, dev_type: device_type, room_id: room_id}
+                    { dev_id: device_id, name: device_name, dev_type: device_type, room_id: room_id }
                 )
             });
             if (!response.ok) {

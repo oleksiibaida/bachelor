@@ -4,7 +4,7 @@ from sqlalchemy import select, insert, update, delete, func
 from sqlalchemy.exc import IntegrityError, NoResultFound, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
-from .models import UserModel, HouseModel, RoomModel, DeviceModel, RoomDeviceModel
+from .models import UserModel, HouseModel, RoomModel, DeviceModel, RoomDeviceModel, ScenarioModel
 from fastapi import Depends, HTTPException
 
 _logger = Config.logger_init()
@@ -258,7 +258,7 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
     try:
         if device_data.dev_id is None or device_data.name is None or user_id is None:
             return False
-        print(DeviceModel.__table__.columns.keys())
+        # print(DeviceModel.__table__.columns.keys())
         new_dev = DeviceModel(
             dev_id = device_data.dev_id,
             name = device_data.name,
@@ -360,7 +360,7 @@ async def verify_user_device(db_session: AsyncSession, user_id: int, device_id):
         return res.scalars().one()
     except NoResultFound:
         _logger.error(f' U_ID {user_id} IS NOT OWNER OF DEV_ID {device_id}')
-        raise HTTPException(status_code=404, detail='NOT FOUND')
+        raise HTTPException(status_code=404, detail=f'U_ID {user_id} IS NOT OWNER OF DEV_ID {device_id}')
     except SQLAlchemyError as e:
         _logger.error(f"SQLAlchemyError: {e}")
         await db_session.rollback()
@@ -487,3 +487,51 @@ async def delete_room_device(db_session: AsyncSession, room_id: int, device_prim
         _logger.error(f"An unexpected error: {e}")
         raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
     
+
+async def add_scenario(db_session: AsyncSession, user_id: int, source_dev: str, data_field: str, condition: ScenarioModel.ScenarioConditionsEnum, value: str, target_dev: str, command: str):
+    try:
+        new_scenario = ScenarioModel(
+            user_id = user_id,
+            source_dev = source_dev,
+            data_field = data_field.lower(),
+            condition = condition,
+            value = value,
+            target_dev = target_dev,
+            command = command
+        )
+        db_session.add(new_scenario)
+        await db_session.commit()
+        return new_scenario
+    except IntegrityError as e:
+        await db_session.rollback()
+        _logger.error(f"IntegrityError: {e.orig}")
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        await db_session.rollback()
+        _logger.error(f"SQLAlchemyError: {e}")
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except Exception as e:
+        await db_session.rollback()
+        _logger.error(f"An unexpected error: {e}")
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+    
+async def delete_scenario(db_session: AsyncSession, scenario_primary: int):
+    try:
+        del_scenario = await db_session.get(ScenarioModel, scenario_primary)
+        if del_scenario:
+            await db_session.delete(del_scenario)
+            await db_session.commit()
+            return True
+        return False
+    except IntegrityError as e:
+        await db_session.rollback()
+        _logger.error(f"IntegrityError: {e.orig}")
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        await db_session.rollback()
+        _logger.error(f"SQLAlchemyError: {e}")
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except Exception as e:
+        await db_session.rollback()
+        _logger.error(f"An unexpected error: {e}")
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
