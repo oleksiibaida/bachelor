@@ -210,6 +210,42 @@ async def signup_user(db_session, username: str, email: str, password: str):
         _logger.error(e)
         return {'error': e}
     
+async def get_user_data(db_session, user_id):
+    try:
+        user = await queries.get_user_data(db_session, user_id)
+        user_data = {
+            'user_id': user.primary_key,
+            'username': user.username,
+            'email': user.email
+        }
+        houses = await get_houses(db_session, user_id)
+        scenarios = []
+        all_scenarios = await queries.get_scenarios_on_user(db_session, user_id)
+        for s in all_scenarios:
+            scene = {
+                'source_dev': s.source_dev,
+                'data_field': s.data_field,
+                'condition': s.condition.value,
+                'value': s.value,
+                'target_dev': s.target_dev,
+                'command': s.command
+            }
+            scenarios.append(scene)
+
+        data = {
+            "user_data": user_data,
+            "houses":houses,
+            "scenarios":scenarios,
+            "conditions":queries.get_scenario_conditions()
+        }
+        return data
+        
+    except HTTPException as e:
+        _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
+        return {'error': e}
+    except Exception as e:
+        _logger.error(e)
+        return {'error': e}
 async def create_new_house(db_session, user_id, houseName):
     try:
         if houseName is None or len(houseName) < 1 or houseName=='': return False
@@ -420,6 +456,8 @@ async def add_new_scenario(db_session, user_id, scenario_data: ScenarioModel):
             target_dev=scenario_data.target_dev,
             command=scenario_data.command
         )
+        
+        return res
     except HTTPException as e:
         _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
         return {'error': e.detail}

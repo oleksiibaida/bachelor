@@ -157,6 +157,7 @@ void m5_setup()
   M5.Lcd.setRotation(1);
   M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(0, 0);
+  M5.Lcd.println("ID:" + String(DEVICE_ID));
 }
 
 /*===WIFI===*/

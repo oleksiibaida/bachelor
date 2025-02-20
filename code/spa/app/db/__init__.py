@@ -16,7 +16,7 @@ async_session = sessionmaker(
 
 async def create_tables():
     async with async_engine.begin() as connection:
-        await connection.run_sync(Base.metadata.drop_all)
+        # await connection.run_sync(Base.metadata.drop_all)
         await connection.run_sync(Base.metadata.create_all)
         await connection.commit()
         logger.info("TABLES CREATED")
@@ -24,3 +24,10 @@ async def create_tables():
 async def get_session():
     async with async_session() as session:
         yield session
+
+async def get_direct_session():
+    async with async_session() as session:
+        return session
+    
+async def close_session(session: AsyncSession):
+    await session.close()

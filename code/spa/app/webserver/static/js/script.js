@@ -9,7 +9,7 @@ function appRouter() {
         return;
     }
 
-    fetch('/get_user', {
+    fetch('/get_user_data', {
         headers: {
             'auth': `Bearer ${token}`
         }

@@ -29,14 +29,41 @@ class MQTTClient():
             main_topic, device_id = str(message.topic).split('/')
             msg = message.payload.decode()
             data = json.loads(msg)      
-            
+
+            # work with scenario
+            for s in cls.saved_scenarios:
+                if s.source_dev == device_id:
+                    condition = s.condition
+                    if eval(f"{data[s.data_field]} {s.condition.value} {s.value}"):
+                        await cls.publish(s.target_dev, topic='command', message=s.command)
+
             from app.webserver.services import WebsocketHandler
             await WebsocketHandler.send_data(device_id, data)
 
+            # device is source_dev in scenario
+            
+ 
         except Exception as e:
             logger.error(e)
 
     @classmethod
-    async def publish(cls, topic, message):
+    async def publish(cls, device_id, topic, message):
         print(f'PUBLISH {topic}:{message}')
 
+    async def send_command_to_device(device_id: str, command: str):
+        return
+
+    saved_scenarios = []
+
+    @classmethod
+    async def load_scenarios(cls):
+        from app.db import queries, get_direct_session, close_session
+        session = await get_direct_session()
+        res = await queries.get_all_scenarios(session)
+        for r in res:
+            print(r.condition.value)
+        await close_session(session)
+        cls.saved_scenarios = res
+        for _ in cls.saved_scenarios:
+            print(_)
+        return

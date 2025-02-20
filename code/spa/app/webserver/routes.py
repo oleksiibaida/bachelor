@@ -20,6 +20,7 @@ templates = Jinja2Templates(directory=templates_path)
 async def startup():
     logger.info(f"Startup called in process: {os.getpid()}")
     mqtt_client = mqtt.MQTTClient()
+    await mqtt_client.load_scenarios()
     asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
 
 async def get_token(request: Request):
@@ -39,7 +40,6 @@ async def index(request: Request):
     """
     return templates.TemplateResponse("index.html", {'request': request})
    
-
 @router.get('/my_device', response_class=HTMLResponse)
 async def my_device_get(request: Request, response: Response, db_session: AsyncSession = Depends(get_session)):
     """
@@ -73,12 +73,15 @@ async def login_post(request: Request, response: Response, user_data: services.U
         logger.error(f'UNEXPECTED {e}')
         return RedirectResponse("/")
 
-@router.get('/get_user')
+@router.get('/get_user_data')
 async def user_get(requset: Request, token: str = Depends(get_token), db_session: AsyncSession = Depends(get_session)):
     try:
         user_id = services.verify_token(token)
         if not user_id:
             return {'error': 'TOKEN INVALID'}
+        res = await services.get_user_data(db_session, user_id)
+        for _ in res:
+            print(_,res[_])
         user = await queries.get_user_data(db_session, user_id)
         if user:
             return {'user_id': user.primary_key, 'username': user.username, 'email': user.email}
@@ -295,6 +298,7 @@ async def add_scenario(request: Request, scenario_data: services.ScenarioModel, 
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         print("SCENARIO DATA:", scenario_data)
         res = await services.add_new_scenario(db_session, user_id, scenario_data)
+        print(res)
         return res
     except HTTPException as e:
         logger.error(e)

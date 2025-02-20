@@ -490,11 +490,14 @@ async def delete_room_device(db_session: AsyncSession, room_id: int, device_prim
 
 async def add_scenario(db_session: AsyncSession, user_id: int, source_dev: str, data_field: str, condition: ScenarioModel.ScenarioConditionsEnum, value: str, target_dev: str, command: str):
     try:
+        if not condition in [k.value for k in ScenarioModel.ScenarioConditionsEnum]:
+            return HTTPException(status_code=422, detail="Condition has wrong value")
+        enum_condition = ScenarioModel.ScenarioConditionsEnum(condition)
         new_scenario = ScenarioModel(
             user_id = user_id,
             source_dev = source_dev,
             data_field = data_field.lower(),
-            condition = condition,
+            condition = enum_condition,
             value = value,
             target_dev = target_dev,
             command = command
@@ -515,6 +518,56 @@ async def add_scenario(db_session: AsyncSession, user_id: int, source_dev: str, 
         _logger.error(f"An unexpected error: {e}")
         raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
     
+async def get_all_scenarios(db_session: AsyncSession):
+    try:
+        res = await db_session.execute(select(ScenarioModel))
+        return res.scalars().all()
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except Exception as e:
+        _logger.error(f"Exception: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+
+async def get_scenarios_on_user(db_session:AsyncSession, user_id: int):
+    try:
+        stmt = select(ScenarioModel).where(ScenarioModel.user_id == user_id)
+        res = await db_session.execute(stmt)
+        return res.scalars().all()
+    except IntegrityError as e:
+        _logger.error(f"IntegrityError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except Exception as e:
+        _logger.error(f"Exception: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+    
+async def get_scenarios_for_device(db_session: AsyncSession, device_id):
+    try:
+        stmt = select(ScenarioModel).where(ScenarioModel.target_dev == device_id)
+    except IntegrityError as e:
+        _logger.error(f"IntegrityError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except Exception as e:
+        _logger.error(f"Exception: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+    
+def get_scenario_conditions():
+    return [e.value for e in ScenarioModel.ScenarioConditionsEnum]
+
 async def delete_scenario(db_session: AsyncSession, scenario_primary: int):
     try:
         del_scenario = await db_session.get(ScenarioModel, scenario_primary)
