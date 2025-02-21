@@ -12,8 +12,12 @@ void bme_setup();
 void bme_displaydata();
 void bme_sendmqtt();
 void vcnl_setup();
+
 void vcnl_displaydata();
 void vcnl_sendmqtt();
+void show_connection();
+void show_sensor_data();
+void eeprom_connect_wifi_mqtt();
 void i2c_scan(int kanal);
 
 // Access Point (AP) konfigurieren
@@ -48,6 +52,7 @@ const char *CLIENT_ID = "m5";
 const char *TOPIC_COMMAND = "command";
 char *SUBSCRIBE_TOPIC;
 char *PUBLISH_TOPIC;
+uint8_t cursor_line = 0;
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 // i2c
@@ -83,39 +88,9 @@ void setup()
   Serial.println("START");
   Wire.begin();
   m5_setup();
-  // clear_eeprom();
-  //
-  // GET WiFi Daten aus EEPROM
-  EEPROM.begin(128);
-
-  char eeprom_ssid[MAX_SSID_LENGTH] = {0};
-  char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
-  EEPROM.get(0, eeprom_ssid);
-  EEPROM.get(32, eeprom_password);
-  EEPROM.end();
-  Serial.print("\nREAD FROM EEPROM");
-  Serial.print(eeprom_ssid);
-  Serial.print(eeprom_password);
-  // Daten gefunden
-  if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
-  {
-    Serial.println("STRING VALID");
-    if (wifi_connect(eeprom_ssid, eeprom_password))
-    {
-      i2cScan.begin(SDA2, SCL2, 400000);
-      mqtt_connect();
-    }
-    else
-    {
-      setup_ap();
-    }
-    vcnl_setup();
-    bme_setup();
-  }
-  else
-  { // keine WLAN-DAten gefunden
-    setup_ap();
-  }
+  eeprom_connect_wifi_mqtt();
+  vcnl_setup();
+  bme_setup();
 }
 
 void loop()
@@ -126,24 +101,12 @@ void loop()
   Serial.println("LOOP");
   if (WiFi.status() != WL_CONNECTED)
   {
-    setup_ap();
-    // Reconnect to WiFi with credentials from EEPROM
-    EEPROM.begin(128);
-    char eeprom_ssid[MAX_SSID_LENGTH] = {0};
-    char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
-    EEPROM.get(0, eeprom_ssid);
-    EEPROM.get(32, eeprom_password);
-    EEPROM.end();
-    // Daten gefunden
-    if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
-      wifi_connect(eeprom_ssid, eeprom_password);
+    void eeprom_connect_wifi_mqtt();
   }
-  else if (!mqttClient.connected())
-  {
-    mqtt_connect();
-  }
-  bme_displaydata();
-  vcnl_displaydata();
+  show_connection();
+  show_sensor_data();
+  // bme_displaydata();
+  // vcnl_displaydata();
   if (mqttClient.connected())
     send_mqtt_data();
   delay(1000);
@@ -359,7 +322,9 @@ void bme_displaydata()
 
   M5.Lcd.fillRect(0, 40, M5.Lcd.width(), 20, TFT_BLUE);
   M5.Lcd.setCursor(X_OFFSET, 40);
-  M5.Lcd.printf("Temperature %.1f", bme_sensor.temperature);
+  M5.Lcd.printf("Temperature %.1f C", bme_sensor.temperature);
+  M5.Lcd.setCursor(X_OFFSET, 60);
+  M5.Lcd.printf("Humidity %.1f %", bme_sensor.humidity);
   /*
     // Print sensor readings
     Serial.print("Temperature: ");
@@ -417,106 +382,106 @@ void vcnl_setup()
     M5.Lcd.print("ERROR: VCNL NOT FOUND");
   }
   Serial.println("VCNL FOUND");
-  // vcnl4040.setProximityLEDCurrent(VCNL4040_LED_CURRENT_200MA);
-  Serial.print("Proximity LED current set to: ");
-  switch (vcnl4040.getProximityLEDCurrent())
-  {
-  case VCNL4040_LED_CURRENT_50MA:
-    Serial.println("50 mA");
-    break;
-  case VCNL4040_LED_CURRENT_75MA:
-    Serial.println("75 mA");
-    break;
-  case VCNL4040_LED_CURRENT_100MA:
-    Serial.println("100 mA");
-    break;
-  case VCNL4040_LED_CURRENT_120MA:
-    Serial.println("120 mA");
-    break;
-  case VCNL4040_LED_CURRENT_140MA:
-    Serial.println("140 mA");
-    break;
-  case VCNL4040_LED_CURRENT_160MA:
-    Serial.println("160 mA");
-    break;
-  case VCNL4040_LED_CURRENT_180MA:
-    Serial.println("180 mA");
-    break;
-  case VCNL4040_LED_CURRENT_200MA:
-    Serial.println("200 mA");
-    break;
-  }
+  // // vcnl4040.setProximityLEDCurrent(VCNL4040_LED_CURRENT_200MA);
+  // Serial.print("Proximity LED current set to: ");
+  // switch (vcnl4040.getProximityLEDCurrent())
+  // {
+  // case VCNL4040_LED_CURRENT_50MA:
+  //   Serial.println("50 mA");
+  //   break;
+  // case VCNL4040_LED_CURRENT_75MA:
+  //   Serial.println("75 mA");
+  //   break;
+  // case VCNL4040_LED_CURRENT_100MA:
+  //   Serial.println("100 mA");
+  //   break;
+  // case VCNL4040_LED_CURRENT_120MA:
+  //   Serial.println("120 mA");
+  //   break;
+  // case VCNL4040_LED_CURRENT_140MA:
+  //   Serial.println("140 mA");
+  //   break;
+  // case VCNL4040_LED_CURRENT_160MA:
+  //   Serial.println("160 mA");
+  //   break;
+  // case VCNL4040_LED_CURRENT_180MA:
+  //   Serial.println("180 mA");
+  //   break;
+  // case VCNL4040_LED_CURRENT_200MA:
+  //   Serial.println("200 mA");
+  //   break;
+  // }
 
-  Serial.print("Proximity LED duty cycle set to: ");
-  switch (vcnl4040.getProximityLEDDutyCycle())
-  {
-  case VCNL4040_LED_DUTY_1_40:
-    Serial.println("1/40");
-    break;
-  case VCNL4040_LED_DUTY_1_80:
-    Serial.println("1/80");
-    break;
-  case VCNL4040_LED_DUTY_1_160:
-    Serial.println("1/160");
-    break;
-  case VCNL4040_LED_DUTY_1_320:
-    Serial.println("1/320");
-    break;
-  }
+  // Serial.print("Proximity LED duty cycle set to: ");
+  // switch (vcnl4040.getProximityLEDDutyCycle())
+  // {
+  // case VCNL4040_LED_DUTY_1_40:
+  //   Serial.println("1/40");
+  //   break;
+  // case VCNL4040_LED_DUTY_1_80:
+  //   Serial.println("1/80");
+  //   break;
+  // case VCNL4040_LED_DUTY_1_160:
+  //   Serial.println("1/160");
+  //   break;
+  // case VCNL4040_LED_DUTY_1_320:
+  //   Serial.println("1/320");
+  //   break;
+  // }
 
-  // vcnl4040.setAmbientIntegrationTime(VCNL4040_AMBIENT_INTEGRATION_TIME_80MS);
-  Serial.print("Ambient light integration time set to: ");
-  switch (vcnl4040.getAmbientIntegrationTime())
-  {
-  case VCNL4040_AMBIENT_INTEGRATION_TIME_80MS:
-    Serial.println("80 ms");
-    break;
-  case VCNL4040_AMBIENT_INTEGRATION_TIME_160MS:
-    Serial.println("160 ms");
-    break;
-  case VCNL4040_AMBIENT_INTEGRATION_TIME_320MS:
-    Serial.println("320 ms");
-    break;
-  case VCNL4040_AMBIENT_INTEGRATION_TIME_640MS:
-    Serial.println("640 ms");
-    break;
-  }
+  // // vcnl4040.setAmbientIntegrationTime(VCNL4040_AMBIENT_INTEGRATION_TIME_80MS);
+  // Serial.print("Ambient light integration time set to: ");
+  // switch (vcnl4040.getAmbientIntegrationTime())
+  // {
+  // case VCNL4040_AMBIENT_INTEGRATION_TIME_80MS:
+  //   Serial.println("80 ms");
+  //   break;
+  // case VCNL4040_AMBIENT_INTEGRATION_TIME_160MS:
+  //   Serial.println("160 ms");
+  //   break;
+  // case VCNL4040_AMBIENT_INTEGRATION_TIME_320MS:
+  //   Serial.println("320 ms");
+  //   break;
+  // case VCNL4040_AMBIENT_INTEGRATION_TIME_640MS:
+  //   Serial.println("640 ms");
+  //   break;
+  // }
 
-  // vcnl4040.setProximityIntegrationTime(VCNL4040_PROXIMITY_INTEGRATION_TIME_8T);
-  Serial.print("Proximity integration time set to: ");
-  switch (vcnl4040.getProximityIntegrationTime())
-  {
-  case VCNL4040_PROXIMITY_INTEGRATION_TIME_1T:
-    Serial.println("1T");
-    break;
-  case VCNL4040_PROXIMITY_INTEGRATION_TIME_1_5T:
-    Serial.println("1.5T");
-    break;
-  case VCNL4040_PROXIMITY_INTEGRATION_TIME_2T:
-    Serial.println("2T");
-    break;
-  case VCNL4040_PROXIMITY_INTEGRATION_TIME_2_5T:
-    Serial.println("2.5T");
-    break;
-  case VCNL4040_PROXIMITY_INTEGRATION_TIME_3T:
-    Serial.println("3T");
-    break;
-  case VCNL4040_PROXIMITY_INTEGRATION_TIME_3_5T:
-    Serial.println("3.5T");
-    break;
-  case VCNL4040_PROXIMITY_INTEGRATION_TIME_4T:
-    Serial.println("4T");
-    break;
-  case VCNL4040_PROXIMITY_INTEGRATION_TIME_8T:
-    Serial.println("8T");
-    break;
-  }
+  // // vcnl4040.setProximityIntegrationTime(VCNL4040_PROXIMITY_INTEGRATION_TIME_8T);
+  // Serial.print("Proximity integration time set to: ");
+  // switch (vcnl4040.getProximityIntegrationTime())
+  // {
+  // case VCNL4040_PROXIMITY_INTEGRATION_TIME_1T:
+  //   Serial.println("1T");
+  //   break;
+  // case VCNL4040_PROXIMITY_INTEGRATION_TIME_1_5T:
+  //   Serial.println("1.5T");
+  //   break;
+  // case VCNL4040_PROXIMITY_INTEGRATION_TIME_2T:
+  //   Serial.println("2T");
+  //   break;
+  // case VCNL4040_PROXIMITY_INTEGRATION_TIME_2_5T:
+  //   Serial.println("2.5T");
+  //   break;
+  // case VCNL4040_PROXIMITY_INTEGRATION_TIME_3T:
+  //   Serial.println("3T");
+  //   break;
+  // case VCNL4040_PROXIMITY_INTEGRATION_TIME_3_5T:
+  //   Serial.println("3.5T");
+  //   break;
+  // case VCNL4040_PROXIMITY_INTEGRATION_TIME_4T:
+  //   Serial.println("4T");
+  //   break;
+  // case VCNL4040_PROXIMITY_INTEGRATION_TIME_8T:
+  //   Serial.println("8T");
+  //   break;
+  // }
 
-  // vcnl4040.setProximityHighResolution(false);
-  Serial.print("Proximity measurement high resolution? ");
-  Serial.println(vcnl4040.getProximityHighResolution() ? "True" : "False");
+  // // vcnl4040.setProximityHighResolution(false);
+  // Serial.print("Proximity measurement high resolution? ");
+  // Serial.println(vcnl4040.getProximityHighResolution() ? "True" : "False");
 
-  Serial.println("");
+  // Serial.println("");
 }
 
 void vcnl_displaydata()
@@ -548,6 +513,86 @@ void vcnl_sendmqtt()
   else
     Serial.println("\nNO MQTT SENT:");
   Serial.print(json);
+}
+
+/*===DISPLAY===*/
+void show_connection()
+{
+  M5.Lcd.setCursor(X_OFFSET, 0);
+  cursor_line=0;
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    M5.Lcd.fillRect(0, 0, M5.Lcd.width(), M5.Lcd.height(), TFT_BLACK);
+    M5.Lcd.print("WIFI OK");
+    M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
+    if (mqttClient.connected())
+    {
+      M5.Lcd.print("MQTT OK");
+    }
+    else
+    {
+      M5.Lcd.print("MQTT NOT CONNECTED");
+    }
+  }
+  else
+  {
+    M5.Lcd.fillRect(0, 0, M5.Lcd.width(), M5.Lcd.height(), TFT_RED);
+    M5.Lcd.print("WIFI NOT CONNECTED");
+    M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
+    M5.Lcd.printf("WIFI: %s", AP_SSID);
+    M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
+
+    M5.Lcd.printf("PASS: %s", AP_PASSWORD);
+    M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
+    M5.Lcd.printf("GO TO 10.0.0.1");
+    Serial.println(cursor_line);
+  }
+}
+
+void show_sensor_data()
+{
+  M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
+  M5.Lcd.printf("Temperature: %1.f", bme_sensor.temperature);
+
+  M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
+  M5.Lcd.printf("Humidity: %1.f", bme_sensor.humidity);
+
+  M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
+  uint8_t ambient_light = vcnl4040.getAmbientLight();
+  M5.Lcd.printf("Light: %d", ambient_light);
+  Serial.println(cursor_line);
+}
+/*===EEPROM===*/
+void eeprom_connect_wifi_mqtt()
+{
+  // GET WiFi Daten aus EEPROM
+  EEPROM.begin(128);
+  char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+  char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+  EEPROM.get(0, eeprom_ssid);
+  EEPROM.get(32, eeprom_password);
+  EEPROM.end();
+  Serial.print("\nREAD FROM EEPROM");
+  Serial.print(eeprom_ssid);
+  Serial.print(eeprom_password);
+  // Daten gefunden
+  if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
+  {
+    Serial.println("STRING VALID");
+    if (wifi_connect(eeprom_ssid, eeprom_password))
+    {
+      i2cScan.begin(SDA2, SCL2, 400000);
+      mqtt_connect();
+    }
+    else // MQTT-Verbindung fehlgeschlagen
+    {
+      setup_ap();
+    }
+  }
+  else
+  { // keine WLAN-Daten gefunden
+    setup_ap();
+  }
 }
 
 /*===SCANNER===*/

@@ -33,22 +33,19 @@ class MQTTClient():
             # work with scenario
             for s in cls.saved_scenarios:
                 if s.source_dev == device_id:
-                    condition = s.condition
                     if eval(f"{data[s.data_field]} {s.condition.value} {s.value}"):
                         await cls.publish(s.target_dev, topic='command', message=s.command)
 
             from app.webserver.services import WebsocketHandler
-            await WebsocketHandler.send_data(device_id, data)
-
-            # device is source_dev in scenario
-            
- 
+            await WebsocketHandler.send_data(device_id, data)          
         except Exception as e:
             logger.error(e)
 
     @classmethod
     async def publish(cls, device_id, topic, message):
-        print(f'PUBLISH {topic}:{message}')
+        async with aiomqtt.Client(hostname=Config.MQTT_BROKER_ADDRESS, port=Config.MQTT_PORT) as client:
+            print(f'PUBLISH {topic}:{message}')
+            client.publish(topic=topic, payload=message)
 
     async def send_command_to_device(device_id: str, command: str):
         return

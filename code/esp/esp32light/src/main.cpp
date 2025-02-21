@@ -57,23 +57,55 @@ Mycila::EasyDisplay display;
 // BME680
 Adafruit_BME680 bme_sensor;
 
-/*===WIFI===*/
-bool wifi_connect(char *ssid, char *password)
-{
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  WiFi.setAutoReconnect(true);
-  for (uint8_t i = 0; i < wifi_repeat; i++)
-  {
-    if (WiFi.status() == WL_CONNECTED)
-    {
-      Serial.println(WiFi.localIP());
+// Functions
+void setup_esp();
+void setup_ap();
+void wifi_connect();
+void show_connections();
+void show_sensordata();
+// void callback();
+void set_topics();
+void mqtt_connect();
+void send_mqtt_sensor_data();
+void bme_setup();
+void i2c_scan();
+bool is_valid_string();
+void eeprom_connect_wifi_mqtt();
 
-      return true;
-    }
-    delay(500);
+void setup()
+{
+  setup_esp();
+  bme_setup();
+  eeprom_connect_wifi_mqtt();
+}
+int counter = 0;
+void loop()
+{
+  delay(500);
+  if(WiFi.status() != WL_CONNECTED){
+    eeprom_connect_wifi_mqtt();
   }
-  return false;
+  counter++;
+  display.display();
+  // bme_displaydata();
+  show_sensordata();
+  if (mqttClient.connected())
+  {
+    send_mqtt_sensor_data();
+  }
+}
+
+
+/*===SETUP===*/
+void setup_esp()
+{
+  Serial.begin(9600);
+  i2cScan.begin(SDA2, SCL2, 400000);
+  display.begin(Mycila::EasyDisplayType::SH1107, 22, 23, 360);
+
+  display.setActive(true);
+  display.home.print("Loading...");
+  display.display();
 }
 
 void setup_ap()
@@ -124,7 +156,28 @@ void setup_ap()
   server.begin();
 }
 
-void display_connection()
+/*===WIFI===*/
+bool wifi_connect(char *ssid, char *password)
+{
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  WiFi.setAutoReconnect(true);
+  for (uint8_t i = 0; i < wifi_repeat; i++)
+  {
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      Serial.println(WiFi.localIP());
+
+      return true;
+    }
+    delay(500);
+  }
+  return false;
+}
+
+
+/*===DISPLAY===*/
+void show_connections()
 {
   display.home.clear();
   if (WiFi.status() == WL_CONNECTED)
@@ -145,19 +198,39 @@ void display_connection()
   }
 }
 
-bool is_valid_string(char *data, int max_length)
+void show_sensordata()
 {
-  if (strlen(data) == 0 or strlen(data) > max_length)
-    return false;
-  for (int i = 0; i < max_length; i++)
+  show_connections();
+  if (!bme_sensor.performReading())
   {
-    if (data[i] == '\0')
-      return true; // End of valid String
-    if (data[i] == 0xFF)
-      return false;
+    Serial.println("Failed to perform reading!");
+    display.home.print("\nNO SENSOR DATA");
+    return;
   }
-  return false;
+
+  display.home.printf("Temperature: %.1f C\n", bme_sensor.temperature);
+  display.home.printf("Humidity: %.1f%\n", bme_sensor.humidity);
+  // // Print sensor readings
+  // Serial.print("Temperature: ");
+  // Serial.print(bme_sensor.temperature);
+  // Serial.println(" °C");
+  // char temp[5];
+  // // mqttClient.publish(PUBLISH_TOPIC, temp);
+
+  // Serial.print("Humidity: ");
+  // Serial.print(bme_sensor.humidity);
+  // Serial.println(" %");
+
+  // Serial.print("Pressure: ");
+  // Serial.print(bme_sensor.pressure / 100.0); // Convert Pa to hPa
+  // Serial.println(" hPa");
+
+  // Serial.print("Gas Resistance: ");
+  // Serial.print(bme_sensor.gas_resistance / 1000.0); // kOhm
+  // Serial.println(" kOhms");
+  // Serial.println();
 }
+
 
 /*===MQTT===*/
 /*Wird beim Empfang der MQTT-Nachricht aufgerufen*/
@@ -213,7 +286,7 @@ void mqtt_connect()
       delay(1000);
     }
   }
-  display_connection();
+  show_connections();
 }
 
 void send_mqtt_sensor_data()
@@ -264,38 +337,6 @@ void bme_setup()
   bme_sensor.setGasHeater(320, 150); // 320°C for 150ms
 }
 
-void bme_displaydata()
-{
-  display_connection();
-  if (!bme_sensor.performReading())
-  {
-    Serial.println("Failed to perform reading!");
-    display.home.print("\nNO SENSOR DATA");
-    return;
-  }
-
-  display.home.printf("Temperature: %.1f C\n", bme_sensor.temperature);
-  display.home.printf("Humidity: %.1f%\n", bme_sensor.humidity);
-  // Print sensor readings
-  Serial.print("Temperature: ");
-  Serial.print(bme_sensor.temperature);
-  Serial.println(" °C");
-  char temp[5];
-  // mqttClient.publish(PUBLISH_TOPIC, temp);
-
-  Serial.print("Humidity: ");
-  Serial.print(bme_sensor.humidity);
-  Serial.println(" %");
-
-  Serial.print("Pressure: ");
-  Serial.print(bme_sensor.pressure / 100.0); // Convert Pa to hPa
-  Serial.println(" hPa");
-
-  Serial.print("Gas Resistance: ");
-  Serial.print(bme_sensor.gas_resistance / 1000.0); // Convert Ohms to kOhms
-  Serial.println(" kOhms");
-  Serial.println();
-}
 
 void i2c_scan(int kanal)
 {
@@ -342,17 +383,23 @@ void i2c_scan(int kanal)
   return;
 }
 
-void setup()
+/*===EEPROM===*/
+bool is_valid_string(char *data, int max_length)
 {
-  Serial.begin(9600);
-  i2cScan.begin(SDA2, SCL2, 400000);
-  display.begin(Mycila::EasyDisplayType::SH1107, 22, 23, 360);
+  if (strlen(data) == 0 or strlen(data) > max_length)
+    return false;
+  for (int i = 0; i < max_length; i++)
+  {
+    if (data[i] == '\0')
+      return true; // End of valid String
+    if (data[i] == 0xFF)
+      return false;
+  }
+  return false;
+}
 
-  display.setActive(true);
-  display.home.print("Loading...");
-  display.display();
-  bme_setup();
-
+void eeprom_connect_wifi_mqtt()
+{
   // GET WiFi Daten aus EEPROM
   EEPROM.begin(128);
   char eeprom_ssid[MAX_SSID_LENGTH] = {0};
@@ -361,16 +408,7 @@ void setup()
   EEPROM.get(32, eeprom_password);
   EEPROM.end();
   Serial.print("\nREAD FROM EEPROM");
-  for (int i = 0; i < 128; i++)
-  {
-    byte value = EEPROM.read(i); // Read each byte
-    Serial.print(value, HEX);    // Print in hexadecimal format
-    Serial.print(" ");
-    if ((i + 1) % 16 == 0)
-    { // Format: new line every 16 bytes
-      Serial.println();
-    }
-  }
+
   Serial.print(eeprom_ssid);
   Serial.print(eeprom_password);
   // Daten gefunden
@@ -392,16 +430,15 @@ void setup()
     setup_ap();
   }
 }
-int counter = 0;
-void loop()
-{
-  delay(500);
-  Serial.println("LOOP");
-  counter++;
-  display.display();
-  bme_displaydata();
-  if (mqttClient.connected())
+/*
+  for (int i = 0; i < 128; i++)
   {
-    send_mqtt_sensor_data();
+    byte value = EEPROM.read(i); // Read each byte
+    Serial.print(value, HEX);    // Print in hexadecimal format
+    Serial.print(" ");
+    if ((i + 1) % 16 == 0)
+    { // Format: new line every 16 bytes
+      Serial.println();
+    }
   }
-}
+*/
