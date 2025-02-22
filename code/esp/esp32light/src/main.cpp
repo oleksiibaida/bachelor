@@ -49,6 +49,7 @@ const int MQTT_PORT = 1883;
 const char *TOPIC_COMMAND = "command";
 char *SUBSCRIBE_TOPIC;
 char *PUBLISH_TOPIC;
+bool ap_on = false;
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -82,19 +83,22 @@ int counter = 0;
 void loop()
 {
   delay(500);
-  if(WiFi.status() != WL_CONNECTED){
-    eeprom_connect_wifi_mqtt();
-  }
   counter++;
   display.display();
   // bme_displaydata();
+  show_connections();
   show_sensordata();
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    eeprom_connect_wifi_mqtt();
+  } else if(!mqttClient.connected()){
+    mqtt_connect();
+  }
   if (mqttClient.connected())
   {
     send_mqtt_sensor_data();
   }
 }
-
 
 /*===SETUP===*/
 void setup_esp()
@@ -152,7 +156,7 @@ void setup_ap()
               request->send(200, "text/html", "WiFi saved. Rebooting...");
               delay(1000);
               ESP.restart(); });
-
+  ap_on = true;
   server.begin();
 }
 
@@ -162,12 +166,14 @@ bool wifi_connect(char *ssid, char *password)
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   WiFi.setAutoReconnect(true);
+  display.home.println("WIFI connecting...");
   for (uint8_t i = 0; i < wifi_repeat; i++)
   {
     if (WiFi.status() == WL_CONNECTED)
     {
       Serial.println(WiFi.localIP());
-
+      ap_on = false;
+      server.end();
       return true;
     }
     delay(500);
@@ -175,32 +181,34 @@ bool wifi_connect(char *ssid, char *password)
   return false;
 }
 
-
 /*===DISPLAY===*/
 void show_connections()
 {
   display.home.clear();
   if (WiFi.status() == WL_CONNECTED)
   {
-    display.home.print("WIFI OK ");
+    display.home.println("WIFI OK ");
     if (mqttClient.connected())
     {
-      display.home.print("| MQTT OK\n");
+      display.home.println("MQTT OK");
     }
     else
     {
-      display.home.print("| MQTT ERROR\n");
+      display.home.println("MQTT ERROR");
     }
   }
   else
   {
-    display.home.printf("WIFI ERROR!\nCONNECT TO SSID:%s \nPASS:%s\nGO TO 10.0.0.1\n", AP_SSID, AP_PASSWORD);
+    display.home.println("WIFI ERROR!");
+    if (ap_on)
+    {
+      display.home.printf("CONNECT TO SSID:%s \nPASS:%s\nGO TO 10.0.0.1\n", AP_SSID, AP_PASSWORD);
+    }
   }
 }
 
 void show_sensordata()
 {
-  show_connections();
   if (!bme_sensor.performReading())
   {
     Serial.println("Failed to perform reading!");
@@ -209,28 +217,8 @@ void show_sensordata()
   }
 
   display.home.printf("Temperature: %.1f C\n", bme_sensor.temperature);
-  display.home.printf("Humidity: %.1f%\n", bme_sensor.humidity);
-  // // Print sensor readings
-  // Serial.print("Temperature: ");
-  // Serial.print(bme_sensor.temperature);
-  // Serial.println(" °C");
-  // char temp[5];
-  // // mqttClient.publish(PUBLISH_TOPIC, temp);
-
-  // Serial.print("Humidity: ");
-  // Serial.print(bme_sensor.humidity);
-  // Serial.println(" %");
-
-  // Serial.print("Pressure: ");
-  // Serial.print(bme_sensor.pressure / 100.0); // Convert Pa to hPa
-  // Serial.println(" hPa");
-
-  // Serial.print("Gas Resistance: ");
-  // Serial.print(bme_sensor.gas_resistance / 1000.0); // kOhm
-  // Serial.println(" kOhms");
-  // Serial.println();
+  display.home.printf("Humidity: %.1f%", bme_sensor.humidity);
 }
-
 
 /*===MQTT===*/
 /*Wird beim Empfang der MQTT-Nachricht aufgerufen*/
@@ -337,7 +325,6 @@ void bme_setup()
   bme_sensor.setGasHeater(320, 150); // 320°C for 150ms
 }
 
-
 void i2c_scan(int kanal)
 {
   int nDevices = 0;
@@ -400,34 +387,37 @@ bool is_valid_string(char *data, int max_length)
 
 void eeprom_connect_wifi_mqtt()
 {
-  // GET WiFi Daten aus EEPROM
-  EEPROM.begin(128);
-  char eeprom_ssid[MAX_SSID_LENGTH] = {0};
-  char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
-  EEPROM.get(0, eeprom_ssid);
-  EEPROM.get(32, eeprom_password);
-  EEPROM.end();
-  Serial.print("\nREAD FROM EEPROM");
-
-  Serial.print(eeprom_ssid);
-  Serial.print(eeprom_password);
-  // Daten gefunden
-  if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
+  if (!ap_on)
   {
-    Serial.println("STRING VALID");
-    if (wifi_connect(eeprom_ssid, eeprom_password)) // verbinden mit WLAN
+    // GET WiFi Daten aus EEPROM
+    EEPROM.begin(128);
+    char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+    char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+    EEPROM.get(0, eeprom_ssid);
+    EEPROM.get(32, eeprom_password);
+    EEPROM.end();
+    Serial.print("\nREAD FROM EEPROM");
+
+    Serial.print(eeprom_ssid);
+    Serial.print(eeprom_password);
+    // Daten gefunden
+    if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
     {
-      i2cScan.begin(SDA2, SCL2, 400000);
-      mqtt_connect();
+      Serial.println("STRING VALID");
+      if (wifi_connect(eeprom_ssid, eeprom_password)) // verbinden mit WLAN
+      {
+        i2cScan.begin(SDA2, SCL2, 400000);
+        mqtt_connect();
+      }
+      else // die Verbindung is schiefgelaufen
+      {
+        setup_ap();
+      }
     }
-    else // die Verbindung is schiefgelaufen
-    {
+    else
+    { // keine WLAN-Daten gefunden
       setup_ap();
     }
-  }
-  else
-  { // keine WLAN-Daten gefunden
-    setup_ap();
   }
 }
 /*
