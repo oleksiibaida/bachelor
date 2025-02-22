@@ -39,13 +39,6 @@ async def index(request: Request):
     :return: Basic HTML-Page index.html
     """
     return templates.TemplateResponse("index.html", {'request': request})
-   
-@router.get('/my_device', response_class=HTMLResponse)
-async def my_device_get(request: Request, response: Response, db_session: AsyncSession = Depends(get_session)):
-    """
-    Provides HTML-Page with list of devices
-    """
-    return templates.TemplateResponse("my_device.html", {"request": request})
 
 #=====LOGIN=====#
 @router.post('/login', response_class=JSONResponse)
@@ -82,12 +75,7 @@ async def user_get(requset: Request, token: str = Depends(get_token), db_session
         res = await services.get_user_data(db_session, user_id)
         for _ in res:
             print(_,res[_])
-        user = await queries.get_user_data(db_session, user_id)
-        if user:
-            return {'user_id': user.primary_key, 'username': user.username, 'email': user.email}
-        else:
-            logger.error(f"U_ID {user_id} NOT FOUND")
-            return {'error': f'USER NOT FOUND'}
+        return JSONResponse(res)
     except HTTPException as e:
         return {'error': e.detail}
     except Exception as e:

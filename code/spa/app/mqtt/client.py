@@ -19,6 +19,7 @@ class MQTTClient():
                         await cls.process_message(message)
             except aiomqtt.MqttError as e:
                 logger.error(e)
+                # return
                 
 
     @classmethod
@@ -64,3 +65,7 @@ class MQTTClient():
         for _ in cls.saved_scenarios:
             print(_)
         return
+    
+    async def send_hello_message():
+        return
+    

@@ -1,6 +1,6 @@
 const app = document.getElementById('app');
-
-
+let stored_data;
+// Start function
 // redicrets user to login page if no token
 function appRouter() {
     const token = localStorage.getItem('token');
@@ -24,7 +24,13 @@ function appRouter() {
             if (user_data.error != null) {
                 throw new Error(user_data.error);
             }
-            else renderPage('main', user_data);
+            else {
+                // renderPage('navbar');
+                // renderPage('main', user_data);
+                stored_data = user_data;
+                renderNavbar();
+                renderMainPage(user_data);
+            }
         })
         .catch((error) => {
             console.error(error)
@@ -38,16 +44,60 @@ function appRouter() {
 // shows defined page
 async function renderPage(page, data = null) {
     switch (page) {
+        case "navbar":
+            renderNavbar();
         case "main":
-            renderMainPage(data);
+            await renderMainPage(data);
             break;
         case "signup":
             renderSignUpPage();
             break;
+        case "mydevice":
+            renderMyDevicesPage();
+        case "myscenario":
+            renderMyScenariosPage();
         default:
             renderLoginForm();
             break;
     }
+}
+
+
+function renderNavbar() {
+    navbar = document.querySelector('#navbar');
+    navbar.innerHTML = `
+    <div class="navbar bg-gray-800 text-white flex justify-between items-center p-6 fixed top-0 left-0 w-full z-10"
+    style="height: 5vh;">
+    <div class="logo text-xl font-bold">
+        <a href="/">Home</a>
+    </div>
+    <div class="nav-links space-x-4">
+        <button id="BTNmyaccount" class="btn-navbar">My Account</button>
+        <button id="BTNmydevices" class="btn-navbar">My Devices</button>
+        <button id="BTNmyscenario" class="btn-navbar">My Scenarios</button>
+        <button id="BTNlogout" class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition duration-300">Logout</button>
+    </div>
+    `;
+
+    // Logout
+    navbar.querySelector('#BTNlogout').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        navbar.innerHTML = '';
+        appRouter();
+    });
+
+    // My Devices
+    navbar.querySelector('#BTNmydevices').addEventListener('click', async () => {
+        // renderPage('mydevice');
+        renderMyDevicesPage();
+    });
+
+    // My Scenarios
+    navbar.querySelector('#BTNmyscenario').addEventListener('click', async () => {
+        renderMyScenariosPage(stored_data.scenarios);
+    });
+
+
 }
 
 function renderSignUpPage() {
@@ -183,10 +233,11 @@ function renderLoginForm() {
 }
 
 async function renderMainPage(data) {
+    console.info(data);
     app.innerHTML = `
     <div class="main_page">
         <div class="flex flex-col justify-center items-center space-y-3">
-            <h1>Hello, ${data.username}</h1>
+            <h1>Hello, ${data.user_data.username}</h1>
             <button id="BTNcreateHouse" type="button" class="create_house-btn">Create New House</button>
             <button id="BTNcreateScenario" type="button" class="create_house-btn">Create Scenario</button>
         </div>
@@ -218,7 +269,8 @@ async function renderMainPage(data) {
     </div>
     `;
 
-    await loadHouses(); // shows user houses
+    displayHouses(data.houses, document.querySelector('#houseList'));
+
     var BTNcreateHouse = document.getElementById("BTNcreateHouse");
     var MNcreateHouse = document.getElementById("MNcreateHouse");
     // MNcreateHouse.style.display = "none";
@@ -253,12 +305,7 @@ async function renderMainPage(data) {
     });
 
     BTNaddHouse.addEventListener("click", async () => {
-        try {
-            await addHouse();
-        } catch (error) {
-            console.error(error);
-            alert("ERROR ADD HOUSE")
-        }
+        await addHouse(document.getElementById("houseName").value);
     });
 
     // close form if clicked outside
@@ -307,41 +354,18 @@ async function renderMainPage(data) {
         }
     }
 
-    async function loadHouses() {
-        try {
-            const response = await fetch('/get_houses', {
-                method: 'GET',
-                headers: { 'auth': `Bearer ${localStorage.getItem('token')}` }
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error);
-            }
-            const response_data = await response.json()
-            if (response_data.error) {
-                console.error(response_data.error)
-                throw new Error(response_data.error)
-            }
-            displayHouses(response_data);
-        } catch (error) { errorHandler(error); }
-    }
-
-    function displayHouses(house_list) {
-        const parent_div = document.getElementById('houseList');
-        parent_div.innerHTML = '';
-        if (house_list.length == 0) {
-            parent_div.innerHTML = '<p> EMPTY </p>';
-        } else {
+    function displayHouses(house_list, parent_div) {
+        parent_div.innerHTML = '<p> Create new House! </p>';
+        if (house_list.length > 0) {
+            parent_div.innerHTML = '';
             for (let i = 0; i < house_list.length; i++) {
                 // create div for house
-                // let element_height = (window.innerHeight - 100)/house_list.length;
                 const house = house_list[i];
                 const house_element = document.createElement('div');
                 house_element.setAttribute('id', `house${house.id}`)
                 house_element.classList.add('house_element');
                 house_element.innerHTML = `
                 <div class="justify-start" id="header${house.id}">&#x25B7 ${house.name} </div>
-                
                 <div id="house_element_details${house.id}" class=" hidden house_element_details">
                     <div class="">        
                         <button id="BTNcreateRoom${house.id}" class="add_room-btn">New Room</button>
@@ -350,10 +374,10 @@ async function renderMainPage(data) {
                             <label for="roomName" class="block text-gray-700 text-sm font-bold mb-2">Room Name:</label>
                             <input type="text" id="roomName${house.id}" value=""
                                 class="required w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <p id="ERRORaddroom" class="text-red-700 font-bold text-sm"></p>
+                            <p id="ERRORaddroom${house.id}" class="text-red-700 font-bold text-sm"></p>
                             <div class="flex justify-between">
-                            <button id="BTNaddRoom${house.id}" class="add_room-btn">Add Room</button>
-                            <button id="BTNcancelRoom${house.id}" class="cancel-btn">Cancel</button>
+                                <button id="BTNaddRoom${house.id}" class="add_room-btn">Add Room</button>
+                                <button id="BTNcancelRoom${house.id}" class="cancel-btn">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -368,12 +392,13 @@ async function renderMainPage(data) {
 
                 displayRooms(house_element.querySelector(`#room_list${house.id}`), house);
 
+                // Expand House Details on click
                 house_element.addEventListener('click', (event) => {
                     // await displayHouseDetails(house_element, house);
                     if (!house_element.querySelector(`#house_element_details${house.id}`).contains(event.target)) {
                         document.getElementById(`house_element_details${house.id}`).classList.toggle('hidden');
 
-                        // side arrows > or down
+                        // side arrows > or down v
                         if (document.getElementById(`house_element_details${house.id}`).classList.contains("hidden")) {
                             document.getElementById(`header${house.id}`).innerHTML = `&#x25B7 ${house.name}`;
                         } else {
@@ -381,24 +406,26 @@ async function renderMainPage(data) {
                         }
                     }
                 });
-                const BTNcreateRoom = document.getElementById(`BTNcreateRoom${house.id}`);
 
+                const BTNcreateRoom = document.getElementById(`BTNcreateRoom${house.id}`);
+                // Button New Room open form
                 BTNcreateRoom.addEventListener('click', () => {
                     BTNcreateRoom.classList.toggle('hidden');
                     document.getElementById(`create_room_element${house.id}`).classList.toggle('hidden');
                 });
 
-                // cancel event
+                // Cancel New Room
                 document.getElementById(`BTNcancelRoom${house.id}`).addEventListener('click', () => {
                     BTNcreateRoom.classList.remove('hidden');
                     document.getElementById(`create_room_element${house.id}`).classList.toggle('hidden');
                 });
 
-                // add room click
+                // Button Add Room
                 document.getElementById(`BTNaddRoom${house.id}`).addEventListener('click', async () => {
                     const roomName = document.getElementById(`roomName${house.id}`).value;
                     if (roomName == '' || roomName == null) {
-                        alert("EMPTY ROOM NAME");
+                        // alert("EMPTY ROOM NAME");
+                        house_element.querySelector(`#ERRORaddroom${house.id}`).innerHTML = "Please give name for the room";
                         return;
                     }
                     addRoom(house.id, roomName)
@@ -612,8 +639,7 @@ async function renderMainPage(data) {
         } catch (error) { errorHandler(error); }
     }
 
-    async function addHouse() {
-        const houseName = document.getElementById("houseName").value;
+    async function addHouse(houseName) {
         try {
             const response = await fetch(
                 '/add_house',
@@ -633,16 +659,13 @@ async function renderMainPage(data) {
             }
             const data = await response.json();
             if (data.error) {
-                alert(data.error)
                 throw new Error(data.error);
-            } else {
-                displayHouses();
             }
+            appRouter();
         } catch (error) {
             errorHandler(error);
         } finally {
-            closeHouseForm();
-            appRouter();
+
         }
     }
 
@@ -656,19 +679,21 @@ async function renderMainPage(data) {
                 },
                 body: JSON.stringify({ house_id })
             });
-            if (!response.ok) { console.error(response.status); }
+            if (!response.ok) {
+                console.error(response.status);
+                throw new Error(response.error);
+            }
             else {
                 const data = await response.json();
-                if (data.success) {
-                    document.getElementById(`house${house_id}`).remove();
+                if (data.error) {
+                    throw new Error(data.error);
                 }
-                else {
-                    console.info(data);
-                    alert("HOUSE COULD NOT BE DELETED")
-                }
-                appRouter();
             }
+            appRouter();
         } catch (error) { errorHandler(error); }
+        finally {
+
+        }
     }
 
     async function addRoom(house_id, room_name) {
@@ -691,13 +716,10 @@ async function renderMainPage(data) {
                 document.getElementById('ERRORaddroom').textContent = "Room with this name already exists. Please choose other name";
                 throw new Error(response_data.error)
             }
-            else {
-                // document.getElementById(`create_room_element${house.id}`).classList.add('hidden');
-                loadHouses();
-                // document.getElementById(`BTNcreateRoom${house.id}`).classList.remove('hidden');
-                // appRouter();
-            }
+            appRouter();
         } catch (error) { errorHandler(error); }
+        finally {
+        }
     }
 
     async function deleteRoom(room_id, house_id) {
@@ -715,14 +737,13 @@ async function renderMainPage(data) {
                 throw new Error(errorData.error);
             }
             const response_data = await response.json();
-            if (response_data.eror) {
-                console.error(response_data.error);
-                alert("ERROR WHEN DELETING THE ROOM")
-            } else if (response_data.success) {
-                document.getElementById(`room${room_id}`).remove();
-                // appRouter();
+            if (response_data.error) {
+                throw new Error(response_data.error)
             }
+            appRouter();
         } catch (error) { errorHandler(error); }
+        finally {
+        }
     }
 
     async function addDeviceRoom(room_id, device_id, device_name, device_type) {
@@ -743,12 +764,14 @@ async function renderMainPage(data) {
             }
             else {
                 const response_data = await response.json();
-                if (response_data.success) {
-                    loadHouses();
-                    console.info(response_data.success);
+                if (response_data.error) {
+                    throw new Error(response_data.error);
                 }
             }
+            appRouter();
         } catch (error) { errorHandler(error); }
+        finally {
+        }
     }
 
     async function deleteDeviceRoom(room_id, device_id) {
@@ -769,20 +792,268 @@ async function renderMainPage(data) {
             else {
                 const response_data = await response.json();
                 console.info(response_data)
-                if (response_data.success) {
-                    console.info(response_data.success);
-                    loadHouses();
-                }
-                else {
-                    if (response_data.error) {
-                        throw new Error(response_data.error)
-                    }
+                if (response_data.error) {
+                    throw new Error(response_data.error)
                 }
             }
+            appRouter();
+        } catch (error) {
+        }
+    }
+}
+
+
+async function renderMyDevicesPage() {
+    console.info("MYDEV");
+    app.innerHTML = `
+    <div class="main_page">
+        <div id="deviceList" class="device_list"></div>
+    </div>
+    `;
+
+    let device_list = await loadDevices();
+    console.info(device_list);
+    displayDevices(device_list, document.querySelector(`#deviceList`));
+
+    async function loadDevices() {
+        try {
+            const response = await fetch('/get_devices', {
+                method: 'GET',
+                headers: { 'auth': `Bearer ${localStorage.getItem('token')}` }
+            })
+            const response_data = await response.json()
+            if (!response.ok) {
+                throw new Error(response_data.error);
+            }
+            if (response_data.error) {
+                errorHandler(response_data.error);
+            }
+            return response_data;
         } catch (error) {
             errorHandler(error);
-            appRouter();
         }
+    }
+
+    function displayDevices(device_list, parent_div) {
+        parent_div.innerHTML = "You have no devices saved. Please add new device";
+        if (device_list.length > 0) {
+            parent_div.innerHTML = "";
+            for (let i = 0; i < device_list.length; i++) {
+                const device = device_list[i];
+                let room_name = "This device is not signed to Room";
+                if (device.room.length > 0) {
+                    room_name = device.room[0].name;
+                }
+                const device_element = document.createElement('div');
+                device_element.classList.add('device_element');
+                device_element.innerHTML = `
+                <div id="device_element${device.dev_id}">
+                    <p id="device_name${device.dev_id}" class="flex mx-2 text-3xl">NAME: ${device.name}</p>
+                    <h1>DEV_ID: ${device.dev_id}</h1>
+                    <p id="device_desc${device.dev_id}" class="flex mx-2">DESC: ${device.description ? device.description : ""}</p>
+                    <p>ROOM: ${room_name}</p>
+                    <div id="deviceData${device.dev_id}">Waiting for data from device...</div>
+                </div>
+                <div class="grid place-items-center m-1 p-2">
+                    <button id="BTNeditDevice${device.dev_id}" class="add_room-btn my-1">Edit</button>
+                    <button id="BTNdeleteDevice${device.dev_id}" class="cancel-sm-btn my-1">Delete</button>
+                </div>
+                `;
+
+                const ws = new WebSocket(`ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`);
+
+                ws.onopen = () => {
+                    ws.send("WS OPEN");
+                };
+
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    console.info(data);
+                    const parent_div = device_element.querySelector(`#deviceData${device.dev_id}`)
+                    parent_div.innerHTML = "";
+                    for (const key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            let dataField = device_element.querySelector(`#${key}${device.dev_id}`);
+                            if (!dataField) {
+                                dataField = document.createElement('p');
+                                dataField.id = `${key}${device.dev_id}`;
+                                parent_div.appendChild(dataField);
+                            }
+                            dataField.innerHTML = `${key}: ${data[key]}`
+                        }
+                    }
+                    // document.getElementById(`devTemp${device.dev_id}`).textContent = `TEMP: ${data.id}`;
+                    // document.getElementById(`devHum${device.dev_id}`).textContent = `HUM: ${data.humidity}`;
+                    // document.getElementById(`ambient${device.dev_id}`).textContent = `AMBIENT: ${data.ambient}`;
+                };
+
+                ws.onclose = () => {
+                    console.error(`WebSocket for device ${device.dev_id} closed`);
+                };
+
+                const BTNeditDevice = device_element.querySelector(`#BTNeditDevice${device.dev_id}`);
+
+                // edit device
+                BTNeditDevice.addEventListener('click', async () => {
+                    const device_name_element = device_element.querySelector(`#device_name${device.dev_id}`);
+                    const device_description_element = device_element.querySelector(`#device_desc${device.dev_id}`);
+                    if (BTNeditDevice.textContent == "Edit") {
+                        // show input fields to change values
+                        device_name_element.innerHTML = `Name: <input id="input_device_name${device.dev_id}" type="text" value="${device.name}" autocomplete="off" class="device_edit_input" />`;
+                        device_description_element.innerHTML = `DESC: <input id="input_device_description${device.dev_id}" type="text" value="${device.description ? device.description : ""}" autocomplete="off" class="device_edit_input" />`;
+
+                        BTNeditDevice.textContent = "Save";
+                    } else {  // save updated data
+                        const new_name = device_element.querySelector(`#input_device_name${device.dev_id}`).value;
+                        const new_description = device_element.querySelector(`#input_device_description${device.dev_id}`).value;
+                        if (device.name != new_name || device.description != new_description) {
+                            try {
+                                const response = await fetch('/update_device', {
+                                    method: 'POST',
+                                    headers: {
+                                        'auth': `Bearer ${localStorage.getItem('token')}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ primary: device.primary, dev_id: device.dev_id, name: new_name, description: new_description })
+                                });
+                                const response_data = await response.json()
+                                if (!response.ok) {
+                                    throw new Error(response_data.error);
+                                }
+                                if (response_data.error) {
+                                    errorHandler(response_data.error);
+                                }
+                                device_name_element.innerHTML = `NAME: ${response_data.name}`;
+                                device_description_element.innerHTML = `DESC: ${response_data.description}`;
+
+                                BTNeditDevice.textContent = "Edit";
+                            } catch (error) {
+                                console.error(error);
+                            }
+                            await renderMyDevicesPage();
+                        }
+                    }
+                });
+
+                device_element.querySelector(`#BTNdeleteDevice${device.dev_id}`).addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('/delete_device', {
+                            method: 'DELETE',
+                            headers: {
+                                'auth': `Bearer ${localStorage.getItem('token')}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(
+                                { device_id: device.dev_id, room_id: device.room_id }
+                            )
+                        });
+                        if (!response.ok) {
+                            throw new Error(response.stat)
+                        }
+                        else {
+                            const response_data = await response.json();
+                            console.info(response_data)
+                            if (response_data.error) {
+                                throw new Error(response_data.error)
+                            }
+                            else if (response_data.success) {
+                                console.info(response_data.success);
+                                await renderMyDevicesPage();
+                            }
+                        }
+                    } catch (error) {
+                        errorHandler(error);
+                    }
+                });
+
+                parent_div.appendChild(device_element);
+            }
+        }
+    }
+}
+
+async function renderMyScenariosPage(scenario_list) {
+    app.innerHTML = `
+    <div class="main_page">
+    <div id="scenarioList" class="device_list"></div>
+    </div>
+    `;
+
+    displayScenarios(scenario_list, app.querySelector('#scenarioList'));
+
+    function displayScenarios(scenario_list, parent_div) {
+        parent_div.innerHTML = "You have no scenarios saved. Please add new scenario";
+        if (scenario_list.length > 0) {
+            parent_div.innerHTML = "";
+            for (let i = 0; i < scenario_list.length; i++) {
+                const scenario = scenario_list[i];
+                console.info(scenario);
+                const scenario_element = document.createElement('div');
+                scenario_element.classList.add('device_element');
+                scenario_element.innerHTML = `
+                    <div id="scenario_element${scenario.id}">
+                        <p>IF: ${scenario.source_dev}.${scenario.data_field} ${scenario.condition} ${scenario.value}</p>
+                        <p>THEN: ${scenario.target_dev} => ${scenario.command}</p>
+                    </div>
+                    <div class="grid place-items-center m-1 p-2">
+                        <button id="BTNdeleteScenario${scenario.id}" class="cancel-sm-btn my-1">Delete</button>
+                    </div>
+                `;
+
+                const BTNdeleteScenario = scenario_element.querySelector(`#BTNdeleteScenario${scenario.id}`);
+
+                BTNdeleteScenario.addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('/delete_scenario', {
+                            method: 'DELETE',
+                            headers: {
+                                'auth': `Bearer ${localStorage.getItem('token')}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(
+                                { scenario_id: scenario.id }
+                            )
+                        });
+                        if (!response.ok) {
+                            throw new Error(response.stat)
+                        } else {
+                            const response_data = await response.json();
+                            if (response_data.success) {
+                                stored_data = await get_user_data();
+                                renderMyScenariosPage(stored_data.scenarios);
+                            }
+                        }
+                    } catch (error) {
+                        errorHandler(error);
+                    }
+                });
+
+                parent_div.appendChild(scenario_element);
+            }
+        }
+    }
+}
+
+async function get_user_data() {
+    try {
+        const response = await fetch(
+            '/get_user_data',
+            {
+                method: 'GET',
+                headers: {
+                    'auth': `Bearer ${localStorage.getItem('token')}`
+                }
+            }
+        );
+        if (!response.ok)
+            throw new Error(response.stat);
+        else {
+            const response_data = await response.json();
+            if (response_data.error) throw new Error(response_data.error);
+            else return response_data;
+        }
+    } catch (error) {
+        errorHandler();
     }
 }
 

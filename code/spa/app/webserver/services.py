@@ -223,6 +223,7 @@ async def get_user_data(db_session, user_id):
         all_scenarios = await queries.get_scenarios_on_user(db_session, user_id)
         for s in all_scenarios:
             scene = {
+                'id': s.primary_key,
                 'source_dev': s.source_dev,
                 'data_field': s.data_field,
                 'condition': s.condition.value,
