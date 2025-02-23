@@ -52,6 +52,7 @@ const char *CLIENT_ID = "m5";
 const char *TOPIC_COMMAND = "command";
 char *SUBSCRIBE_TOPIC;
 char *PUBLISH_TOPIC;
+char *HANDSHAKE_TOPIC;
 uint8_t cursor_line = 0;
 bool ap_on = false;
 WiFiClient wifiClient;
@@ -66,20 +67,47 @@ Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
 /*Wird beim Empfang der MQTT-Nachricht aufgerufen*/
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  // Serial.print("Nacricht erhalten. Topic: ");
-  // Serial.print(topic);
-  // Serial.print(" Text: ");
+  Serial.println();
+  Serial.print("Nacricht erhalten. Topic: ");
+  Serial.print(topic);
+  Serial.print(" Text: ");
   String id = String(topic).substring(String(topic).indexOf('/') + 1);
-  if (id == CLIENT_ID)
+
+  String message = "";
+  for (int i = 0; i < length; i++)
   {
-    String text = "";
-    for (int i = 0; i < length; i++)
+    message += (char)payload[i];
+  }
+  message.trim();
+  // Print in Serial
+  Serial.println(message);
+
+  // Handshake
+  if (message == "handshake")
+  {
+    JsonDocument data;
+    char json[128];
+
+    const char *data_fields[] = {"temperature", "humidity", "light"};
+    const char *actions[] = {"none"};
+
+    JsonArray json_data_fields = data.createNestedArray("data_fields");
+    JsonArray json_actions = data.createNestedArray("actions");
+
+    for (const char *df : data_fields)
     {
-      text += (char)payload[i];
+      json_data_fields.add(df);
     }
-    text.trim();
-    // Print in Arduino
-    Serial.println(text);
+
+    for (const char *a : actions)
+    {
+      json_actions.add(a);
+    }
+    Serial.println("AAAAAAAAAAAAAA");
+    serializeJson(data, json, sizeof(json));
+    Serial.println(json);
+    Serial.println(HANDSHAKE_TOPIC);
+    mqttClient.publish(HANDSHAKE_TOPIC, json);
   }
 }
 
@@ -97,6 +125,7 @@ void setup()
 void loop()
 {
   Serial.println("LOOP");
+  mqttClient.loop();
   show_connection();
   show_sensor_data();
   // bme_displaydata();
@@ -235,21 +264,19 @@ void set_topics()
   SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(DEVICE_ID) + 2);
   // PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
   PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
-  if (SUBSCRIBE_TOPIC == NULL)
-  {
-    // Serial.print("Konnte nicht abonnieren. Default topic");
-    // SUBSCRIBE_TOPIC = "command/m5bmevcnl#";
-  }
-  else
-  {
-    strcpy(SUBSCRIBE_TOPIC, TOPIC_COMMAND);
-    strcat(SUBSCRIBE_TOPIC, "/");
-    strcat(SUBSCRIBE_TOPIC, DEVICE_ID);
+  HANDSHAKE_TOPIC = (char *)malloc(strlen("handshake") + strlen(DEVICE_ID) + 2);
 
-    strcpy(PUBLISH_TOPIC, "data");
-    strcat(PUBLISH_TOPIC, "/");
-    strcat(PUBLISH_TOPIC, DEVICE_ID);
-  }
+  strcpy(SUBSCRIBE_TOPIC, TOPIC_COMMAND);
+  strcat(SUBSCRIBE_TOPIC, "/");
+  strcat(SUBSCRIBE_TOPIC, DEVICE_ID);
+
+  strcpy(PUBLISH_TOPIC, "data");
+  strcat(PUBLISH_TOPIC, "/");
+  strcat(PUBLISH_TOPIC, DEVICE_ID);
+
+  strcpy(HANDSHAKE_TOPIC, "handshake");
+  strcat(HANDSHAKE_TOPIC, "/");
+  strcat(HANDSHAKE_TOPIC, DEVICE_ID);
 }
 
 void send_mqtt_data()
@@ -278,7 +305,7 @@ void send_mqtt_data()
   sensor_data["pressure"] = pressure;
   sensor_data["gas_resistance"] = gas_resistance;
   sensor_data["proximity"] = proximity;
-  sensor_data["ambient"] = ambient;
+  sensor_data["light"] = ambient;
   sensor_data["white_light"] = white_light;
   serializeJson(sensor_data, json, sizeof(json));
 

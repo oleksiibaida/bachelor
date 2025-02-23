@@ -14,6 +14,7 @@
 #define I2C_BME_HEX 0x77
 #define I2C_VCNL_HEX 0x60
 #define DEVICE_ID "esp32display"
+#define LIGHT_PIN 4
 
 const uint8_t display_font_size = 18;
 
@@ -49,6 +50,7 @@ const int MQTT_PORT = 1883;
 const char *TOPIC_COMMAND = "command";
 char *SUBSCRIBE_TOPIC;
 char *PUBLISH_TOPIC;
+char *HANDSHAKE_TOPIC;
 bool ap_on = false;
 
 WiFiClient wifiClient;
@@ -69,6 +71,7 @@ void set_topics();
 void mqtt_connect();
 void send_mqtt_sensor_data();
 void bme_setup();
+void light_on_off(bool on);
 void i2c_scan();
 bool is_valid_string();
 void eeprom_connect_wifi_mqtt();
@@ -82,16 +85,19 @@ void setup()
 int counter = 0;
 void loop()
 {
-  delay(500);
-  counter++;
+  delay(1000);
   display.display();
   // bme_displaydata();
   show_connections();
   show_sensordata();
+  mqttClient.loop();
+
   if (WiFi.status() != WL_CONNECTED)
   {
     eeprom_connect_wifi_mqtt();
-  } else if(!mqttClient.connected()){
+  }
+  else if (!mqttClient.connected())
+  {
     mqtt_connect();
   }
   if (mqttClient.connected())
@@ -104,12 +110,19 @@ void loop()
 void setup_esp()
 {
   Serial.begin(9600);
+
+  // Setup I2C
   i2cScan.begin(SDA2, SCL2, 400000);
   display.begin(Mycila::EasyDisplayType::SH1107, 22, 23, 360);
 
+  // Setup display
   display.setActive(true);
   display.home.print("Loading...");
   display.display();
+
+  // Set up light
+  pinMode(LIGHT_PIN, OUTPUT);
+  digitalWrite(LIGHT_PIN, HIGH);
 }
 
 void setup_ap()
@@ -224,20 +237,53 @@ void show_sensordata()
 /*Wird beim Empfang der MQTT-Nachricht aufgerufen*/
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  // Serial.print("Nacricht erhalten. Topic: ");
-  // Serial.print(topic);
-  // Serial.print(" Text: ");
+  Serial.println();
+  Serial.print("Nacricht erhalten. Topic: ");
+  Serial.print(topic);
+  Serial.print(" Text: ");
   String id = String(topic).substring(String(topic).indexOf('/') + 1);
-  if (id == DEVICE_ID)
+
+  String message = "";
+  for (int i = 0; i < length; i++)
   {
-    String text = "";
-    for (int i = 0; i < length; i++)
-    {
-      text += (char)payload[i];
+    message += (char)payload[i];
+  }
+  message.trim();
+  // Print in Serial
+  Serial.println(message);
+
+  // Handshake
+  if (message == "handshake")
+  {
+    JsonDocument data;
+    char json[128];
+
+    const char *data_fields[] = {"temperature", "humidity"};
+    const char *actions[] = {"light_turn_on", "light_turn_off"};
+
+    JsonArray json_data_fields = data.createNestedArray("data_fields");
+    JsonArray json_actions = data.createNestedArray("actions");
+
+    for (const char* df: data_fields){
+      json_data_fields.add(df);
     }
-    text.trim();
-    // Print in Arduino
-    Serial.println(text);
+
+    for (const char* a: actions){
+      json_actions.add(a);
+    }
+
+    serializeJson(data, json, sizeof(json));
+    Serial.println(json);
+    Serial.println(HANDSHAKE_TOPIC);
+    mqttClient.publish(HANDSHAKE_TOPIC, json);
+  }
+  else if (message == "light_turn_on")
+  {
+    light_on_off(true);
+  }
+  else if (message == "light_turn_off")
+  {
+    light_on_off(false);
   }
 }
 
@@ -246,6 +292,7 @@ void set_topics()
   SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(DEVICE_ID) + 2);
   // PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
   PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
+  HANDSHAKE_TOPIC = (char *)malloc(strlen("handshake") + strlen(DEVICE_ID) + 2);
 
   strcpy(SUBSCRIBE_TOPIC, TOPIC_COMMAND);
   strcat(SUBSCRIBE_TOPIC, "/");
@@ -254,6 +301,10 @@ void set_topics()
   strcpy(PUBLISH_TOPIC, "data");
   strcat(PUBLISH_TOPIC, "/");
   strcat(PUBLISH_TOPIC, DEVICE_ID);
+
+  strcpy(HANDSHAKE_TOPIC, "handshake");
+  strcat(HANDSHAKE_TOPIC, "/");
+  strcat(HANDSHAKE_TOPIC, DEVICE_ID);
 }
 
 void mqtt_connect()
@@ -368,6 +419,21 @@ void i2c_scan(int kanal)
     Serial.println("Ende \n");
   }
   return;
+}
+
+/*===LIGHT===*/
+void light_on_off(bool on)
+{
+  if (on)
+  {
+    Serial.println("LIGHT ON");
+    digitalWrite(LIGHT_PIN, HIGH);
+  }
+  else
+  {
+    Serial.println("LIGHT OFF");
+    digitalWrite(LIGHT_PIN, LOW);
+  }
 }
 
 /*===EEPROM===*/
