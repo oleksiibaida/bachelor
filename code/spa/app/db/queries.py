@@ -357,7 +357,7 @@ async def verify_user_device(db_session: AsyncSession, user_id: int, device_id):
     try:
         stmt = select(DeviceModel).where(DeviceModel.dev_id == device_id, DeviceModel.user_id == user_id)
         res = await db_session.execute(stmt)
-        return res.scalars().one()
+        return res.scalars().one_or_none()
     except NoResultFound:
         _logger.error(f' U_ID {user_id} IS NOT OWNER OF DEV_ID {device_id}')
         raise HTTPException(status_code=404, detail=f'U_ID {user_id} IS NOT OWNER OF DEV_ID {device_id}')
@@ -375,13 +375,16 @@ async def verify_user_device(db_session: AsyncSession, user_id: int, device_id):
 async def update_device(db_session: AsyncSession, user_id:int, new_device_data):
     try:
         # TODO also change room
-        if new_device_data.primary is None:
-            _logger.error("DEVICE_PRIMARY IS NOT PROVIDED")
-            raise HTTPException(status_code=400, detail="DEVICE_PRIMARY IS NOT PROVIDED")
-        if new_device_data.name is None and new_device_data.description is None:
+        if new_device_data.dev_id is None:
+            _logger.error("DEV_ID IS NOT PROVIDED")
+            raise HTTPException(status_code=400, detail="DEV_ID IS NOT PROVIDED")
+        if new_device_data.length < 1:
             _logger.error("NEW DATA IS NOT PROVIDED")
             raise HTTPException(status_code=400, detail="NEW DATA IS NOT PROVIDED")
-        device = await db_session.get(DeviceModel, new_device_data.primary)
+        # device = await db_session.get(DeviceModel, new_device_data.primary)
+        find_device_stmt = select(DeviceModel).where(DeviceModel.user_id == user_id, DeviceModel.dev_id == new_device_data.dev_id)
+        res = await db_session.execute(find_device_stmt)
+        device = res.scalars().one()
         if device:
             if device.user_id != user_id:
                 _logger.critical(f"UNAUTHORIZED ACCESS U_ID {user_id} ON DEVICE {device.primary_key}")
@@ -390,10 +393,46 @@ async def update_device(db_session: AsyncSession, user_id:int, new_device_data):
                 device.name = new_device_data.name
             if new_device_data.description:
                 device.description = new_device_data.description
+            if new_device_data.dev_type:
+                device.dev_type = new_device_data.dev_type
             await db_session.commit()
         return device
     except NoResultFound:
         _logger.error(f'{new_device_data.primary} DEVICE NOT FOUND')
+        raise HTTPException(status_code=404, detail='NOT FOUND')
+    except IntegrityError as e:
+        _logger.error(f"IntegrityError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=422, detail="NOT FOUND")
+    except SQLAlchemyError as e:
+        _logger.error(f"SQLAlchemyError: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="DATABASE ERROR")
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        _logger.error(f"Exception: {e}")
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
+    
+async def update_device_handshake_data(db_session: AsyncSession, device_id, handshake_data):
+    try:
+        # Convert handshake_data in .csv format
+        data_fields_csv = ','.join(handshake_data.get("data_fields"))
+        actions_csv = ','.join(handshake_data.get("actions"))
+        stmt = (
+            update(DeviceModel)
+            .where(DeviceModel.dev_id == device_id)
+            .values(
+                data_fields = data_fields_csv,
+                actions = actions_csv
+            )
+        )
+        await db_session.execute(stmt)
+        await db_session.commit()
+        return
+    except NoResultFound:
+        _logger.error(f'{handshake_data.dev_id} DEVICE NOT FOUND')
         raise HTTPException(status_code=404, detail='NOT FOUND')
     except IntegrityError as e:
         _logger.error(f"IntegrityError: {e}")

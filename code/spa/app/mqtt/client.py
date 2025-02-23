@@ -31,11 +31,20 @@ class MQTTClient():
             msg = message.payload.decode()
             data = json.loads(msg)      
 
+            # Answer on handshake message
+            if main_topic == 'handshake':
+                print(main_topic, data)
+                from app.db import queries, get_direct_session, close_session
+                session =  await get_direct_session()
+                await queries.update_device_handshake_data(session, device_id, data)
+                await close_session(session)
+
             # work with scenario
             for s in cls.saved_scenarios:
                 if s.source_dev == device_id:
                     if eval(f"{data[s.data_field]} {s.condition.value} {s.value}"):
-                        await cls.publish(s.target_dev, topic='command', message=s.command)
+                        print(f"{data[s.data_field]} {s.condition.value} {s.value}")
+                        await cls.send_command_to_device(s.target_dev, s.command)
 
             from app.webserver.services import WebsocketHandler
             await WebsocketHandler.send_data(device_id, data)          
@@ -49,7 +58,9 @@ class MQTTClient():
             client.publish(topic=topic, payload=message)
 
     async def send_command_to_device(device_id: str, command: str):
-        return
+        async with aiomqtt.Client(hostname=Config.MQTT_BROKER_ADDRESS, port=Config.MQTT_PORT) as client:
+            topic = "command/" + device_id
+            await client.publish(topic, command)
 
     saved_scenarios = []
 
@@ -66,6 +77,9 @@ class MQTTClient():
             print(_)
         return
     
-    async def send_hello_message():
-        return
+
+    async def send_handshake(device_id):
+        async with aiomqtt.Client(hostname=Config.MQTT_BROKER_ADDRESS, port=Config.MQTT_PORT) as client:
+            topic = "command/" + device_id
+            await client.publish(topic, "handshake")
     

@@ -69,6 +69,8 @@ class DeviceModel(Base):
     user_id = Column(Integer, ForeignKey('user.primary_key', ondelete='CASCADE'), nullable=False, unique=False)
     description = Column(String(250), nullable=True)
     dev_type = Column(String(30), nullable=True)
+    data_fields = Column(String(256), nullable=True)
+    actions = Column(String(256), nullable=True)
 
     dev_rooms = relationship("RoomDeviceModel", back_populates="device", cascade="all, delete-orphan", lazy='selectin')
     

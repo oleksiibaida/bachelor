@@ -75,7 +75,7 @@ class db:
 
 
 db = db()
-# db.test()
+db.test()
 # db.del_all_houses()
 print('====HOUSES====')
 hs = db.get_all_houses()

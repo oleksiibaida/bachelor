@@ -236,10 +236,9 @@ async function renderMainPage(data) {
     console.info(data);
     app.innerHTML = `
     <div class="main_page">
-        <div class="flex flex-col justify-center items-center space-y-3">
-            <h1>Hello, ${data.user_data.username}</h1>
+        <div class="main_header">
+            <p class="text-2xl">Hello, ${data.user_data.username}</p>
             <button id="BTNcreateHouse" type="button" class="create_house-btn">Create New House</button>
-            <button id="BTNcreateScenario" type="button" class="create_house-btn">Create Scenario</button>
         </div>
         <div id="MNcreateHouse" class="hidden mn-createhouse">
             <div class="p-4">
@@ -255,16 +254,6 @@ async function renderMainPage(data) {
                 </div>
             </div>
         </div>
-        <div id="MNcreateScenario" class="hidden mn-createhouse">
-            <input type="text" id="sourceDevice" placeholder="if">
-            <input type="text" id="data_field" placeholder="data_field">
-            <input type="text" id="condition" placeholder="condition">
-            <input type="number" id="value" placeholder="value">
-            <input type="text" id="targetDevice" placeholder="thenDevice">
-            <input type="text" id="command" placeholder="command">
-            <button id="BTNaddScenario" class="create_house-btn">Save</button>
-        </div>
-
         <div id="houseList" class="houseList"></div>
     </div>
     `;
@@ -276,21 +265,6 @@ async function renderMainPage(data) {
     // MNcreateHouse.style.display = "none";
     var BTNaddHouse = document.getElementById("BTNaddHouse");
     var BTNcloseHouseMN = document.getElementById("BTNcloseHouseMN")
-
-    document.getElementById("BTNcreateScenario").addEventListener('click', () => {
-        document.getElementById("MNcreateScenario").classList.toggle('hidden');
-    });
-
-    document.getElementById("BTNaddScenario").addEventListener('click', async () => {
-        const source_dev = document.getElementById("sourceDevice").value;
-        const data_field = document.getElementById("data_field").value;
-        const condition = document.getElementById("condition").value;
-        const value = document.getElementById("value").value;
-        const target_dev = document.getElementById("targetDevice").value;
-        const command = document.getElementById("command").value;
-        await createScenario(source_dev, data_field, condition, value, target_dev, command);
-        document.getElementById("MNcreateScenario").classList.add('hidden');
-    });
 
     // Create New House click
     BTNcreateHouse.addEventListener("click", () => {
@@ -324,34 +298,6 @@ async function renderMainPage(data) {
         // BTNcreateHouse.style.display = "block";
         MNcreateHouse.classList.add("hidden");
         BTNcreateHouse.classList.remove("hidden");
-    }
-
-    async function createScenario(source_dev, data_field, condition, value, target_dev, command) {
-        try {
-            const response = await fetch(
-                '/add_scenario',
-                {
-                    method: 'POST',
-                    headers: {
-                        'auth': `Bearer ${localStorage.getItem('token')}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ source_dev, data_field, condition, value, target_dev, command })
-                }
-            );
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error);
-            }
-            const response_data = await response.json()
-            if (response_data.error) {
-                console.error(response_data.error)
-                throw new Error(response_data.error)
-            }
-            appRouter();
-        } catch (error) {
-            errorHandler(error);
-        }
     }
 
     function displayHouses(house_list, parent_div) {
@@ -587,15 +533,53 @@ async function renderMainPage(data) {
                             Waiting for data from device
                         </div>
                         <div>
-                            <button id="wstest${device.dev_id}">TEST</button>
                         </div>
                     </div>
+                    <div id="actions${device.dev_id}" class="device_element"></div>
                     <button id="deleteDevice${device.dev_id}" class="cancel-sm-btn"> DELETE </button>
                     `;
 
+                    doActions(device_element.querySelector(`#actions${device.dev_id}`))
+
+                    device_element.querySelector(`#deleteDevice${device.dev_id}`).addEventListener('click', async () => {
+                        deleteDeviceRoom(room.id, device.dev_id);
+                    });
+
+                    function doActions(parent_div) {
+                        parent_div.innerHTML = "";
+                        if (device.actions.length > 0) {
+                            parent_div.innerHTML = "<p>ACTIONS</p>"
+                            for (num in device.actions) {
+                                let action_element = document.createElement('div');
+                                let action_button = document.createElement('button');
+                                action_button.setAttribute('type', 'button');
+                                action_button.setAttribute('action', device.actions[num]);
+                                action_button.innerHTML = device.actions[num];
+
+                                // Send command to device
+                                action_button.addEventListener('click', async () => {
+                                    try {
+                                        const response = await fetch(
+                                            `/send_command/${device.dev_id}/${action_button.getAttribute('action')}`,
+                                            {
+                                                method: 'POST',
+                                                headers: {
+                                                    'auth': `Bearer ${localStorage.getItem('token')}`
+                                                }
+                                            });
+                                        if (!response.ok)
+                                            throw new Error(response.status);
+
+                                    } catch (error) { errorHandler(error); }
+                                });
+                                action_element.appendChild(action_button);
+                                parent_div.appendChild(action_element);
+                            }
+                        }
+                    }
+
+                    // Websocket routine
                     const ws = new WebSocket(`ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`);
-
-
                     ws.onopen = () => {
                         ws.send(JSON.stringify({ auth: "Bearer " + localStorage.getItem("token") }));
                     };
@@ -624,15 +608,6 @@ async function renderMainPage(data) {
                     ws.onclose = () => {
                         console.error(`WebSocket for device ${device.dev_id} closed`);
                     };
-
-                    device_element.querySelector(`#wstest${device.dev_id}`).addEventListener('click', async () => {
-                        ws.send(`TEST MESSAGE from dev ${device.dev_id}`);
-                    });
-
-                    device_element.querySelector(`#deleteDevice${device.dev_id}`).addEventListener('click', async () => {
-                        deleteDeviceRoom(room.id, device.dev_id);
-                    });
-
                     parent_div.appendChild(device_element);
                 }
             }
@@ -850,11 +825,14 @@ async function renderMyDevicesPage() {
                 <div id="device_element${device.dev_id}">
                     <p id="device_name${device.dev_id}" class="flex mx-2 text-3xl">NAME: ${device.name}</p>
                     <h1>DEV_ID: ${device.dev_id}</h1>
-                    <p id="device_desc${device.dev_id}" class="flex mx-2">DESC: ${device.description ? device.description : ""}</p>
+                    <p id="device_desc${device.dev_id}" class="flex mx-2">Description: ${device.description ? device.description : ""}</p>
                     <p>ROOM: ${room_name}</p>
+                    <p>Data fields: ${device.data_fields}</p>
+                    <p>Actions: ${device.actions}</p>
                     <div id="deviceData${device.dev_id}">Waiting for data from device...</div>
                 </div>
                 <div class="grid place-items-center m-1 p-2">
+                    <button id="BTNhandshake${device.dev_id}" class="add_room-btn my-2">Handshake</button>
                     <button id="BTNeditDevice${device.dev_id}" class="add_room-btn my-1">Edit</button>
                     <button id="BTNdeleteDevice${device.dev_id}" class="cancel-sm-btn my-1">Delete</button>
                 </div>
@@ -891,8 +869,31 @@ async function renderMyDevicesPage() {
                     console.error(`WebSocket for device ${device.dev_id} closed`);
                 };
 
-                const BTNeditDevice = device_element.querySelector(`#BTNeditDevice${device.dev_id}`);
+                // send handshake
+                device_element.querySelector(`#BTNhandshake${device.dev_id}`).addEventListener('click', async () => {
+                    try {
+                        const response = await fetch(
+                            `/handshake/${device.dev_id}`,
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'auth': `Bearer ${localStorage.getItem('token')}`
+                                }
+                            }
+                        )
+                        if (!response.ok) {
+                            throw new Error(response.status);
+                        }
+                        response_data = await response.json();
+                        if (response_data != null && response_data.error) {
+                            throw new Error(response_data.error);
+                        }
+                        await renderMyDevicesPage();
+                    }
+                    catch (error) { errorHandler(error); }
+                });
 
+                const BTNeditDevice = device_element.querySelector(`#BTNeditDevice${device.dev_id}`);
                 // edit device
                 BTNeditDevice.addEventListener('click', async () => {
                     const device_name_element = device_element.querySelector(`#device_name${device.dev_id}`);
@@ -972,14 +973,115 @@ async function renderMyDevicesPage() {
     }
 }
 
+/**
+ * 
+ *<input type="text" id="sourceDevice" placeholder="if">
+            <input type="text" id="data_field" placeholder="data_field">
+            <input type="text" id="condition" placeholder="condition">
+            <input type="number" id="value" placeholder="value">
+            <input type="text" id="targetDevice" placeholder="thenDevice">
+            <input type="text" id="command" placeholder="command">
+ */
+
 async function renderMyScenariosPage(scenario_list) {
     app.innerHTML = `
     <div class="main_page">
-    <div id="scenarioList" class="device_list"></div>
+        <div class="main_header">
+            <button id="BTNcreateScenario" type="button" class="create_house-btn">Create Scenario</button>
+        </div>
+        <div id="MNcreateScenario" class="hidden mn-createhouse">
+            <select id="sourceDevice">
+                <option value="default">Source Device</option>
+            </select>
+            <select id="data_field">
+                <option value="default">Data Field</option>
+            </select>
+            <select id="condition">
+                <option value="default">Condition</option>
+            </select>
+            <input id="value" type="number" placeholder="Value">
+            <select id="targetDevice">
+                <option value="default">Target Device</option>
+            </select>
+            <select id="command">
+                <option value="default">Command</option>
+            </select>
+            <button id="BTNaddScenario" class="create_house-btn">Save</button>
+        </div>
+        <div id="scenarioList" class="device_list"></div>
     </div>
     `;
 
+    loadSelectData();
     displayScenarios(scenario_list, app.querySelector('#scenarioList'));
+
+    // Open form
+    app.querySelector("#BTNcreateScenario").addEventListener('click', () => {
+        // Load data in Selectors
+        document.getElementById("MNcreateScenario").classList.toggle('hidden');
+    });
+
+    document.getElementById("BTNaddScenario").addEventListener('click', async () => {
+        const source_dev = document.getElementById("sourceDevice").value;
+        const data_field = document.getElementById("data_field").value;
+        const condition = document.getElementById("condition").value;
+        const value = document.getElementById("value").value;
+        const target_dev = document.getElementById("targetDevice").value;
+        const command = document.getElementById("command").value;
+        await createScenario(source_dev, data_field, condition, value, target_dev, command);
+        document.getElementById("MNcreateScenario").classList.add('hidden');
+    });
+
+    const sourceDevSelect = app.querySelector("#sourceDevice")
+    sourceDevSelect.addEventListener('change', () => {
+        // Load data fields from source device
+        if (sourceDevSelect.value != "default") {
+            let sourceDeviceId = sourceDevSelect.value;
+            let source_dev = stored_data.devices.find(device => device.dev_id === sourceDeviceId);
+            for (num in source_dev.data_fields) {
+                let option_element = document.createElement('option');
+                option_element.setAttribute('value', source_dev.data_fields[num]);
+                option_element.innerHTML = source_dev.data_fields[num];
+
+                app.querySelector("#data_field").appendChild(option_element);
+            }
+        }
+    });
+
+    const targetDevSelect = app.querySelector("#targetDevice")
+    targetDevSelect.addEventListener('change', () => {
+        // Load data fields from source device
+        if (targetDevSelect.value != "default") {
+            let targetDeviceId = targetDevSelect.value;
+            let target_dev = stored_data.devices.find(device => device.dev_id === targetDeviceId);
+            for (num in target_dev.actions) {
+                let option_element = document.createElement('option');
+                option_element.setAttribute('value', target_dev.actions[num]);
+                option_element.innerHTML = target_dev.actions[num];
+
+                app.querySelector("#command").appendChild(option_element);
+            }
+        }
+    });
+
+    function loadSelectData() {
+        for (num in stored_data.devices) {
+            let source_option = document.createElement('option');
+            source_option.setAttribute('value', stored_data.devices[num].dev_id);
+            source_option.innerHTML = stored_data.devices[num].name;
+
+            let target_option = source_option.cloneNode(true);
+            app.querySelector("#sourceDevice").appendChild(source_option);
+            app.querySelector("#targetDevice").appendChild(target_option);
+        }
+        for (num in stored_data.conditions) {
+            let option_element = document.createElement('option');
+            option_element.setAttribute('value', stored_data.conditions[num]);
+            option_element.innerHTML = stored_data.conditions[num];
+
+            app.querySelector("#condition").appendChild(option_element);
+        }
+    }
 
     function displayScenarios(scenario_list, parent_div) {
         parent_div.innerHTML = "You have no scenarios saved. Please add new scenario";
@@ -1011,7 +1113,7 @@ async function renderMyScenariosPage(scenario_list) {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify(
-                                { scenario_id: scenario.id }
+                                { scenario_primary: scenario.id }
                             )
                         });
                         if (!response.ok) {
@@ -1030,6 +1132,37 @@ async function renderMyScenariosPage(scenario_list) {
 
                 parent_div.appendChild(scenario_element);
             }
+        }
+    }
+
+    async function createScenario(source_dev, data_field, condition, value, target_dev, command) {
+        try {
+            if (source_dev == null || data_field == null || condition == null || value == null || target_dev == null || command == null) {
+                return false;
+            }
+            const response = await fetch(
+                '/add_scenario',
+                {
+                    method: 'POST',
+                    headers: {
+                        'auth': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ source_dev, data_field, condition, value, target_dev, command })
+                }
+            );
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error);
+            }
+            const response_data = await response.json()
+            if (response_data.error) {
+                console.error(response_data.error)
+                throw new Error(response_data.error)
+            }
+            appRouter();
+        } catch (error) {
+            errorHandler(error);
         }
     }
 }

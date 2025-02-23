@@ -8,7 +8,7 @@ from . import services
 # from .services import auth_user, logout_user, validate_session_user, create_new_house
 from app.db import get_session, queries
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.mqtt import client as mqtt
+from app.mqtt.client import MQTTClient
 logger = Config.logger_init()
 router = APIRouter()
 templates_path = os.path.join(os.path.dirname(__file__), "templates")
@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory=templates_path)
 @router.on_event("startup")
 async def startup():
     logger.info(f"Startup called in process: {os.getpid()}")
-    mqtt_client = mqtt.MQTTClient()
+    mqtt_client = MQTTClient()
     await mqtt_client.load_scenarios()
     asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
 
@@ -244,6 +244,32 @@ async def get_devices(request: Request, token: str = Depends(get_token),db_sessi
     except Exception as e:
         logger.error(e)
         return {'error': 'Unexpected error'}
+    
+@router.post('/handshake/{device_id}')
+async def handshake(request: Request, token: str = Depends(get_token), device_id: str = Path(...), db_session: AsyncSession = Depends(get_session)):
+    try:
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER UNAUTHORIZED")
+        await MQTTClient.send_handshake(device_id)
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}        
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}
+    
+@router.post('/send_command/{device_id}/{command}')
+async def send_command(request: Request, token: str = Depends(get_token), device_id: str = Path(...), command: str = Path(...), db_session: AsyncSession = Depends(get_session)):
+    try:
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER UNAUTHORIZED")
+        await services.send_command(db_session, user_id, device_id, command)
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}        
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}
 
 @router.delete('/delete_device')
 async def del_room_device(request: Request, room_device: services.RoomDeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
@@ -297,3 +323,17 @@ async def add_scenario(request: Request, scenario_data: services.ScenarioModel, 
     except Exception as e:
         logger.error(e)
         return {'error': 'Unexpected error'}
+    
+@router.delete('/delete_scenario')
+async def delete_scenario(request: Request, scenario_primary: int, token: str = Depends(get_token), db_session: AsyncSession = Depends(get_session)):
+    try:
+        return
+    except HTTPException as e:
+        logger.error(e)
+        return {'error': e}
+    except ValueError as e:
+        logger.error(e)
+        return {'error': e}
+    except Exception as e:
+        logger.error(e)
+        return {'error': 'Unexpected error'}    

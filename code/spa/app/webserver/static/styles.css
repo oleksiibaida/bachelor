@@ -19,11 +19,15 @@ body {
 
 /*===MAIN===*/
 .main_page {
-    @apply p-1 my-5 h-full bg-gray-300;
+    @apply p-1 my-5 h-full bg-gray-300 items-center;
+}
+
+.main_header {
+    @apply flex flex-col justify-center items-center space-y-3;
 }
 
 .mn-createhouse {
-    @apply relative m-5 bg-stone-300 shadow-md rounded-md mt-2 w-64 p-2 border border-solid border-black
+    @apply relative m-5 bg-stone-300 shadow-md rounded-md mt-2 w-64 p-4 border border-solid border-black
 }
 
 .houseList {
