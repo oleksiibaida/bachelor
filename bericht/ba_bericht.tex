@@ -26,6 +26,160 @@
 \usepackage{enumitem}
 \renewcommand{\lstlistlistingname}{Programmcode}
 
+% Style füür HTML
+\definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
+%\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{editorGray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{editorOcher}{rgb}{1, 0.5, 0} % #FF7F00 -> rgb(239, 169, 0)
+\definecolor{editorGreen}{rgb}{0, 0.5, 0} % #007C00 -> rgb(0, 124, 0)
+\definecolor{orange}{rgb}{1,0.45,0.13}		
+\definecolor{olive}{rgb}{0.17,0.59,0.20}
+\definecolor{brown}{rgb}{0.69,0.31,0.31}
+\definecolor{purple}{rgb}{0.38,0.18,0.81}
+\definecolor{lightblue}{rgb}{0.1,0.57,0.7}
+\definecolor{lightred}{rgb}{1,0.4,0.5}
+\usepackage{upquote}
+\usepackage{listings}
+% CSS
+\lstdefinelanguage{CSS}{
+  keywords={color,background-image:,margin,padding,font,weight,display,position,top,left,right,bottom,list,style,border,size,white,space,min,width, transition:, transform:, transition-property, transition-duration, transition-timing-function},	
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  alsoletter={:},
+  alsodigit={-}
+}
+
+% JavaScript
+\lstdefinelanguage{JavaScript}{
+  morekeywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  morecomment=[s]{/*}{*/},
+  morecomment=[l]//,
+  morestring=[b]",
+  morestring=[b]'
+}
+
+\lstdefinelanguage{HTML5}{
+  language=html,
+  sensitive=true,	
+  alsoletter={<>=-},	
+  morecomment=[s]{<!-}{-->},
+  tag=[s],
+  otherkeywords={
+  % General
+  >,
+  % Standard tags
+	<!DOCTYPE,
+  </html, <html, <head, <title, </title, <style, </style, <link, </head, <meta, />,
+	% body
+	</body, <body,
+	% Divs
+	</div, <div, </div>, 
+	% Paragraphs
+	</p, <p, </p>,
+	% scripts
+	</script, <script,
+  % More tags...
+  <canvas, /canvas>, <svg, <rect, <animateTransform, </rect>, </svg>, <video, <source, <iframe, </iframe>, </video>, <image, </image>, <header, </header, <article, </article
+  },
+  ndkeywords={
+  % General
+  =,
+  % HTML attributes
+  charset=, src=, id=, width=, height=, style=, type=, rel=, href=,
+  % SVG attributes
+  fill=, attributeName=, begin=, dur=, from=, to=, poster=, controls=, x=, y=, repeatCount=, xlink:href=,
+  % properties
+  margin:, padding:, background-image:, border:, top:, left:, position:, width:, height:, margin-top:, margin-bottom:, font-size:, line-height:,
+	% CSS3 properties
+  transform:, -moz-transform:, -webkit-transform:,
+  animation:, -webkit-animation:,
+  transition:,  transition-duration:, transition-property:, transition-timing-function:,
+  }
+}
+
+\lstdefinestyle{htmlcssjs} {%
+  % General design
+%  backgroundcolor=\color{editorGray},
+  basicstyle={\footnotesize\ttfamily},   
+  frame=single,
+  % line-numbers
+  xleftmargin={0.5cm},
+  %numbers=left,
+  stepnumber=1,
+  firstnumber=1,
+  numberfirstline=true,	
+  % Code design
+  identifierstyle=\color{black},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{editorGreen}\bfseries,
+  stringstyle=\color{editorOcher}\ttfamily,
+  commentstyle=\color{brown}\ttfamily,
+  % Code
+  language=HTML5,
+  alsolanguage=JavaScript,
+  alsodigit={.:;},	
+  tabsize=2,
+  showtabs=false,
+  showspaces=false,
+  showstringspaces=false,
+  extendedchars=true,
+  breaklines=true,
+  captionpos=b,
+  % German umlauts
+  literate=%
+  {Ö}{{\"O}}1
+  {Ä}{{\"A}}1
+  {Ü}{{\"U}}1
+  {ß}{{\ss}}1
+  {ü}{{\"u}}1
+  {ä}{{\"a}}1
+  {ö}{{\"o}}1
+}
+%
+\lstdefinestyle{python} {%
+language=python,
+literate=%
+*{0}{{{\color{lightred}0}}}1
+{1}{{{\color{lightred}1}}}1
+{2}{{{\color{lightred}2}}}1
+{3}{{{\color{lightred}3}}}1
+{4}{{{\color{lightred}4}}}1
+{5}{{{\color{lightred}5}}}1
+{6}{{{\color{lightred}6}}}1
+{7}{{{\color{lightred}7}}}1
+{8}{{{\color{lightred}8}}}1
+{9}{{{\color{lightred}9}}}1,
+basicstyle=\footnotesize\ttfamily, % Standardschrift
+numbers=left,               % Ort der Zeilennummern
+%numberstyle=\tiny,          % Stil der Zeilennummern
+%stepnumber=2,               % Abstand zwischen den Zeilennummern
+numbersep=5pt,              % Abstand der Nummern zum Text
+tabsize=4,                  % Groesse von Tabs
+extendedchars=true,         %
+breaklines=true,            % Zeilen werden Umgebrochen
+keywordstyle=\color{blue}\bfseries,
+frame=b,
+commentstyle=\color{brown}\itshape,
+stringstyle=\color{editorOcher}\ttfamily, % Farbe der String
+showspaces=false,           % Leerzeichen anzeigen ?
+showtabs=false,             % Tabs anzeigen ?
+xleftmargin=10pt,
+framexleftmargin=10pt,
+framexrightmargin=5pt,
+framexbottommargin=4pt,
+%backgroundcolor=\color{lightgray},
+showstringspaces=false,      % Leerzeichen in Strings anzeigen ?
+captionpos=b,
+}%
+%
+\makeatother
+%END
+
+
 \geometry{a4paper, margin=2cm}
 \hypersetup{
   colorlinks = true,
@@ -75,7 +229,7 @@
     language=C,
     backgroundcolor=\color{white},
     keywordstyle=\color{blue}\bfseries,        % Standard Keywords
-    commentstyle=\color{green}\itshape,        % Kommentare
+    commentstyle=\color{gray}\itshape,        % Kommentare
     stringstyle=\color{orange},                % Strings
     numberstyle=\tiny\color{gray},             % Zeilennummern
     basicstyle=\ttfamily\small,                % Basis-Schriftart
@@ -116,7 +270,72 @@
 \par Moderne Steuerungs- und Sicherheitssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Laut Günther Ohland, Vorstandsmitglied des Branchenverbands "Smarthome Initiative Deutschland", ermöglichen diese Systeme eine Reduktion des Heizenergieverbrauchs um 20 bis 30 Prozent \cite{spiegel_heizung}. Die Kosten für die smarte Technik rechnen sich in der Regel nach zwei Jahren. Die Systeme übernehmen ein Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Reglung der Raumtemperatur oder das Aufräumen des Hauses etc. Der Aufgabenbereich der Systeme ist dabei nur nach den Bedürfnissen der Benutzerinnen und Benutzer abgegrenzt.
 \par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Das Ziel dieser Arbeit ist die Erstellung einer Schnittstelle, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht und den Benutzer über gefährliche Vorgänge in seinem Haus informiert. 
 \par Im Rahmen der Entwicklung dieses Systems wurden die aktuellen Technologien zur Erstellung eines Webinterfaces und zur Kommunikation zwischen den Geräten eingesetzt. \textbf{TODO Kurz erklären was in Kapitel 2,3,4,5 ... erklärt wird}
+\newpage
 
+\section{Ziel des Projekts}
+\par Das im Rahmen dieser Arbeit entwickelte System stellt einen Prototyp für ein Smart-Home-System dar. Ziel des Projekts ist die Realisierung eines intelligenten Heimsystems, das verschiedene Technologien integeriert und flexibel erweiterbar ist. Die Architektur des Systems ist modular aufgebaut, sodass die Geräte hinzugefügt und eingebunden werden können. Dies erlaubt eine skalierbare und anpassbare Nutzung in unterschiedlichen Anwendungsfällen.
+\par Das entwickelte System dient der Überwachung und Steuerung von vernetzten Geräten innerhalb eines Hauses. Ziel des Systems ist es, Sensordaten zu erfassen, diese zu verarbeiten und eine benutzerfreundliche Interaktionsmöglichkeit zu bieten. Dabei kommen verschiedene Hardware- und Softwarekomponenten zum Einsatz, die eine nahtlose Kommunikation zwischen den einzelnen Modulen gewährleisten.
+\par Das System erfüllt mehrere wesentliche Aufgaben:
+\begin{enumerate}
+  \item \textbf{Sensordatenerfassung}: Die an den Mikrocontrollern angeschlossenen Sensoren übermitteln die erfassenen Daten an dem zentralen Server.
+  \item \textbf{Sicherheitsaspekt}: Das System ist mit den Sensoren für die Erkennung des Brandes ausgestattet. Außerdem bietet das System gesicherter Zugang zu dem Haus.
+  \item \textbf{Datenverarbeitung und Speicherung}: Der zentrale Server stellt die empfangenen Daten zur Analyse bereit und speichert die Benutzer- und Geräteinformationen in der Datenbank.
+  \item \textbf{Benutzerinteraktion}: Über die Weboberfläche können die Nutzer das System konfigurieren, Messwerte einsehen und Aktoren steuern. Außerdem werden die Nutzer über das Brand im Haus informiert.
+  \item \textbf{Kommunikation}: Die Kommunikation zwischen den Komponenten erfolgt über das MQTT-Protokoll, wodurch eine effiziente und skalierbare Datenübertragung ermöglicht wird.
+  \item \textbf{Automatisierung}: Basierend auf den erfassten Sensordaten können bestimmte Vorgänge automatisch ausgelöst werden.
+\end{enumerate}
+\par 
+\newpage
+\subsection{Komponenten des Systems}
+\par Das System besteht aus mehreren Komponenten, die zusammenarbeiten, um eine effiziente Steuerung und Datenerfassung zu gewährleisten: 
+\begin{itemize} 
+  \item \textbf{Raspberry Pi:} Der zentrale Server. Stellt das lokale WLAN-Netzwerk bereit, hostet den MQTT-Broker und führt die Webanwendung aus. 
+  \item \textbf{Arduino:} Ausgestattet mit mehreren Sensoren, die Gefahren wie Feuer und Gas erkennen und den Zugang zum Haus sichern. Entsprechende Meldungen werden an den Server gesendet.
+  \item \textbf{M5Stick:} Angeschlossen an die Temperatur- und Lichtsensoren und sendet die aufgezeichneten Daten auf den Server. 
+  \item \textbf{ESP32:} Angeschlossen an Display und Temperatursensor dient zur Anzeige der Umgebungsdaten und sendet diese an den Server. 
+  \item \textbf{Webserver:} Eine auf FastAPI basierende RESTful API, die Benutzern den Zugriff auf das System und die Steuerung von Geräten ermöglicht. 
+  \item \textbf{Datenbank:} Eine lokale Datenbank zur Speicherung von Benutzerinformationen und Gerätekonfigurationen.
+  \item \textbf{Web-Anwendung:} Eine browserbasierte Benutzeroberfläche, die den Benutzern eine intuitive Steuerung und Visualisierung der Daten ermöglicht. 
+\end{itemize}
+
+\subsection{Architektur und Datenfluss}
+\par Das entwickelte System basiert auf einer modularen Architektur, die mehrere Komponenten integriert.
+\par Der Raspberry Pi dient als zentraler Server des Systems. Der Minicomputer stellt ein WLAN-Netzwerk zur Verfügung und hostet den Webserver mit der Datenbank sowie den MQTT-Broker. Alle Benutzerinteraktionen, Sensordaten, Datenflüsse und Datenverarbeitungen finden auf dem Server statt. Das System ist somit stark zentralisiert und arbeitet nur lokal. Das bedeutet, dass sich alle Benutzer in einem lokalen Netzwerk mit dem Raspberry Pi befinden müssen. 
+\par Die Geräte verbinden sich mit dem WLAN und mit dem MQTT-Broker, die vom Raspberry Pi zur Verfügung gestellt werden. Jedes Gerät verfügt über eine eindeutige Geräte-ID. Die Sensoren senden ihre Daten an den MQTT-Broker, der auf dem Raspberry Pi läuft. Die Aktoren abonnieren die Command-Topics mit der entsprechenden "Geräte-ID".
+\par Im Kern des Systems befindet sich ein Webserver, der auf dem Raspberry Pi ausgeführt wird. Dieser Webserver stellt eine RESTful-API zur Verfügung. Für den Zugriff zu der API wurde eine Webseite aufgebaut. Die API bietet folgende Funktionen an:
+\begin{itemize}
+  \item Authentifizierung und Autorisierung der Benutzer
+  \item Verwaltung der Gerätekonfigurationen und Benutzerprofile
+  \item Bereitstellung von Endpunkten zur Abfrage und Steuerung von IoT-Geräten
+  \item Bereitstellung der Daten von den Geräten in Echtzeit
+  \item Bidirektionale Kommunikation mit den IoT-Geräten
+\end{itemize}
+\par Die Benutzerauthentifizierung erfolgt über JSON Web Tokens (JWT). Bei der Anmeldung wird ein JWT erzeugt, das eine verschlüsselte Benutzer-ID enthält. Dieses Token wird auf der Seite des Benutzers gespeichert und bei jeder Anfrage an den Server gesendet, um die Identität des Benutzers zu verifizieren. JWTs haben eine festgelegte Lebensdauer, nach deren Ablauf eine erneute Anmeldung oder eine Token-Erneuerung erforderlich ist. Die Verwendung von JWT ermöglicht eine sichere, zustandslose Authentifizierung, da der Server keine Sitzungsdaten speichern muss.
+\par Die Benutzerdaten und Gerätekonfigurationen werden in einer lokalen Datenbank gespeichert, die mit \texttt{SQLite} implementiert wird. \texttt{SQLite} hat den Vorteil, dass die gesamte Datenbank in einer einzigen Datei gespeichert wird, wodurch der Ressourcenverbrauch des Servers minimiert wird. Der Zugriff auf die Datenbank erfolgt über \texttt{SQLAlchemy}, eine leistungsfähige ORM-Bibliothek für Python. \texttt{SQLAlchemy} ermöglicht asynchrone Datenbankzugriffe, was die Leistung und Skalierbarkeit der Anwendung verbessert.
+\par Die Geräte senden ihre Daten an den zentralen MQTT-Broker. Um die eingehenden Nachrichten effizient verarbeiten zu können, wird ein MQTT-Client mit Hilfe der Bibliothek \texttt{aiomqtt} implementiert. Diese Bibliothek verwendet Python \texttt{asyncio}, was eine nicht-blockierende, asynchrone Verarbeitung ermöglicht. Dadurch können Nachrichten empfangen und verarbeitet werden, ohne den Hauptprozess zu blockieren. Das verbessert die Reaktionsfähigkeit des Systems und ermöglicht die parallele Verarbeitung mehrerer MQTT-Nachrichten, was besonders wichtig für die Systeme mit mehreren Geräten ist.
+\par Die Gerätedaten müssen den Benutzern in Echtzeit zur Verfügung gestellt werden. Zu diesem Zweck wird \texttt{WebSocket} verwendet. Es ermöglicht eine kontinuierliche und bidirektionale Datenübertragung zwischen Server und Client. Dadurch wird sichergestellt, dass die Daten sofort und ohne wiederholte Anfragen an den Benutzer übermittelt werden.
+\par Der Benutzer benötigt eine Schnittstelle, um auf das System zugreifen zu können. Dazu wird eine Webseite in Form einer SPA\footnote{Engl. Single Page Application} entwickelt. Eine SPA lädt einmal die grundlegende HTML-, CSS- und JavaScript-Struktur und aktualisiert dann dynamisch nur die relevanten Inhalte, ohne die gesamte Seite neu zu laden. Der Hauptvorteil einer SPA liegt in der verbesserten Nutzererfahrung, da Seitenwechsel nahezu verzögerungsfrei erfolgen. Außerdem wird die Serverlast reduziert, da nur die benötigten Daten über eine API geladen werden, anstatt komplette HTML-Dokumente zu übertragen. Dies führt zu einer schnelleren und reaktionsfähigeren Anwendung, was insbesondere bei Anwendungen mit Echtzeitanforderungen von Vorteil ist. 
+\par Die für die SPA entwickelte API kann auch von anderen Anwendungen, z. B. mobilen Anwendungen, genutzt werden. Dadurch können die Anwendungen auf einer gemeinsamen Backend-Struktur aufbauen, was die Wartung vereinfacht und die Wiederverwendbarkeit des Codes erhöht.
+\par Die vorgestellte Architektur bietet eine effiziente, skalierbare und reaktionsfähige Struktur. Der Zugriff auf das System erfolgt über die API. Durch die Verwendung asynchroner Methoden werden Blockierungen vermieden. \texttt{WebSocket} stellt die empfangenen Daten ohne serverseitige Speicherung sofort zur Verfügung. Die SPA bietet eine schnelle und benutzerfreundliche Schnittstelle mit direktem Zugriff auf die API-Endpunkte. Diese Architektur garantiert eine hohe Performance und vereinfacht sowohl die Wartung als auch zukünftige Erweiterungen des Systems.
+\subsubsection{Struktur der MQTT-Kommunikation}
+\par Die im System verwendeten Geräte kommunizieren über das MQTT-Protokol. Der MQTT-Broker wird auf dem Raspberry Pi ausgeführt. 
+\par Die Geräte verbinden sich mit dem MQTT-Broker und senden ihre Nachrichten in individuelle Topics. Es gibt 4 Haupttopics, die für jedes Gerät mit der entsprechender Geräte-ID erweitert werden. Die Tabelle \ref{tab:mqttnachrichten} listet die Topics auf. ID wird von jedem Gerät ermittelt und beim Senden der Nachricht entsprechend gesetzt.
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|>{\centering\arraybackslash}m{2,5cm}|>{\centering\arraybackslash}m{6cm}|>{\centering\arraybackslash}m{8cm}|}
+    \hline
+    \textbf{Topic}      & \textbf{Nachricht}                         & \textbf{Beschreibung} \\ \hline
+    handshake/ID   &  \texttt{"data\_fields": ["temperature", "humidity"]},\par \texttt{"commands": ["light\_turn\_on", "light\_turn\_off"]}                                   &   In diesem Topic senden die Geräte ihre Konfigurationen.\\\hline
+    data/ID     & \texttt{"temperature": 23}, \par \texttt{"humidity": 75} & Hier werden die von den Sensoren erfassten Daten übertragen. \\ \hline
+    command/ID  & \texttt{"light\_turn\_on"}  & Dieses Topic wird von Geräten abonniert. Der in der Nachricht übermittelte Befehl wird vom Gerät ausgeführt. \\ \hline
+    alarm/ID    & \texttt{"fire": "fire\_start"} & Dies ist ein spezielles Topic für das Alarmsystem. Wenn der Alarm ausgelöst wird, wird die entsprechende Meldung in diesem Topic gesendet. \\ \hline
+  \end{tabular}
+  \caption{MQTT-Nachrichten}
+  \label{tab:mqttnachrichten}
+\end{table}
+\par Beim Hinzufügen eines neuen Geräts zum System sendet der dem Broker eine Handshake-Nachricht in das Topic „\texttt{command/ID}“ mit dem Text „\texttt{handshake}“ gesendet. Das Gerät antwortet darauf im Topic „\texttt{handshake/ID}“ mit seiner Konfiguration in JSON-Format. Im Feld „\texttt{data\_fields}“ werden die Felder angegeben, die von den Sensoren erfasst werden. Im Feld „\texttt{commands}“ werden die Befehle angegeben, die das Gerät ausführen kann. Diese Daten werden in der Datenbank gespeichert, können jedoch durch erneutes Senden der Handshake-Nachricht aktualisiert werden. Nach der Handshake-Nachricht werden in das Topic „\texttt{command/ID}“ ausschließlich Nachriten mit gespeicherten Befehlen gesendet. 
+\par Die Nachrichten, die in das Topic „\texttt{data/ID}“ gesendet werden, müssen ein JSON-Format haben. Das erleichtert die Verarbeitung der Daten. 
+\par \textbf{TOODOO} Diagram zum Zeigen der Kommunikation.
 \newpage
 \section{Grundlagen \& Theorie}
 \par In diesem Abschnitt werden die technischen Spezifikationen der verwendeten Komponenten und Technologien detailliert beschrieben.
@@ -255,77 +474,164 @@
     
   \subsection{Software}
   \subsubsection{PlatformIO}
+  \subsubsection{Python}
+  \subsubsection{FastAPI}
+  \subsubsection{SQLAlchemy}
+  \subsubsection{WebSocket}
+  \subsubsection{Web}
+  \par \textbf{TOODOO} kurzer Überblick auf die Webentwicklung mit HTML/CSS und JavaScript
 
-    \subsubsection{Uvicorn}
-    \subsubsection{HTML \& TailwindCSS}
-    \subsubsection{Javascript}
-    \subsubsection{WebSocket}
-    \subsubsection{Linux-Pakete für Raspberry Pi}
-    \subsubsection{Python}
-    \subsubsection{Asyncio}
-    \subsubsection{FastAPI}
-    \subsubsection{Uvicorn}
-    \subsubsection{SQLAlchemy}
 
 \newpage
-\section{Konzeption das Systems}
-\par Im Rahmen dieses Projektes wurde ein System entwickelt, welches die Funktionalitäten eines Kontroll- und Verwaltungssystems mit denen eines IoT-Systems vereint. Die Integration von Sensordaten und Benutzerinteraktionen stellt einen wesentlichen Aspekt des Systems dar. Die Realisierung erfolgt durch die Kombination verschiedener Technologien und Teilsysteme, darunter eine Webanwendung auf FastAPI, eine MQTT-Kommunikationsschicht und verschiedene Aktoren und Sensoren, die auf Arduino- oder ESP-Module basieren.
-\subsection{Komponenten des Systems}
-\par Das entwickelte System basiert auf einer modularen Architektur, die mehrere Komponenten integriert. Jede dieser Komponenten erfüllt eine spezifische Rolle im Gesamtsystem: 
-\begin{itemize} 
-  \item \textbf{Raspberry Pi:} Der zentrale Server, der das lokale WLAN-Netzwerk bereitstellt, den MQTT-Broker hostet und die Webanwendung ausführt. 
-  \item \textbf{Arduino:} Ausgestattet mit mehreren Sensoren, die Gefahren wie Feuer und Gas erkennen und den Zugang zum Haus sichern. Entsprechende Meldungen werden an den Server gesendet.
-  \item \textbf{M5Stick:} Angeschlossen an die Temperatur- und Lichtsensoren und sendet die aufgezeichneten Daten auf den Server. 
-  \item \textbf{ESP32:} TTTOOOOODDDDOOOO 
-  \item \textbf{Webserver:} Eine auf FastAPI basierende RESTful API, die Benutzern den Zugriff auf das System und die Steuerung von Geräten ermöglicht. 
-  \item \textbf{Datenbank:} Eine lokale Datenbank zur Speicherung von Benutzerinformationen und Gerätekonfigurationen.
-  \item \textbf{Web-Anwendung:} Eine browserbasierte Benutzeroberfläche, die den Benutzern eine intuitive Steuerung und Visualisierung der Daten ermöglicht. 
-\end{itemize}
-
-\subsection{Architektur und Datenfluss}
-\par Der Raspberry Pi dient als zentraler Server des Systems. Der Minicomputer stellt ein WLAN-Netzwerk zur Verfügung und hostet den Webserver mit der Datenbank sowie den MQTT-Broker. Alle Benutzerinteraktionen, Sensordaten, Datenflüsse und Datenverarbeitungen finden auf dem Server statt. Das System ist somit stark zentralisiert und arbeitet nur lokal. Das bedeutet, dass sich alle Benutzer in einem lokalen Netzwerk mit dem Raspberry Pi befinden müssen. 
-\par Die Geräte verbinden sich mit dem WLAN, das vom Raspberry Pi zur Verfügung gestellt wird. Die Sensoren senden ihre Daten an den MQTT-Broker, der auf dem Raspberry Pi läuft. Die Aktoren abonnieren die Command-Topics mit der entsprechenden "Geräte-ID".
-\par Im Kern des Systems befindet sich ein Webserver, der auf dem Raspberry Pi ausgeführt wird. Dieser Webserver stellt eine RESTful-API zur Verfügung. Für den Zugriff zu der API wurde eine Webseite aufgebaut. Die API bietet folgende Funktionen an:
-\begin{itemize}
-  \item Authentifizierung und Autorisierung der Benutzer
-  \item Verwaltung der Gerätekonfigurationen und Benutzerprofile
-  \item Bereitstellung von Endpunkten zur Abfrage und Steuerung von IoT-Geräten
-  \item Bereitstellung der Daten von den Geräten in Echtzeit
-  \item Bidirektionale Kommunikation mit den IoT-Geräten
-\end{itemize}
-\par Die Benutzerauthentifizierung erfolgt über JSON Web Tokens (JWT). Bei der Anmeldung wird ein JWT erzeugt, das eine verschlüsselte Benutzer-ID enthält. Dieses Token wird auf der Seite des Benutzers gespeichert und bei jeder Anfrage an den Server gesendet, um die Identität des Benutzers zu verifizieren. JWTs haben eine festgelegte Lebensdauer, nach deren Ablauf eine erneute Anmeldung oder eine Token-Erneuerung erforderlich ist. Die Verwendung von JWT ermöglicht eine sichere, zustandslose Authentifizierung ermöglicht, da der Server keine Sitzungsdaten speichern muss.
-\par Die Benutzerdaten und Gerätekonfigurationen werden in einer lokalen Datenbank gespeichert, die mit \texttt{SQLite} implementiert wird. \texttt{SQLite} hat den Vorteil, dass die gesamte Datenbank in einer einzigen Datei gespeichert wird, wodurch der Ressourcenverbrauch des Servers minimiert wird. Der Zugriff auf die Datenbank erfolgt über \texttt{SQLAlchemy}, eine leistungsfähige ORM-Bibliothek für Python. \texttt{SQLAlchemy} ermöglicht asynchrone Datenbankzugriffe, was die Leistung und Skalierbarkeit der Anwendung verbessert.
-\par Die Geräte senden ihre Daten an den zentralen MQTT-Broker. Um die eingehenden Nachrichten effizient verarbeiten zu können, wird ein MQTT-Client mit Hilfe der Bibliothek \texttt{aiomqtt} implementiert. Diese Bibliothek verwendet Python \texttt{asyncio}, was eine nicht-blockierende, asynchrone Verarbeitung ermöglicht. Dadurch können Nachrichten empfangen und verarbeitet werden, ohne den Hauptprozess zu blockieren, was die Reaktionsfähigkeit des Systems verbessert. Es ermöglicht auch die parallele Verwendung mehrerer MQTT-Clients, was die Skalierbarkeit des Systems optimiert, was besonders für Systeme mit mehreren Geräten wichtig ist.
-\par Die Gerätedaten müssen den Benutzern in Echtzeit zur Verfügung gestellt werden. Zu diesem Zweck wird \texttt{WebSocket} verwendet. Es ermöglicht eine kontinuierliche und bidirektionale Datenübertragung zwischen Server und Client. Dadurch wird sichergestellt, dass die Daten sofort und ohne wiederholte Anfragen an den Benutzer übermittelt werden.
-\par Der Benutzer benötigt eine Schnittstelle, um auf das System zugreifen zu können. Dazu wird eine Webseite in Form einer SPA\footnote{Engl. Single Page Application} entwickelt. Eine SPA lädt einmal die grundlegende HTML-, CSS- und JavaScript-Struktur und aktualisiert dann dynamisch nur die relevanten Inhalte, ohne die gesamte Seite neu zu laden. Der Hauptvorteil einer SPA liegt in der verbesserten Nutzererfahrung, da Seitenwechsel nahezu verzögerungsfrei erfolgen. Außerdem wird die Serverlast reduziert, da nur die benötigten Daten über eine API geladen werden, anstatt komplette HTML-Dokumente zu übertragen. Dies führt zu einer schnelleren und reaktionsfähigeren Anwendung, was insbesondere bei Anwendungen mit Echtzeitanforderungen von Vorteil ist. 
-\par Die für die SPA entwickelte API kann auch von anderen Anwendungen, z. B. mobilen Anwendungen, genutzt werden. Dadurch können die Anwendungen auf einer gemeinsamen Backend-Struktur aufbauen, was die Wartung vereinfacht und die Wiederverwendbarkeit des Codes erhöht.
-\par Die vorgestellte Architektur bietet eine effiziente, skalierbare und reaktionsfähige Struktur. Der Zugriff auf das System erfolgt über die API. Durch die Verwendung asynchroner Methoden werden Blockierungen vermieden. \texttt{WebSocket} stellt die empfangenen Daten ohne serverseitige Speicherung sofort zur Verfügung. Die SPA bietet eine schnelle und benutzerfreundliche Schnittstelle mit direktem Zugriff auf die API-Endpunkte. Diese Architektur garantiert eine hohe Performance und vereinfacht sowohl die Wartung als auch zukünftige Erweiterungen des Systems.
-\newpage
-\section{Implementierung und praktische Umsetzung}
-\subsection{Einrichtung der Hardwarekomponenten}
-  \subsubsection{Arduino}
+\section{Einrichtung der Hardwarekomponenten}
+  \subsection{Arduino}
   \par \textbf{TOODOO} wird leicht geändert und erweitert.
   \par Der Arduino mit den angeschlossenen Sensoren stellt das Sichterheitskomponente des Systems dar. Dieses Teilsystem erkennt die Gefahren von Gas und Feuer und alarmiert den Benutzer. Außerdem stellt der Arduino der gesicherte Zugang zu dem Haus durch die Eingabe einer PIN. Die Anschließung der Sensoren und Aktoren an Arduino ist in der PA1 \cite{pa1} beschrieben. 
   \par Der Arduino kann nicht direkt mit einem WLAN verbunden werden, da er kein WLAN-Modul besitzt. Für diesen Zweck habe ich ein ESP8266-Modul verwendet. Der wird mit dem Arduino durch eine UART-Schnittstelle angeschlossenen und mit dem WLAN verbunden. Die Kommunikation zwischen Arduino und ESP8266 erfolgt über die serielle Schnittstelle. Der Arduino gibt die entsprechenden Kommanden durch Serial an ESP8266 weiter und der ESP8266 führt die Befehle aus. Die detaillierte Beschreibung zur Verbindung von Arduino und ESP8266 ist in dem Bericht zu meiner Projektarbeit 2 \cite{pa2} Kapitel 4.1 zu finden.
-  \par Der Arduino sendet und empfängt die MQTT-Nachrichten via ESP8266. Ein Mal pro Sekunde sendet der Arduino eine MQTT-Nachricht in das Topic "status/<ID>/" in dem die Bereitschaft der angeschlossenen Sensoren geteilt wird. Bei der Erkennung einer Gefahr wird sofort der Alarm ausgelöst und eine MQTT-Nachricht in das Topic "alarm/<ID>" mit dem entsprechenden Text gesendet.
-  \subsubsection{Raspberry Pi}
+  \par Der Arduino sendet und empfängt die MQTT-Nachrichten via angeschlossenen ESP8266. Ein Mal pro Sekunde sendet der Arduino eine MQTT-Nachricht in das Topic „data/<ID>“ in dem die Bereitschaft der angeschlossenen Sensoren geteilt wird. Bei der Erkennung einer Gefahr wird sofort der Alarm ausgelöst und eine MQTT-Nachricht in das Topic „alarm/<ID>“ mit dem entsprechenden Text gesendet.
+  \subsection{Raspberry Pi}
   \par Der Raspberry Pi dient als zentraler Server des Systems. Er stellt einen WLAN-Zugriffspunkt zur Verfügung, über den sich die Geräte mit meinem System verbinden. Als Netzwerkzentrale gewährleistet er eine stabile und sichere Kommunikation zwischen den Komponenten, selbst in Umgebungen ohne Internetzugang.
   \par Die Geräte kommunizieren über die MQTT-Protokoll, wobei der Raspberry Pi den MQTT-Broker auf Basis von \texttt{Mosquitto} hostet. Die Geräte senden ihre Daten in spezifische Topics. Die Clients abonnieren diese Topics und erhalten die von Geräten gesendet Daten. Diese Daten werden von einem asynchronen MQTT-Client verarbeitet.
   \par Der Raspberry Pi hostet zudem den API-Webserver, der als Schnittstelle für die Interaktion mit dem System dient. Die API ist mit \texttt{FastAPI} implementiert und läuft auf dem ASGI-Server \texttt{Uvicorn}. \texttt{Uvicorn} ermöglicht eine effiziente, asynchrone Verarbeitung von Anfragen und sorgt für eine hohe Leistungsfähigkeit.
   \par Die von den Geräten empfangenen Daten werden durch den asynchronen MQTT-Client verarbeitet und über \texttt{WebSocket} direkt an die API weitergeleitet. Dadurch wird eine Echtzeitübertragung an die Benutzeroberfläche ermöglicht, ohne dass die Daten zwischengespeichert oder erneut abgefragt werden müssen.
   \par Der genaue Ablauf für die Einrichtung des Raspberry Pi ist in dem Bericht zu meiner Projektarbeit 2 \cite{pa2}, Kapitel 2, beschrieben. 
   \par Diese Architektur ermöglicht die effiziente und schnelle Interaktion mit dem System. Das System ist zwar nur im lokalen Netzwerk verfügbar. Da keine Cloud-Dienste erforderlich sind, bietet das System eine erhöhte Sicherheit und ist von der Internetverbindung unabhängig.  
-  \subsubsection{Einrichtung der ESP-Module}
+  \subsection{Einrichtung der ESP-Module}
   \par In diesem Projekt werden drei verschiedene ESP-Module verwendet: ESP8266, ESP32 und der auf dem ESP32 basierende M5Stick.  Jedes Modul erfüllt spezifische Aufgaben, aber alle Module müssen sowohl mit dem WLAN als auch mit dem MQTT-Broker verbunden sein. Daher ist die Implementierung der Funktion \texttt{setup()} für alle drei Module ähnlich aufgebaut.
-  \par Beim Start des ESP-Moduls wird die Funktion \texttt{setup()} (Listing \ref{lst:esp8266setup}) aufgerufen. Zunächst wird es versucht, die WLAN-Zugangsdaten aus dem EEPROM auszulesen (Zeile 5-10). Das EEPROM wird mit einer Größe von 128 Byte initialisiert. Dies ist notwendig, bevor Daten aus dem Speicher gelesen werden können. Es werden zwei Felder vom Typ \texttt{char} wurden mit den in den eckigen Klammern angegebenen Längen erstellt (Zeile 6-7), um die aus dem EEPROM gelesenen Daten zu speichern. Beide Felder sind zunächst mit Nullen gefüllt. Der Name des WLAN-Netzes (SSID) wird ab Adresse 0 des EEPROM ausgelesen und mit der Funktion \texttt{EEPROM.get(0, eeprom\_ssid)} im Char-Feld gespeichert. Das Passwort wird ab Adresse 32 aus dem EEPROM ausgelesen.
-  \par Anschließend prft die Boolean-Funktion \texttt{is\_valid\_string()} (Listing \ref{lst:esp8266validstring}), ob der übergebene String-Parameter eine Länge größer als 0 und kleiner als \texttt{max\_length}, sowie eine korrekte Terminierung hat. Zusätzlich gibt die Funktion den Wert \texttt{False} zurück, wenn der String ein Standard-EEPROM-Zeichen mit dem Wert \texttt{0xFF} enthält.
-  \par Sind die gültigen Werte im EEPROM gespeichert, versucht das Modul, sich mit diesen Zugangsdaten mit dem WLAN zu verbinden (Zeile 14). Die Funktion \texttt{connect\_wifi} (Listing \ref{lst:espconnectwifi}) schaltet das WLAN-Modul in den Modus "Station" um, was die Verbindung mit anderen WLAN-Netzwerken erlaubt. Danach wird es versucht mit dem WLAN mit übergebenen Zugangsdaten zu verbinden. In der Variable \texttt{wifi\_repeat} ist die Anzahl der Versuche zur Erstellung der Verbindung gespeichert. Jede Sekunde wird den Status der Verbindung überprüft. Wenn die Verbindung erfolgreich erstellt wurde, gibt die Funktion \texttt{True} aus. 
-  \par Nach erfolgreicher Verbindung mit dem WLAN, wird die Funktion \texttt{connect\_mqtt} (Listing \ref{lst:espconnectmqtt}) aufgerufen. Zunächst wird die Funktion \texttt{set\_topics} aufgerufen, die die Topics zum Senden und Empfangen der Nachrichten erstellt. Dabei werden die Topics mit \texttt{DEVICE\_ID} für jedes Gerät individuell formuliert. Der \texttt{mqttClient} ist ein Objekt der Klasse \texttt{PubSubClient}. Die Funktion \texttt{setServer()} erhält als Parameter die IP-Adresse des MQTT-Brokers sowie den Port, auf dem der Broker lauscht. Diese Parameter sind als Konstanten definiert. Die Callback-Funktion wird beim Empfang einer MQTT-Nachricht ausgeführt und ist für jedes Modul unterschiedlich aufgebaut. Anschließend verbindet sich das Modul mit dem MQTT-Broker und abonniert das \texttt{SUBSCRIBE\_TOPIC}.
-  \par Falls die aus dem EEPROM ausgelesenen Daten ungültig sind oder keine erfolgreiche WLAN-Verbindung aufgebaut werden kann, wird die Funktion setup\_ap() (Listing \ref{lst:esp8266setupap}) aufgerufen. Diese Funktion versetzt das WLAN-Modul in den Modus „Access Point“ und stellt einen Webserver bereit. Die Konfiguration des Access Points erfolgt über die Befehle WiFi.softAP() und WiFi.softAPConfig(), wobei die Parameter des Access Points in Listing \ref{lst:esp8266defap} definiert sind. 
-  \par Der Webserver wird durch das Objekt \texttt{server} der Klasse \texttt{AsyncWebServer} zur Verfügung gestellt. Der Webserver wird mit dem Befehl \texttt{server.begin()} gestartet. Die HTTP-Route wird innerhalb der Funktion server.on() festgelegt. Beim Aufruf der Root-Route ("/") wird eine HTTP-GET-Anfrage bearbeitet, die mit einer HTML-Seite beantwortet wird. Diese Seite, deren Inhalt in der Variablen \texttt{html\_page} (Listing \ref{lst:esp8266defap}) gespeichert ist, enthält ein Formular zur Eingabe der WLAN-Zugangsdaten.
-  \par Wenn der Benutzer auf die Taste „Submit“ drückt, wird eine HTTP-POST-Anfrage an den Server gesendet. Die Zugangsdaten werden aus dem request-Objekt ausgelesen und auf ihre maximale Länge überprüft. Wenn die Daten gültig sind, werden sie im EEPROM gespeichert. Der EEPROM wird initialisiert, die neuen Zugangsdaten werden gespeichert, und die Änderungen mit \texttt{EEPROM.commit()} übernommen. Anschließend wird das ESP-Modul mit \texttt{ESP.restart()} neu gestartet, um die neuen WLAN-Daten zu verwenden.
-  \par Diese Setup-Konfiguration wird bei allen ESP-Modulen verwendet. Je nach Modul kann diese Funktion erweitert sein. Beispielsweise wird bei Modulen mit Display angezeigt, ob die Verbindung aufgebaut wurde.
+  \par Beim Start des ESP-Moduls wird die Setup-Funktion aufgerufen. Zunächst wird das Modul mit der Funktion \texttt{setup\_esp} entsprechn eingerichtet. Je nach Modul umfasst diese Funktion verschiedene Anfahrroutinen. Dazu gehört unter anderem die Initialisierung der seriellen oder I2C-Kommunikation, die Einrichtung der angeschlossenen Sensoren und so weiter. 
+  \par Anschließend werden mit der Funktion \texttt{connect\_wifi\_mqtt} (Listing \ref{lst:espconnwifimqtt}) die WLAN- und MQTT-Verbidnungen aufgebaut. Zunächst wird versucht die WLAN-Daten aus dem EEPROM zu laden. Das EEPROM wird mit einer Größe von 128 Byte initialisiert. Dies ist notwendig, bevor Daten aus dem Speicher gelesen werden können. Es werden zwei Felder vom Typ \texttt{char} mit vordefinierten maximalen Längen zum Speichern der Daten aus dem EEPROM erstellt (Zeile 5-6). Der Name des WLAN-Netzes (SSID) wird ab Adresse 0 bis 31 des EEPROM ausgelesen und mit der Funktion \texttt{EEPROM.get(0, eeprom\_ssid)} im Char-Feld \texttt{eeprom\_ssid} gespeichert. Das Passwort wird ab Adresse 32 aus dem EEPROM ausgelesen und im Char-Feld \texttt{eeprom\_password} gespeichert.
+  \par Anschließend wird mit der Boolean-Funktion \texttt{is\_valid\_string()} geprüft, ob die aus dem EEPROM abgelesenen Daten gültig sind. Die Funktion gibt den Wert \texttt{False} zurück, wenn ein Standard-EEPROM-Zeichen mit dem Wert \texttt{0xFF} gefunden wurde. Dies bedeutet, dass EEPROM noch leer ist und die WLAN-Daten noch gespeichert werden müssen.
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnwifimqtt}, caption={ESP: connect\_wifi\_mqtt()}]
+    void connect_wifi_mqtt()
+    {
+      EEPROM.begin(128);
+      char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+      char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+      EEPROM.get(0, eeprom_ssid);
+      EEPROM.get(32, eeprom_password);
+      EEPROM.end();
+      // Daten gefunden
+      if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
+      {
+        // verbinden mit WLAN
+        if (wifi_connect(eeprom_ssid, eeprom_password)) 
+        {
+          i2cScan.begin(SDA2, SCL2, 400000);
+          mqtt_connect();
+        }
+        else // die WLAN-Verbindung is schiefgelaufen
+        { setup_ap(); }
+      }
+      else // keine WLAN-Daten gefunden
+      { setup_ap(); }
+    
+    }
+  \end{lstlisting}
+  
+  \par Sind die gültigen Werte im EEPROM gespeichert, versucht das Modul, sich mit diesen Zugangsdaten mit dem WLAN zu verbinden (Zeile 13). Die Funktion \texttt{connect\_wifi} schaltet das WLAN-Modul in den Modus "Station" um, was die Verbindung mit anderen WLAN-Netzwerken erlaubt. Danach wird es versucht mit dem WLAN mit übergebenen Zugangsdaten zu verbinden. In der Variable \texttt{wifi\_repeat} ist die Anzahl der Versuche zur Erstellung der Verbindung gespeichert. Jede Sekunde wird den Status der Verbindung überprüft. Wenn die Verbindung erfolgreich erstellt wurde, gibt die Funktion \texttt{True} aus.
+  \par Falls die aus dem EEPROM ausgelesenen Daten ungültig sind oder keine erfolgreiche WLAN-Verbindung aufgebaut werden kann, wird die Funktion setup\_ap() (Listing \ref{lst:espsetupap}) aufgerufen. Diese Funktion stellt einen Webserver bereit. Das WLAN-Modul wird in den Modus „Access Point“ versetzt. Die Konfiguration des WLAN-Zugangspunktes erfolgt über die Befehle WiFi.softAP() und WiFi.softAPConfig(), wobei die Parameter des Access Points in Listing \ref{lst:espdefap} definiert sind.   
+  \par Der Webserver wird durch das Objekt \texttt{server} der Klasse \texttt{AsyncWebServer} zur Verfügung gestellt und mit dem Befehl \texttt{server.begin()} gestartet.
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espdefap}, caption={ESP: Access Point}]
+    // Name des Netzwerks, entspricht DEVICE_ID
+    const char AP_SSID[] = DEVICE_ID;
+    // Passwort = setup + DEVICE_ID
+    const char AP_PASSWORD[] = "setupesp32";
+    // Gleich fuer alle ESP-Module
+    IPAddress ap_ip(10, 0, 0, 1);
+    IPAddress ap_gateway(10, 0, 0, 1);
+    IPAddress ap_subnet(255, 255, 255, 0);
+    AsyncWebServer server(80);
+  \end{lstlisting}
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espsetupap}, caption={ESP: setup\_ap}]
+    void setup_ap()
+    {
+      WiFi.mode(WIFI_AP);
+      WiFi.softAP(AP_SSID, AP_PASSWORD);
+      WiFi.softAPConfig(ap_ip, ap_gateway, ap_subnet);
+      server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+        { request->send(200, "text/html", html_page); });
+    
+      server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request)
+        {
+          // GET Daten aus Input
+          String ssid = request->getParam("ssid", true)->value();
+          String password = request->getParam("password", true)->value();
+          if (ssid.length() > MAX_SSID_LENGTH - 1 || password.length() > MAX_PASSWORD_LENGTH - 1)
+          {
+            ap_on = false;
+            return;
+          }
+          // String in char[]
+          char new_ssid[MAX_SSID_LENGTH] = {0};
+          strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
+          char new_password[MAX_PASSWORD_LENGTH] = {0};
+          strncpy(new_password, password.c_str(), MAX_PASSWORD_LENGTH - 1);
 
+          // in EEPROM speichern
+          EEPROM.begin(128);          
+          EEPROM.put(0, new_ssid);
+          EEPROM.put(32, new_password);
+          EEPROM.commit();
+          EEPROM.end();
+
+          request->send(200, "text/html", "WiFi saved. Rebooting...");
+          delay(1000);
+          ESP.restart(); });
+      ap_on = true;
+      server.begin();
+    }
+  \end{lstlisting}
+  \par Die HTTP-Routen werden innerhalb der Funktion \texttt{server.on()} festgelegt. Beim Aufruf der Root-Route ("/") wird eine HTTP-GET-Anfrage bearbeitet, die mit einer HTML-Seite beantwortet wird. Diese Seite enthält ein Formular mit Input-Felder zur Eingabe der WLAN-Zugangsdaten. Der Benutzer soll der Name des Netzwerks und das Passwort eingeben.
+  \par Wenn der Benutzer auf die Taste „Submit“ drückt, wird eine HTTP-POST-Anfrage an die Route „\texttt{/save}“ gesendet. Die Zugangsdaten werden aus dem request-Objekt ausgelesen und auf ihre maximale Länge überprüft. Wenn die Daten gültig sind, werden sie im EEPROM gespeichert. Der EEPROM wird initialisiert, die neuen Zugangsdaten werden gespeichert, und die Änderungen mit \texttt{EEPROM.commit()} übernommen. Anschließend wird das ESP-Modul mit \texttt{ESP.restart()} neu gestartet, um die neuen WLAN-Daten zu verwenden.
+  \par Nach erfolgreicher Verbindung mit dem WLAN, wird die Funktion \texttt{mqtt\_connect()} (Listing \ref{lst:espconnectmqtt}) aufgerufen, um die Verbindung zum MQTT-Broker zu erstellen. Zunächst werden die Topics zum Senden und Empfangen der Nachrichten mit der Funktion \texttt{set\_topics} erstellt. Dabei werden die Topics mit \texttt{Geräte-ID} für jedes Modul individuell formuliert.
+  \par Der \texttt{mqttClient} ist ein Objekt der Klasse \texttt{PubSubClient}. Die Funktion \texttt{setServer()} erhält als Parameter die IP-Adresse des MQTT-Brokers sowie den Port, auf dem der Broker lauscht. Diese Parameter sind als Konstanten im Programmcode definiert.  Die Funktion \texttt{callback} wird beim Empfang einer MQTT-Nachricht ausgeführt. Anschließend verbindet sich das Modul mit dem MQTT-Broker und abonniert das \texttt{SUBSCRIBE\_TOPIC}.
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnectmqtt}, caption={ESP: mqtt\_connect}]
+    void mqtt_connect()
+    {
+      set_topics();
+      mqttClient.setServer(WiFi.gatewayIP(), MQTT_PORT);
+      mqttClient.setCallback(callback);
+      // Verbinden mit dem MQTT-Broker
+      if (mqttClient.connect(DEVICE_ID))
+      {
+        mqttClient.subscribe(SUBSCRIBE_TOPIC);
+        Serial.println("MQTT CONNECTED");
+      }
+      else {delay(1000);}
+    }
+  \end{lstlisting}
+  \par Die Funktion \texttt{callback} wird beim Empfang einer MQTT-Nachricht ausgeführt. In dieser Funktion sind die Reaktionen auf den erhaltenen Nachriten aus dem Topic „\texttt{command/ID}“ festgelegt.  Abhängig vom Gerät kann diese Funktion angepasst und erweitert werden. 
+  \par Der Text der empfangenen MQTT-Nachricht wird als \texttt{payload} an die Funktion übergeben und zunächst im \texttt{String message} gespeichert. Dieser enthält die auszuführenden Befehle, die je nach Gerät unterschiedlich interpretiert werden können. Jedes Gerät muss jedoch auf das Kommando „\texttt{handshake}“ reagieren.
+  \par Wenn eine Handshake-Nachricht empfangen wurde, muss das Gerät mit seinen Konfiguration antworten (Listing \ref{lst:espcallback}). Zunächst werden zwei Arrays definiert: eines für die relevanten Datenfelder und eines für die möglichen Befehle. Im Array „\texttt{data\_fields}“ sind die Schlüssel gelistet, die das Modul in das Topic \texttt{data/ID} sendet. Im Array „\texttt{commands}“ sind die Befehle gelistet, die das Modul ausführen kann. Je nach Modul variiert der Inhalt. Diese Arrays werden in einem JSON-Dokument strukturiert, wobei die Datenfelder und Befehle jeweils als separate Arrays innerhalb des Dokuments abgelegt werden:
+  \begin{Verbatim}[frame=single]
+    {
+      "data_fields": [ "temperature", "humidity"],
+      "commands": [ "light_turn_on", "light_turn_off"]
+    }    
+  \end{Verbatim}
+  \par Anschließend wird das JSON-Dokument serialisiert und in eine Zeichenkette umgewandelt. Diese serialisierte Nachricht wird dann über die MQTT-Verbindung an das Topic „\texttt{handshake/ID}“ gesendet.
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espcallback}, caption={ESP: mqtt\_connect}]
+  void callback(char *topic, byte *payload, unsigned int length)
+  {
+    if (message == "handshake")
+    {
+      const char *data_fields[] = {"temperature", "humidity"};
+      const char *commands[] = {"light_turn_on", "light_turn_off"};
+      
+      char json[128];
+      JsonDocument data;
+      JsonArray json_df = data.createNestedArray("data_fields");
+      JsonArray json_commands = data.createNestedArray("commands");
+  
+      for (const char* df: data_fields){ json_df.add(df); }
+      for (const char* a: commands){ json_actions.add(a); }
+  
+      serializeJson(data, json, sizeof(json));
+      mqttClient.publish(HANDSHAKE_TOPIC, json);
+    }
+  }
+  \end{lstlisting}
+  \par Diese Setup-Konfiguration wird bei allen ESP-Modulen verwendet. Je nach Modul wird diese Funktion erweitert sein. Beispielsweise wird bei Modulen mit Display angezeigt, ob die Verbindung aufgebaut wurde.
   \subsubsection{ESP8266}
   \par Der ESP8266 wird für die Verbindung des Arduinos mit dem WLAN verwendet. Zu seinem Aufgaben gehört das Senden und Empfangen der MQTT-Nachrichten in entsprechenden Topics. Wie in meinem Bericht zur Projektarbeit 2 \cite{pa2} Kapitel 4.1 beschrieben, ist der ESP8266 über eine UART-Schnittstelle mit dem Arduino verbunden.
   \par Beim Start des Moduls wird die Funktion \texttt{setup()} (Listing \ref{lst:esp8266setup}) ausgeführt. Zusätzlich läuchtet der blaue LED während der Einrichtung des Moduls. Der Diode läuchtet, wenn es keine Spannung auf dem GPIO 1 fällt.
@@ -349,7 +655,7 @@
   Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
 \end{lstlisting}
 
-\par Beim Start des Moduls wird die Funktion \texttt{setup()} aufgerufen. Zusätzlich zu der im Listing \ref{lst:esp8266setup} duchgeführte Einrichtungen müssen noch die beiden Sensoren eingerichted und im Betriebszustand gebracht werden. Dacher werden im Setup die Funktionen \texttt{vcnl\_setup()} und \texttt{bme\_setup()} für die Einrichtung der Sensoren aufgerufen.
+\par Beim Start des Moduls wird die Funktion \texttt{setup()} aufgerufen. Zusätzlich zu der im Listing \ref{lst:espsetup} duchgeführte Einrichtungen müssen noch die beiden Sensoren eingerichtet und im Betriebszustand gebracht werden. Dacher werden im Setup die Funktionen \texttt{vcnl\_setup()} und \texttt{bme\_setup()} für die Einrichtung der Sensoren aufgerufen.
 
 \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5vcnlsetup}, caption={M5Stick: vcnl\_setup}]
 
@@ -357,7 +663,7 @@
 
 \subsubsection{ESP32}
 \newpage
-\subsection{Softwareentwicklung}
+\section{Softwareentwicklung}
 \par In diesem Abschnitt wird die Aufbau und Entwicklung der Software für das System beschrieben. Für die Entwicklung wurden Programmiersprachen Python und JavaScript mit mehreren Bibliotheken sowie die Markierungssprache HTML und CSS für die Visualisierung der Webseite verwendet.
 \par Das Programm läuft auf dem Raspberry Pi. Der Programmcode ist in dem Projektordner unter \texttt{bachelor/code/spa} zu finden. Das Programm ist modular aufgebaut, wobei jedes Paket (Package) in einem eigenen Unterordner organisiert ist und eine spezifische Aufgabe erfüllt. Die Struktur des Programms sieht wie folgt aus:
 \begin{Verbatim}[frame=single]
@@ -385,7 +691,7 @@
 \begin{Verbatim}[frame=single]
   pip install -r requirements.txt
 \end{Verbatim}
-  \subsubsection{Datenbank}
+  \subsection{Datenbank}
   \paragraph{Struktur der Datenbank}
   \par \textbf{}
   \par Die Datenbank für dieses Projekt wurde mit SQLAlchemy implementiert. Ziel war es, eine relationale Datenbank zu erstellen, die modular und flexibel aufgebaut ist, sowie die Möglichkeit bietet die Datenbankoperationen ohne direkten SQL-Abfragen durchzufüchren.
@@ -421,32 +727,46 @@
                         \begin{itemize}
                           \item \textit{\textbf{primary\_key:}} Ein Primärschlüssel vom Typ Integer, der automatisch inkrementiert wird.
                           \item \textit{\textbf{name:}} Der vom Benutzer erstellte Name des Hauses.
-                          \item \textit{\textbf{user\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle user verweist, um anzugeben, welchem Benutzer das Haus gehört.
+                          \item \textit{\textbf{user\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle \texttt{user} verweist, um anzugeben, welchem Benutzer das Haus gehört.
                         \end{itemize}
                         Ein Haus gehört zu einem bestimmten Benutzer. Ein Haus kann mehrere Räume enthalten.
     \item \textbf{room} --- Speichert die vom Benutzer erstellten Räume. 
                         \begin{itemize}
                           \item \textit{\textbf{primary\_key:}} Ein Primärschlüssel vom Typ Integer, der automatisch inkrementiert wird.
                           \item \textit{\textbf{name:}} Der vom Benutzer erstellte Name des Raums.
-                          \item \textit{\textbf{house\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle house verweist.
+                          \item \textit{\textbf{house\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle \texttt{house} verweist.
                         \end{itemize}
                         \par Ein Raum gehört immer zu einem bestimmten Haus. Ein Raum kann mehrere Geräte enthalten.
-    \item \textbf{devices} --- Speichert die vom Benutzer angemeldeten Geräte. 
+    \item \textbf{device} --- Speichert die vom Benutzer angemeldeten Geräte. 
                         \begin{itemize}
                           \item \textit{\textbf{primary\_key:}} Ein Primärschlüssel vom Typ Integer, der automatisch inkrementiert wird.
                           \item \textit{\textbf{dev\_id:}} Die eindeutige, vordefinierte ID des Geräts. 
                           \item \textit{\textbf{name:}} Der vom Benutzer erstellte Name des Geräts.
-                          \item \textit{\textbf{user\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle user verweist und angibt, welchem Benutzer das Gerät gehört.
+                          \item \textit{\textbf{user\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle \texttt{user} verweist und angibt, welchem Benutzer das Gerät gehört.
                           \item \textit{\textbf{description:}} Eine optionale Beschreibung des Geräts.
-                          \item \textit{\textbf{dev\_type:}} Einer von drei Gerätetypen: Lichtsensor, Temperatur-\& Luftfeuchtigkeitssensor oder Alarmsystem. Dient ausschließlich zur Anzeige von Informationen im Frontend.
+                          \item \textit{\textbf{data\_fields:}} Die Datenfelder, die vom Gerät geliefert und dem Benutzer zur Verfügung gestellt werden. Werden im CSV-Format gespeichert, getrennt durch „,“.
+                          \item \textit{\textbf{commands:}} Die Befehle, die das Gerät ausführen kann. Werden im CSV-Format gespeichert, getrennt durch „,“.
                         \end{itemize}
                         Ein Gerät gehört genau einem Benutzer und einem Raum. Ein anderes Gerät mit derselben Geräte-ID kann jedoch von einem anderen Benutzer angemeldet und einem anderen Raum zugeordnet werden.
     \item \textbf{roomdevice} --- Speichert die Zuordnung der Geräte zu den Räumen. 
                         \begin{itemize}
                           \item \textit{\textbf{primary\_key:}} Ein Primärschlüssel vom Typ Integer, der automatisch inkrementiert wird.
-                          \item \textit{\textbf{room\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle room verweist.
+                          \item \textit{\textbf{room\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle \texttt{room} verweist.
                           \item \textit{\textbf{device\_primary:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle device verweist.
                         \end{itemize}
+    \item \textit{\textbf{scenario:}} --- Speichert die vom Benutzer erstellten Szenarien.
+                        \begin{itemize}
+                          \item \textit{\textbf{primary\_key:}} Ein Primärschlüssel vom Typ Integer, der automatisch inkrementiert wird.
+                          \item \textit{\textbf{user\_id:}} Ein Fremdschlüssel, der auf den Primärschlüssel der Tabelle \texttt{user} verweist.
+                          \item \textit{\textbf{name:}} Der vom Benutzer erstellte Name des Szenarios
+                          \item \textit{\textbf{source\_dev:}} Gerät, das das Szenario auslöst. Ein Fremdschlüssel, der auf der Spalte \texttt{dev\_id} der Tabelle \texttt{device} verweist.
+                          \item \textit{\textbf{data\_field:}} Datenfeld des Quellgeräts.
+                          \item \textit{\textbf{condition:}} Bedingung für das Auslösen der Szenario. Mögliche Werte sind „\texttt{>}“, „\texttt{>}“  und „==“, die die Bedingungen „größer als“, „kleiner als“ und „gleich“ repräsentieren.
+                          \item \textit{\textbf{value:}} Der Wert des Datenfeldes. 
+                          \item \textit{\textbf{target\_dev:}} Zielgerät, der ein Befehl beim Auslösen des Szenarios ausführt.
+                          \item \textit{\textbf{command:}} Der Befehl, der das Zielgerät ausführt.
+                        \end{itemize}
+                        Ein Benutzer kann mehrere Szenarios erstellen. 
   \end{itemize}
   \paragraph{Aufbau mit SQLAlchemy}
   \par \textbf{}
@@ -474,7 +794,7 @@
   \par \textbf{}
   \par Beim Import des Moduls \texttt{db} wird die Klasse \texttt{\_\_init\_\_} (Listing \ref{lst:dbinit}) aufgerufen. In dieser Klasse wird zunächst der Logger initialisiert. Anschließend wird eine asynchrone Engine \texttt{async\_engine} für die Verbindung zur Datenbank erzeugt. Mit dem Parameter \texttt{async\_engine} wird das Objekt \texttt{async\_session} der Klasse \texttt{Sessionmaker} erzeugt. Die Funktion \texttt{create\_tables()} initialisiert alle Tabellen in den Klassenmodellen, die von der Klasse \texttt{Base} erben. Die Funktion \texttt{get\_session()} gibt eine asynchrone Session aus der \texttt{async\_session} zurück. Mit dieser Session wird dann auf die Datenbank zugegriffen. 
 % 
-  \subsubsection{Webbasierte Schnittstelle (API)} 
+  \subsection{Webbasierte Schnittstelle (API)} 
   \par Um die Benutzerinteraktionen mit dem System zu ermöglichen, muss eine Schnittstelle gebaut werden. Diese Schnittstelle muss den gesicherten Zugriff zu dem System bieten, die notwendigen Informationen bereitstellen, auf die Benutzerinteraktionen reagieren und die Daten verwalten. Nach sorgfältiger Abwägung verschiedener Optionen habe ich mich für die Implementierung einer webbasierten Schnittstelle auf Basis von \texttt{FastAPI} entschieden.
   \par Ein entscheidender Vorteil von \texttt{FastAPI} gegenüber anderen Frameworks wie \texttt{Flask} oder \texttt{Django} in diesem Projekt ist die native Unterstützung asynchroner Programmierung. Dadurch kann \texttt{FastAPI} Anfragen effizient bearbeiten, indem sie mehrere Tasks gleichzeitig ausführt, anstatt blockierend auf das Ende einzelner Prozesse zu warten. Dies ist für mein System besonders vorteilhaft, da mehrere Benutzerinteraktionen, Datenverarbeitung und auch MQTT-Kommunikation parallel ablaufen müssen. Darüber hinaus bietet \texttt{FastAPI} automaisch generierte Dokumentation für die API.
   \par Die zentrale Idee hinter der Entwicklung der API besteht darin, dem Benutzer eine effiziente und sichere Möglichkeit zu bieten, IoT-Geräte in einer strukturierten Umgebung zu verwalten. Dies umfasst das Hinzufügen neuer Geräte, die Gruppierung dieser Geräte in Räumen sowie die Verwaltung mehrerer Räume innerhalb eines Hauses. Darüber hinaus ermöglicht die API die kontinuierliche Überwachung und Steuerung der hinzugefügten Geräte.
@@ -503,8 +823,8 @@
   \par Um auf Anfragen mit HTML-Dateien zu antworten, wird ein \texttt{Jinja2Templates}-Objekt erstellt. Dabei wird der Pfad zum Ordner \texttt{templates/} angegeben, der die HTML-Vorlagen enthält. Dieses Objekt ermöglicht es, dynamische HTML-Antworten zu generieren, indem Daten aus den Endpunkten in die Vorlagen eingebunden werden.
   \par Jede Funktion, die auf die Datenbank zugreift, benötigt als Parameter eine Instanz der Klasse \texttt{AsyncSession}. Im Modul \texttt{routes.py} wird dazu die Funktion \texttt{get\_session()} aus dem Paket \texttt{db} verwendet, die für die Erstellung der Datenbanksitzungen zuständig ist. Durch die Verwendung des Abhängigkeitsmechanismus \texttt{Depends(get\_session)} wird bei jedem Aufruf einer Router-Funktion automatisch eine neue Datenbanksitzung erzeugt und an die entsprechenden Unterfunktionen weitergegeben. Dies ermöglicht eine effiziente und asynchrone Kommunikation mit der Datenbank, wodurch mehrere Anfragen gleichzeitig ohne blockierende Wartezeiten bearbeitet werden können.
   \par Durch die Verwendung von FastAPI-Routern und einer klar strukturierten Modulanordnung bleibt die API übersichtlich, leicht wartbar und erweiterbar. Die Trennung von Präsentationslogik (HTML, CSS) und Daten (API) wird ebenfalls gewährleistet.
-  \paragraph{Sicherheit}
-  \par \textbf{}
+  \subsubsection{Sicherheit}
+  % \par \textbf{}
   \par Sicherheit spielt bei diesem System eine wichtige Rolle. Für die API gibt es zwei kritische Sicherheitspunkte: die Übertragung sensibler Daten und die Authentifizierung der Benutzer.
   \par Um sensible Daten, wie Passwörter, sicher zu speichern, wird der Algorithmus \texttt{bcrypt} verwendet. Anstatt Passwörter im Klartext zu speichern, wird bei der Registrierung eines Benutzers das Passwort gehasht. Der Hash wird in der Datenbank gespeichert, nicht das Passwort selbst. Bei der Anmeldung wird das eingegebene Passwort mit dem gespeicherten Hash verglichen, ohne dass das Originalpasswort jemals entschlüsselt wird. Dadurch sind die Benutzerdaten auch dann geschützt, wenn die Datenbank kompromittiert wird.
   \par Zur Authentifizierung und Identifizierung des Benutzers nach erfolgreicher Anmeldung wird das JWT-Verfahren\footnote {JSON Web Token} verwendet. Die Funktion \texttt{services.create\_jwt\_token()} generiert ein JWT-Token, das an den Benutzer zurückgegeben wird. Dieses Token enthält die Benutzer-ID in verschlüsselter Form, besitzt eine in der Konfiguration definierte Ablaufzeit (\texttt{Config.JWT\_EXPIRE\_TIME}) und wird mit einem geheimen Schlüssel (\texttt{Config.JWT\_SECRET\_KEY}) signiert.
@@ -520,7 +840,7 @@
   \paragraph{Anmeldung}
   \par \textbf{}
   \par Damit ein Benutzer die Funktionen der API nutzen kann, muss zunächst ein Konto erstellt werden. Dies erfolgt durch Senden eines \texttt{POST}-Requests an die Route \texttt{/sign\_up}. Der Request muss die erforderlichen Parameter \texttt{username}, \texttt{email} und \texttt{password} enthalten. Nach Erhalt der Anfrage wird die Funktion \texttt{signup\_post()} aufgerufen, die die eingegebenen Daten verarbeitet und die Benutzerregistrierung durchführt.
-  \par Die Registrierungsdaten werden als \texttt{SignUpModel}-Objekt entgegengenommen und an die Funktion \texttt{services.signup\_user()} weitergeleitet. Diese Funktion übernimmt die Validierung der Eingaben, indem sie prüft, ob alle erforderlichen Felder ausgefüllt wurden. Wenn ein Wert fehlt, wird die entsprechende Fehlermeldung geloggt und zurückgegeben. Sind alle Daten vollständig, wird der Benutzer mit der Funktion \texttt{queries.add\_user()} in der Datenbank gespeichert. 
+  \par Die Registrierungsdaten werden als \texttt{SignUpModel}-Objekt entgegengenommen und an die Funktion \texttt{services.signup\_user()} weitergeleitet. Diese Funktion übernimmt die Validierung der Eingaben, indem sie prüft, ob alle erforderlichen Felder ausgefüllt wurden. Wenn ein Wert fehlt, wird die entsprechende Fehlermeldung geloggt und zurückgegeben. Sind alle Daten vollständig, wird der Benutzer mit der Funktion \texttt{queries.add\_user()} in der Datenbank gespeichert. Diese Funktion gibt ein Fehler zurück, wenn der Benutzername oder die Email schon in der Datenbank gespeichert sind.
   \par Nach erfolgreicher Speicherung wird ein JWT-Token generiert und zurückgegeben, das die Benutzer-ID enthält. Mit diesem Token kann der Benutzer direkt angemeldet werden. Tritt während des Prozesses eine Exception auf, so wird diese geloggt und eine entsprechende Fehlermeldung ausgegeben.
   \paragraph{Einloggen}
   \par Um einem bereits registrierten Benutzer den Zugriff auf die API zu ermöglichen, ist eine Authentifizierung erforderlich. Diese erfolgt durch das Senden eines \texttt{POST}-Requests an die Route \texttt{/login}. Der Request muss die Parameter \texttt{username} und \texttt{password} enthalten, die im \texttt{user\_data}-Objekt übergeben werden. Nach Erhalt der Anfrage wird die Funktion \texttt{login\_post()} aufgerufen, die die Authentifizierung des Benutzers vornimmt.
@@ -528,6 +848,7 @@
   \par Wenn der Benutzer existiert, wird das eingegebene Passwort mit der gespeicherten verschlüsselten Version verglichen. Ist die Prüfung erfolgreich, gibt die Funktion den Primärschlüssel zurück. Andernfalls wird die Fehlermeldung „Wrong password“ zurückgegeben.
   \par Nach erfolgreicher Authentifizierung wird in der Funktion \texttt{loin\_post()} ein JWT-Token erzeugt und zurückgegeben, das die Benutzerkennung enthält. Tritt während des Prozesses eine Exception auf, wird diese protokolliert und eine entsprechende Fehlermeldung ausgegeben.
   \par Nach dem erfolgreichen Eingloggen und Erhalt des Tokens, kann der Benutzer zu den Funktionen der API zugreifen. 
+  \subsubsection{Aufbau}
   \paragraph{Haus und Raum}
   \par \textbf{}
   \par Der Benutzer kann seine Geräte nach Räumen und die Räume nach Häusern gruppieren. Dies erleichtert die Verwaltung und Überwachung der Geräte. Besonders im Frontend ist dies sehr nützlich, da es eine klare Strukturierung des Hauses geschaffen wird. Dabei kann ein Benutzer mehrere Häuser besitzen.
@@ -549,8 +870,8 @@
   \par Zusätzlich hat der Benutzer die Möglichkeit, das Gerät direkt einem bestimmten Raum innerhalb des Hauses zuzuordnen. Dazu muss im Body des Requests die entsprechende Raum-ID angegeben werden. Die Funktion \texttt{services.add\_new\_device} sucht in diesem Fall, mit dem Befehl \texttt{queries.get\_house\_by\_room} nach dem entsprechenden Haus. Anschließend wird geprüft, ob die aus dem Token extrahierte Benutzer-ID mit der des Hauseigentümers übereinstimmt. Ist dies nicht der Fall, wird der Zugriff verweigert, der Vorgang abgebrochen und eine entsprechende Fehlermeldung zurückgegeben.
   \par Anschließend wird mit dem Befehl \texttt{queries.add\_new\_device} das Gerät zunächst ohne direkte Raumzuordnung in der Datenbank gespeichert. Ist eine Raum-ID vorhanden, wird mit dem Befehl \texttt{queries.add\_room\_device} ein Eintrag in der Tabelle \texttt{roomdevice} erzeugt, der den Primärschlüssel des Gerätes mit der Raum-ID verknüpft.
   \par Diese strukturierte Vorgehensweise gewährleistet nicht nur eine sichere und konsistente Registrierung neuer Geräte, sondern bietet dem Benutzer auch die Möglichkeit, seine Smart-Home-Geräte flexibel zu verwalten und eindeutig zu identifizieren.
-  \paragraph{MQTT-Client}
-  \par \textbf{}
+  \subsection{MQTT-Client}
+  % \par \textbf{}
   \par Die Geräte senden kontinuierlich ihre Daten über die MQTT-Verbindung an den MQTT-Broker. Jedes Gerät nutzt sein separates Topic, das sich auf die Geräte-ID bezieht. Um die Daten eines bestimmten Geräts zu empfangen, muss ein MQTT-Client das entsprechende Topic abonnieren.
   \par Der MQTT-Client für den Webserver ist im Paket \texttt{mqtt} enthalten. In der Datei \texttt{client.py} ist die Klasse \texttt{MQTTClient} implementiert, die eine asynchrone Schnittstelle zur Verarbeitung von MQTT-Nachrichten bereitstellt. 
   \par Die Implementierung basiert auf der Bibliothek \texttt{aiomqtt}. Durch die asynchrone Architektur kann der Client effizient auf die eingehenden MQTT-Nachrichten reagieren, ohne blockierende Operationen auszuführen.
@@ -558,8 +879,8 @@
   \par Innerhalb der asynchronen Schleife wird zunächst mit dem Befehl \texttt{async with aiomqtt.Client(...)} die Verbindung zu dem MQTT-Broker aufgebaut. Anschließend werden die übergebenen Topics abonniert. Danach empfängt der Client die MQTT-Nachrichten asynchron über die async for-Schleife, die auf client.messages lauscht. Jede eingehende Nachricht wird an die Funktion \texttt{process\_message()} weitergeleitet, die für die weitere Verarbeitung verantwortlich ist.
   \par Die Funktion \texttt{process\_message()} extrahiert zunächst die Geräte-ID aus dem Topic. Anschließend wird der Payload der Nachricht dekodiert und in ein JSON-Objekt data umgewandelt. Diese Daten werden dann über WebSockets an den Webserver weitergeleitet. Dazu wird die Klasse WebsocketHandler aus der Datei \texttt{services.py} importiert, und die Daten werden an die Funktion \texttt{send\_data()} dieser Klasse übergeben.
   \par Durch diese Architektur kann der Webserver in Echtzeit auf neue MQTT-Nachrichten reagieren und die empfangenen Daten effizient an verbundene Clients weiterleiten.
-  \paragraph{WebSocket}
-  \par \textbf{}
+  \subsection{WebSocket}
+  % \par \textbf{}
   \par Die Geräte senden kontinuierlich Daten über die MQTT-Verbindung an den MQTT-Broker. Diese Daten müssen verarbeitet und dem Benutzer in Echtzeit angezeigt werden. Zu diesem Zweck wird eine WebSocket-Schnittstelle bereitgestellt, die eine direkte und effiziente bidirektionale Kommunikation ermöglicht.
   \par Die Route \texttt{mqtt/device/<device\_id>} stellt eine WebSocket-Verbindung zur Verfügung, wobei \texttt{device\_id} für die eindeutige Geräte-ID steht. Die Klasse \texttt{WebsocketHandler} in der Datei \texttt{services.py} verwaltet sämtliche WebSocket-Verbindungen und deren Lebenszyklus. Das Feldattribut \texttt{active\_connections} speichert alle aktiven WebSocket-Verbindungen in Form einer „List of Dictionaries“, wobei jedes Dictionary eine bestehende Verbindung mit der zugehörigen \texttt{device\_id} sowie dem WebSocket-Objekt enthält.
   \par Die Autorisierung des Benutzers, der eine Verbindung zum WebSocket aufbauen möchte, erfolgt über die Funktion \texttt{auth\_websocket()}. Diese akzeptiert zunächst die WebSocket-Verbindung und wartet asynchron auf die erste Nachricht. Die erste Nachricht, die an dem WebSocket gesendet wird, dient als Initialisierungsnachricht und muss ein Token erhalten, das ähnlich wie ein HTTP-Header aufgebaut ist:
@@ -569,16 +890,123 @@
   \par Aus dem übergebenen Token wird die Benutzer-ID extrahiert. Anschließend wird mit dem Befehl \texttt{queries.verify\_user\_device(...)} geprüft, ob der authentifizierte Benutzer berechtigt ist, auf das angegebene Gerät zuzugreifen. Fehlt das Token oder besitzt der Benutzer keine Zugriffsrechte auf das Gerät, wird eine entsprechende Fehlermeldung ausgegeben und geloggt.
   \par Nach erfolgreicher Autorisierung des Benutzers wird die Funktion \texttt{connect()} aus der Klasse \texttt{WebsocketHandler} aufgerufen. Diese fügt die neue Verbindung in die Liste von aktiven Verbindungen hinzu. Die Verbindung bleibt bestehen, bis sie entweder vom Benutzer geschlossen oder durch einen Netzwerkfehler unterbrochen wird.
   \par Die Kommunikation über das WebSocket-Protokoll erfolgt in einer Endlosschleife, die ständig auf eingehende Nachrichten wartet. Wird die Verbindung vom Benutzer oder durch andere Ereignisse unterbrochen, wird diese mit der Funktion \texttt{disconnect} aus der Liste der aktiven Verbindungen entfernt.
-  \par Die Funktion \texttt{send\_data()} ermöglicht das gezielte Senden von Daten über die WebSocket-Schnittstelle. Dabei wird geprüft, ob eine aktive WebSocket-Verbindung mit der entsprechenden \texttt{device\_id} existiert. Falls ja, werden die zu sendenden Daten als JSON-Objekt über die WebSocket-Schnittstelle an das Gerät übertragen. Tritt ein Übertragungsfehler auf, wird die Verbindung geschlossen und aus der Liste der aktiven Verbindungen entfernt.
+  \par Die Funktion \texttt{send\_data()} ermöglicht dNas gezielte Senden von Daten über die WebSocket-Schnittstelle. Dabei wird geprüft, ob eine aktive WebSocket-Verbindung mit der entsprechenden \texttt{device\_id} existiert. Falls ja, werden die zu sendenden Daten als JSON-Objekt über die WebSocket-Schnittstelle an das Gerät übertragen. Tritt ein Übertragungsfehler auf, wird die Verbindung geschlossen und aus der Liste der aktiven Verbindungen entfernt.
   \par Die Implementierung dieser WebSocket-Schnittstelle ermöglicht eine effiziente und latenzarme Datenübertragung zwischen dem MQTT-Broker und den angebundenen Geräten.
-  \subsubsection{Frontend}
-  \par Das Frontend ist im Form einer Einseitigerapplikation (SPA\footnote{Eng. Single Page Applicaiton}) implementiert. 
-  \subsubsection{Integration der Komponenten}
-  \par MQtt client, erhalten Daten von Broker etc
+  \subsection{API-Endpunkte}
+  \par \textbf{TODO} Eine Liste von allen API-Endpunkten mit Beschreibung.
+  \subsection{Frontend}
+  \par \textbf{TODO}  Das Frontend der Webanwendung ist als Single Page Application (SPA\footnote{Eng. Single Page Applicaiton}) implementiert. Eine SPA ist eine Webanwendung, die auf einer einzigen HTML-Seite geladen wird und deren Inhalt dynamisch durch JavaScript aktualisiert wird. Dies führt zu einer verbesserten Benutzererfahrung, da der Wechsel zwischen verschiedenen Ansichten schneller erfolgt und weniger Serveranfragen notwendig sind. 
+  \par Das Frontend der Anwendung besteht aus einer HTML-Seite zur Strukturierung der Inhalte, JavaScript für die interaktive Funktionalität sowie CSS-Dateien zur Gestaltung und Formatierung. Diese Komponenten sind im Paket \texttt{Webserver} organisiert und befinden sich in den Verzeichnissen „\texttt{templates}“ und „\texttt{static}“.
+  
+  \subsubsection{JAVASCRIPT}
+  \par Die Funktionalität des Frontends wird durch ein JavaScript-Skript „\texttt{script.js}“ gesteuert. Es ist das dynamische Laden des Inhalts sowie für Benutzerinteraktion verantwortlich. 
+  \paragraph{Asynchronen Serveranfragen}
+  \par \textbf{NAME DES ABNSCHNITTS ÄNDERN}
+  \par Da sowohl das Backend als auch die Datenbank asynchron implementiert sind, müssen auch die Anfragen im Frontend asynchron verarbeitet werden. Dies wird durch die Verwendung von asynchronen HTTP-Anfragen mittels der \texttt{fetch}-API realisiert. Dadurch wird verhindert, dass die Benutzeroberfläche während der Kommunikation mit dem Server blockiert wird. Antworten des Servers werden mittels Promises verarbeitet, wodurch das Frontend flexibel auf unterschiedliche Antwortzeiten reagieren kann.
+  \par Im Listing \ref{lst:jsgetuserdata} ist die Funktion \texttt{get\_user\_data} dargestellt. Diese Funktion dient als Beispiel für die asynchrone Verarbeitung von Server-Anfragen im Frontend. Sie nutzt \texttt{async} und \texttt{await}, um eine GET-Anfrage an die Route „\texttt{/get\_user\_data}“ zu senden. Dabei wird das Token aus dem „\texttt{localStorage}“ als Bearer-Token im Authorisation-Header der Anfrage übermittelt.
+  \par Die Serverantwort wird in einem \texttt{try-catch}-Block verarbeitet, um potenzielle Fehler abzufangen und die Anwendung vor unerwarteten Abstürzen zu schützen. Falls die Antwort des Servers nicht den Status ok aufweist, wird eine Fehlermeldung generiert. Anschließend wird der zurückgegebene JSON-Inhalt geprüft. Falls ein Fehler im Antwortobjekt enthalten ist, wird dieser ebenfalls als Exception geworfen. Nur wenn die Serverantwort gültig ist und keine Fehlermeldung enthält, wird das empfangene Benutzerobjekt zurückgegeben. Im Fehlerfall wird die Funktion \texttt{errorHandler()} aufgerufen, um eine entsprechende Fehlerbehandlung vorzunehmen.
+  \begin{lstlisting}[frame=single, style=htmlcssjs, label={lst:jsgetuserdata}, caption={get\_user\_data}]
+    async function get_user_data() {
+      try {
+        const response = await fetch(
+          '/get_user_data',
+          {
+            method: 'GET',
+            headers: {
+              'auth': `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+        if (!response.ok)
+          throw new Error(response.stat);
+        else {
+          const response_data = await response.json();
+          if (response_data.error) 
+            throw new Error(response_data.error);
+          else 
+            return response_data;
+        }
+      } catch (error) {
+        errorHandler();
+      }
+  }
+  \end{lstlisting}
+  \paragraph{Benutzerinteraktion}
 
+  \subsubsection{Oberfläche}
+  \par Die Datei „\texttt{index.html}“, die sich im Verzeichnis templates befindet (Listing \ref{lst:indexhtml}), bildet die Grundlage für die Benutzeroberfläche der Anwendung. Sie wird vom Server als Antwort auf einer \texttt{GET}-Anfrage an die Rooot-Route „/“ bereitgestellt. 
+  \par Im \texttt{head}-Bereich der Datei sind der Seitentitel sowie die Verknüpfung zur CSS-Datei „\texttt{output.css}“ definiert, die das Styling der Anwendung steuert. 
+  \par Der \texttt{body}-Bereich der HTML-Datei enthält zwei zentrale \texttt{div}-Elemente: „\texttt{navbar}“ für die Navigationsleiste und „\texttt{app}“ für den dynamisch generierten Inhalt der Seite. Am Ende der Datei ist ein Verweis auf das JavaScript-Skript „\texttt{script.js}“ eingebunden. Dieses Skript übernimmt die Steuerung des Routings sowie die Interaktion mit dem Benutzer, indem es die Ansicht basierend auf dem Authentifizierungsstatus des Nutzers und geladenen Daten dynamisch aktualisiert.
+  \begin{lstlisting}[style=htmlcssjs, label={lst:indexhtml}, caption={index.html}]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baida Bachelor</title>
+  <link rel="stylesheet" href="{{url_for('static',path='/output.css')}}">
+</head>
+<body>
+  <div id="navbar"></div>
+  <div id="app" class="app content"></div>
+  <script src="../static/js/script.js"></script>
+</body>
+</html>
+  \end{lstlisting}
+  \paragraph{Anmeldung und Registrierung}
+  \par \textbf{}
+  \par Beim Laden der Seite überprüft die Anwendung, ob ein gültiges Token im \texttt{localStorage} vorhanden ist. Falls kein Token existiert oder es ungültig ist, wird der Nutzer automatisch zur Login-Seite weitergeleitet. Andernfalls wird eine Anfrage an die Route „\texttt{/get\_user\_data}“ gesendet, um die Benutzerdaten abzurufen.
+  \par Die Abbildung \ref{abb:login} zeigt die Login-Seite. Die Generierung der Seite erfolgt mit der Funktion „\texttt{renderLoginForm()}“. Dabei wird das \texttt{div}-Element „\texttt{app}“ mit einem Formular versehen, das Eingabefelder für den Benutzernamen und das Passwort enthält. Durch Drücken des Login-Buttons werden die Anmeldedaten an die Route „\texttt{/login}“ gesendet. Stimmen die übermittelten Anmeldedaten mit den hinterlegten Benutzerinformationen überein, antwortet der Server mit einem JWT-Token. Dieses Token wird im localStorage gespeichert, wodurch der Benutzer authentifiziert und angemeldet wird. Andernfalls wird eine Meldung ausgegeben, dass die Anmeldedaten ungültig sind.
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{login.png}
+    \caption{Login-Seite}
+    \label{abb:login}
+  \end{figure}
+  \par Unter dem Login-Button befindet sich ein Link zur Registrierungsseite. Ein Klick auf diesen Link ruft die Funktion \texttt{renderSignUpPage} auf, die das \texttt{div}-Element „\texttt{app}“ mit einem Formular für die Benutzerregistrierung füllt. Die Abbildung \ref{abb:signuppage} zeigt die Registrierungsseite. Das Formular enthält Eingabefelder für den Benutzernamen, die E-Mail-Adresse und das Passwort. Durch Drücken der Taste „Sign Up“ werden die Anmeldedaten an die Route „\texttt{/sign\_up}“ gesendet. Wenn die Registrierungsdaten gültig sind, antwortet die Route mit einem JWT-Token und der Benutzer ist im System angemeldet.
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{signup.png}
+    \caption{Signup-Seite}
+    \label{abb:signuppage}
+  \end{figure}
+  \paragraph{Navigationsleiste}
+  \par \textbf{}
+  \par Die Funktion \texttt{renderNavbar} füllt das \texttt{div}-Element „navbar“ mit einer Navigationsleiste. Diese enthält einen Link zur Hauptseite sowie die Schaltflächen „My Devices“, „My Scenarios“ und „Logout“. 
+  \par Ein Klick auf „Logout“  löscht das gespeicherte Token und leitet den Benutzer zur Anmeldeseite weiter. Die Schaltfläche „My Devices“ ruft die Funktion \texttt{renderMyDevicePage} auf, die die gespeicherten Geräte des Benutzers anzeigt. Mit „My Scenarios“ wird die Funktion \texttt{renderMyScenarioPage} aufgerufen, die die vom Benutzer erstellten Szenarien darstellt.
+  \paragraph{Hauptseite}
+  \par \textbf{}
+  \par Nach erfolgreicher Anmeldung und Erhalt des JWT-Tokens wird der Benutzer zur Hauptseite der Anwendung weitergeleitet. Dort erfolgt eine Anfrage an die Route „\texttt{/get\_user\_data}“, um die relevanten Benutzerdaten vom Server abzurufen. Die Serverantwort auf diese Anfrage besteht aus einem JSON-Objekt, das Listen der gespeicherten Häuser, Geräte und Szenarien enthält. Diese Daten werden anschließend in der lokalen Variablen „\texttt{stored\_data}“ gespeichert und zur dynamischen Darstellung der Benutzeroberfläche verwendet. Falls die Token-Validierung fehlschlägt, wird der Benutzer automatisch zur Anmeldeseite zurückgeleitet. Nach Erhalt der Benutzerdaten wird die Hauptseite generiert.
+  \par Die Funktion \texttt{renderMainPage} füllt das \texttt{div}-Element „app“ mit der im Listing \ref{lst:mainhtml} dargestellten HTML-Struktur. 
+  \begin{lstlisting}[style=htmlcssjs, label={lst:mainhtml}, caption={script.js: renderMainPage}]
+    <div id="main_page">
+        <div id="main_header">
+            <p>Hello, ${data.user_data.username}!</p>
+            <button id="BTNcreateHouse" type="button">Create New House</button>
+        </div>
+        <div id="MNcreateHouse"></div>
+        <div id="houseList"></div>
+    </div>
+  \end{lstlisting}
+  \par Oben auf der Seite wird eine Willkommensnachricht zusammen mit einer Schaltfläche zum Erstellen eines neuen Hauses angezeigt. Durch Anklicken des Buttons wird das \texttt{div}-Element „MNcreateHouse“ mit einem Formular befüllt, in das der Benutzer den Namen des Hauses eingeben kann. Mit der Schaltfläche „Save“ wird das Haus gespeichert. Dabei wird eine asynchrone Anfrage an die Route „\texttt{add\_house}“ gesendet, die das Token und den Hausnamen enthält, und das Haus wird in der Datenbank gespeichert. Nach Abschluss wird die Seite neu geladen und das neue Haus erscheint.
+  \par In das \texttt{div}-Element „houseList“ werden die vom Benutzer erstellten Häuser, einschließlich der Räume und zugehörigen Geräte, geladen. Diese Daten sind in der lokalen Variablen „\texttt{stored\_data}“ unter dem Schlüssel „houses“ gespeichert. Für jedes Haus wird ein \texttt{div}-Element mit der im Listing \ref{lst:houseelement} dargestellten HTML-Struktur erstellt und an das \texttt{div}-Element „houseList“ angehängt. Dabei wird jede ID um die ID des jeweiligen Hauses erweitert, um die spätere Zuordnung der Räume und Geräte zu ermöglichen.
+  \begin{lstlisting}[style=htmlcssjs, label={lst:houseelement}, caption={script.js: house\_element}]
+  <div id="header${house.id}">${house.name} </div>
+  <div id="house_element${house.id}">
+    <div>        
+      <button id="BTNcreateRoom${house.id}">New Room</button>
+      <div id="create_room${house.id}"></div>
+    <div id="room_list${house.id}"></div>
+    <div>
+      <button id="BTNdeleteHouse${house.id}">Delete House</button>
+    </div>
+  </div>
+  \end{lstlisting}
+  \par Im \texttt{header}-Element wird der Name des Hauses angezeigt. Unterhalb des Headers befindet sich ein Button zur Erstellung eines neuen Raumes sowie der Bereich für die Raumauflistung. Zusätzlich gibt es eine Schaltfläche zum Löschen des Hauses. Die Schaltfläche „\texttt{create\_room}“ öffnet ein Formular, in dem der Benutzer den Namen des Raumes eingeben und speichern kann.
+  \par Anschließend wird das \texttt{div}-Element „room\_list“ mit den Räumen des Hauses gefüllt. Dieser Vorgang ist ähnlich wie bei der Anzeige der Häuser. Für jeden Raum wird ein \texttt{div}-Element „room\_element“ mit der ID des Raumes erstellt. Dieses Element enthält den Namen des Raumes, eine Schaltfläche zum Hinzufügen eines Geräts, den Bereich zur Auflistung der Geräte und eine Schaltfläche zum Löschen des Raumes. Die Schaltfläche zum Hinzufügen eines Geräts öffnet ein Formular, in das der Benutzer die ID und den Namen des Geräts eingeben soll. Durch bestätigen der „Save“-Taste wird das Gerät gespeichert und zu dem Raum zugewiesen. 
+  \par 
+  % „“
 \newpage
-\section{Funktionsweise des Systems}
-\par Hier wird beschrieben wie der Benutzer das System verwendet und wie laufen die Prozesse im System. Es wird ein Diagramm ersetellt ähnlich zu im PA 2. 
 \section{Ergebnisse und Diskussion}
 \par Hier wird zusammengefasst, was ich mit diesem Projekt gelernt habe, welche Ziele erreicht und nicht erreicht habe, mögliche Weiterentwicklung des Systems etc
 \newpage
@@ -667,9 +1095,11 @@
 \listoftables
 %\addcontentsline{toc}{section}{Tabellenverzeichnis}
 % \lstlistoflistings
-% \addcontentsline{toc}{section}{Programmcode}
-\newpage
-\section{Programmcode}
+\addcontentsline{toc}{section}{Programmcode}
+
+\lstlistoflistings
+%\newpage
+%\section{Programmcode}
 
 % \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266setup}, caption={ESP: setup}]
 %   void setup()
@@ -884,4 +1314,4 @@
 
 
 \end{document}
-% „“ 
+% „“
