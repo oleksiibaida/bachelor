@@ -263,8 +263,7 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
             dev_id = device_data.dev_id,
             name = device_data.name,
             user_id = user_id,
-            description = device_data.description,
-            dev_type = device_data.dev_type
+            description = device_data.description
         )
         db_session.add(new_dev)
         await db_session.commit()
@@ -393,8 +392,6 @@ async def update_device(db_session: AsyncSession, user_id:int, new_device_data):
                 device.name = new_device_data.name
             if new_device_data.description:
                 device.description = new_device_data.description
-            if new_device_data.dev_type:
-                device.dev_type = new_device_data.dev_type
             await db_session.commit()
         return device
     except NoResultFound:
@@ -418,14 +415,14 @@ async def update_device(db_session: AsyncSession, user_id:int, new_device_data):
 async def update_device_handshake_data(db_session: AsyncSession, device_id, handshake_data):
     try:
         # Convert handshake_data in .csv format
-        data_fields_csv = ','.join(handshake_data.get("data_fields"))
-        actions_csv = ','.join(handshake_data.get("actions"))
+        data_fields_csv = ','.join(handshake_data.get("data_fields")) if handshake_data.get("data_fields") is not None else None
+        commands_csv = ','.join(handshake_data.get("commands")) if handshake_data.get("commands") is not None else None
         stmt = (
             update(DeviceModel)
             .where(DeviceModel.dev_id == device_id)
             .values(
                 data_fields = data_fields_csv,
-                actions = actions_csv
+                commands = commands_csv
             )
         )
         await db_session.execute(stmt)

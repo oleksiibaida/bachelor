@@ -33,7 +33,7 @@ class MQTTClient():
 
             # Answer on handshake message
             if main_topic == 'handshake':
-                print(main_topic, data)
+                print(data)
                 from app.db import queries, get_direct_session, close_session
                 session =  await get_direct_session()
                 await queries.update_device_handshake_data(session, device_id, data)

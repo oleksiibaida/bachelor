@@ -35,7 +35,6 @@ class DeviceModel(BaseModel):
     primary: int = None
     room_id: int = None
     description: str = None
-    dev_type: str = None
 
 class RoomDeviceModel(BaseModel):
     device_id: str
@@ -302,16 +301,15 @@ async def get_houses(db_session, user_id: int):
                     device = room_device.device
                     if device:
                         # Convert csv to array
-                        data_fields = str(device.data_fields).split(',')
-                        actions = str(device.actions).split(',')
+                        data_fields = str(device.data_fields).split(',') if device.data_fields is not None else ""
+                        commands = str(device.commands).split(',') if device.commands is not None else ""
                         device_data = {
                             "id": device.primary_key,
                             "dev_id": device.dev_id,
                             "name": device.name,
                             "description": device.description,
-                            "dev_type": device.dev_type,
                             'data_fields': data_fields,
-                            'actions': actions
+                            'commands': commands
                         }
                         room_data["devices"].append(device_data)
                 house_data["rooms"].append(room_data)
@@ -365,7 +363,6 @@ async def add_new_device(db_session, user_id, device_data):
         if device_data.name is None:
             device_data.name = device_data.dev_id
         new_device = await queries.add_new_device(db_session, user_id, device_data)
-        await MQTTClient.send_handshake(new_device.dev_id)
         if not new_device:
             return False
         if device_data.room_id is not None:
@@ -378,8 +375,9 @@ async def add_new_device(db_session, user_id, device_data):
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
             new_room_device = await queries.add_room_device(db_session, new_device.primary_key, device_data.room_id)
             _logger.debug(f'Device {device_data.name} added to room {device_data.room_id}')
-            return [new_device, new_room_device]
-        return new_device
+
+        await MQTTClient.send_handshake(new_device.dev_id)
+        return [new_device, new_room_device]
     except HTTPException as e:
         _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
         return {'error': e.detail}
@@ -394,15 +392,15 @@ async def get_devices(db_session, user_id: int):
         for dev in devices:
             if dev:
                 # Convert from csv to array
-                data_fields = str(dev.data_fields).split(',')
-                actions = str(dev.actions).split(',')
+                data_fields = str(dev.data_fields).split(',') if dev.data_fields is not None else ""
+                commands = str(dev.commands).split(',') if dev.commands is not None else ""
                 device_data = {
                     'primary': dev.primary_key,
                     'dev_id': dev.dev_id,
                     'name': dev.name,
                     'description': dev.description,
                     'data_fields': data_fields,
-                    'actions': actions,
+                    'commands': commands,
                     'room': []
                 }
                 # room_device is RoomDeviceModel
@@ -450,7 +448,7 @@ async def send_command(db_sesion, user_id, device_id, command):
         return {'error': e}
    
 
-async def delete_device(db_session, user_id: int, device_id: str, room_id: int = None ):
+async def delete_device(db_session, user_id: int, device_id: str):
     try:
         # if room_id:
         #     house_id = await queries.get_house_by_room(db_session, room_id)

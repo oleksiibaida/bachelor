@@ -49,12 +49,13 @@ class ScenarioModel(Base):
     __tablename__ = "scenario"
 
     primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    name = Column(String(20), nullable=False)
     user_id = Column(Integer, ForeignKey("user.primary_key", ondelete='CASCADE'), nullable=False)
-    source_dev = Column(Integer, ForeignKey("device.dev_id", ondelete='CASCADE'), nullable=False)
+    source_dev = Column(String(20), ForeignKey("device.dev_id", ondelete='CASCADE'), nullable=False)
     data_field = Column(String(20), nullable=False)  # Trigger value (e.g., temperature)
     condition = Column(Enum(ScenarioConditionsEnum), nullable=False)
     value = Column(Integer, nullable=False)
-    target_dev = Column(Integer, ForeignKey("device.dev_id", ondelete='CASCADE'), nullable=False)
+    target_dev = Column(String(20), ForeignKey("device.dev_id", ondelete='CASCADE'), nullable=False)
     command = Column(String(50), nullable=False)
 
     if_device = relationship("DeviceModel", foreign_keys=[source_dev], lazy='selectin')
@@ -64,13 +65,12 @@ class DeviceModel(Base):
 
     __tablename__ = 'device'
     primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    dev_id = Column(String(10), nullable=False)
+    dev_id = Column(String(20), nullable=False)
     name = Column(String(50), nullable=False)
     user_id = Column(Integer, ForeignKey('user.primary_key', ondelete='CASCADE'), nullable=False, unique=False)
     description = Column(String(250), nullable=True)
-    dev_type = Column(String(30), nullable=True)
     data_fields = Column(String(256), nullable=True)
-    actions = Column(String(256), nullable=True)
+    commands = Column(String(256), nullable=True)
 
     dev_rooms = relationship("RoomDeviceModel", back_populates="device", cascade="all, delete-orphan", lazy='selectin')
     

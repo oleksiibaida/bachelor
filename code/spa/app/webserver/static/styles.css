@@ -56,7 +56,11 @@ body {
 }
 
 .device_element {
-    @apply flex items-center justify-between bg-gray-300 border-2 border-solid border-green-800 px-3 py-1 my-1 rounded;
+    @apply flex items-center justify-between bg-gray-300 border-2 border-solid border-green-800 px-2 py-1 my-1 rounded;
+}
+
+.device_commands {
+    @apply  inline-flex flex-col font-mono items-center align-middle justify-center rounded-md border-solid border-2 border-green-800 px-3 pb-1 pt-2 w-auto
 }
 
 .device_edit_input {
@@ -111,4 +115,8 @@ body {
 
 .cancel-sm-btn {
     @apply bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-1 px-2 rounded mx-1 my-1
+}
+
+.action-btn{
+    @apply bg-blue-200 hover:bg-blue-800 text-sm py-1 px-2 border-solid border-2 border-black rounded mb-2
 }

@@ -74,13 +74,13 @@ void bme_setup();
 void light_on_off(bool on);
 void i2c_scan();
 bool is_valid_string();
-void eeprom_connect_wifi_mqtt();
+void connect_wifi_mqtt();
 
 void setup()
 {
   setup_esp();
   bme_setup();
-  eeprom_connect_wifi_mqtt();
+  connect_wifi_mqtt();
 }
 int counter = 0;
 void loop()
@@ -94,7 +94,7 @@ void loop()
 
   if (WiFi.status() != WL_CONNECTED)
   {
-    eeprom_connect_wifi_mqtt();
+    connect_wifi_mqtt();
   }
   else if (!mqttClient.connected())
   {
@@ -130,12 +130,6 @@ void setup_ap()
   WiFi.mode(WIFI_AP);
   WiFi.softAP(AP_SSID, AP_PASSWORD);
   WiFi.softAPConfig(ap_ip, ap_gateway, ap_subnet);
-
-  // M5.Lcd.fillRect(0, 0, M5.Lcd.width(), M5.Lcd.height(), TFT_RED);
-  // M5.Lcd.setCursor(X_OFFSET, 0);
-  // M5.Lcd.println("SET UP WIFI ");
-  // M5.Lcd.setCursor(X_OFFSET, 20);
-  // M5.Lcd.println("GO TO 10.0.0.1");
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send(200, "text/html", html_page); });
 
@@ -146,11 +140,9 @@ void setup_ap()
               String password = request->getParam("password", true)->value();
               if (ssid.length() > MAX_SSID_LENGTH - 1 || password.length() > MAX_PASSWORD_LENGTH - 1)
               {
+                ap_on = false;
                 return;
               }
-              Serial.print("\nGOT WIFI DATA");
-              Serial.print(ssid);
-              Serial.print(password);
               // String in char[]
               char new_ssid[MAX_SSID_LENGTH] = {0};
               strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
@@ -160,7 +152,7 @@ void setup_ap()
               // in EEPROM speichern
               EEPROM.begin(128);
               // TODO clear EEPROM
-              
+
               EEPROM.put(0, new_ssid);
               EEPROM.put(32, new_password);
               EEPROM.commit();
@@ -259,17 +251,17 @@ void callback(char *topic, byte *payload, unsigned int length)
     char json[128];
 
     const char *data_fields[] = {"temperature", "humidity"};
-    const char *actions[] = {"light_turn_on", "light_turn_off"};
+    const char *commands[] = {"light_turn_on", "light_turn_off"};
 
     JsonArray json_data_fields = data.createNestedArray("data_fields");
-    JsonArray json_actions = data.createNestedArray("actions");
+    JsonArray json_commands = data.createNestedArray("commands");
 
     for (const char* df: data_fields){
       json_data_fields.add(df);
     }
 
-    for (const char* a: actions){
-      json_actions.add(a);
+    for (const char* a: commands){
+      json_commands.add(a);
     }
 
     serializeJson(data, json, sizeof(json));
@@ -451,7 +443,7 @@ bool is_valid_string(char *data, int max_length)
   return false;
 }
 
-void eeprom_connect_wifi_mqtt()
+void connect_wifi_mqtt()
 {
   if (!ap_on)
   {

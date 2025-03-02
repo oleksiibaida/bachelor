@@ -72,7 +72,6 @@ function renderNavbar() {
         <a href="/">Home</a>
     </div>
     <div class="nav-links space-x-4">
-        <button id="BTNmyaccount" class="btn-navbar">My Account</button>
         <button id="BTNmydevices" class="btn-navbar">My Devices</button>
         <button id="BTNmyscenario" class="btn-navbar">My Scenarios</button>
         <button id="BTNlogout" class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition duration-300">Logout</button>
@@ -190,7 +189,6 @@ function renderLoginForm() {
     document.getElementById('loginForm').addEventListener('submit', async (event) => {
         event.preventDefault();
         const username = document.getElementById('username').value;
-        // const password = await hashPassword(document.getElementById('password').value, salt_rounds);
         const password = document.getElementById('password').value;
 
         try {
@@ -203,12 +201,7 @@ function renderLoginForm() {
             });
             // error
             if (!response.ok) {
-                if (response.status === 401) {
-                    alert("Invalid username or password");
-                } else {
-                    alert(`LOGIN FAIL STATUS: ${response.status}`);
-                }
-                return;
+                throw new Error
             }
             const response_data = await response.json();
             if (response_data == null) {
@@ -237,10 +230,37 @@ async function renderMainPage(data) {
     app.innerHTML = `
     <div class="main_page">
         <div class="main_header">
-            <p class="text-2xl">Hello, ${data.user_data.username}</p>
+            <p class="text-2xl">Hello, ${data.user_data.username}!</p>
             <button id="BTNcreateHouse" type="button" class="create_house-btn">Create New House</button>
         </div>
-        <div id="MNcreateHouse" class="hidden mn-createhouse">
+        <div id="MNcreateHouse"></div>
+        <div id="houseList" class="houseList"></div>
+    </div>
+    `;
+
+    displayHouses(data.houses, document.querySelector('#houseList'));
+
+    // MNcreateHouse.style.display = "none";
+
+    // Create New House click
+    document.getElementById("BTNcreateHouse").addEventListener("click", () => {
+        mnCreateHouse(document.getElementById("MNcreateHouse"));
+    });
+
+    // // close form if clicked outside
+    // document.addEventListener("click", (event) => {
+    //     if (!BTNcreateHouse.contains(event.target) && !document.getElementById('MNcreateHouse').contains(event.target)) {
+    //         // MNcreateHouse.style.display = "none";
+    //         // BTNcreateHouse.style.display = "block";
+    //         MNcreateHouse.classList.add("hidden");
+    //         BTNcreateHouse.classList.remove("hidden");
+    //     }
+
+    // })
+
+    function mnCreateHouse(parent_div) {
+        parent_div.classList.add("mn-createhouse")
+        parent_div.innerHTML = `
             <div class="p-4">
                 <label for="houseName" class="block text-gray-700 text-sm font-bold mb-2">House Name:</label>
                 <input type="text" id="houseName" value="House 1"
@@ -253,51 +273,16 @@ async function renderMainPage(data) {
                         class="cancel-btn">Close</button>
                 </div>
             </div>
-        </div>
-        <div id="houseList" class="houseList"></div>
-    </div>
-    `;
+        `;
 
-    displayHouses(data.houses, document.querySelector('#houseList'));
+        BTNcloseHouseMN.addEventListener("click", () => {
+            parent_div.innerHTML = "";
+            parent_div.classList = ""
+        });
 
-    var BTNcreateHouse = document.getElementById("BTNcreateHouse");
-    var MNcreateHouse = document.getElementById("MNcreateHouse");
-    // MNcreateHouse.style.display = "none";
-    var BTNaddHouse = document.getElementById("BTNaddHouse");
-    var BTNcloseHouseMN = document.getElementById("BTNcloseHouseMN")
-
-    // Create New House click
-    BTNcreateHouse.addEventListener("click", () => {
-        MNcreateHouse.classList.remove("hidden");
-        BTNcreateHouse.classList.add("hidden");
-        // MNcreateHouse.style.display = "block";
-        // BTNcreateHouse.style.display = "none";
-    });
-
-    BTNcloseHouseMN.addEventListener("click", () => {
-        closeHouseForm();
-    });
-
-    BTNaddHouse.addEventListener("click", async () => {
-        await addHouse(document.getElementById("houseName").value);
-    });
-
-    // close form if clicked outside
-    document.addEventListener("click", (event) => {
-        if (!BTNcreateHouse.contains(event.target) && !MNcreateHouse.contains(event.target)) {
-            // MNcreateHouse.style.display = "none";
-            // BTNcreateHouse.style.display = "block";
-            MNcreateHouse.classList.add("hidden");
-            BTNcreateHouse.classList.remove("hidden");
-        }
-
-    })
-
-    function closeHouseForm() {
-        // MNcreateHouse.style.display = "none";
-        // BTNcreateHouse.style.display = "block";
-        MNcreateHouse.classList.add("hidden");
-        BTNcreateHouse.classList.remove("hidden");
+        BTNaddHouse.addEventListener("click", async () => {
+            await addHouse(document.getElementById("houseName").value);
+        });
     }
 
     function displayHouses(house_list, parent_div) {
@@ -407,12 +392,6 @@ async function renderMainPage(data) {
                                 class="required flex-1 w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <p id="ERRORaddDeviceId${room.id}" class="text-red-700 font-bold text-sm"></p>
-                        <div class="flex items-center">
-                            <label for="deviceType${room.id}" class="block text-gray-700 text-sm font-bold mb-2 mr-2 w-10">Type:</label>
-                            <select id="deviceType${room.id}">
-                                <option value="default">Choose type</option>
-                            </select>
-                        </div>
                         <p id="ERRORaddDeviceType${room.id}" class="text-red-700 font-bold text-sm"></p>
                         <div class="flex items-center">
                             <label for="deviceName${room.id}" class="block text-gray-700 text-sm font-bold mb-2 mr-2">Name:</label>
@@ -461,13 +440,7 @@ async function renderMainPage(data) {
                 room_element.querySelector(`#BTNaddDevice${room.id}`).addEventListener('click', () => {
                     room_element.querySelector(`#FRaddDevice${room.id}`).classList.remove('hidden'); // open form
                     room_element.querySelector(`#BTNaddDevice${room.id}`).classList.add('hidden'); // hide button
-                    dev_types = ['Temperature & Humidity Sensor', 'Ligh Sensor', 'Alarming System'];
-                    for (dt in dev_types) {
-                        type_element = document.createElement('option');
-                        type_element.setAttribute("value", dev_types[dt]);
-                        type_element.innerHTML = dev_types[dt];
-                        room_element.querySelector(`#deviceType${room.id}`).appendChild(type_element);
-                    }
+
                 });
 
                 room_element.querySelector(`#BTNcancelDevice${room.id}`).addEventListener('click', () => {
@@ -481,22 +454,17 @@ async function renderMainPage(data) {
                 room_element.querySelector(`#BTNaddNewDevice${room.id}`).addEventListener('click', async () => {
                     const dev_id = room_element.querySelector(`#deviceID${room.id}`).value;
                     const dev_name = room_element.querySelector(`#deviceName${room.id}`).value;
-                    const dev_type = room_element.querySelector(`#deviceType${room.id}`).value;
                     if (dev_id == "") {
                         room_element.querySelector(`#ERRORaddDeviceId${room.id}`).textContent = 'ID cannot be empty';
                         return;
                     } else { room_element.querySelector(`#ERRORaddDeviceId${room.id}`).textContent = ''; }
-                    if (dev_type == "default") {
-                        room_element.querySelector(`#ERRORaddDeviceType${room.id}`).textContent = 'U must choose a type';
-                        return;
-                    } else { room_element.querySelector(`#ERRORaddDeviceType${room.id}`).textContent = ''; }
                     if (dev_name == "") {
                         room_element.querySelector(`#ERRORaddDeviceName${room.id}`).textContent = 'Name cannot be empty';
                         return;
                     } else { room_element.querySelector(`#ERRORaddDeviceName${room.id}`).textContent = ''; }
                     room_element.querySelector(`#ERRORaddDeviceId${room.id}`).textContent = '';
                     room_element.querySelector(`#ERRORaddDeviceName${room.id}`).textContent = '';
-                    const res = addDeviceRoom(room.id, dev_id, dev_name, dev_type);
+                    const res = addDeviceRoom(room.id, dev_id, dev_name);
                     // if (res == true) {
                     //     room_element.querySelector(`#FRaddDevice${room.id}`).classList.add('hidden');
                     //     appRouter();
@@ -528,33 +496,33 @@ async function renderMainPage(data) {
                     <div>
                         <p class="text-4xl">NAME: ${device.name}</p>
                         <p class="text-base"> ID: ${device.dev_id} </p>
-                        <p class="text-2xl"> Type: ${device.dev_type} </p>
                         <div id="deviceData${device.dev_id}" class="device_data">
                             Waiting for data from device
                         </div>
-                        <div>
-                        </div>
                     </div>
-                    <div id="actions${device.dev_id}" class="device_element"></div>
+                    <div id="commands${device.dev_id}"></div>
                     <button id="deleteDevice${device.dev_id}" class="cancel-sm-btn"> DELETE </button>
                     `;
 
-                    doActions(device_element.querySelector(`#actions${device.dev_id}`))
+                    showCommands(device_element.querySelector(`#commands${device.dev_id}`))
 
                     device_element.querySelector(`#deleteDevice${device.dev_id}`).addEventListener('click', async () => {
                         deleteDeviceRoom(room.id, device.dev_id);
                     });
 
-                    function doActions(parent_div) {
+                    function showCommands(parent_div) {
                         parent_div.innerHTML = "";
-                        if (device.actions.length > 0) {
-                            parent_div.innerHTML = "<p>ACTIONS</p>"
-                            for (num in device.actions) {
-                                let action_element = document.createElement('div');
+                        console.info(device.commands)
+                        if (device.commands.length > 0 && device.commands[0] != "None") {
+                            parent_div.classList.add("device_commands")
+                            parent_div.innerHTML = '<p class="text-xl font-bold">COMMANDS</p>'
+                            for (num in device.commands) {
+                                // let action_element = document.createElement('div');
                                 let action_button = document.createElement('button');
+                                action_button.classList.add('action-btn');
                                 action_button.setAttribute('type', 'button');
-                                action_button.setAttribute('action', device.actions[num]);
-                                action_button.innerHTML = device.actions[num];
+                                action_button.setAttribute('action', device.commands[num]);
+                                action_button.innerHTML = device.commands[num];
 
                                 // Send command to device
                                 action_button.addEventListener('click', async () => {
@@ -572,8 +540,8 @@ async function renderMainPage(data) {
 
                                     } catch (error) { errorHandler(error); }
                                 });
-                                action_element.appendChild(action_button);
-                                parent_div.appendChild(action_element);
+                                // action_element.appendChild(action_button);
+                                parent_div.appendChild(action_button);
                             }
                         }
                     }
@@ -586,10 +554,13 @@ async function renderMainPage(data) {
 
                     ws.onmessage = (event) => {
                         const data = JSON.parse(event.data);
-                        console.info(data);
                         const parent_div = device_element.querySelector(`#deviceData${device.dev_id}`);
-                        parent_div.innerHTML = "";
-                        for (const key in data) {
+                        // parent_div.innerHTML = "";
+                        let data_fields = device.data_fields
+                        if (data_fields.length == 0) {
+                            data_fields = Object.keys(data);
+                        }
+                        for (const key of data_fields) {
                             if (data.hasOwnProperty(key)) {
                                 let dataField = device_element.querySelector(`#${key}${device.dev_id}`);
                                 if (!dataField) {
@@ -600,9 +571,6 @@ async function renderMainPage(data) {
                                 dataField.innerHTML = `${key}: ${data[key]}`
                             }
                         }
-                        // document.getElementById(`devTemp${device.dev_id}`).textContent = `TEMP: ${data.id}`;
-                        // document.getElementById(`devHum${device.dev_id}`).textContent = `HUM: ${data.humidity}`;
-                        // document.getElementById(`ambient${device.dev_id}`).textContent = `AMBIENT: ${data.ambient}`;
                     };
 
                     ws.onclose = () => {
@@ -721,7 +689,7 @@ async function renderMainPage(data) {
         }
     }
 
-    async function addDeviceRoom(room_id, device_id, device_name, device_type) {
+    async function addDeviceRoom(room_id, device_id, device_name) {
         try {
             const response = await fetch('/add_new_device', {
                 method: 'POST',
@@ -730,7 +698,7 @@ async function renderMainPage(data) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(
-                    { dev_id: device_id, name: device_name, dev_type: device_type, room_id: room_id }
+                    { dev_id: device_id, name: device_name, room_id: room_id }
                 )
             });
             if (!response.ok) {
@@ -776,7 +744,6 @@ async function renderMainPage(data) {
         }
     }
 }
-
 
 async function renderMyDevicesPage() {
     console.info("MYDEV");
@@ -828,7 +795,7 @@ async function renderMyDevicesPage() {
                     <p id="device_desc${device.dev_id}" class="flex mx-2">Description: ${device.description ? device.description : ""}</p>
                     <p>ROOM: ${room_name}</p>
                     <p>Data fields: ${device.data_fields}</p>
-                    <p>Actions: ${device.actions}</p>
+                    <p>Actions: ${device.commands}</p>
                     <div id="deviceData${device.dev_id}">Waiting for data from device...</div>
                 </div>
                 <div class="grid place-items-center m-1 p-2">
@@ -973,16 +940,6 @@ async function renderMyDevicesPage() {
     }
 }
 
-/**
- * 
- *<input type="text" id="sourceDevice" placeholder="if">
-            <input type="text" id="data_field" placeholder="data_field">
-            <input type="text" id="condition" placeholder="condition">
-            <input type="number" id="value" placeholder="value">
-            <input type="text" id="targetDevice" placeholder="thenDevice">
-            <input type="text" id="command" placeholder="command">
- */
-
 async function renderMyScenariosPage(scenario_list) {
     app.innerHTML = `
     <div class="main_page">
@@ -1054,10 +1011,10 @@ async function renderMyScenariosPage(scenario_list) {
         if (targetDevSelect.value != "default") {
             let targetDeviceId = targetDevSelect.value;
             let target_dev = stored_data.devices.find(device => device.dev_id === targetDeviceId);
-            for (num in target_dev.actions) {
+            for (num in target_dev.commands) {
                 let option_element = document.createElement('option');
-                option_element.setAttribute('value', target_dev.actions[num]);
-                option_element.innerHTML = target_dev.actions[num];
+                option_element.setAttribute('value', target_dev.commands[num]);
+                option_element.innerHTML = target_dev.commands[num];
 
                 app.querySelector("#command").appendChild(option_element);
             }
