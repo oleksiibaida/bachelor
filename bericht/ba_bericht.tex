@@ -55,11 +55,12 @@
 
 % JavaScript
 \lstdefinelanguage{JavaScript}{
-  morekeywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  morekeywords={typeof, const, of, let, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
   morecomment=[s]{/*}{*/},
   morecomment=[l]//,
   morestring=[b]",
-  morestring=[b]'
+  morestring=[b]',
+  morestring=[b]`
 }
 
 \lstdefinelanguage{HTML5}{
@@ -1094,8 +1095,50 @@ captionpos=b,
       <button id="deleteDevice${device.dev_id}"> DELETE </button>
     </div>
   \end{lstlisting}
-  \par Im \texttt{div}-Element „deviceData“ werden die aus dem WebSocket empfangenen Daten dargestellt. 
+  \paragraph{WebSocket}
+  \par \textbf{}
+  \par Im \texttt{div}-Element „deviceData“ werden die vom Gerät empfangenen Daten angezeigt. Dazu wird eine WebSocket-Verbindung aufgebaut. Das Listing \ref{lst:jswebsocket} zeigt die Initialisierung der Verbindung sowie die Verarbeitung der eingehenden Daten.
+  \par Zunächst wird ein WebSocket-Objekt mit der URL der WebSocket-Route erzeugt (Zeile 1-3). Sobald die Verbindung erfolgreich hergestellt wurde, sendet das Skript das Authentifizierungstoken an den Server (Zeile 5-8), um die Verbindung zu autorisieren.
+  \par Bei jeder eingehenden Nachricht wird das Ereignis \texttt{onmessage} ausgelöst (Zeile 10). Die empfangenen Daten werden in ein JavaScript-Objekt umgewandelt (Zeile 11) und anschließend wird das \texttt{div}-Element mit der ID „deviceData“ für das entsprechende Gerät abgerufen (Zeile 12).  
+  \par Wenn das Gerät keine vordefinierten Datenfelder hat, werden die Schlüssel des empfangenen Datenobjekts extrahiert und als Datenfelder verwendet (Zeilen 13-16). In diesem Fall werden alle empfangenen Daten angezeigt.
+  \par Für jedes dieser Datenfelder wird geprüft, ob es im empfangenen Datenobjekt vorhanden ist (Zeile 17-18). Ist dies der Fall, sucht das Skript nach einem \texttt{p}-Element, dessen ID den Namen des Datenfelds und die Geräte-ID enthält (Zeile 19-20). Ist ein solches Element nicht vorhanden, wird es dynamisch erzeugt und in das \texttt{div}-Element eingefügt (Zeile 21-25). Schließlich wird der Inhalt des Elements mit dem Schlüssel und dem entsprechenden Wert aus den empfangenen Daten aktualisiert (Zeile 26).
+  \par Wenn die Verbindung unterbrochen wird, wird eine Meldung an die Konsole ausgegeben.
   % „“
+  \begin{lstlisting}[style=htmlcssjs, numbers=left, label={lst:jswebsocket}, caption={script.js: websocket}]
+  const ws = new WebSocket(
+    `ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`
+  );
+
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ auth: "Bearer " + 
+                localStorage.getItem("token") }));
+  };
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    const parent_div = device_element.querySelector(`#deviceData${device.dev_id}`);
+    let data_fields = device.data_fields;
+    if (data_fields.length == 0) {
+      data_fields = Object.keys(data);
+    }
+    for (const key of data_fields) {
+      if (data.hasOwnProperty(key)) {
+        let dataField = device_element.querySelector(
+          `#${key}${device.dev_id}`);
+        if (!dataField) {
+          dataField = document.createElement('p');
+          dataField.id = `${key}${device.dev_id}`;
+          parent_div.appendChild(dataField);
+        }
+        dataField.innerHTML = `${key}: ${data[key]}`
+      }
+    }
+  };
+
+  ws.onclose = () => {
+    console.error(`WebSocket for device ${device.dev_id} closed`);
+  };
+  \end{lstlisting}
   \subsubsection{Styling}
 \newpage
 \section{Ergebnisse und Diskussion}
