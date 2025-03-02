@@ -823,6 +823,8 @@ captionpos=b,
   \par Um auf Anfragen mit HTML-Dateien zu antworten, wird ein \texttt{Jinja2Templates}-Objekt erstellt. Dabei wird der Pfad zum Ordner \texttt{templates/} angegeben, der die HTML-Vorlagen enthält. Dieses Objekt ermöglicht es, dynamische HTML-Antworten zu generieren, indem Daten aus den Endpunkten in die Vorlagen eingebunden werden.
   \par Jede Funktion, die auf die Datenbank zugreift, benötigt als Parameter eine Instanz der Klasse \texttt{AsyncSession}. Im Modul \texttt{routes.py} wird dazu die Funktion \texttt{get\_session()} aus dem Paket \texttt{db} verwendet, die für die Erstellung der Datenbanksitzungen zuständig ist. Durch die Verwendung des Abhängigkeitsmechanismus \texttt{Depends(get\_session)} wird bei jedem Aufruf einer Router-Funktion automatisch eine neue Datenbanksitzung erzeugt und an die entsprechenden Unterfunktionen weitergegeben. Dies ermöglicht eine effiziente und asynchrone Kommunikation mit der Datenbank, wodurch mehrere Anfragen gleichzeitig ohne blockierende Wartezeiten bearbeitet werden können.
   \par Durch die Verwendung von FastAPI-Routern und einer klar strukturierten Modulanordnung bleibt die API übersichtlich, leicht wartbar und erweiterbar. Die Trennung von Präsentationslogik (HTML, CSS) und Daten (API) wird ebenfalls gewährleistet.
+  \subsubsection{API-Endpunkte}
+  \par \textbf{TODO} Eine Liste von allen API-Endpunkten mit Beschreibung.
   \subsubsection{Sicherheit}
   % \par \textbf{}
   \par Sicherheit spielt bei diesem System eine wichtige Rolle. Für die API gibt es zwei kritische Sicherheitspunkte: die Übertragung sensibler Daten und die Authentifizierung der Benutzer.
@@ -858,8 +860,8 @@ captionpos=b,
   \par Die Daten des Raumes und die Benutzer-ID werden an die Funktion \texttt{services.add\_room()} übergeben. Diese Funktion holt zunächst mit dem Befehl \texttt{queries.get\_house()} die Daten des Hauses aus der Datenbank, um den Besitzer des Hauses zu bestätigen. Stimmt die übergebene Benutzer-ID mit der in der Datenbank gespeicherten Benutzer-ID des Hausbesitzers überein, wird mit der Funktion \texttt{queries.add\_new\_room()} ein neuer Eintrag in der Datenbank erstellt. Im Erfolgsfall wird eine Bestätigung zurückgegeben. 
   \par Wenn der Benutzer nicht berechtigt ist, einen Raum zu dem angegebenen Haus hinzuzufügen, wird eine Meldung über unberechtigten Zugriff geloggt und als Fehlerantwort zurückgegeben.
   Das Löschen eines Hauses oder Raumes erfolgt ähnlich wie das Hinzufügen: Es wird ein \texttt{POST}-Request an die entsprechenden Routen (\texttt{/delete\_house} bzw. \texttt{delete\_room}) gesendet, wobei im Header das Bearer-Token und im Inhalt des Requests die zu löschende Haus- bzw. Raum-ID übermittelt wird. Dabei ist zu beachten, dass beim Löschen eines Hauses auch alle zugehörigen Räume gelöscht werden. Dies wird durch die Beziehung \texttt{rooms} in \texttt{HouseModel} in der Datenbank definiert. 
-  \par Beim Löschen eines Hauses wird ein Request mit den Benutzer- und House-ID an die Route \texttt{/delete\_house} gesenden. Nach der Validierung des Tokens und Erzeugeung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_house()} übergeben. Diese Funktion prüft, ob das Haus dem Benutzer gehört und löscht mit dem Befehl \texttt{queries.delete\_house()} den zugehörigen Eintrag aus der Datenbank. Die zugehörigen Räume werden ebenfalls gelöscht. Im Fehlerfall wird der entsprechende Fehler geloggt und ausgegeben. 
-  \par Das Löschen eines Raumes ist ähnlich dem Löschen eines Hauses. Ein Request mit der Raum- und Haus-ID wird an die Route \texttt{delete\_room} gesendet. Nach der Validierung des Tokens und Erzeugeung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_room()} übergeben. Wenn der Benutzer der Eigentümer des Hauses mit der übergebenen House-ID ist, wird der Raum aus der Datenbank gelöscht. Tritt ein Fehler auf, wird dieser geloggt und die entsprechende Meldung wird ausgegeben.
+  \par Beim Löschen eines Hauses wird ein Request mit den Benutzer- und House-ID an die Route \texttt{/delete\_house} gesenden. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_house()} übergeben. Diese Funktion prüft, ob das Haus dem Benutzer gehört und löscht mit dem Befehl \texttt{queries.delete\_house()} den zugehörigen Eintrag aus der Datenbank. Die zugehörigen Räume werden ebenfalls gelöscht. Im Fehlerfall wird der entsprechende Fehler geloggt und ausgegeben. 
+  \par Das Löschen eines Raumes ist ähnlich dem Löschen eines Hauses. Ein Request mit der Raum- und Haus-ID wird an die Route \texttt{delete\_room} gesendet. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_room()} übergeben. Wenn der Benutzer der Eigentümer des Hauses mit der übergebenen House-ID ist, wird der Raum aus der Datenbank gelöscht. Tritt ein Fehler auf, wird dieser geloggt und die entsprechende Meldung wird ausgegeben.
   \par Die Route \texttt{/get\_houses} gibt alle Häuser des Benutzers im JSON-Format zurück. Der Request muss im Header nur das Token enthalten, aus dem die Benutzer-ID erzeugt wird. Die Benutzer-ID wird an die Funktion \texttt{services.get\_houses()} übergeben, die Benutzer-ID an die Funktion \texttt{queries.get\_houses\_on\_user()} übergibt. Diese Funktion gibt eine Liste von \texttt{HouseModel} zurück, die dem Benutzer gehören. Diese Liste wird in eine „List of Dictionaries“ umgewandelt, die alle Häuser, die zugehörigen Räume und die Geräte enthält. Anschließend wird ein JSONResponse-Objekt zurückgegeben.
   \paragraph{Device}
   \par \textbf{}
@@ -892,20 +894,20 @@ captionpos=b,
   \par Die Kommunikation über das WebSocket-Protokoll erfolgt in einer Endlosschleife, die ständig auf eingehende Nachrichten wartet. Wird die Verbindung vom Benutzer oder durch andere Ereignisse unterbrochen, wird diese mit der Funktion \texttt{disconnect} aus der Liste der aktiven Verbindungen entfernt.
   \par Die Funktion \texttt{send\_data()} ermöglicht dNas gezielte Senden von Daten über die WebSocket-Schnittstelle. Dabei wird geprüft, ob eine aktive WebSocket-Verbindung mit der entsprechenden \texttt{device\_id} existiert. Falls ja, werden die zu sendenden Daten als JSON-Objekt über die WebSocket-Schnittstelle an das Gerät übertragen. Tritt ein Übertragungsfehler auf, wird die Verbindung geschlossen und aus der Liste der aktiven Verbindungen entfernt.
   \par Die Implementierung dieser WebSocket-Schnittstelle ermöglicht eine effiziente und latenzarme Datenübertragung zwischen dem MQTT-Broker und den angebundenen Geräten.
-  \subsection{API-Endpunkte}
-  \par \textbf{TODO} Eine Liste von allen API-Endpunkten mit Beschreibung.
+ 
   \subsection{Frontend}
   \par \textbf{TODO}  Das Frontend der Webanwendung ist als Single Page Application (SPA\footnote{Eng. Single Page Applicaiton}) implementiert. Eine SPA ist eine Webanwendung, die auf einer einzigen HTML-Seite geladen wird und deren Inhalt dynamisch durch JavaScript aktualisiert wird. Dies führt zu einer verbesserten Benutzererfahrung, da der Wechsel zwischen verschiedenen Ansichten schneller erfolgt und weniger Serveranfragen notwendig sind. 
   \par Das Frontend der Anwendung besteht aus einer HTML-Seite zur Strukturierung der Inhalte, JavaScript für die interaktive Funktionalität sowie CSS-Dateien zur Gestaltung und Formatierung. Diese Komponenten sind im Paket \texttt{Webserver} organisiert und befinden sich in den Verzeichnissen „\texttt{templates}“ und „\texttt{static}“.
-  
-  \subsubsection{JAVASCRIPT}
-  \par Die Funktionalität des Frontends wird durch ein JavaScript-Skript „\texttt{script.js}“ gesteuert. Es ist das dynamische Laden des Inhalts sowie für Benutzerinteraktion verantwortlich. 
+  \par 
+  \subsubsection{Dynamische Datendarstellung mit JavaScript}
+  \par Die Funktionalität des Frontends wird durch ein JavaScript-Skript „\texttt{script.js}“ gesteuert.
+  \par Die Benutzerdaten werden auf die Seite dynamisch dargestellt. Beim Laden der Seite werden die Benutzerdaten auf dem Server abgefragt und lokal gespeichert. Anschließend werden die Elemente der Oberfläche basierend auf diese Daten dynamisch erzeugt. 
   \paragraph{Asynchronen Serveranfragen}
-  \par \textbf{NAME DES ABNSCHNITTS ÄNDERN}
+  \par \textbf{}
   \par Da sowohl das Backend als auch die Datenbank asynchron implementiert sind, müssen auch die Anfragen im Frontend asynchron verarbeitet werden. Dies wird durch die Verwendung von asynchronen HTTP-Anfragen mittels der \texttt{fetch}-API realisiert. Dadurch wird verhindert, dass die Benutzeroberfläche während der Kommunikation mit dem Server blockiert wird. Antworten des Servers werden mittels Promises verarbeitet, wodurch das Frontend flexibel auf unterschiedliche Antwortzeiten reagieren kann.
   \par Im Listing \ref{lst:jsgetuserdata} ist die Funktion \texttt{get\_user\_data} dargestellt. Diese Funktion dient als Beispiel für die asynchrone Verarbeitung von Server-Anfragen im Frontend. Sie nutzt \texttt{async} und \texttt{await}, um eine GET-Anfrage an die Route „\texttt{/get\_user\_data}“ zu senden. Dabei wird das Token aus dem „\texttt{localStorage}“ als Bearer-Token im Authorisation-Header der Anfrage übermittelt.
   \par Die Serverantwort wird in einem \texttt{try-catch}-Block verarbeitet, um potenzielle Fehler abzufangen und die Anwendung vor unerwarteten Abstürzen zu schützen. Falls die Antwort des Servers nicht den Status ok aufweist, wird eine Fehlermeldung generiert. Anschließend wird der zurückgegebene JSON-Inhalt geprüft. Falls ein Fehler im Antwortobjekt enthalten ist, wird dieser ebenfalls als Exception geworfen. Nur wenn die Serverantwort gültig ist und keine Fehlermeldung enthält, wird das empfangene Benutzerobjekt zurückgegeben. Im Fehlerfall wird die Funktion \texttt{errorHandler()} aufgerufen, um eine entsprechende Fehlerbehandlung vorzunehmen.
-  \begin{lstlisting}[frame=single, style=htmlcssjs, label={lst:jsgetuserdata}, caption={get\_user\_data}]
+  \begin{lstlisting}[frame=single, style=htmlcssjs, label={lst:jsgetuserdata}, caption={script.js: get\_user\_data}]
     async function get_user_data() {
       try {
         const response = await fetch(
@@ -932,8 +934,43 @@ captionpos=b,
   }
   \end{lstlisting}
   \paragraph{Benutzerinteraktion}
+  \par Die Reaktionen auf die Benutzerinteraktionen sind mittels Event-Listener impementiert. Event-Listener ermöglichen es, auf Benutzerinteraktionen wie Klicks, Tastendrücke oder Mausbewegungen zu reagieren. In JavaScript werden sie mit der Funktion \texttt{addEventListener} an ein HTML-Element gebunden. Dabei wird das gewünschte Ereignis und eine Callback-Funktion angegeben, die beim Auftreten des Ereignisses ausgeführt wird.
+  \par Event-Listener können nicht nur für einzelne Elemente, sondern auch für übergeordnete Container genutzt werden. Dies ist besonders nützlich, wenn neue Elemente dynamisch hinzugefügt oder gelöscht werden. 
+  \par Das Listing \ref{lst:jsmncreatehouse} zeigt den Prozess der Erstellung eines Formulars zum Hinzufügen eines neuen Hauses. In der ersten Zeile wird ein Event-Listener auf das Element mit der ID „BTNcreateHouse“ gesetzt. Beim Anklicken wird die Funktion \texttt{mnCreateHouse} aufgerufen, die das Eingabeformular erstellt. Dieser Funktion wird als Parameter ein \texttt{div}-Element übergeben, in dem das Formular angezeigt wird. Die HTML-Struktur des Formulars wird in den Zeilen 8 bis 15 definiert.
+  \par Anschließend wird ein Event-Listener für die Schaltfläche „BTNcloseHouseMN“ registriert, der das Formular schließt, indem er den Inhalt des \texttt{div}-Elements entfernt und dessen CSS-Klassen zurücksetzt.
+  \par Die Schaltfläche „BTNaddHouse“ erhält einen asynchronen Event-Listener, der die Funktion \texttt{addHouse} aufruft. Als Parameter wird der Name des Hauses übergeben, den der Benutzer im Eingabefeld „houseName“ eingegeben hat.
+  
+  \begin{lstlisting}[frame=single, numbers=left, style=htmlcssjs, label={lst:jsmncreatehouse}, caption={script.js: mnCreateHouse}]
+    document.getElementById("BTNcreateHouse").addEventListener("click", 
+      () => {
+        mnCreateHouse(document.getElementById("MNcreateHouse"));
+      });
 
-  \subsubsection{Oberfläche}
+    function mnCreateHouse(parent_div){
+      parent_div.innerHTML = `
+        <div class="p-4">
+          <label for="houseName">House Name:</label>
+          <input type="text" id="houseName" value="House 1">
+          <div>
+            <button id="BTNaddHouse">Save</button>
+            <button id="BTNcloseHouseMN">Close</button>
+          </div>
+        </div>
+      `;
+
+      BTNcloseHouseMN.addEventListener("click", () => {
+          parent_div.innerHTML = "";
+          parent_div.classList = ""
+      });
+  
+      BTNaddHouse.addEventListener("click", async () => {
+          await addHouse(document.getElementById("houseName").value);
+      });
+    }
+  \end{lstlisting}
+  \par Die Implementierung dieser Event-Listener folgt einem einheitlichen Muster, das für weitere Schaltflächen und Formulare in der Anwendung übernommen werden kann. Je nach Anforderung kann die Funktionalität entsprechend angepasst und erweitert werden.
+  \paragraph{Oberfläche}
+  \par \textbf{}
   \par Die Datei „\texttt{index.html}“, die sich im Verzeichnis templates befindet (Listing \ref{lst:indexhtml}), bildet die Grundlage für die Benutzeroberfläche der Anwendung. Sie wird vom Server als Antwort auf einer \texttt{GET}-Anfrage an die Rooot-Route „/“ bereitgestellt. 
   \par Im \texttt{head}-Bereich der Datei sind der Seitentitel sowie die Verknüpfung zur CSS-Datei „\texttt{output.css}“ definiert, die das Styling der Anwendung steuert. 
   \par Der \texttt{body}-Bereich der HTML-Datei enthält zwei zentrale \texttt{div}-Elemente: „\texttt{navbar}“ für die Navigationsleiste und „\texttt{app}“ für den dynamisch generierten Inhalt der Seite. Am Ende der Datei ist ein Verweis auf das JavaScript-Skript „\texttt{script.js}“ eingebunden. Dieses Skript übernimmt die Steuerung des Routings sowie die Interaktion mit dem Benutzer, indem es die Ansicht basierend auf dem Authentifizierungsstatus des Nutzers und geladenen Daten dynamisch aktualisiert.
@@ -955,21 +992,62 @@ captionpos=b,
   \end{lstlisting}
   \paragraph{Anmeldung und Registrierung}
   \par \textbf{}
-  \par Beim Laden der Seite überprüft die Anwendung, ob ein gültiges Token im \texttt{localStorage} vorhanden ist. Falls kein Token existiert oder es ungültig ist, wird der Nutzer automatisch zur Login-Seite weitergeleitet. Andernfalls wird eine Anfrage an die Route „\texttt{/get\_user\_data}“ gesendet, um die Benutzerdaten abzurufen.
-  \par Die Abbildung \ref{abb:login} zeigt die Login-Seite. Die Generierung der Seite erfolgt mit der Funktion „\texttt{renderLoginForm()}“. Dabei wird das \texttt{div}-Element „\texttt{app}“ mit einem Formular versehen, das Eingabefelder für den Benutzernamen und das Passwort enthält. Durch Drücken des Login-Buttons werden die Anmeldedaten an die Route „\texttt{/login}“ gesendet. Stimmen die übermittelten Anmeldedaten mit den hinterlegten Benutzerinformationen überein, antwortet der Server mit einem JWT-Token. Dieses Token wird im localStorage gespeichert, wodurch der Benutzer authentifiziert und angemeldet wird. Andernfalls wird eine Meldung ausgegeben, dass die Anmeldedaten ungültig sind.
-  \begin{figure}[h]
-    \centering
-    \includegraphics[width=0.75\textwidth]{login.png}
-    \caption{Login-Seite}
-    \label{abb:login}
-  \end{figure}
-  \par Unter dem Login-Button befindet sich ein Link zur Registrierungsseite. Ein Klick auf diesen Link ruft die Funktion \texttt{renderSignUpPage} auf, die das \texttt{div}-Element „\texttt{app}“ mit einem Formular für die Benutzerregistrierung füllt. Die Abbildung \ref{abb:signuppage} zeigt die Registrierungsseite. Das Formular enthält Eingabefelder für den Benutzernamen, die E-Mail-Adresse und das Passwort. Durch Drücken der Taste „Sign Up“ werden die Anmeldedaten an die Route „\texttt{/sign\_up}“ gesendet. Wenn die Registrierungsdaten gültig sind, antwortet die Route mit einem JWT-Token und der Benutzer ist im System angemeldet.
-  \begin{figure}[h]
-    \centering
-    \includegraphics[width=0.75\textwidth]{signup.png}
-    \caption{Signup-Seite}
-    \label{abb:signuppage}
-  \end{figure}
+  \par Beim Laden der Seite überprüft die Anwendung, ob ein gültiges Token im \texttt{localStorage} vorhanden ist. Falls kein Token existiert oder es ungültig ist, wird der Nutzer automatisch zur Login-Seite weitergeleitet. Andernfalls werden die Benutzerdaten von dem Server abgefragt und die Hauptseite wird geladen.
+  \par Die Login-Seite wird in der Funktion „\texttt{renderLoginForm()}“ (Listing \ref{lst:loginhtml}) erstellt. Dabei wird das \texttt{div}-Element „\texttt{app}“ mit einem Formular versehen, das Eingabefelder für den Benutzernamen und das Passwort enthält (Zeile 1-18). 
+  % „“
+  \par Die Schaltfläche „Login“ ist mit einem Event-Listener für das Ereignis „submit“ verknüpft. Durch Drücken des Login-Buttons werden die Daten aus den Eingabefeldern abgelesen und in den Variablen „username“ und „password“ gespeichert (Zeile 22-23). Anschließend wird eine asynchrone Post-Anfrage an die Route „/login“. Im \texttt{header}-Objekt wird der \texttt{Content-Type} auf „application/json“ gesetzt, damit der Server weiß, dass die übermittelten Daten im JSON-Format vorliegen (Zeile 30). Die Anmeldedaten werden mit \texttt{JSON.stringify()} in eine JSON-Zeichenkette umgewandelt und im \texttt{body} der Anfrage übermittelt (Zeile 32). 
+  \par Nach dem Senden der Anfrage wartet die Anwendung mit \texttt{await} auf die Antwort des Servers. Sobald die Antwort eingetroffen ist, wird sie mit der Funktion \texttt{response.json()} in ein JSON-Objekt umgewandelt und in der Variablen \texttt{response\_data} gespeichert (Zeile 35).
+  \par Stimmen die übermittelten Anmeldedaten mit den hinterlegten Benutzerinformationen überein, antwortet der Server mit einem JWT-Token. Dieses Token wird im localStorage gespeichert, wodurch der Benutzer authentifiziert und angemeldet wird (Zeile 37). Andernfalls antwortet der Server mit einem Fehler, dass die falschen Daten eingegeben wurden und die entsprechende Meldung wird ausgegeben.
+  \begin{lstlisting}[style=htmlcssjs, numbers=left, label={lst:loginhtml}, caption={script.js: renderLoginForm}]
+      app.innerHTML = `
+      <div class="flex items-center justify-center h-screen">
+        <h2>LOGIN</h2>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label for="username">Username</label>
+            <input type="text" id="username">
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input type="password" id="password">
+          </div>
+          <button type="submit">LOGIN</button>
+        </form>
+        <div>
+          <button id="BTNsignup">SignUp here</button>
+        </div>
+      </div>`;
+
+      document.getElementById('loginForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // asynchrone Anfrage auf die Route "login"
+        try {
+          const response = await fetch('/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ username, password })
+          });
+          // 
+          const response_data = await response.json();
+          if ('token' in response_data) {
+                localStorage.setItem('token', response_data['token']);
+                appRouter();
+          }
+        } catch(error){ errorHandler(error);}
+  }
+  \end{lstlisting}
+  % \begin{figure}[h]
+  %   \centering
+  %   \includegraphics[width=0.75\textwidth]{login.png}
+  %   \caption{Login-Seite}
+  %   \label{abb:login}
+  % \end{figure}
+  \par Unter dem Login-Button befindet sich ein Link zur Registrierungsseite. Ein Klick auf diesen Link ruft die Funktion \texttt{renderSignUpPage} auf, die das \texttt{div}-Element „\texttt{app}“ mit einem Formular für die Benutzerregistrierung füllt. Das Formular enthält Eingabefelder für den Benutzernamen, die E-Mail-Adresse und das Passwort. Durch Drücken der Taste „Sign Up“ werden die Anmeldedaten an die Route „\texttt{/sign\_up}“ mittels einer Post-Anfrage gesendet. Wenn die Registrierungsdaten gültig sind, antwortet der Server mit einem JWT-Token und der Benutzer wird im System registriert.
   \paragraph{Navigationsleiste}
   \par \textbf{}
   \par Die Funktion \texttt{renderNavbar} füllt das \texttt{div}-Element „navbar“ mit einer Navigationsleiste. Diese enthält einen Link zur Hauptseite sowie die Schaltflächen „My Devices“, „My Scenarios“ und „Logout“. 
@@ -978,7 +1056,7 @@ captionpos=b,
   \par \textbf{}
   \par Nach erfolgreicher Anmeldung und Erhalt des JWT-Tokens wird der Benutzer zur Hauptseite der Anwendung weitergeleitet. Dort erfolgt eine Anfrage an die Route „\texttt{/get\_user\_data}“, um die relevanten Benutzerdaten vom Server abzurufen. Die Serverantwort auf diese Anfrage besteht aus einem JSON-Objekt, das Listen der gespeicherten Häuser, Geräte und Szenarien enthält. Diese Daten werden anschließend in der lokalen Variablen „\texttt{stored\_data}“ gespeichert und zur dynamischen Darstellung der Benutzeroberfläche verwendet. Falls die Token-Validierung fehlschlägt, wird der Benutzer automatisch zur Anmeldeseite zurückgeleitet. Nach Erhalt der Benutzerdaten wird die Hauptseite generiert.
   \par Die Funktion \texttt{renderMainPage} füllt das \texttt{div}-Element „app“ mit der im Listing \ref{lst:mainhtml} dargestellten HTML-Struktur. 
-  \begin{lstlisting}[style=htmlcssjs, label={lst:mainhtml}, caption={script.js: renderMainPage}]
+  \begin{lstlisting}[style=htmlcssjs, label={lst:mainhtml}, caption={html: renderMainPage}]
     <div id="main_page">
         <div id="main_header">
             <p>Hello, ${data.user_data.username}!</p>
@@ -990,7 +1068,7 @@ captionpos=b,
   \end{lstlisting}
   \par Oben auf der Seite wird eine Willkommensnachricht zusammen mit einer Schaltfläche zum Erstellen eines neuen Hauses angezeigt. Durch Anklicken des Buttons wird das \texttt{div}-Element „MNcreateHouse“ mit einem Formular befüllt, in das der Benutzer den Namen des Hauses eingeben kann. Mit der Schaltfläche „Save“ wird das Haus gespeichert. Dabei wird eine asynchrone Anfrage an die Route „\texttt{add\_house}“ gesendet, die das Token und den Hausnamen enthält, und das Haus wird in der Datenbank gespeichert. Nach Abschluss wird die Seite neu geladen und das neue Haus erscheint.
   \par In das \texttt{div}-Element „houseList“ werden die vom Benutzer erstellten Häuser, einschließlich der Räume und zugehörigen Geräte, geladen. Diese Daten sind in der lokalen Variablen „\texttt{stored\_data}“ unter dem Schlüssel „houses“ gespeichert. Für jedes Haus wird ein \texttt{div}-Element mit der im Listing \ref{lst:houseelement} dargestellten HTML-Struktur erstellt und an das \texttt{div}-Element „houseList“ angehängt. Dabei wird jede ID um die ID des jeweiligen Hauses erweitert, um die spätere Zuordnung der Räume und Geräte zu ermöglichen.
-  \begin{lstlisting}[style=htmlcssjs, label={lst:houseelement}, caption={script.js: house\_element}]
+  \begin{lstlisting}[style=htmlcssjs, label={lst:houseelement}, caption={html: house\_element}]
   <div id="header${house.id}">${house.name} </div>
   <div id="house_element${house.id}">
     <div>        
@@ -1002,10 +1080,23 @@ captionpos=b,
     </div>
   </div>
   \end{lstlisting}
-  \par Im \texttt{header}-Element wird der Name des Hauses angezeigt. Unterhalb des Headers befindet sich ein Button zur Erstellung eines neuen Raumes sowie der Bereich für die Raumauflistung. Zusätzlich gibt es eine Schaltfläche zum Löschen des Hauses. Die Schaltfläche „\texttt{create\_room}“ öffnet ein Formular, in dem der Benutzer den Namen des Raumes eingeben und speichern kann.
-  \par Anschließend wird das \texttt{div}-Element „room\_list“ mit den Räumen des Hauses gefüllt. Dieser Vorgang ist ähnlich wie bei der Anzeige der Häuser. Für jeden Raum wird ein \texttt{div}-Element „room\_element“ mit der ID des Raumes erstellt. Dieses Element enthält den Namen des Raumes, eine Schaltfläche zum Hinzufügen eines Geräts, den Bereich zur Auflistung der Geräte und eine Schaltfläche zum Löschen des Raumes. Die Schaltfläche zum Hinzufügen eines Geräts öffnet ein Formular, in das der Benutzer die ID und den Namen des Geräts eingeben soll. Durch bestätigen der „Save“-Taste wird das Gerät gespeichert und zu dem Raum zugewiesen. 
-  \par 
+  \par Im \texttt{header}-Element wird der Name des Hauses angezeigt. Unterhalb des Headers befindet sich eine Schaltfläche zum Anlegen eines neuen Raumes sowie der Bereich für die Auflistung der Räume. Zusätzlich gibt es eine Schaltfläche zum Löschen des Hauses. Der Button „\texttt{create\_room}“ öffnet ein Formular, in dem der Benutzer den Namen des Raumes eingeben und speichern kann.
+  \par Anschließend wird das \texttt{div}-Element „room\_list“ mit den Räumen des Hauses gefüllt. Dieser Vorgang ist ähnlich wie bei der Anzeige der Häuser. Für jeden Raum wird ein \texttt{div}-Element „room\_element“ mit der ID des Raumes erzeugt. Dieses Element enthält den Namen des Raumes, eine Schaltfläche zum Hinzufügen eines Gerätes, den Bereich zur Auflistung der Geräte und eine Schaltfläche zum Löschen des Raumes. Die Schaltfläche zum Hinzufügen eines Geräts öffnet ein Formular, in das der Benutzer die ID und den Namen des Gerätes eingeben soll. Durch Bestätigen der Schaltfläche „Speichern“ wird das Gerät gespeichert und dem Raum zugeordnet. 
+  \par Die zu dem Raum zugeordneten Geräte müssen auch angezeigt werden. Für jedes Gerät wird ein \texttt{div}-Element „device\_element“ mit der ID des Gerätes erzeugt. Im Listing \ref{lst:deviceelement} ist die HTML-Struktur des Elements angezeigt. Dieses Element enthält der Name und ID des Geräts, eine Schaltfläche zum Löschen des Gerätes und zwei weitere \texttt{div}-Elemente für die Darstellung der von Gerät gesendeten Daten und den gespeicherten Befehlen, die das Gerät ausführen kann.
+  \begin{lstlisting}[style=htmlcssjs, label={lst:deviceelement}, caption={html: device\_element}]
+    <div id="device_element${device.dev_id}"
+      <div>
+          <p>NAME: ${device.name}</p>
+          <p> ID: ${device.dev_id} </p>
+          <div id="deviceData${device.dev_id}"></div>
+      </div>
+      <div id="commands${device.dev_id}"></div>
+      <button id="deleteDevice${device.dev_id}"> DELETE </button>
+    </div>
+  \end{lstlisting}
+  \par Im \texttt{div}-Element „deviceData“ werden die aus dem WebSocket empfangenen Daten dargestellt. 
   % „“
+  \subsubsection{Styling}
 \newpage
 \section{Ergebnisse und Diskussion}
 \par Hier wird zusammengefasst, was ich mit diesem Projekt gelernt habe, welche Ziele erreicht und nicht erreicht habe, mögliche Weiterentwicklung des Systems etc
