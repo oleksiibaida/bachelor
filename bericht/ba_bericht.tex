@@ -141,8 +141,9 @@
   {ö}{{\"o}}1
 }
 %
-\lstdefinestyle{python} {%
+\lstdefinestyle{mypython} {%
 language=python,
+captionpos=b,
 literate=%
 *{0}{{{\color{lightred}0}}}1
 {1}{{{\color{lightred}1}}}1
@@ -155,15 +156,15 @@ literate=%
 {8}{{{\color{lightred}8}}}1
 {9}{{{\color{lightred}9}}}1,
 basicstyle=\footnotesize\ttfamily, % Standardschrift
-numbers=left,               % Ort der Zeilennummern
-%numberstyle=\tiny,          % Stil der Zeilennummern
+numbers=left,                          % Ort der Zeilennummern
+frame = single,
+numberstyle=\tiny,          % Stil der Zeilennummern
 %stepnumber=2,               % Abstand zwischen den Zeilennummern
 numbersep=5pt,              % Abstand der Nummern zum Text
 tabsize=4,                  % Groesse von Tabs
 extendedchars=true,         %
 breaklines=true,            % Zeilen werden Umgebrochen
 keywordstyle=\color{blue}\bfseries,
-frame=b,
 commentstyle=\color{brown}\itshape,
 stringstyle=\color{editorOcher}\ttfamily, % Farbe der String
 showspaces=false,           % Leerzeichen anzeigen ?
@@ -878,9 +879,30 @@ captionpos=b,
   \par Die Geräte senden kontinuierlich ihre Daten über die MQTT-Verbindung an den MQTT-Broker. Jedes Gerät nutzt sein separates Topic, das sich auf die Geräte-ID bezieht. Um die Daten eines bestimmten Geräts zu empfangen, muss ein MQTT-Client das entsprechende Topic abonnieren.
   \par Der MQTT-Client für den Webserver ist im Paket \texttt{mqtt} enthalten. In der Datei \texttt{client.py} ist die Klasse \texttt{MQTTClient} implementiert, die eine asynchrone Schnittstelle zur Verarbeitung von MQTT-Nachrichten bereitstellt. 
   \par Die Implementierung basiert auf der Bibliothek \texttt{aiomqtt}. Durch die asynchrone Architektur kann der Client effizient auf die eingehenden MQTT-Nachrichten reagieren, ohne blockierende Operationen auszuführen.
-  \par Die asynchrone Funktion \texttt{start\_client()} enthält eine Endlosschleife und erwartet als Parameter eine Liste von Topics, die der Client abonnieren soll. Diese Funktion wird beim Start des Webservers mit dem Befehl \texttt{asyncio.create\_task()} als asynchrone Aufgabe gestartet. Dadurch wird sichergestellt, dass die MQTT-Verbindung parallel zu anderen asynchronen Aufgaben läuft. Zudem stellt die Endlosschleife sicher, dass die Verbindung nach einer Unterbrechung oder einem Fehler automatisch wiederhergestellt wird.
-  \par Innerhalb der asynchronen Schleife wird zunächst mit dem Befehl \texttt{async with aiomqtt.Client(...)} die Verbindung zu dem MQTT-Broker aufgebaut. Anschließend werden die übergebenen Topics abonniert. Danach empfängt der Client die MQTT-Nachrichten asynchron über die async for-Schleife, die auf client.messages lauscht. Jede eingehende Nachricht wird an die Funktion \texttt{process\_message()} weitergeleitet, die für die weitere Verarbeitung verantwortlich ist.
-  \par Die Funktion \texttt{process\_message()} extrahiert zunächst die Geräte-ID aus dem Topic. Anschließend wird der Payload der Nachricht dekodiert und in ein JSON-Objekt data umgewandelt. Diese Daten werden dann über WebSockets an den Webserver weitergeleitet. Dazu wird die Klasse WebsocketHandler aus der Datei \texttt{services.py} importiert, und die Daten werden an die Funktion \texttt{send\_data()} dieser Klasse übergeben.
+  \par Die asynchrone Funktion \texttt{start\_client()} (Listing \ref{lst:startclient}) wird beim Start des Webservers als asynchrone Aufgabe gestartet gestartet. Diese Funktion enthält eine Endlosschleife und erwartet als Parameter eine Liste von Topics, die der Client abonnieren soll. Dadurch wird sichergestellt, dass die MQTT-Verbindung parallel zu anderen asynchronen Aufgaben läuft. Zudem stellt die Endlosschleife sicher, dass die Verbindung nach einer Unterbrechung oder einem Fehler automatisch wiederhergestellt wird.
+  \par Innerhalb der Endlosschleife wird zunächst die Verbindung zu dem MQTT-Broker aufgebaut (Zeile 4). Das Objekt \texttt{Client} der Klasse \texttt{aiomqtt} erwartet als Parameter die IP-Adresse des MQTT-Brokers und den Port. Anschließend werden die übergebenen Topics abonniert (Zeile 5-6). Danach empfängt der Client die MQTT-Nachrichten asynchron über die async for-Schleife, die auf client.messages lauscht (Zeile 7-8). Jede eingehende Nachricht wird an die Funktion \texttt{process\_message()} weitergeleitet, die für die weitere Verarbeitung verantwortlich ist.
+  \par Wenn ein MQTT-Fehler auftritt, wird diese geloggt, aber die Funktion wird nicht abgestürzt.
+  \begin{lstlisting}[style=mypython, label={lst:startclient}, caption={client.py: start\_client}]
+    async def start_client(cls, topics: list):
+      while True:
+        try:
+          async with aiomqtt.Client(hostname=Config.MQTT_BROKER_ADDRESS, port=Config.MQTT_PORT) as client:
+            for t in topics:
+                await client.subscribe(t)
+            async for message in client.messages:
+              await cls.process_message(message)
+        except aiomqtt.MqttError as e:
+          logger.error(e)
+  \end{lstlisting}
+  \par Die Funktion \texttt{process\_message()} extrahiert zunächst die Geräte-ID aus dem Topic. Anschließend wird der Payload der Nachricht dekodiert und in ein JSON-Objekt data umgewandelt. Diese Daten werden dann über WebSockets an den Benutzer weitergeleitet. Dazu wird die Klasse WebsocketHandler aus der Datei \texttt{services.py} importiert, und die Daten werden an die Funktion \texttt{send\_data()} dieser Klasse übergeben.
+  \paragraph{Handshake}
+  \par \textbf{}
+  \par Die Handshake-Nachricht wird an ein Gerät gesendet, um dessen Konfigurationsdaten zu empfangen. Die Klasse MQTT-Client enthält die Funktion \texttt{send\_handshake()}, die eine MQTT-Nachricht in das Topic „\texttt{command/device\_id}“ mit dem Text „handshake“ sendet. Das Gerät antwortet im Topic „handshake“.
+  \par Beim Empfang einer MQTT-Nachricht von diesem Topic verarbeitet die Funktion \texttt{process\_message()} den Inhalt der Nachricht entsprechend. Die empfangenen Daten müssen in die Datenbank eingefügt werden. Dazu werden die Funktionen aus dem Paket „\texttt{db}“ importiert und das gespeicherte Gerät mit den neuen Daten aktualisiert.
+  \par Diese Vorgehensweise kann jederzeit durchgeführt werden. Damit ist sichergestellt, dass die Daten bei Bedarf aktualisiert werden können.
+  % „“
+  \paragraph{Szenario}
+  \par \textbf{TODO}
   \par Durch diese Architektur kann der Webserver in Echtzeit auf neue MQTT-Nachrichten reagieren und die empfangenen Daten effizient an verbundene Clients weiterleiten.
   \subsection{WebSocket}
   % \par \textbf{}
