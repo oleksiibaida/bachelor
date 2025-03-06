@@ -349,7 +349,8 @@ captionpos=b,
     \par Die technischen Spezifikationen des Arduino Uno sind in Tabelle \ref{tab:arduinounotd} dargestellt.
     \begin{table}[h]
       \centering
-      \begin{tabular}{|l|l|}
+      \renewcommand{\arraystretch}{1.5}
+      \begin{tabular}{|>{\centering\arraybackslash}p{0.5\textwidth}|>{\centering\arraybackslash}p{0.5\textwidth}|} 
           \hline
           Modell                         & Arduino Uno                \\ \hline
           Mikrocontroller                & ATmega328P                      \\ \hline
@@ -375,7 +376,8 @@ captionpos=b,
 
   \begin{table}[h]
   \centering
-  \begin{tabular}{|l|l|}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{|>{\centering\arraybackslash}p{0.5\textwidth}|>{\centering\arraybackslash}p{0.5\textwidth}|} 
   \hline
   Modell & ESP8266-01 \\ \hline
   Chip & ESP8266EX \\ \hline
@@ -399,7 +401,8 @@ captionpos=b,
 
     \begin{table}[h]
     \centering
-    \begin{tabular}{|l|l|}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|>{\centering\arraybackslash}p{0.5\textwidth}|>{\centering\arraybackslash}p{0.5\textwidth}|} 
     \hline
     Modell & ESP32-WROOM-32 \\ \hline
     Architektur & 32-Bit Dual-Core \\ \hline
@@ -429,9 +432,10 @@ captionpos=b,
   \par Der BME680 ist ein kompakter Umweltsensor von Bosh, der mehrere Funktionen in einem Modul vereint. Das Modul ist mit einem Gassensor, einem Feuchtesensor, einem Luftdrucksensor und einem Temperatursensor ausgestattet. Aufgrund seiner kompakten Größe und hohen Genauigkeit wird das Modul häufig im Bereich der Umweltsensorik eingesetzt.
   \par Mit Hilfe des eingebauten Gassensors und einer vom Hersteller speziell entwickelten Software kann die Luftqualität (IAQ - Eng. Index of Air Quality) gemessen werden. Grundsätzlich handelt es sich um eine Zahl von 0 bis 500, wobei 0 die beste und 500 die schlechteste Luftqualität darstellt. Eine detaillierte Beschreibung des Sensors sowie der Bestimmung der IAQ ist im Datenblatt zum Modul BME680 \cite{bme680} unter Kapitel 1.2 zu finden. Die Tabelle \ref{tab:bme680td} enthält die wichtigsten technischen Daten des Moduls.
   \par Der BME680 verfügt über I2C- und SPI- Schnittstellen für die Kommunikation mit anderen Geräten. 
-  \begin{table}[h]
+  \begin{table}[h!]
     \centering
-    \begin{tabular}{|l|l|}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|>{\centering\arraybackslash}p{0.5\textwidth}|>{\centering\arraybackslash}p{0.5\textwidth}|} 
     \hline
     Modell & BME680 \\ \hline
     Versorgungsspannung & 3,3 V \\ \hline
@@ -450,9 +454,10 @@ captionpos=b,
   \par Mit Hilfe des Näherungssensors und der IRED kann das Modul den Abstand zu einem Objekt bis zu einer Entfernung von 200 mm in Echtzeit messen. Der Lichtsensor misst die Helligkeit der Umgebung. 
   \par Das VCNL4040 verfügt über eine I2C-Schnittstelle zur Kommunikation mit anderen Geräten. 
   \par Eine detaillierte Beschreibung des Moduls sowie die technischen Daten sind dem Datenblatt \cite{vcnl4040} zu entnehmen. In der Tabelle \ref{tab:vcnl4040td} sind die wichtigsten Daten aufgelistet.
-  \begin{table}[h]
+  \begin{table}[h!]
     \centering
-    \begin{tabular}{|l|l|}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|>{\centering\arraybackslash}p{0.5\textwidth}|>{\centering\arraybackslash}p{0.5\textwidth}|} 
     \hline
     Modell & VCNL4040 \\ \hline
     Messprinzip & Infrarot-Näherungssensor \\ \hline
@@ -465,15 +470,89 @@ captionpos=b,
     \label{tab:vcnl4040td}
     \end{table}
 
-  \par In diesem Projekt wird das Modul als Lichtsensor zur Bestimmung der Umgebungshelligkeit eingesetzt. Außerdem wird es zur Näherungserkennung verwendet, um berührungslose Steuerungen zu ermöglichen.
+  \par In diesem Projekt wird das Modul als Lichtsensor zur Bestimmung der Umgebungshelligkeit eingesetzt. %Außerdem wird es zur Näherungserkennung verwendet, um berührungslose Steuerungen zu ermöglichen.
   \subsubsection{Raspberry Pi}
-  \par 
+  \par Der Raspberry Pi \cite{raspi} ist ein Einplatinencomputer, der von der Raspberry Pi foundation entwickelt wurde. Dieser Minicomputer verfügt über einen leistungsfähigen ARM-Prozessor. Dank seiner geringen Größe und hohe Rechenleistung wird er häufig in IoT-Systemen eingesetzt.
+  \par Die technische Daten sind in der Tabelle \ref{tbl:raspberry_tech} gelistet.
+  \begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|>{\centering\arraybackslash}p{0.5\textwidth}|>{\centering\arraybackslash}p{0.5\textwidth}|}  %{|l|l|}
+    \hline
+    Modell                               & Raspberry Pi 1.0 Modell B+               \\ \hline
+    CPU                            & ARM-Prozessor                            \\ \hline
+    Arbeitsspeicher (RAM)                & 512 MB                                   \\ \hline
+    USB-Ports                            & 4                                 \\ \hline
+    MicroSD-Kartensteckplatz             & 1                                 \\ \hline
+    HDMI-Anschluss                       & 1                                 \\ \hline
+    Ethernet-Anschluss                   & 1                                 \\ \hline
+    GPIO-Pins                            & 40                                 \\ \hline
+    Wi-Fi                                & Vorhanden                                \\ \hline
+    Bluetooth                            & Vorhanden                                \\ \hline
+    Stromversorgung                      & 5V Micro-USB-Anschluss                      \\ \hline
+    Betriebssystem                       & Raspberry Pi OS \\ &Debian 11  „Bullseye“             \\ \hline
+    \end{tabular}
+    \caption{Technische Daten des Raspberry Pi}
+    \label{tbl:raspberry_tech}
+  \end{table}
+  \par In diesem Projekt wird der Raspberry Pi als zentraler Server eingesetzt. Er übernimmt die Kommunikation mit den angeschlossenen Sensoren und Aktoren über MQTT und stellt eine Webschnittstelle für Benutzerinteraktionen bereit. Zusätzlich wird er als WLAN-Access-Point konfiguriert, um eine lokale Netzwerkverbindung für die angebundenen IoT-Geräte bereitzustellen.
   \subsection{Kommunikationsprotokolle}
-  \subsubsection{HTTP}
+  \subsubsection[HTTP]{Hypertext Transfer Protocol}
+  \par Das Hypertext Transfer Protocol (HTTP) ist ein anwendungsorientiertes Kommunikationsprotokoll, das den Datenaustausch zwischen Webservern und Clients ermöglicht. Es dient der Übertragung von Hypertext-Dokumenten zwischen Webservern und Clients, typischerweise Webbrowsern.
+  \par HTTP arbeitet nach dem Request-Response-Prinzip, bei dem ein Client eine Anfrage (Request) an einen Server sendet, der daraufhin eine Antwort (Response) zurücksendet. Die Kommunikation erfolgt in der Regel über das Transmission Control Protocol (TCP).
+  \par Ein wesentliches Merkmal von HTTP ist seine Zustandslosigkeit (Statelessness). Jede Anfrage wird unabhängig von früheren Anfragen behandelt, so dass das Protokoll keine Informationen über frühere Interaktionen speichert. Um dennoch Sitzungsdaten zu verwalten, werden Mechanismen wie Cookies, Session-IDs oder Token-basierte Authentifizierung verwendet. In diesem Projekt wird JWT (JSON Web Token) für die Benutzerauthentifizierung verwendet.
+  \par HTTP definiert mehrere Methoden zur Kommunikation mit dem Webserver, darunter:
+  \begin{itemize}
+    \item \textbf{GET}: Zum Abrufen von Informationen aus dem System.
+    \item \textbf{POST:} Zum Übermitteln neuer Daten oder Benutzerinteraktionen.
+    \item \textbf{PUT:} Zur Aktualisierung vorhandener Informationen. 
+    \item \textbf{DELETE:} Zum Löschen von Daten.
+  \end{itemize}
+  \par Ein HTTP-Request besteht aus mehreren Komponenten:
+  \begin{itemize}
+    \item \textbf{Request-Line:} Enthält die HTTP-Methode, die Ziel-URL und die verwendete HTTP-Version.
+    \item \textbf{Header:} Enthält zusätzliche Metadaten wie akzeptierte Datenformate oder Authentifizierungsinformationen.
+    \item \textbf{Body:} Enthält bei Methoden wie POST oder PUT die zu übertragenden Daten.
+  \end{itemize}
+  \par Ein Beispiel für eine HTTP-POST-Anfrage, bei der die Anmeldedaten gesendet werden:
+  \begin{Verbatim}[frame=single]
+    POST /login HTTP/1.1  
+    Host: 127.0.0.1  
+    Content-Type: application/json
+    Content-Length: 32  
+
+    username=testuser&password=1234 
+  \end{Verbatim}
+  \par Der Server antwortet mit einer HTTP-Response, die ähnlich strukturiert ist. Die erste Zeile der Antwort wird als Statuszeile bezeichnet und enthält die HTTP-Version, den Statuscode und eine Statusbeschreibung.
+  \par In diesem Projekt wird HTTP für die Kommunikation zwischen Webserver und Browser verwendet.
   \subsubsection{MQTT}
+  \par Das Message Queuing Telemetry Transport (MQTT)-Protokoll \cite{mqtt} ist ein leichtgewichtiges und effizientes Nachrichtenprotokoll, das speziell für den Einsatz in IoT-Systemen entwickelt wurde. Es ermöglicht die asynchrone Kommunikation zwischen Geräten über Netzwerke mit geringer Bandbreite und hoher Latenz.
+  \par MQTT basiert auf dem Publish-Subscribe-Modell, das eine zentrale Instanz, den Broker, erfordert. Ein Publisher sendet Nachrichten zu einem bestimmten Topic, während ein Subscriber die Nachrichten eines abonnierten Topics empfängt. Der Broker übernimmt dabei die Filterung, Verteilung und Verwaltung der Nachrichten.
+  \par Ein Topic ist ein hierarchisch strukturierter String,  die zur Gliederung von Nachrichten dient. Die einzelnen Ebenen eines Topics werden durch einen Slash („/“) getrennt. Dies ermöglicht eine feine Filterung der Nachrichten. Ein Broker verlangt keine vorherige Registrierung von Topics, sondern akzeptiert alle syntaktisch gültigen Topics.
+  \par Eine Nachricht ist ein String, der in ein Topic gesendet wird. In vielen Anwendungsfällen werden Nachrichten im JSON-Format übertragen, um eine strukturierte Verarbeitung zu ermöglichen.
+  \par MQTT bietet die Möglichkeit, die zuletzt gesendete Nachricht eines Topics zu speichern. Ein neu verbundener Client, der ein solches Topic abonniert, erhält automatisch die letzte gespeicherte Nachricht.
+  \par Beim Aufbau einer MQTT-Verbindung sendet der Client eine eindeutige Client-ID an den Broker. Optional kann eine Authentifizierung mittels Benutzername und Passwort erfolgen, um unberechtigten Zugriff auf das System zu verhindern.
+  \par Eine weitere sicherheitsrelevante Funktion ist das Last-Will-and-Testament (LWT), das es dem Broker ermöglicht, im Falle eines Geräteausfalls eine bestimmte Nachricht zu senden. Das Testament wird vom Client beim Verbindungsaufbau mit Topic und Message angegeben und vom Broker gespeichert. Zusätzlich wird mit dem Parameter \texttt{keepAlive} die maximale Reaktionszeit des Clients festgelegt. Wird diese Zeit überschritten, interpretiert der Broker dies als Ausfall und sendet die hinterlegte LWT-Nachricht. 
+  \par Aufgrund seiner geringen Ressourcenanforderungen, einfachen Implementierung und Zuverlässigkeit findet MQTT breite Anwendung in Smart-Home-Systemen, industriellen IoT-Lösungen und Telemetrie-Anwendungen. Die Nachrichtenübertragung erfolgt in einer festgelegten Reihenfolge, wodurch eine konsistente Kommunikation gewährleistet wird.
+  % \par Bei der Wahl des Protokolls sollten die Entwickler die folgenden Schlüsselpunkte berücksichtigen:
+  % \begin{itemize}
+  %   \item[\textbullet] \textbf{Data latency} –- Wie schnell sollen die Daten übergeben werden? Wie kann man ein Packet vom Startpunkt zum Endpunkt vernünftig übergeben?
+  %   \item[\textbullet] \textbf{Reliability} –- Welche Folgen hat Datenverlust im IoT-System? Wie kann das System zuverlässiger werden?
+  %   \item[\textbullet] \textbf{Bandwidth} –- Wie groß sind Datenmengen, die transportiert werden sollen?
+  %   \item[\textbullet] \textbf{Transport} –- Welches Protokoll ist für den Transport am besten geeignet? Am meisten wird zwischen TCP, UDP und HTTP entschieden.
+  % \end{itemize}
+% „“
   \subsubsection{UART}
-  \subsubsection{I2C}
-    
+  \par UART\footnote{Universal Asynchronous Receiver Transmitter} ist eine Hardwarekomponente, die die serielle Datenübertragung bei der Kommunikation zwischen Mikrocontrollern und anderen Geräten ermöglicht. Eine UART-Schnittstelle ist der Standard für serielle Schnittstellen an PCs und Mikrocontrollern und wird zum Senden und Empfangen von Daten über eine Datenleitung verwendet.
+  \par UART arbeitet asynchron, d.h. es gibt keine gemeinsame Taktverbindung zwischen den kommunizierenden Geräten. Stattdessen wird die Datenübertragung durch Start- und Stoppbits synchronisiert. Diese ermöglichen es dem Empfänger, den Beginn und das Ende eines Datenpakets zu erkennen. Ein typisches Datenpaket besteht aus einem Startbit, gefolgt von einer festgelegten Anzahl von Datenbits (normalerweise 8), einem optionalen Paritätsbit zur Fehlerkontrolle und einem oder mehreren Stoppbits. Der Vorteil besteht darin, dass keine permanente Synchronisation zwischen Empfänger und Sender erforderlich ist. Sie müssen nur für die Dauer der Übertragung synchronisiert sein. Wenn keine Daten zu übertragen sind, setzt der Sender die Leitung auf die Polarität des Stopbits.
+  \par Ein Vorteil der seriellen Kommunikation ist ihre Einfachheit, sowohl in der Implementierung als auch in der Verkabelung. Um die Kommunikation zwischen den Geräten herzustellen, wird die Rx-Leitung eines Gerätes mit der Tx-Leitung des anderen Gerätes verbunden und umgekehrt: Die Tx-Leitung des ersten Gerätes wird mit der Rx-Leitung des zweiten Gerätes verbunden. Dadurch entsteht eine Master-Slave-Beziehung zwischen den beiden Geräten, auch wenn die Geräte gleichberechtigt kommunizieren können. Zudem ist UART in den meisten Mikrocontrollern integriert, was die Anwendung vereinfacht und die Kosten minimiert.
+  \par In meinem Projekt nutze ich eine UART-Schnittstelle, um den Arduino mit dem ESP8266 zu verbinden und damit die serielle Kommunikation zscihen den beiden Modulen zu ermöglichen. 
+  \subsubsection{Inter-Integrated Circuit}
+  \par Der I²C-Bus basiert auf dem Controller-Target-Prinzip (früher Master-Slave-Prinzip). Der Controller ist das Gerät, das die Datenübertragung auf dem Bus initiiert und die Taktimpulse erzeugt. Das angesprochene Gerät wird in diesem Moment als Target betrachtet. Der Bus erlaubt mehrere Controller- und Target-Geräte, wobei jedes Gerät eine eindeutige Adresse besitzt.
+  \par I²C- Bus verwendet das Controller-Target-Prinzip (früher Master-Slave-Prinzip). Ein Controller ist das Gerät, das die Datenübertragung auf dem Bus initiiert und die Taktsignale erzeugt. Zu diesem Zeitpunkt wird jedes angesprochene Gerät als Ziel betrachtet. Es können mehrere Target- und Controller-Geräte am Bus angeschlossen sein, wobei jedes Gerät eine eindeutige Adresse besitzt.
+  \par SDA und SCL sind bidirektionale Leitungen. Wenn der Bus frei ist, sind beide Leitungen auf \texttt{HIGH} gesetzt. Alle Transaktionen beginnen mit einer Startbedingung und enden mit einer Stopbedingung. Beide Bedingungen werden immer von dem Controller erzeugt. 
+  \par Die Kommunikation beginnt mit einer Startbedingung, bei der der Controller die SDA-Leitung auf \texttt{LOW} setzt, während SCL noch \texttt{HIGH} ist. Danach sendet der Controller die Adresse des Targets und ein Lese- oder Schreibbit. Das adressierte Target bestätigt den Empfang mit einem ACK-Bit (Acknowledge), woraufhin der Datenaustausch beginnt. Die Übertragung endet mit einer Stopbedingung, wenn SDA von \texttt{LOW} auf \texttt{HIGH} wechselt, während SCL \texttt{HIGH} bleibt.
+  \par Der Vorteil von I²C liegt in der einfachen Verkabelung, da nur zwei Leitungen für die Kommunikation mehrerer Geräte ausreichen. I²C wird häufig in Sensoren, Echtzeituhrmodulen, EEPROMs und Display-Controllern eingesetzt. Insbesondere in Embedded-Systemen und IoT-Anwendungen ist das Protokoll aufgrund seiner geringen Hardwareanforderungen und flexiblen Adressierung weit verbreitet.
   \subsection{Software}
   \subsubsection{PlatformIO}
   \subsubsection{Python}
@@ -485,7 +564,7 @@ captionpos=b,
 
 
 \newpage
-\section{Einrichtung der Hardwarekomponenten}
+  \section{Einrichtung der Hardwarekomponenten}
   \subsection{Arduino}
   \par \textbf{TOODOO} wird leicht geändert und erweitert.
   \par Der Arduino mit den angeschlossenen Sensoren stellt das Sichterheitskomponente des Systems dar. Dieses Teilsystem erkennt die Gefahren von Gas und Feuer und alarmiert den Benutzer. Außerdem stellt der Arduino der gesicherte Zugang zu dem Haus durch die Eingabe einer PIN. Die Anschließung der Sensoren und Aktoren an Arduino ist in der PA1 \cite{pa1} beschrieben. 
@@ -1200,10 +1279,14 @@ captionpos=b,
   \par \textbf{Links zur verwendeten Software:}
   \bibitem{mqtt}
   Dr Andy Stanford-Clark, Arlen Nipper, \textit{Message Queuing Telemetry Transport}, \url{https://mqtt.org/}
+
+  \bibitem{i2c}
+  NXP Semiconductors, \textit{I2C-bus specification and user manual}, \url{https://www.nxp.com/docs/en/user-guide/UM10204.pdf}
+
+
+
   \bibitem{python}
   Guido van Rossum, Python Software Foundation, \textit{Python}, \url{https://www.python.org/}
-  \bibitem{telegram}
-  Telegram FZ-LLC, \textit{Telegram Messenger}, \url{https://github.com//telegramdesktop/tdesktop}
   \par \textbf{Linux-Packete}:
   \bibitem{hostapd}
   Jouni Malinen, \textit{hostapd}, \url{https://w1.fi/hostapd/}, Zugriff am: 19. September 2024.
