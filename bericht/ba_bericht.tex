@@ -580,11 +580,55 @@ captionpos=b,
   \par \texttt{SQLAlchemy} unterstützt Object-Relational Mapping (ORM).ORM ist eine Programmiertechnik, die relationale Datenbanken mit objektorientierter Programmierung (OOP) verbindet. Dabei werden Tabellen als Klassen und Datensätze als Instanzen dieser Klassen dargestellt.Dadurch können Entwickler Datenbankoperationen über Python-Objekte ausführen, ohne direkte SQL-Abfragen schreiben zu müssen.
   \par Der Aufbau einer Webanwendung mit \texttt{SQLAlchemy} erfolgt in mehreren Schritten.Zunächst wird eine asynchrone Datenbank-Engine (\texttt{AsyncEngine}) erstellt, die die Verbindung zur Datenbank verwaltet.Anschließend wird eine asynchrone Session (\texttt{AsyncSession}) konfiguriert, die als Schnittstelle zwischen den Python-Objekten und der Datenbank dient.Die Datenmodelle werden als Python-Klassen definiert, die von \texttt{Base} erben und mit Tabellen-Metadaten versehen werden.
   \par In diesem Projekt werden asynchrone Funktionen für den Datenbankzugriff verwendet. Durch den Einsatz von \texttt{SQLAlchemy} mit \texttt{AsyncSession} können Abfragen parallel ausgeführt werden, ohne den Hauptprozess zu blockieren.
-  \subsubsection{WebSocket}
+
   \subsubsection{Webentwicklung}
   \par \textbf{TOODOO} kurzer Überblick auf die Webentwicklung mit HTML/CSS und JavaScript
+  \par Die Entwicklung moderner Webanwendungen basiert auf drei zentralen Technologien: HTML, CSS und JavaScript. Diese bilden die Grundlage für die Erstellung interaktiver und ansprechender Webseiten. HTML dient der strukturellen Definition der Inhalte, CSS sorgt für die visuelle Gestaltung und JavaScript ermöglicht dynamische Funktionen und Interaktionen. Durch das Zusammenspiel dieser Technologien können komplexe, dynamische Webanwendungen realisiert werden.
+  \paragraph{HTML}
+  \par \textbf{}
+  \par Die Hypertext Markup Language (HTML) ist die standardisierte Beschreibungssprache zur Strukturierung und Darstellung von Webseiteninhalten. Sie bildet die Grundlage jeder Webseite und definiert deren logischen Aufbau durch eine hierarchische Struktur von Elementen. 
+  \par HTML ermöglicht die Strukturierung von Webseiten durch die Definition von Elementen und deren Beziehungen. Diese Elemente werden von Webbrowsern interpretiert und in eine visuelle Darstellung umgesetzt. Darüber hinaus unterstützt HTML die Einbindung externer Ressourcen wie CSS zur Gestaltung und JavaScript zur Implementierung dynamischer Funktionen.
+  \par HTML-Dokumente folgen einer baumartigen Struktur und bestehen aus ineinander verschachtelten Elementen, die durch sogenannte Tags gekennzeichnet sind. Jedes HTML-Dokument beginnt mit einer \texttt{<!DOCTYPE>}-Deklaration, die den Dokumenttyp definiert. 
+  \par Die Grundstruktur eines HTML-Dokuments besteht aus folgenden Hauptelementen:
+  \begin{itemize}
+    \item \textbf{\texttt{<hmtl>}:} Das Wurzelelement. Enthält den gesamten HTML-Code.
+    \item \textbf{\texttt{<head>}:} Der Kopf des Dokuments. Enthält die Metadaten, wie Seitentitel, Zeilenkodierung,  Pfade zu den Stylesheets und Skripts.
+    \item \textbf{\texttt{<body>}:} Der Hauptinhalt der Seite. Enthält alle Elemente, die an der Webseite angezeigt werden.
+  \end{itemize}
+  \par Neben diesen Basiselementen enthält HTML eine Vielzahl weiterer Elemente zur Strukturierung von Webseiten. Dazu gehören das \texttt{<div>}-Element als Container und das \texttt{<button>}-Element für interaktive Schaltflächen.  
+  \paragraph{CSS}  
+  \par \textbf{}
+  \par Die Cascading Style Sheets (CSS) sind eine Stylesheet-Sprache zur Gestaltung von HTML-Dokumenten. Sie ermöglichen die Trennung von Inhalt und Design, wodurch Webseiten flexibler und effizienter angepasst werden können.  
+  \par CSS definiert das visuelle Erscheinungsbild von HTML-Elementen durch Eigenschaften wie Farben, Schriften, Abstände und Layouts. Es folgt einer hierarchischen Struktur, in der Regeln kaskadierend angewendet werden. Die CSS-Regeln werden hierarchisch angewendet, wobei übergeordnete Elemente ihre Stile an untergeordnete weitergeben. Falls mehrere Regeln auf dasselbe Element zutreffen, bestimmt die Spezifität der Selektoren, welche Regel Vorrang hat.  
+  \par CSS kann auf drei Arten eingebunden werden: direkt im \texttt{style}-Attribut eines HTML-Elements, innerhalb eines \texttt{<style>}-Elements im \texttt{<head>}-Bereich oder am häufigsten in einer separaten \texttt{.css}-Datei gespeichert und über das \texttt{<link>}-Element in das HTML-Dokument eingebunden.  
+  \par Neben der grundlegenden Formatierung unterstützt CSS Positionierungstechniken, die eine präzise Anordnung von Elementen ermöglichen. Darüber hinaus ermöglicht CSS die Implementierung von Animationen und responsiven Designs, so dass sich Webseiten an unterschiedliche Bildschirmgrößen und Geräte anpassen können.  
+  \par Eine Alternative zu klassischem CSS ist \texttt{Tailwind CSS}. Es vereinfacht die Gestaltung von Webseiten durch vordefinierte Klassen. 
+  \par Im \texttt{Tailwind CSS} hat jede Klasse eine spezifische Funktion, so dass komplexe Designs ohne eigene Stylesheets möglich sind. Außerdem bietet es eine Konfigurationsdatei, in der Farben, Abstände und andere Designparameter individuell angepasst werden können.
+  \par Anstatt für jedes Element individuelle CSS-Regeln zu schreiben, werden Style-Sheets direkt durch CSS-Klassen im \texttt{class}-Attribut eines HTML-Elements definiert. Beispielsweise erzeugt die Klasse \texttt{class="bg-green-500 text-blue p-4"} ein grünes Hintergrundfeld mit blauer Schrift und einem Innenabstand von 16 Pixeln.
+    
+  \par Ein Vorteil von Tailwind CSS ist die hohe Flexibilität und Wiederverwendbarkeit der Klassen. Das Styling kann direkt in den Komponenten definiert werden. Außerdem bietet Tailwind CSS eine \textbf{Purge-Funktion}, die nicht verwendete Klassen aus der endgültigen CSS-Datei entfernt, um die Ladezeiten zu optimieren. 
 
 
+  \paragraph{JavaScript}  
+  \par \textbf{}
+  \par JavaScript ist eine dynamische Programmiersprache, die zur Interaktivität und Behandlung von Webseiteninhalten verwendet wird. Sie ermöglicht die Erstellung dynamischer, benutzerinteraktiver Webseiten. Mit JavaScript können HTML-Elemente zur Laufzeit verändert und Reaktionen auf Benutzereingaben definiert werden.  Die Grundstruktur von JavaScript basiert auf Anweisungen, die sequentiell ausgeführt werden.
+  \par JavaScript ist eine ereignisgesteuerte Sprache, in der viele Prozesse durch Ereignisse wie Klicks, Tastatureingaben oder Zeitabläufe ausgelöst werden. In JavaScript wird der Code in Funktionen organisiert, die bestimmte Aufgaben ausführen. Diese Funktionen können bei Bedarf aufgerufen werden. 
+  \par JavaScript unterstützt asynchronen Programmcode. Asynchrone Funktionen ermöglichen lange Operationen im Hintergrund, ohne die Benutzeroberfläche zu blockieren. Asynchrone Funktionen werden mit dem Schlüsselwort \texttt{async} deklariert. Das Schlüsselwort \texttt{await} wird verwendet, um auf das Ergebnis einer anderen asynchronen Funktion zu warten. Ein einfaches Beispiel für eine asynchrone Funktion ist:
+  \begin{lstlisting}[frame=single, style=htmlcssjs]
+  async function ladeDaten() {
+    let response = await fetch("/get_data");
+    let data = await antwort.json();
+    console.log(daten);
+  }
+  \end{lstlisting}
+  \par Das Schlüsselwort \texttt{await} sorgt dafür, dass der JavaScript-Interpreter wartet, bis die Daten abgerufen und in der Variablen \texttt{data} gespeichert wurden, bevor der Code fortgesetzt wird. Dadurch wird die Blockierung des Codes vermieden. Gleichzeitig wird es sichergestellt, dass der gesamte Prozess abgeschlossen ist, bevor mit den Daten weitergearbeitet wird.   
+  \par Eine zentrale Funktion von JavaScript ist die Behandlung des Document Object Model (DOM). Das DOM stellt die Webseite als Baumstruktur dar, wobei jedes HTML-Element als Knoten in diesem Baum betrachtet wird. Mit JavaScript können diese Knoten verändert, hinzugefügt oder entfernt werden, um die Darstellung der Seite zu beeinflussen.
+
+  \paragraph{WebSocket}  
+  \par \textbf{}
+  \par WebSocket ist ein Kommunikationsprotokoll, das eine dauerhafte, bidirektionale Verbindung zwischen einem Client und einem Server ermöglicht. Im Gegensatz zu klassischen HTTP-Verbindungen, die nach jeder Anfrage und Antwort geschlossen werden, bleibt bei WebSocket die Verbindung offen, so dass beide Parteien jederzeit Daten austauschen können. Dies ermöglicht eine Echtzeit-Kommunikation, ohne dass ständig neue Verbindungen aufgebaut werden müssen. 
+  \par WebSocket ermöglicht das Senden von Daten in beide Richtungen: vom Client zum Server und umgekehrt. Dies ist besonders nützlich für Anwendungen, die eine kontinuierliche Datenübertragung benötigen, wie z.B. Echtzeit-Datenvisualisierungen.  
+  \par In JavaScript kann WebSocket einfach mit der WebSocket-API verwendet werden. Eine WebSocket-Verbindung wird hergestellt, indem ein neues \texttt{WebSocket}-Objekt instanziiert wird, das die URL des WebSocket-Servers als Parameter erhält. Sobald die Verbindung hergestellt ist, können Nachrichten gesendet und empfangen werden.
 \newpage
   \section{Einrichtung der Hardwarekomponenten}
   \subsection{Arduino}  
