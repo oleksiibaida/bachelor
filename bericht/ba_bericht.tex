@@ -564,7 +564,27 @@ captionpos=b,
   \par Python unterstützt die objektorientierte Programmierung (OOP) mit Klassen und Vererbung. Gleichzeitig erlaubt die Sprache weitere Programmierparadigmen wie die prozedurale und funktionale Programmierung. Dadurch eignet sich Python für eine Vielzahl von Softwarearchitekturen und erlaubt es Entwicklern, verschiedene Ansätze flexibel zu kombinieren.
   \par Darüber hinaus bietet Python eine dynamische Typisierung. Das bedeutet, dass der Datentyp einer Variablen erst zur Laufzeit vom Interpreter bestimmt wird. Dies erleichtert die Entwicklung, kann aber auch zu schwer nachvollziehbaren Fehlern führen.
   \par Ein großer Vorteil von Python ist die große Anzahl an Bibliotheken. Neben der Standardbibliothek gibt es eine große Auswahl an Bibliotheken von Drittanbietern, die speziell für verschiedene Anwendungsbereiche entwickelt wurden. Im Bereich der Webentwicklung steht mit \texttt{FastAPI} ein leistungsfähiges Framework zur Erstellung moderner, asynchroner Webanwendungen zur Verfügung, während \texttt{SQLAlchemy} eine flexible ORM- und Datenbankbibliothek für effiziente Datenbankzugriffe bietet. Eine aktive Community sorgt für die kontinuierliche Weiterentwicklung und umfassende Dokumentation dieser Werkzeuge.
-  \par In meinem Projekt werden Python-Skripte sowohl für die Verarbeitung von MQTT-Nachrichten als auch für den Betrieb des Webservers verwendet.
+  \par Python unterstützt die asynchrone Programmierung. Dadurch können langlaufende Prozesse wie Netzwerkanfragen oder Datenbankabfragen ausgeführt werden, ohne den Hauptprozess zu blockieren. Dies wird durch die \texttt{asyncio}-Bibliothek und die Verwendung der Schlüsselwörter \texttt{async} und \texttt{await} ermöglicht.  
+  \par Eine Funktion wird als asynchron gekennzeichnet, indem sie mit dem Schlüsselwort \texttt{async} deklariert wird. Innerhalb einer asynchronen Funktion wird das Schlüsselwort \texttt{await} verwendet, um auf die Durchführung einer anderen asynchronen Operation zu warten, ohne den Programmablauf zu unterbrechen. Alle asynchronen Funktionen müssen mit dem Schlüsselwort \texttt{await} aufgerufen werden.
+  \par Ein Beispiel für eine asynchrone Datenbankabfrage ist im Listing \ref{lst:asyncbsp} dargestellt. Die Funktion \texttt{get\_username()} ist eine asynchrone Funktion, die Benutzername für die übergebene Benutzer-ID zurückgibt. Die Datenbankabfrage wird mit \texttt{await} ausgeführt, damit das Programm während der Wartezeit nicht blockiert wird. Erst wenn das Ergebnis vorliegt, wird der Benutzername zurückgegeben.  
+  \par Diese Funktion wird innerhalb einer anderen asynchronen Funktion \texttt{main()} aufgerufen. Asynchrone Funktionen müssen in einem asynchronen Kontext aufgerufen werden. Deshalb wird die Funktion \texttt{main()} mit \texttt{asyncio.run()} gestartet. Dadurch wird das asynchrone Programm korrekt ausgeführt.
+  \begin{lstlisting}[style=mypython, label={lst:asyncbsp}, caption={Beispiel für asynchrone Abfrage}]
+    import asyncio
+    import datenbank
+
+    async def get_username(user_id):
+      data = await datenbank.get_user(user_id)
+      return data.username
+
+    async def main():
+      username = await get_username(123)
+      print(username)
+  
+    asyncio.run(main())
+
+  \end{lstlisting} 
+  \par Diese Methode ist besonders nützlich für Anwendungen, die viele gleichzeitige Anfragen verarbeiten müssen. Durch die nicht-blockierenden Abfragen bleibt die Anwendung responsiv und effizient. 
+  \par In diesem Projekt werden Python-Skripte sowohl für die Verarbeitung von MQTT-Nachrichten als auch für den Betrieb des Webservers und der Datenbank verwendet.
   \paragraph{FastAPI}
   \par \textbf{}
   \par \texttt{FastAPI} ist ein modernes Webframework für Python, das speziell für die Entwicklung leistungsstarker, asynchroner Webanwendungen und APIs konzipiert wurde. Es basiert auf Starlette für das Web-Handling und Pydantic für die Datenvalidierung
@@ -952,7 +972,6 @@ captionpos=b,
         await connection.commit()
         logger.info("TABLES CREATED")
   \end{lstlisting}
-% „“
   \paragraph{Modelle}
   \par \textbf{}
   \par In der Datei „models.py“ sind die Datenbank-Tabelle als Python-Klassen dargestellt, die von der \texttt{Base} erben. 
@@ -1017,17 +1036,98 @@ captionpos=b,
     |--- services.py
     |--- templates/
     |--- static/
-  \end{Verbatim}
+  \end{Verbatim} 
+  
+  
+  \subsubsection{API-Endpunkte}
   \par Im Skript \texttt{routes.py} sind die API-Endpunkte definiert, die verschiedene Funktionen des Systems bereitstellen. Jeder Endpunkt ist dabei einer bestimmten Aufgabe zugeordnet. 
   \par Zur besseren Strukturierung und Modularisierung des Codes wurden die Hilfsfunktionen in das Skript \texttt{services.py} ausgelagert. Diese Funktionen enthalten die Anwendungslogik, verarbeiten die Daten und stellen sie zur Verfügung, verwalten die Verbindungen zum WebSocket.
-  \par Nach dem Import der erforderlichen Module wird ein Router mit \texttt{APIRouter()} erstellt, um die API-Endpunkte zu definieren. Der Router wird anschließend mit der Methode \texttt{include\_router()} in das Hauptobjekt der FastAPI-Anwendung integriert.
+  \par Nach dem Import der erforderlichen Module wird ein Router mit \texttt{APIRouter()} erstellt, der die API-Endpunkte verwaltet. Die API-Endpunkte werden am Router registriert und anschließend mit der Funktion \texttt{include\_router()} in das Hauptobjekt der FastAPI-Anwendung integriert. Durch die Verwendung von FastAPI-Routern und einer klar strukturierten Modulanordnung bleibt die API übersichtlich, leicht wartbar und erweiterbar.
   \par Um auf Anfragen mit HTML-Dateien zu antworten, wird ein \texttt{Jinja2Templates}-Objekt erstellt. Dabei wird der Pfad zum Ordner \texttt{templates/} angegeben, der die HTML-Vorlagen enthält. Dieses Objekt ermöglicht es, dynamische HTML-Antworten zu generieren, indem Daten aus den Endpunkten in die Vorlagen eingebunden werden.
-  \par Jede Funktion, die auf die Datenbank zugreift, benötigt als Parameter eine Instanz der Klasse \texttt{AsyncSession}. Im Modul \texttt{routes.py} wird dazu die Funktion \texttt{get\_session()} aus dem Paket \texttt{db} verwendet, die für die Erstellung der Datenbanksitzungen zuständig ist. Durch die Verwendung des Abhängigkeitsmechanismus \texttt{Depends(get\_session)} wird bei jedem Aufruf einer Router-Funktion automatisch eine neue Datenbanksitzung erzeugt und an die entsprechenden Unterfunktionen weitergegeben. Dies ermöglicht eine effiziente und asynchrone Kommunikation mit der Datenbank, wodurch mehrere Anfragen gleichzeitig ohne blockierende Wartezeiten bearbeitet werden können.
-  \par Durch die Verwendung von FastAPI-Routern und einer klar strukturierten Modulanordnung bleibt die API übersichtlich, leicht wartbar und erweiterbar. Die Trennung von Präsentationslogik (HTML, CSS) und Daten (API) wird ebenfalls gewährleistet.
-  \subsubsection{API-Endpunkte}
-  \par \textbf{TODO} Eine Liste von allen API-Endpunkten mit Beschreibung.
+  \par Jede Funktion, die auf die Datenbank zugreift, benötigt als Parameter eine Instanz der Klasse \texttt{AsyncSession}. Im Modul \texttt{routes.py} wird dazu die Funktion \texttt{get\_session()} aus dem Paket \texttt{db} verwendet, die für die Erzeugung der Datenbanksitzungen zuständig ist. Durch die Verwendung des Abhängigkeitsmechanismus \texttt{Depends(get\_session)} wird bei jedem Aufruf einer Router-Funktion automatisch eine neue Datenbanksitzung erzeugt und an die entsprechenden Unterfunktionen weitergegeben. Dies ermöglicht eine effiziente und asynchrone Kommunikation mit der Datenbank, wodurch mehrere Anfragen gleichzeitig ohne blockierende Wartezeiten bearbeitet werden können.
+  \par Im Listing \ref{lst:getuserdata} ist ein API-Endpunkt „\texttt{/get\_user\_data}“ definiert, der an dem \texttt{router}-Objekt registriert ist (Zeile 1). Beim Empfang einer GET-Anfrage auf dieser Route wird die asynchrone Funktion \texttt{get\_user\_data()} ausgeführt.
+  \begin{lstlisting}[style=mypython, label={lst:getuserdata}, caption={routes.py: get\_user\_data}]
+    @router.get('/get_user_data')
+    async def get_user_data(
+      requset: Request, 
+      token: str = Depends(get_token), 
+      db_session: AsyncSession = Depends(get_session)
+    ):
+        try:
+            user_id = services.verify_token(token)
+            if not user_id:
+                return {'error': 'TOKEN INVALID'}
+            res = await services.get_user_data(db_session, user_id)
+            return JSONResponse(res)
+        except Exception as e:
+            return {'error': e}
+  \end{lstlisting}
+  \par Die Funktion erwartet drei Parameter:
+  \begin{itemize}
+  \item \textbf{\texttt{request: Request} –} Das Anfrageobjekt, das die vollständige HTTP-Anfrage des Clients enthält.
+  \item \textbf{\texttt{token: str = Depends(get\_token)} –} Ein Authentifizierungstoken, das über die FastAPI-Abhängigkeitsfunktion \texttt{Depends()} aus der Funktion \texttt{get\_token()} abgeleitet wird.
+  \item \textbf{\texttt{db\_session: AsyncSession = Depends(get\_session)} –} Eine asynchrone Datenbank-Session, die über die Funktion \texttt{get\_session()} erzeugt wird.
+  \end{itemize}
+  \par Nach dem Empfang der Anfrage wird innerhalb eines \texttt{try}-Blocks die Benutzer-ID mithilfe der Funktion \texttt{services.verify\_token()} aus dem erhaltenen Token ermittelt (Zeile 8–10). Detaillierter wird dieser Vorgang in Abschnitt 5.2.2 erklärt.
+  \par Anschließend wird die asynchrone Funktion \texttt{services.get\_user\_data()} aufgerufen, die als Parameter die Datenbank-Session sowie die Benutzer-ID erhält (Zeile 11). Diese Funktion liefert die in der Datenbank gespeicherten Benutzerdaten im JSON-Format. Das erhaltene JSON-Objekt wird mit \texttt{JSONResponse()} an den Client zurückgegeben.
+  \par Dies stellt den Standardvorgang zur Verarbeitung von HTTP-Anfragen in FastAPI dar. Die HTTP-Anfragen werden mit entsprechenden Funktionen verknüpft. Nach der Bearbeitung der Anfrage wird eine Antwort an dem Client geliefert. Im Fehlerfall wird das Fehler an den Client zurückgegeben.
+  \paragraph{Überblick auf die API-Endpunkte}
+
+  \begin{itemize}
+    \item \texttt{/} (GET): Root-Endpunkt. Antwortet mit der HTML-Datei „index.html“.
+    \item \texttt{/login} (POST): Prüft, ob die übergebene Benutzername-Passwort-Kombination mit der in der Datenbank gespeicherten übereinstimmt. Gibt im Erfolgsfall ein Token zurück. \textbf{Parameter:} 
+    \begin{itemize}
+        \item \texttt{user\_data}: \{\texttt{username} (str), \texttt{password} (str)\}
+    \end{itemize}  
+    \item \texttt{/sign\_up} (POST): Fügt einen neuen Benutzer mit den übergebenen Benutzerdaten in die Datenbank ein. \textbf{Parameter:} 
+    \begin{itemize}
+        \item \texttt{user\_data}: \{\texttt{username} (str), \texttt{password} (str), \texttt{email} (str)\}
+    \end{itemize}  
+    \item \texttt{/get\_user\_data} (GET): Liefert die in der Datenbank gespeicherten Benutzerdaten als JSON-Objekt zurück. \textbf{Parameter:} 
+    \begin{itemize}
+        \item \texttt{token} (str)
+    \end{itemize}
+    \item \texttt{/add\_house} (POST): Fügt ein neues Haus in die Datenbank ein. \textbf{Parameter:} 
+    \begin{itemize}
+        \item \texttt{token} (str), \texttt{house\_name} (str)
+    \end{itemize}  
+\end{itemize}
+
+
+  \begin{itemize}
+    \item \texttt{/} (GET): Root-Enpunkt. Antwortet mit HTML-Datei „index.html“
+    \item \texttt{/login} (POST):  Prüft, ob die übergebene Benutzername-Passwort-Kombination mit der in der Datenbank gespeicherten übereinstimmt. Im Erfolgsfall gibt ein Token zurück. \textbf{Parameter:} 
+      \begin{itemize}
+        \item \texttt{user\_data}: \{\texttt{username}: str, \texttt{password} : str\}
+      \end{itemize}  
+    \item \texttt{/sign\_up} (POST): Fügt der neue Benutzer mit übergebenen Benutzerdaten in die Datenbank ein. \textbf{Parameter:} 
+      \begin{itemize}
+        \item \texttt{user\_data}: \{\texttt{username}: str, \texttt{password} : str, \texttt{email}: str\}
+      \end{itemize}  
+    \item \texttt{/get\_user\_data} (GET): Liefert die in der Datenbank gespeicherten Benutzerdaten als JSON-Objekt. \textbf{Parameter:} 
+    \begin{itemize}
+      \item \texttt{token}: str
+    \end{itemize}
+    \item \texttt{/add\_house} (POST): Fügt ein neues Haus in die Datenbank ein. \textbf{Parameter:} 
+    \begin{itemize}
+      \item \texttt{token}: str,
+      \item \texttt{house\_name}: str
+    \end{itemize}
+    \item \texttt{/} ():
+    \begin{itemize}
+      \item \texttt{}
+    \end{itemize}
+    \item \texttt{/} ():
+    \item \texttt{/} ():
+    \item \texttt{/} ():
+    \item \texttt{/} ():
+    \item \texttt{/} ():
+    \item \texttt{/} ():
+    \item \texttt{/} ():
+  \end{itemize}
+  % „“
   \subsubsection{Sicherheit}
-  % \par \textbf{}
+  \par \textbf{}
   \par Sicherheit spielt bei diesem System eine wichtige Rolle. Für die API gibt es zwei kritische Sicherheitspunkte: die Übertragung sensibler Daten und die Authentifizierung der Benutzer.
   \par Um sensible Daten, wie Passwörter, sicher zu speichern, wird der Algorithmus \texttt{bcrypt} verwendet. Anstatt Passwörter im Klartext zu speichern, wird bei der Registrierung eines Benutzers das Passwort gehasht. Der Hash wird in der Datenbank gespeichert, nicht das Passwort selbst. Bei der Anmeldung wird das eingegebene Passwort mit dem gespeicherten Hash verglichen, ohne dass das Originalpasswort jemals entschlüsselt wird. Dadurch sind die Benutzerdaten auch dann geschützt, wenn die Datenbank kompromittiert wird.
   \par Zur Authentifizierung und Identifizierung des Benutzers nach erfolgreicher Anmeldung wird das JWT-Verfahren\footnote {JSON Web Token} verwendet. Die Funktion \texttt{services.create\_jwt\_token()} generiert ein JWT-Token, das an den Benutzer zurückgegeben wird. Dieses Token enthält die Benutzer-ID in verschlüsselter Form, besitzt eine in der Konfiguration definierte Ablaufzeit (\texttt{Config.JWT\_EXPIRE\_TIME}) und wird mit einem geheimen Schlüssel (\texttt{Config.JWT\_SECRET\_KEY}) signiert.
