@@ -55,7 +55,7 @@
 
 % JavaScript
 \lstdefinelanguage{JavaScript}{
-  morekeywords={typeof, const, of, let, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  morekeywords={typeof, const, of, let, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, @tailwind, @apply},
   morecomment=[s]{/*}{*/},
   morecomment=[l]//,
   morestring=[b]",
@@ -269,7 +269,7 @@ captionpos=b,
 
 \section{Einleitung}
 \par In einer Welt, die zunehmend von vernetzten Geräten und dem Internet der Dinge geprägt ist, wird die Entwicklung effizienter und benutzerfreundlicher Systeme zur Steuerung und Überwachung von Gebäuden immer relevanter. Im Jahr 2024 wurde in Deutschland die Anzahl von über 19 Millionen Haushalten, die ein oder mehrere smarte Geräte besaßen, verzeichnet. Es wird prognostiziert, dass sich diese Zahl innerhalb der nächsten drei Jahre verdoppeln wird \cite{statita_smhomes}.
-\par Moderne Steuerungs- und Sicherheitssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Laut Günther Ohland, Vorstandsmitglied des Branchenverbands "Smarthome Initiative Deutschland", ermöglichen diese Systeme eine Reduktion des Heizenergieverbrauchs um 20 bis 30 Prozent \cite{spiegel_heizung}. Die Kosten für die smarte Technik rechnen sich in der Regel nach zwei Jahren. Die Systeme übernehmen ein Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Reglung der Raumtemperatur oder das Aufräumen des Hauses etc. Der Aufgabenbereich der Systeme ist dabei nur nach den Bedürfnissen der Benutzerinnen und Benutzer abgegrenzt.
+\par Moderne Steuerungs- und Sicherheitssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Die Kosten für die smarte Technik rechnen sich in der Regel nach zwei Jahren. Die Systeme übernehmen ein Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Reglung der Raumtemperatur oder das Aufräumen des Hauses etc. Der Aufgabenbereich der Systeme ist dabei nur nach den Bedürfnissen der Benutzerinnen und Benutzer abgegrenzt.
 \par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Das Ziel dieser Arbeit ist die Erstellung einer Schnittstelle, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht und den Benutzer über gefährliche Vorgänge in seinem Haus informiert. 
 \par Im Rahmen der Entwicklung dieses Systems wurden die aktuellen Technologien zur Erstellung eines Webinterfaces und zur Kommunikation zwischen den Geräten eingesetzt. \textbf{TODO Kurz erklären was in Kapitel 2,3,4,5 ... erklärt wird}
 \newpage
@@ -587,7 +587,7 @@ captionpos=b,
   \par In diesem Projekt werden Python-Skripte sowohl für die Verarbeitung von MQTT-Nachrichten als auch für den Betrieb des Webservers und der Datenbank verwendet.
   \paragraph{FastAPI}
   \par \textbf{}
-  \par \texttt{FastAPI} ist ein modernes Webframework für Python, das speziell für die Entwicklung leistungsstarker, asynchroner Webanwendungen und APIs konzipiert wurde. Es basiert auf Starlette für das Web-Handling und Pydantic für die Datenvalidierung
+  \par \texttt{FastAPI} \cite{fastapidoc} ist ein modernes Webframework für Python, das speziell für die Entwicklung leistungsstarker, asynchroner Webanwendungen und APIs konzipiert wurde. Es basiert auf Starlette für das Web-Handling und Pydantic für die Datenvalidierung
   \par Ein wesentlicher Vorteil von \texttt{FastAPI} ist die eingebaute Unterstützung für asynchronen Code. Dies ermöglicht eine höhere Effizienz, da Anfragen nicht blockierend verarbeitet werden. Besonders in Anwendungen mit vielen gleichzeitigen Verbindungen und Echtzeitanforderungen ist die asynchrone Programmierung von Vorteil.
   \par Der Aufbau einer Webanwendung mit \texttt{FastAPI} folgt einer klar strukturierten Architektur. Zunächst wird die FastAPI-Anwendung mit dem Befehl \texttt{FastAPI()} initialisiert. Diese Instanz stellt das zentrale Steuerelement der Anwendung dar. Anschließend werden Router erstellt, um verschiedene API-Endpunkte zu definieren. Ein Router fasst verwandte Endpunkte zusammen und wird dann der Anwendung hinzugefügt.
   \par \texttt{FastAPI} generiert automatisch die API-Dokumentation. Diese wird auf Basis der definierten API-Endpunkte und der Pydantic-Modelle erzeugt. Dadurch erhalten Entwickler eine vollständige, interaktive Dokumentation, die sofort genutzt werden kann, um die API zu testen und zu integrieren.
@@ -602,7 +602,6 @@ captionpos=b,
   \par In diesem Projekt werden asynchrone Funktionen für den Datenbankzugriff verwendet. Durch den Einsatz von \texttt{SQLAlchemy} mit \texttt{AsyncSession} können Abfragen parallel ausgeführt werden, ohne den Hauptprozess zu blockieren.
 
   \subsubsection{Webentwicklung}
-  \par \textbf{TOODOO} kurzer Überblick auf die Webentwicklung mit HTML/CSS und JavaScript
   \par Die Entwicklung moderner Webanwendungen basiert auf drei zentralen Technologien: HTML, CSS und JavaScript. Diese bilden die Grundlage für die Erstellung interaktiver und ansprechender Webseiten. HTML dient der strukturellen Definition der Inhalte, CSS sorgt für die visuelle Gestaltung und JavaScript ermöglicht dynamische Funktionen und Interaktionen. Durch das Zusammenspiel dieser Technologien können komplexe, dynamische Webanwendungen realisiert werden.
   \paragraph{HTML}
   \par \textbf{}
@@ -1072,56 +1071,53 @@ captionpos=b,
   \par Anschließend wird die asynchrone Funktion \texttt{services.get\_user\_data()} aufgerufen, die als Parameter die Datenbank-Session sowie die Benutzer-ID erhält (Zeile 11). Diese Funktion liefert die in der Datenbank gespeicherten Benutzerdaten im JSON-Format. Das erhaltene JSON-Objekt wird mit \texttt{JSONResponse()} an den Client zurückgegeben.
   \par Dies stellt den Standardvorgang zur Verarbeitung von HTTP-Anfragen in FastAPI dar. Die HTTP-Anfragen werden mit entsprechenden Funktionen verknüpft. Nach der Bearbeitung der Anfrage wird eine Antwort an dem Client geliefert. Im Fehlerfall wird das Fehler an den Client zurückgegeben.
   \paragraph{Überblick auf die API-Endpunkte}
-
+  \par \textbf{}
+  \par \textbf{KA ob das passt. Vlt hinweis geben, dass Doku auf /docs augerufen werden kann }
+  \par \textbf{TODOO jede funktion liefer error im fehlerfall.}
   \begin{itemize}
-    \item \texttt{/} (GET): Root-Endpunkt. Antwortet mit der HTML-Datei „index.html“.
-    \item \texttt{/login} (POST): Prüft, ob die übergebene Benutzername-Passwort-Kombination mit der in der Datenbank gespeicherten übereinstimmt. Gibt im Erfolgsfall ein Token zurück. \textbf{Parameter:} 
-    \begin{itemize}
-        \item \texttt{user\_data}: \{\texttt{username} (str), \texttt{password} (str)\}
-    \end{itemize}  
-    \item \texttt{/sign\_up} (POST): Fügt einen neuen Benutzer mit den übergebenen Benutzerdaten in die Datenbank ein. \textbf{Parameter:} 
-    \begin{itemize}
-        \item \texttt{user\_data}: \{\texttt{username} (str), \texttt{password} (str), \texttt{email} (str)\}
-    \end{itemize}  
-    \item \texttt{/get\_user\_data} (GET): Liefert die in der Datenbank gespeicherten Benutzerdaten als JSON-Objekt zurück. \textbf{Parameter:} 
-    \begin{itemize}
-        \item \texttt{token} (str)
-    \end{itemize}
-    \item \texttt{/add\_house} (POST): Fügt ein neues Haus in die Datenbank ein. \textbf{Parameter:} 
-    \begin{itemize}
-        \item \texttt{token} (str), \texttt{house\_name} (str)
-    \end{itemize}  
-\end{itemize}
-
-
-  \begin{itemize}
-    \item \texttt{/} (GET): Root-Enpunkt. Antwortet mit HTML-Datei „index.html“
-    \item \texttt{/login} (POST):  Prüft, ob die übergebene Benutzername-Passwort-Kombination mit der in der Datenbank gespeicherten übereinstimmt. Im Erfolgsfall gibt ein Token zurück. \textbf{Parameter:} 
-      \begin{itemize}
-        \item \texttt{user\_data}: \{\texttt{username}: str, \texttt{password} : str\}
-      \end{itemize}  
-    \item \texttt{/sign\_up} (POST): Fügt der neue Benutzer mit übergebenen Benutzerdaten in die Datenbank ein. \textbf{Parameter:} 
-      \begin{itemize}
-        \item \texttt{user\_data}: \{\texttt{username}: str, \texttt{password} : str, \texttt{email}: str\}
-      \end{itemize}  
-    \item \texttt{/get\_user\_data} (GET): Liefert die in der Datenbank gespeicherten Benutzerdaten als JSON-Objekt. \textbf{Parameter:} 
-    \begin{itemize}
-      \item \texttt{token}: str
-    \end{itemize}
-    \item \texttt{/add\_house} (POST): Fügt ein neues Haus in die Datenbank ein. \textbf{Parameter:} 
-    \begin{itemize}
-      \item \texttt{token}: str,
-      \item \texttt{house\_name}: str
-    \end{itemize}
-    \item \texttt{/} ():
-    \begin{itemize}
-      \item \texttt{}
-    \end{itemize}
-    \item \texttt{/} ():
-    \item \texttt{/} ():
-    \item \texttt{/} ():
-    \item \texttt{/} ():
-    \item \texttt{/} ():
+    \item \texttt{/} (GET): Root-Enpunkt. Antwortet mit HTML-Datei „index.html“. 
+    \item \texttt{/login} (POST):  Prüft, ob die übergebene Benutzername-Passwort-Kombination mit der in der Datenbank gespeicherten übereinstimmt.  
+      \par \textbf{Parameter:} \{\texttt{username}: str, \texttt{password} : str\}
+      \par \textbf{Antwort:} \texttt{\{"token": str\}}
+    \item \texttt{/sign\_up} (POST): Fügt der neue Benutzer mit übergebenen Benutzerdaten in die Datenbank ein. 
+      \par\textbf{Parameter:} \{\texttt{username}: str, \texttt{password} : str, \texttt{email}: str\}
+      \par \textbf{Antwort:} \texttt{\{"token": str\}}
+    \item \texttt{/get\_user\_data} (GET): Liefert die in der Datenbank gespeicherten Benutzerdaten als JSON-Objekt. 
+      \par \textbf{Header:} \{\texttt{"token": str}\}
+      \par \textbf{Antwort:}
+      \begin{Verbatim}
+        {
+          "user_data": {"user_id": "username": str, "email":str},
+          "houses": [HouseModel],
+          "devices": [DeviceModel],
+          "scnearios": [ScenarioModel],
+          "conditions": [str]
+        }
+      \end{Verbatim}
+    \item \texttt{/add\_house} (POST): Fügt ein neues Haus in die Datenbank ein. 
+      \par \textbf{Header:} \{\texttt{"token": str}\}
+      \par \textbf{Parameter:} \{\texttt{"name": str}\}
+      \par \textbf{Antwort: } \{\texttt{"house": HouseModel}\}
+    \item \texttt{/get\_houses} (GET): Gibt eine Liste der vom Benutzer erstellten Häuser zurück.
+      \par \textbf{Header:} \{\texttt{"token": str}\}
+      \par \textbf{Antwort: } [\texttt{HouseModel}]
+    \item \texttt{/delete\_house} (DELETE): Löscht das Haus mit übergebener House-ID. Prüft zunächst, ob das Haus dem Benutzer gehört.
+      \par \textbf{Header:} \{\texttt{"token": str}\}
+      \par \textbf{Parameter:} \{\texttt{"house\_id": int}\}
+      \par \textbf{Antwort: } \{\texttt{"success": str}\}
+    \item \texttt{/add\_room} (POST): Erstellt ein neues Raum im Haus. Prüft zunächst, ob ein Raum mit gleichem Raum bereits im Haus existiert.
+      \par \textbf{Header:} \{\texttt{"token": str}\}
+      \par \textbf{Parameter:} \{\texttt{"house\_id": int, "name": str}\}
+      \par \textbf{Antwort: } \{\texttt{"room": RoomModel}\}
+    \item \texttt{/deleste\_room} (DELETE): Löscht den Raum mit der übergebenen Raum-ID. Zuerst wird geprüft, ob der Raum zu einem vom Benutzer erstellten House gehört.
+      \par \textbf{Header:} \{\texttt{"token": str}\}
+      \par \textbf{Parameter:} \{\texttt{"house\_id": int, "name": str}\}
+      \par \textbf{Antwort: } \{\texttt{"success": str}\}
+    \item \texttt{/add\_new\_device} (POST): Meldet ein neues Gerät an. Prüft zunächst, ob die übergebene Geräte-ID bereits vom Benutzer angemeldet wurde. Optional, wenn die Raum-ID übergeben wurde, wird das Gerät dem Raum hinzugefügt.
+      \par \textbf{Header:} \{\texttt{"token": str}\}
+      \par \textbf{Parameter:} \{\texttt{"dev\_id": str, "name": str, "room\_id": int = None}\}
+      \par \textbf{Antwort: } \{\texttt{DeviceModel, RoomDeviceModel}\}
+    \item \texttt{/update\_device} (POST): Aktualisiert die Gerätedaten. Prüft, ob dass Gerät mit übergener Geräte-ID dem Benutzer gehört.
     \item \texttt{/} ():
     \item \texttt{/} ():
   \end{itemize}
@@ -1424,7 +1420,6 @@ captionpos=b,
   \par Wenn das Gerät keine vordefinierten Datenfelder hat, werden die Schlüssel des empfangenen Datenobjekts extrahiert und als Datenfelder verwendet (Zeilen 13-16). In diesem Fall werden alle empfangenen Daten angezeigt.
   \par Für jedes dieser Datenfelder wird geprüft, ob es im empfangenen Datenobjekt vorhanden ist (Zeile 17-18). Ist dies der Fall, sucht das Skript nach einem \texttt{p}-Element, dessen ID den Namen des Datenfelds und die Geräte-ID enthält (Zeile 19-20). Ist ein solches Element nicht vorhanden, wird es dynamisch erzeugt und in das \texttt{div}-Element eingefügt (Zeile 21-25). Schließlich wird der Inhalt des Elements mit dem Schlüssel und dem entsprechenden Wert aus den empfangenen Daten aktualisiert (Zeile 26).
   \par Wenn die Verbindung unterbrochen wird, wird eine Meldung an die Konsole ausgegeben.
-  % „“
   \begin{lstlisting}[style=htmlcssjs, numbers=left, label={lst:jswebsocket}, caption={script.js: websocket}]
   const ws = new WebSocket(
     `ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`
@@ -1461,6 +1456,46 @@ captionpos=b,
   };
   \end{lstlisting}
   \subsubsection{Styling}
+  \par Das Styling der Webseite ist mit \texttt{Tailwind CSS} definiert. \texttt{Tailwind CSS} hat der Vorteil vor klassischem CSS, dass die es vordefinierte Klassen hat, die direkt im HTML-Code angebunden werden können. Außerdem ist es möglich eine separate \texttt{.css}-Datei zu erstellen, wo weiteren Klassen definiert werden können. 
+  \paragraph{Einrichtung von Tailwind CSS}
+  \par \textbf{}
+  \par \texttt{Tailwind CSS} wird über \texttt{npm} installiert. Zunächst musste Node.js auf dem System vorhanden sein. Danach wurde Tailwind CSS mit folgendem Befehl installiert:
+  \begin{Verbatim}[frame=single]
+    npm install -D tailwindcss postcss autoprefixer
+  \end{Verbatim}
+  \par Nach der erfolgreichen Installation muss die Konfigurationsdatei erstellt werden. Mit diesem Befehl wird die Konfigurationsdatei „\texttt{tailwind.config.js}“ erstellt:
+  \begin{Verbatim}[frame=single]
+    npx tailwindcss init -p
+  \end{Verbatim}
+  \paragraph{Aufbau mit Tailwind CSS}
+  \par \textbf{}
+  \par Für das Styling der Webseite wurde eine eigene Datei \texttt{styles.css} (Listing \ref{lst:stylecss}) erstellt. Damit die vordefinierten Klassen von Tailwind CSS verwendet werden können, müssen am Anfang der Datei die Tailwind CSS-Direktiven eingebunden werden (Zeile 1–3). Diese Direktiven stellen sicher, dass die Basisstile, Komponentenklassen und Utility-Klassen von Tailwind korrekt geladen und verarbeitet werden. In der Datei können eigene CSS-Klassen definiert werden, die mit dem Befehl \texttt{@apply} mehrere Tailwind CSS-Klassen zusammenfassen.
+  \par Ein Beispiel ist die Klasse \texttt{main\_page}, die für den Hauptbereich der Webseite verwendet wird. Diese Klasse enthält mehrere Tailwind CSS-Regeln:
+  \begin{itemize}
+    \item \texttt{p-1} setzt den Innenabstand (Padding) auf 4 Pixel. Damit wird sichergestellt, dass Inhalte nicht direkt an den Rändern des Elements anliegen.
+    \item \texttt{my-5} legt den vertikalen Außenabstand (Margin) auf 20 Pixel fest, um das Element optisch von anderen Elementen abzugrenzen.
+    \item \texttt{h-full} stellt sicher, dass das Element die gesamte verfügbare Höhe seines übergeordneten Containers einnimmt.
+    \item \texttt{bg-gray-300} definiert einen hellgrauen Hintergrund.
+    \item \texttt{items-center} richtet die enthaltenen Elemente mittig aus. 
+  \end{itemize}
+  \begin{lstlisting}[style=htmlcssjs, numbers=left, label={lst:stylecss}, caption={style.css}]
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+    .main_page {
+        @apply p-1 my-5 h-full bg-gray-300 items-center;
+    }
+    ...
+  \end{lstlisting}
+  \par Damit die Klassen übernommen und kompiliert werden können, muss der Watch-Modus von Tailwind CSS gestartet werden:
+  \begin{Verbatim}[frame=single]
+    npx tailwindcss -i ./app/webserver/static/styles.css \
+        -o ./app/webserver/static/output.css --watch  
+  \end{Verbatim}
+  \par Der Parameter \texttt{-i} gibt den Pfad zu der Eingabedatei an, in der die eigenen Tailwind CSS-Klassen definiert sind. Der Parameter \texttt{-o} legt die Ausgabedatei fest, in die der kompilierte CSS-Code geschrieben wird. Durch \texttt{--watch} wird der Watch-Modus aktiviert, wodurch Änderungen in der Eingabedatei automatisch erkannt und in die Ausgabedatei übernommen werden. Dadurch wird sichergestellt, dass neue oder geänderte Tailwind CSS-Klassen direkt im Projekt verfügbar sind, ohne dass der Compiler manuell neu gestartet werden muss.
+  
+  % „“
 \newpage
 \section{Ergebnisse und Diskussion}
 \par Hier wird zusammengefasst, was ich mit diesem Projekt gelernt habe, welche Ziele erreicht und nicht erreicht habe, mögliche Weiterentwicklung des Systems etc
@@ -1478,8 +1513,6 @@ captionpos=b,
   
   \bibitem{statita_smhomes}
   Statista, \textit{„Smart Home - Anzahl der Haushalte in Deutschland 2028“}, Zugegriffen: 13. Januar 2025. [Online]. Verfügbar unter \url{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}
-  \bibitem{spiegel_heizung}
-  J. Breithut, \textit{„Strom und Heizung: Wann ein Smart Home wirklich beim Energiesparen hilft“}, Der Spiegel, 17. Juli 2022. Zugegriffen: 13. Januar 2025. [Online]. Verfügbar unter: \url{https://www.spiegel.de/netzwelt/gadgets/strom-und-heizung-wann-ein-smart-home-wirklich-beim-energiesparen-hilft-a-ffb4b710-0cec-40e4-a2c4-6c5d4a3feb92}
 
 
   \par \textbf{Links zur verwendeten Hardware:}
@@ -1529,7 +1562,9 @@ captionpos=b,
   \bibitem{json}
   Python Software Foundation, \textit{json}, \url{https://docs.python.org/3/library/json.html}
   \bibitem{sqlalchemy}
-  Mike Bayer, \textit{SQLAlchemy} \url{https://www.sqlalchemy.org}  am: 11. März 2025. [Online].
+  Mike Bayer, \textit{SQLAlchemy}, \url{https://www.sqlalchemy.org} Zugriff am: 11. März 2025 [Online].
+  \bibitem{fastapidoc}
+  Sebastián Ramírez (Tiangolo), \textit{FastAPI}, \url{https://fastapi.tiangolo.com/} Zugriff am: 24. März 2025s [Online].
 
 \end{thebibliography}
 
