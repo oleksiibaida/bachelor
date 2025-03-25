@@ -1,16 +1,18 @@
-from ..db.models import UserModel
-# from dbalchemy import db_session
 from ..config import Config
 from app.db import queries
-import secrets
 import time
 import jwt
-import json
 from app.mqtt.client import MQTTClient
 from fastapi import HTTPException, status, WebSocket, WebSocketException
 from fastapi.websockets import WebSocketDisconnect
 from pydantic import BaseModel
 _logger = Config.logger_init()
+
+class TokenModel(BaseModel):
+    token: str
+
+class ErrorModel(BaseModel):
+    error: str
 
 class UserLoginModel(BaseModel):
     username: str
@@ -41,6 +43,7 @@ class RoomDeviceModel(BaseModel):
     room_id: int = None
 
 class ScenarioModel(BaseModel):
+    name: str
     source_dev: str
     data_field: str    
     condition: str
@@ -448,7 +451,7 @@ async def send_command(db_sesion, user_id, device_id, command):
         return {'error': e}
    
 
-async def delete_device(db_session, user_id: int, device_id: str):
+async def delete_device(db_session, user_id: int, device_id: str, room_id: int = None):
     try:
         # if room_id:
         #     house_id = await queries.get_house_by_room(db_session, room_id)
@@ -458,8 +461,11 @@ async def delete_device(db_session, user_id: int, device_id: str):
         #         _logger.critical(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house_id}')
         #         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
         device = await queries.get_device(db_session, user_id, dev_id=device_id)
+        print(device)
         if not device:
             return False
+        if room_id:
+            await queries.delete_room_device(db_session, room_id, device.primary_key)
         res = await queries.delete_device(db_session, device_primary_key=device.primary_key)
         # print(res)
         if not res:
@@ -484,6 +490,7 @@ async def add_new_scenario(db_session, user_id, scenario_data: ScenarioModel):
         res = await queries.add_scenario(
             db_session, 
             user_id=user_id, 
+            name=scenario_data.name,
             source_dev=scenario_data.source_dev,
             data_field=scenario_data.data_field,
             condition=scenario_data.condition,

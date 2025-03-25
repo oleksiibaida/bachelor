@@ -540,7 +540,6 @@ async function renderMainPage(data) {
 
                                     } catch (error) { errorHandler(error); }
                                 });
-                                // action_element.appendChild(action_button);
                                 parent_div.appendChild(action_button);
                             }
                         }
@@ -947,6 +946,11 @@ async function renderMyScenariosPage(scenario_list) {
             <button id="BTNcreateScenario" type="button" class="create_house-btn">Create Scenario</button>
         </div>
         <div id="MNcreateScenario" class="hidden mn-createhouse">
+            <div class="flex items-center">
+                <label for="scenarioName" class="">Name:</label>
+                <input type="text" id="scenarioName" value=""
+                    class="required">
+            </div>
             <select id="sourceDevice">
                 <option value="default">Source Device</option>
             </select>
@@ -979,13 +983,14 @@ async function renderMyScenariosPage(scenario_list) {
     });
 
     document.getElementById("BTNaddScenario").addEventListener('click', async () => {
+        const name = document.getElementById("scenarioName").value;
         const source_dev = document.getElementById("sourceDevice").value;
         const data_field = document.getElementById("data_field").value;
         const condition = document.getElementById("condition").value;
         const value = document.getElementById("value").value;
         const target_dev = document.getElementById("targetDevice").value;
         const command = document.getElementById("command").value;
-        await createScenario(source_dev, data_field, condition, value, target_dev, command);
+        await createScenario(name, source_dev, data_field, condition, value, target_dev, command);
         document.getElementById("MNcreateScenario").classList.add('hidden');
     });
 
@@ -1092,9 +1097,9 @@ async function renderMyScenariosPage(scenario_list) {
         }
     }
 
-    async function createScenario(source_dev, data_field, condition, value, target_dev, command) {
+    async function createScenario(name, source_dev, data_field, condition, value, target_dev, command) {
         try {
-            if (source_dev == null || data_field == null || condition == null || value == null || target_dev == null || command == null) {
+            if (name == null ||source_dev == null || data_field == null || condition == null || value == null || target_dev == null || command == null) {
                 return false;
             }
             const response = await fetch(
@@ -1105,7 +1110,7 @@ async function renderMyScenariosPage(scenario_list) {
                         'auth': `Bearer ${localStorage.getItem('token')}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ source_dev, data_field, condition, value, target_dev, command })
+                    body: JSON.stringify({ name, source_dev, data_field, condition, value, target_dev, command })
                 }
             );
             if (!response.ok) {

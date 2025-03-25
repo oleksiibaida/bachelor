@@ -5,12 +5,15 @@ from fastapi import APIRouter, Request, Response, Form, Depends, status, Path, C
 from fastapi.responses import JSONResponse, RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from . import services
+from typing import Union
 # from .services import auth_user, logout_user, validate_session_user, create_new_house
 from app.db import get_session, queries
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.mqtt.client import MQTTClient
+
 logger = Config.logger_init()
 router = APIRouter()
+
 templates_path = os.path.join(os.path.dirname(__file__), "templates")
 
 # oauth = OAuth2AuthorizationCodeBearer(authorizationUrl='localhost',tokenUrl="/login")
@@ -21,6 +24,7 @@ async def startup():
     logger.info(f"Startup called in process: {os.getpid()}")
     mqtt_client = MQTTClient()
     await mqtt_client.load_scenarios()
+    print("S")
     asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
 
 async def get_token(request: Request):
@@ -41,7 +45,7 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {'request': request})
 
 #=====LOGIN=====#
-@router.post('/login', response_class=JSONResponse)
+@router.post('/login', response_model=services.TokenModel, responses={400: {"model": services.ErrorModel}})
 async def login_post(request: Request, response: Response, user_data: services.UserLoginModel, db_session: AsyncSession = Depends(get_session)):
     """
     Authenticate user
@@ -89,12 +93,17 @@ async def signup_post(request: Request, user_data: services.SignUpModel, db_sess
     - **username**: Required String
     - **password**: Required String
     - **email**: Required String
+    - **return**: {token: str}
     """
     res = await services.signup_user(db_session, user_data.username, user_data.email, user_data.password)
     return res
 
 @router.post('/add_house')
 async def add_house_post(request: Request, house_data: services.HouseModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
+    """
+    Saves house in DB. Unique house name for user_id
+    - **name: Required string**
+    """
     try:
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
@@ -274,17 +283,18 @@ async def send_command(request: Request, token: str = Depends(get_token), device
 @router.delete('/delete_device')
 async def del_room_device(request: Request, room_device: services.RoomDeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
+        print("ALALALA")
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         print("DEV DATA", room_device)
-        res = await services.delete_device(db_session, user_id, room_id=room_device.room_id, device_id=room_device.device_id)
+        res = await services.delete_device(db_session, user_id, device_id=room_device.device_id, room_id=room_device.room_id)
         print("RES:", res)
         if not res:
             return {'error': 'Error on the server side'}
         return res
     except Exception as e:
         logger.error(e)
-        return {'error': 'Unexpected Error on the server side'}
+        return {'error': 'aaaUnexpected Error on the server side'}
 
 @router.websocket('/mqtt/device/{device_id}')
 async def websocket_mqtt(ws: WebSocket,  device_id: str = Path(...), db_session: AsyncSession = Depends(get_session)):

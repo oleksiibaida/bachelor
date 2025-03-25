@@ -524,13 +524,14 @@ async def delete_room_device(db_session: AsyncSession, room_id: int, device_prim
         raise HTTPException(status_code=500, detail="UNEXPECTED DATABASE ERROR")
     
 
-async def add_scenario(db_session: AsyncSession, user_id: int, source_dev: str, data_field: str, condition: ScenarioModel.ScenarioConditionsEnum, value: str, target_dev: str, command: str):
+async def add_scenario(db_session: AsyncSession, user_id: int, name: str, source_dev: str, data_field: str, condition: ScenarioModel.ScenarioConditionsEnum, value: str, target_dev: str, command: str):
     try:
         if not condition in [k.value for k in ScenarioModel.ScenarioConditionsEnum]:
             return HTTPException(status_code=422, detail="Condition has wrong value")
         enum_condition = ScenarioModel.ScenarioConditionsEnum(condition)
         new_scenario = ScenarioModel(
             user_id = user_id,
+            name = name,
             source_dev = source_dev,
             data_field = data_field.lower(),
             condition = enum_condition,

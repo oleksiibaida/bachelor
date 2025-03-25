@@ -4,9 +4,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import UniqueConstraint
 from .base import Base
-from app.config import Config
-
-__logger = Config.logger_init()
 
 
 class UserModel(Base):
@@ -15,9 +12,7 @@ class UserModel(Base):
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(200), nullable=False)
-    # def __repr__(self):
-    #     return f'<U_ID:{self.primary_key} U_NM:{self.username}>' #{self.primary_key, self.username, self.email, self.pasword}    
-    
+
     def verify_password(self, password:str):
         return bcrypt.checkpw(password.encode('utf-8'), self.password)
 
