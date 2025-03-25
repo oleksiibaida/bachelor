@@ -303,10 +303,8 @@ void send_mqtt_data()
   sensor_data["temperature"] = temperature;
   sensor_data["humidity"] = humidity;
   sensor_data["pressure"] = pressure;
-  sensor_data["gas_resistance"] = gas_resistance;
   sensor_data["proximity"] = proximity;
   sensor_data["light"] = ambient;
-  sensor_data["white_light"] = white_light;
   serializeJson(sensor_data, json, sizeof(json));
 
   if (mqttClient.connected())
@@ -460,7 +458,7 @@ void show_sensor_data()
   M5.Lcd.printf("Humidity: %1.f", bme_sensor.humidity);
 
   M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
-  uint8_t ambient_light = vcnl4040.getAmbientLight();
+  uint8_t ambient_light = vcnl4040.getLux();
   M5.Lcd.printf("Light: %d", ambient_light);
 }
 /*===EEPROM===*/

@@ -13,7 +13,7 @@
 #define I2C_DISPLAY_HEX 0x3C
 #define I2C_BME_HEX 0x77
 #define I2C_VCNL_HEX 0x60
-#define DEVICE_ID "esp32display"
+#define DEVICE_ID "esp32light"
 #define LIGHT_PIN 4
 
 const uint8_t display_font_size = 18;
