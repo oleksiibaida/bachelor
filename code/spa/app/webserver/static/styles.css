@@ -26,7 +26,11 @@ html, body {
 }
 
 .mn-createhouse {
-    @apply relative m-5 bg-stone-300 shadow-md rounded-md mt-2 w-64 p-4 border border-solid border-black
+    @apply relative m-5 bg-stone-300 shadow-md rounded-lg mt-2 w-64 p-4 border border-solid border-black
+}
+
+.mn-createscenario{
+    @apply flex flex-col space-y-4 m-4 p-4 border border-solid border-black rounded-lg shadow-md w-1/2
 }
 
 .houseList {
@@ -70,6 +74,18 @@ html, body {
     @apply text-xl
 }
 
+.input-label{
+    @apply block text-gray-700 text-sm font-bold mb-2
+}
+
+.input-field {
+    @apply w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500
+}
+
+.error-label{
+    @apply text-red-700 font-bold text-sm
+}
+
 /*===LOGIN==*/
 .login-form {
     @apply justify-center items-center bg-white p-6 rounded shadow-md;
@@ -97,7 +113,7 @@ html, body {
 }
 
 .create_house-btn {
-    @apply bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded
+    @apply bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-1 my-1
 }
 
 .add_room-btn {

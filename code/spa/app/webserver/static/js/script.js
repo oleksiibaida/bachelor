@@ -245,6 +245,7 @@ async function renderMainPage(data) {
     // Create New House click
     document.getElementById("BTNcreateHouse").addEventListener("click", () => {
         mnCreateHouse(document.getElementById("MNcreateHouse"));
+        document.getElementById("BTNcreateHouse").classList.add('hidden')
     });
 
     // // close form if clicked outside
@@ -262,9 +263,9 @@ async function renderMainPage(data) {
         parent_div.classList.add("mn-createhouse")
         parent_div.innerHTML = `
             <div class="p-4">
-                <label for="houseName" class="block text-gray-700 text-sm font-bold mb-2">House Name:</label>
+                <label for="houseName" class="input-label">House Name:</label>
                 <input type="text" id="houseName" value="House 1"
-                    class="w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="input-field">
 
                 <div class="flex justify-between">
                     <button id="BTNaddHouse"
@@ -277,11 +278,13 @@ async function renderMainPage(data) {
 
         BTNcloseHouseMN.addEventListener("click", () => {
             parent_div.innerHTML = "";
-            parent_div.classList = ""
+            parent_div.classList = "";
+            document.getElementById("BTNcreateHouse").classList.remove('hidden');
         });
 
         BTNaddHouse.addEventListener("click", async () => {
             await addHouse(document.getElementById("houseName").value);
+            document.getElementById("BTNcreateHouse").classList.remove('hidden');
         });
     }
 
@@ -302,9 +305,9 @@ async function renderMainPage(data) {
                         <button id="BTNcreateRoom${house.id}" class="add_room-btn">New Room</button>
                         <div id="create_room_element${house.id}" class="hidden create_room_element">
                             <h1>Add New Room</h1>
-                            <label for="roomName" class="block text-gray-700 text-sm font-bold mb-2">Room Name:</label>
+                            <label for="roomName" class="input-label">Room Name:</label>
                             <input type="text" id="roomName${house.id}" value=""
-                                class="required w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="required input-field">
                             <p id="ERRORaddroom${house.id}" class="text-red-700 font-bold text-sm"></p>
                             <div class="flex justify-between">
                                 <button id="BTNaddRoom${house.id}" class="add_room-btn">Add Room</button>
@@ -387,20 +390,20 @@ async function renderMainPage(data) {
                     <div id="FRaddDevice${room.id}" class="hidden create_room_element">
                         <h1>Add New Device</h1>
                         <div class="flex items-center">
-                            <label for="deviceID${room.id}" class="block text-gray-700 text-sm font-bold mb-2 mr-2 w-10">ID:</label>
+                            <label for="deviceID${room.id}" class="mr-2 input-label">ID:</label>
                             <input type="text" id="deviceID${room.id}" value=""
-                                class="required flex-1 w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="required flex-1 input-field">
                         </div>
-                        <p id="ERRORaddDeviceId${room.id}" class="text-red-700 font-bold text-sm"></p>
-                        <p id="ERRORaddDeviceType${room.id}" class="text-red-700 font-bold text-sm"></p>
+                        <p id="ERRORaddDeviceId${room.id}" class="error-label"></p>
+                        <p id="ERRORaddDeviceType${room.id}" class="error-label"></p>
                         <div class="flex items-center">
-                            <label for="deviceName${room.id}" class="block text-gray-700 text-sm font-bold mb-2 mr-2">Name:</label>
+                            <label for="deviceName${room.id}" class="mr-2 input-label">Name:</label>
                             <button id="BTNnameSameId${room.id}" class = "add_room-sm-btn">Same to ID</button>
                             <input type="text" id="deviceName${room.id}" value=""
-                                class="required flex-1 w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="required flex-1 input-field">
                             
                         </div>
-                        <p id="ERRORaddDeviceName${room.id}" class="text-red-700 font-bold text-sm"></p>
+                        <p id="ERRORaddDeviceName${room.id}" class="error-label"></p>
                         <div class="flex justify-between">
                             <button id="BTNaddNewDevice${room.id}" class="add_room-btn">Save</button>
                             <button id="BTNcancelDevice${room.id}" class="cancel-btn">Cancel</button>
@@ -945,86 +948,122 @@ async function renderMyScenariosPage(scenario_list) {
         <div class="main_header">
             <button id="BTNcreateScenario" type="button" class="create_house-btn">Create Scenario</button>
         </div>
-        <div id="MNcreateScenario" class="hidden mn-createhouse">
-            <div class="flex items-center">
-                <label for="scenarioName" class="">Name:</label>
-                <input type="text" id="scenarioName" value=""
-                    class="required">
-            </div>
-            <select id="sourceDevice">
-                <option value="default">Source Device</option>
-            </select>
-            <select id="data_field">
-                <option value="default">Data Field</option>
-            </select>
-            <select id="condition">
-                <option value="default">Condition</option>
-            </select>
-            <input id="value" type="number" placeholder="Value">
-            <select id="targetDevice">
-                <option value="default">Target Device</option>
-            </select>
-            <select id="command">
-                <option value="default">Command</option>
-            </select>
-            <button id="BTNaddScenario" class="create_house-btn">Save</button>
-        </div>
+        <div id="MNcreateScenario"></div>
         <div id="scenarioList" class="device_list"></div>
     </div>
     `;
 
-    loadSelectData();
+
     displayScenarios(scenario_list, app.querySelector('#scenarioList'));
 
     // Open form
     app.querySelector("#BTNcreateScenario").addEventListener('click', () => {
         // Load data in Selectors
-        document.getElementById("MNcreateScenario").classList.toggle('hidden');
+        //document.getElementById("MNcreateScenario").classList.toggle('hidden');
+        mnCreateScenario(document.getElementById("MNcreateScenario"))
     });
 
-    document.getElementById("BTNaddScenario").addEventListener('click', async () => {
-        const name = document.getElementById("scenarioName").value;
-        const source_dev = document.getElementById("sourceDevice").value;
-        const data_field = document.getElementById("data_field").value;
-        const condition = document.getElementById("condition").value;
-        const value = document.getElementById("value").value;
-        const target_dev = document.getElementById("targetDevice").value;
-        const command = document.getElementById("command").value;
-        await createScenario(name, source_dev, data_field, condition, value, target_dev, command);
-        document.getElementById("MNcreateScenario").classList.add('hidden');
-    });
+    function mnCreateScenario(parent_div) {
+        parent_div.classList.add("mn-createscenario")
+        parent_div.innerHTML = `
+            <div class="flex items-center">
+                <label for="scenarioName" class="mr-2">Name:</label>
+                <input type="text" id="scenarioName" value=""
+                    class="required w-full input-field">
+            </div>
+            <select id="sourceDevice" class="input-field">
+                <option value="default" class="p-2 rounded">Source Device</option>
+            </select>
+            <div class="flex space-x-2">
+                <select id="data_field" class="p-2 rounded w-1/3">
+                    <option value="default">Data Field</option>
+                </select>
+                <select id="condition" class="p-2 rounded w-1/3">
+                    <option value="default">Condition</option>
+                </select>
+                <input id="value" type="number" placeholder="Value" class="border p-2 rounded w-1/3">
+            </div>
+            <div class="flex space-x-2">
+                <select id="targetDevice" class="flex-1 input-field">
+                    <option value="default">Target Device</option>
+                </select>
+                <select id="command" class="flex-1 input-field">
+                    <option value="default">Command</option>
+                </select>
+            </div>
+            <div class="flex space-x-6 justify-between">
+                <button id="BTNaddScenario" class="flex-1 create_house-btn">Save</button>
+                <button id="BTNcancel" class="flex-1 cancel-btn">Cancel</button>
+            </div>
+        `;
+        loadSelectData();
 
-    const sourceDevSelect = app.querySelector("#sourceDevice")
-    sourceDevSelect.addEventListener('change', () => {
-        // Load data fields from source device
-        if (sourceDevSelect.value != "default") {
-            let sourceDeviceId = sourceDevSelect.value;
-            let source_dev = stored_data.devices.find(device => device.dev_id === sourceDeviceId);
-            for (num in source_dev.data_fields) {
-                let option_element = document.createElement('option');
-                option_element.setAttribute('value', source_dev.data_fields[num]);
-                option_element.innerHTML = source_dev.data_fields[num];
+        document.getElementById("BTNaddScenario").addEventListener('click', async () => {
+            const name = document.getElementById("scenarioName").value;
+            const source_dev = document.getElementById("sourceDevice").value;
+            const data_field = document.getElementById("data_field").value;
+            const condition = document.getElementById("condition").value;
+            const value = document.getElementById("value").value;
+            const target_dev = document.getElementById("targetDevice").value;
+            const command = document.getElementById("command").value;
+            await createScenario(name, source_dev, data_field, condition, value, target_dev, command);
+            document.getElementById("MNcreateScenario").classList.add('hidden');
+        });
 
-                app.querySelector("#data_field").appendChild(option_element);
+        const sourceDevSelect = app.querySelector("#sourceDevice")
+        sourceDevSelect.addEventListener('change', () => {
+            // Load data fields from source device
+            let df = app.querySelector("#data_field");
+            if (sourceDevSelect.value != "default") {
+                let sourceDeviceId = sourceDevSelect.value;
+                let source_dev = stored_data.devices.find(device => device.dev_id === sourceDeviceId);
+                // app.querySelector("#data_field").innerHTML = ""
+                // Clear options
+                // TODO 
+                if (df.options.length > 1) {
+                    for (let i = df.options.length - 1; i >= 0; i++) {
+                        console.info(df.options[i])
+                        if (df.options[i].value != "default") {
+                            df.remove(i);
+                        }
+                    }
+                }
+                for (num in source_dev.data_fields) {
+                    let option_element = document.createElement('option');
+                    option_element.setAttribute('value', source_dev.data_fields[num]);
+                    option_element.innerHTML = source_dev.data_fields[num];
+
+                    df.appendChild(option_element);
+                }
+            } else {
+                // Clear options
+                if (df.options.length > 1) {
+                    for (let i = df.options.length - 1; i >= 0; i++) {
+                        if (df.options[i].value != "default") {
+                            df.remove(i);
+                        }
+                    }
+                }
             }
-        }
-    });
+        });
 
-    const targetDevSelect = app.querySelector("#targetDevice")
-    targetDevSelect.addEventListener('change', () => {
-        // Load data fields from source device
-        if (targetDevSelect.value != "default") {
-            let targetDeviceId = targetDevSelect.value;
-            let target_dev = stored_data.devices.find(device => device.dev_id === targetDeviceId);
-            for (num in target_dev.commands) {
-                let option_element = document.createElement('option');
-                option_element.setAttribute('value', target_dev.commands[num]);
-                option_element.innerHTML = target_dev.commands[num];
+        const targetDevSelect = app.querySelector("#targetDevice")
+        targetDevSelect.addEventListener('change', () => {
+            // Load data fields from source device
+            if (targetDevSelect.value != "default") {
+                let targetDeviceId = targetDevSelect.value;
+                let target_dev = stored_data.devices.find(device => device.dev_id === targetDeviceId);
+                // app.querySelector("#command").innerHTML=""
+                for (num in target_dev.commands) {
+                    let option_element = document.createElement('option');
+                    option_element.setAttribute('value', target_dev.commands[num]);
+                    option_element.innerHTML = target_dev.commands[num];
 
-                app.querySelector("#command").appendChild(option_element);
+                    app.querySelector("#command").appendChild(option_element);
+                }
             }
-        }
-    });
+        });
+    }
 
     function loadSelectData() {
         for (num in stored_data.devices) {
@@ -1056,6 +1095,7 @@ async function renderMyScenariosPage(scenario_list) {
                 scenario_element.classList.add('device_element');
                 scenario_element.innerHTML = `
                     <div id="scenario_element${scenario.id}">
+                        <p>NAME: ${scenario.name}</p>
                         <p>IF: ${scenario.source_dev}.${scenario.data_field} ${scenario.condition} ${scenario.value}</p>
                         <p>THEN: ${scenario.target_dev} => ${scenario.command}</p>
                     </div>
@@ -1068,6 +1108,7 @@ async function renderMyScenariosPage(scenario_list) {
 
                 BTNdeleteScenario.addEventListener('click', async () => {
                     try {
+                        scenario_primary = scenario.id
                         const response = await fetch('/delete_scenario', {
                             method: 'DELETE',
                             headers: {
@@ -1075,13 +1116,16 @@ async function renderMyScenariosPage(scenario_list) {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify(
-                                { scenario_primary: scenario.id }
+                                { scenario_primary }
                             )
                         });
                         if (!response.ok) {
                             throw new Error(response.stat)
                         } else {
                             const response_data = await response.json();
+                            if (response_data.error) {
+                                throw new Error(response_data.error)
+                            }
                             if (response_data.success) {
                                 stored_data = await get_user_data();
                                 renderMyScenariosPage(stored_data.scenarios);
@@ -1099,7 +1143,7 @@ async function renderMyScenariosPage(scenario_list) {
 
     async function createScenario(name, source_dev, data_field, condition, value, target_dev, command) {
         try {
-            if (name == null ||source_dev == null || data_field == null || condition == null || value == null || target_dev == null || command == null) {
+            if (name == null || source_dev == null || data_field == null || condition == null || value == null || target_dev == null || command == null) {
                 return false;
             }
             const response = await fetch(

@@ -25,10 +25,9 @@ async def startup():
     mqtt_client = MQTTClient()
     await mqtt_client.load_scenarios()
     print("S")
-    asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
+    #asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
 
 async def get_token(request: Request):
-    # print(f"HEADE: {request.headers}")
     auth = request.headers.get('auth')
     if not auth or not auth.startswith('Bearer '):
         logger.error("AUTH HEADER MISSING")
@@ -224,7 +223,6 @@ async def update_device(request: Request, device_data: services.DeviceModel, tok
     user_id = services.verify_token(token)
     if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
     try:
-        # TODO also change room
         res = await queries.update_device(db_session, user_id, device_data)
         if res:
             return {'primary': res.primary_key, 'name': res.name, 'description': res.description}
@@ -335,9 +333,17 @@ async def add_scenario(request: Request, scenario_data: services.ScenarioModel, 
         return {'error': 'Unexpected error'}
     
 @router.delete('/delete_scenario')
-async def delete_scenario(request: Request, scenario_primary: int, token: str = Depends(get_token), db_session: AsyncSession = Depends(get_session)):
+async def delete_scenario(request: Request, token: str = Depends(get_token), db_session: AsyncSession = Depends(get_session)):
     try:
-        return
+        print(request)
+        user_id = services.verify_token(token)
+        if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
+        body = await request.json()
+        scenario_primary = body.get("scenario_primary")
+        res = await services.delete_scenario(db_session, user_id, scenario_primary)
+        if res:
+            return {"success": f"Scenario {scenario_primary} DELETED"}
+        return res
     except HTTPException as e:
         logger.error(e)
         return {'error': e}

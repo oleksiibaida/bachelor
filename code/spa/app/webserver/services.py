@@ -227,6 +227,7 @@ async def get_user_data(db_session, user_id):
         for s in all_scenarios:
             scene = {
                 'id': s.primary_key,
+                'name': s.name,
                 'source_dev': s.source_dev,
                 'data_field': s.data_field,
                 'condition': s.condition.value,
@@ -461,9 +462,8 @@ async def delete_device(db_session, user_id: int, device_id: str, room_id: int =
         #         _logger.critical(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house_id}')
         #         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
         device = await queries.get_device(db_session, user_id, dev_id=device_id)
-        print(device)
         if not device:
-            return False
+            raise HTTPException(404, f"DEV_ID {device_id} with U_ID {user_id} NOT FOUND")
         if room_id:
             await queries.delete_room_device(db_session, room_id, device.primary_key)
         res = await queries.delete_device(db_session, device_primary_key=device.primary_key)
@@ -505,4 +505,23 @@ async def add_new_scenario(db_session, user_id, scenario_data: ScenarioModel):
         return {'error': e.detail}
     except Exception as e:
         _logger.error(e)
+        return {'error': e}
+    
+async def delete_scenario(db_session, user_id, scenario_primary):
+    try:
+        # Check owner
+        scenario = await db_session.get(queries.ScenarioModel, scenario_primary)
+        if scenario.user_id != user_id:
+             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f'U_ID {user_id} is not owner of Scenario {scenario_primary}')
+        if scenario:
+            await db_session.delete(scenario)
+            await db_session.commit()
+            return True
+        else:
+            raise HTTPException(404, f"Scneario with primary_key {scenario_primary} NOT FOUND")
+    except HTTPException as e:
+        _logger.error(f'HTTPException:{e.status_code}.{e.detail}')
+        return {'error': e.detail}
+    except Exception as e:
+        _logger.critical(f"Unexpected error: {e}")
         return {'error': e}

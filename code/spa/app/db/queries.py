@@ -373,7 +373,6 @@ async def verify_user_device(db_session: AsyncSession, user_id: int, device_id):
 
 async def update_device(db_session: AsyncSession, user_id:int, new_device_data):
     try:
-        # TODO also change room
         if new_device_data.dev_id is None:
             _logger.error("DEV_ID IS NOT PROVIDED")
             raise HTTPException(status_code=400, detail="DEV_ID IS NOT PROVIDED")
