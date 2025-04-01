@@ -273,10 +273,15 @@ captionpos=b,
 \pagebreak
 
 \section{Einleitung}
-\par In einer Welt, die zunehmend von vernetzten Geräten und dem Internet der Dinge geprägt ist, wird die Entwicklung effizienter und benutzerfreundlicher Systeme zur Steuerung und Überwachung von Gebäuden immer relevanter. Im Jahr 2024 wurde in Deutschland die Anzahl von über 19 Millionen Haushalten, die ein oder mehrere smarte Geräte besaßen, verzeichnet. Es wird prognostiziert, dass sich diese Zahl innerhalb der nächsten drei Jahre verdoppeln wird \cite{statita_smhomes}.
-\par Moderne Steuerungs- und Sicherheitssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Die Kosten für die smarte Technik rechnen sich in der Regel nach zwei Jahren. Die Systeme übernehmen ein Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Reglung der Raumtemperatur oder das Aufräumen des Hauses etc. Der Aufgabenbereich der Systeme ist dabei nur nach den Bedürfnissen der Benutzerinnen und Benutzer abgegrenzt.
-\par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Das Ziel dieser Arbeit ist die Erstellung einer Schnittstelle, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht und den Benutzer über gefährliche Vorgänge in seinem Haus informiert. 
-\par Im Rahmen der Entwicklung dieses Systems wurden die aktuellen Technologien zur Erstellung eines Webinterfaces und zur Kommunikation zwischen den Geräten eingesetzt. \textbf{TODO Kurz erklären was in Kapitel 2,3,4,5 ... erklärt wird}
+\par In einer Welt, die zunehmend von vernetzten Geräten und dem Internet der Dinge geprägt ist, wird die Entwicklung effizienter und benutzerfreundlicher Systeme zur Steuerung und Überwachung von Gebäuden immer relevanter. Im Jahr 2024 wurde in Deutschland die Anzahl von über 19 Millionen Haushalten, die ein oder mehrere smarte Geräte besaßen, verzeichnet. Prognosen zufolge wird sich diese Zahl in den nächsten drei Jahren verdoppeln \cite{statita_smhomes}.
+\par Moderne Steuerungs- und Sicherheitssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Diese Systeme übernehmen einen Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Regelung der Raumtemperatur oder das Aufräumen des Hauses. Die möglichen Funktionen sind dabei nur durch die Bedürfnisse der Benutzerinnen und Benutzer begrenzt.
+\par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Es wird eine Web-Schnittstelle erstellt, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht, die von Geräten erfassenen Daten darstellt und den Benutzer über gefährliche Vorgänge in seinem Haus informiert. 
+\par Zur Erfassung und Verarbeitung der Sensordaten werden Mikrocontroller eingesetzt. Diese sind entsprechend programmiert, um die Sensordaetn zu erfassen und die Daten über das Netzwerk an den zentralen Server zu übermitteln.
+\par Im Rahmen der Entwicklung dieses Systems wurden die aktuellen Technologien zur Erstellung eines Webinterfaces und zur Kommunikation zwischen den Geräten eingesetzt. Das System bleibt dabei flexibel und erweiterbar. 
+\par Die Bachelorarbeit gliedert sich in mehrere Kapitel. Kapitel 2 behandelt die Ziele des Projekts sowie die allgemeine Systemarchitektur und die einzelnen Komponenten des Systems.
+\par In Kapitel 3 werden die theoretischen Grundlagen sowie die eingesetzten Technologien und Protokolle erläutert. Kapitel 4 beschreibt die Einrichtung der im Projekt verwendeten Hardwarekomponenten.
+\par In Kapitel 5 werden die Softwarekomponenten des Systems beschrieben. Die Entwicklung des Back- und Frontends sowie die Verarbeitung der im System laufenden MQTT-Nachrichten werden detailliert dargestellt.
+\par In Kapitel 6 wird ein konkreter Anwendungsfall des Systems beschrieben. Daneben werden mögliche Weiterentwicklungen und Optimierungspotenziale aufgezeigt, um das System in Zukunft zu erweitern und zu verbessern.
 \newpage
 
 \section{Ziel des Projekts}
@@ -655,19 +660,36 @@ captionpos=b,
   \par In JavaScript kann WebSocket einfach mit der WebSocket-API verwendet werden. Eine WebSocket-Verbindung wird hergestellt, indem ein neues \texttt{WebSocket}-Objekt instanziiert wird, das die URL des WebSocket-Servers als Parameter erhält. Sobald die Verbindung hergestellt ist, können Nachrichten gesendet und empfangen werden.
 \newpage
   \section{Einrichtung der Hardwarekomponenten}
-  \subsection{Arduino}  
-  \par \textbf{TOODOO} wird leicht geändert und erweitert.
-  \par Der Arduino mit den angeschlossenen Sensoren stellt das Sichterheitskomponente des Systems dar. Dieses Teilsystem erkennt die Gefahren von Gas und Feuer und alarmiert den Benutzer. Außerdem bietet der Arduino mit angeschlossenem Tastenfeld der gesicherte Zugang zu dem Haus durch die Eingabe einer PIN. Die Anschließung der Sensoren und Aktoren an Arduino ist in der PA1 \cite{pa1} beschrieben. 
-  \par Der Arduino kann nicht direkt mit einem WLAN verbunden werden, da er kein WLAN-Modul besitzt. Für diesen Zweck wurde ein ESP8266-Modul verwendet. Der wird mit dem Arduino durch eine UART-Schnittstelle angeschlossenen und mit dem WLAN verbunden. 
-  \par Die Kommunikation zwischen Arduino und ESP8266 erfolgt über die serielle Schnittstelle. Der Arduino gibt die entsprechenden Kommanden durch Serial an ESP8266 weiter und der ESP8266 führt die Befehle aus. Die detaillierte Beschreibung zur Verbindung von Arduino und ESP8266 ist in dem Bericht zu meiner Projektarbeit 2 \cite{pa2} Kapitel 4.1 zu finden.
-  \par Der Arduino sendet und empfängt die MQTT-Nachrichten via angeschlossenen ESP8266. Ein Mal pro Sekunde sendet der Arduino eine MQTT-Nachricht in das Topic „\texttt{data/<ID>}“ in dem die Bereitschaft der angeschlossenen Sensoren geteilt wird. Bei der Erkennung einer Gefahr wird sofort der Alarm ausgelöst und eine MQTT-Nachricht in das Topic „\texttt{alarm/<ID>}“ mit dem entsprechenden Text gesendet.
+  \par In diesem Kapitel wird die Einrichtung der im System verwendeten Hardwarekomponenten beschrieben. 
   \subsection{Raspberry Pi}
   \par Der Raspberry Pi dient als zentraler Server des Systems. Als Netzwerkzentrale gewährleistet er eine stabile und sichere Kommunikation zwischen den Komponenten, auch in Umgebungen ohne Internetzugang. Er stellt einen WLAN-Zugriffspunkt zur Verfügung, über den sich die Geräte mit dem Server verbinden.
   \par Die Kommunikation zwischen den Geräten erfolgt über das MQTT-Protokoll. Der Raspberry Pi hostet den MQTT-Broker auf Basis von \texttt{Mosquitto}. Die Geräte senden ihre Daten in individuelle Topics. Diese Daten werden von einem asynchronen MQTT-Client empfangen und verarbeitet.
+  \par Der genaue Ablauf für die Einrichtung des Raspberry Pi ist in dem Bericht zu der Projektarbeit 2 \cite{pa2}, Kapitel 2, beschrieben.
   \par Der Raspberry Pi hostet zudem den API-Webserver, der als Schnittstelle für die Interaktion mit dem System dient. Die API ist mit \texttt{FastAPI} implementiert und läuft auf dem ASGI-Server \texttt{Uvicorn}. \texttt{Uvicorn} ermöglicht eine effiziente, asynchrone Verarbeitung von Anfragen und sorgt für eine hohe Leistungsfähigkeit.
   \par Die von den Geräten empfangenen Daten werden durch den asynchronen MQTT-Client verarbeitet und über \texttt{WebSocket} direkt an die API weitergeleitet. Dadurch wird eine Echtzeitübertragung an die Benutzeroberfläche ermöglicht, ohne dass die Daten zwischengespeichert oder erneut abgefragt werden müssen.
-  \par Der genaue Ablauf für die Einrichtung des Raspberry Pi ist in dem Bericht zu der Projektarbeit 2 \cite{pa2}, Kapitel 2, beschrieben. 
+ 
   \par Diese Architektur ermöglicht die effiziente und schnelle Interaktion mit dem System. Das System ist zwar nur im lokalen Netzwerk verfügbar. Da keine Cloud-Dienste erforderlich sind, bietet das System eine erhöhte Sicherheit und ist von der Internetverbindung unabhängig.  
+  \subsection{Arduino}  
+  \par Der Arduino mit den angeschlossenen Sensoren stellt die Sicherheitskomponente des Systems dar.
+  \par Die am Arduino angeschlossenen Sensoren erkennen die Gefahren, wie Gas oder Feuer. Im Falle einer Gefahrensituation sendet der Arduino eine Warnmeldung an den Server und aktiviert den Alarm.
+  \par Zusätzlich dient der Arduino als Zugangskontrolle zum Haus. Über ein angeschlossenes Tastenfeld kann eine PIN eingegeben werden, um den Zugang zum Haus zu sichern. Die genaue Anbindung der Sensoren und Aktoren ist in der Projektdokumentation PA1 \cite{pa1} beschrieben.
+  \par Da der Arduino kein WLAN-Modul besitzt, wird für die drahtlose Kommunikation ein ESP8266-Modul verwendet. Das Modul wird über eine UART-Schnittstelle mit dem Arduino verbunden. Der Arduino sendet die Daten für die MQTT-Nachrichten über \texttt{Serial} an das ESP8266. Das Modul verarbeitet diese und sendet die generierte MQTT-Nachricht.
+  \par Die detaillierte Beschreibung der Verbindung von Arduino und ESP8266 ist in dem Bericht zu meiner Projektarbeit 2 \cite{pa2} Kapitel 4.1 zu finden.
+
+  \par In diesem Projekt wird der Programmcode des Arduinos erweitert, um eine optimierte Interaktion mit der API zu ermöglichen. 
+  \par Der Arduino sendet einmal pro Sekunde eine MQTT-Nachricht an das Topic „\texttt{data/<ID>}“ in der der aktuelle Status der angeschlossenen Sensoren übermittelt wird. Wird eine Gefahr erkannt, wird sofort der Alarm ausgelöst und die entsprechende Meldung in das Topic „\texttt{alarm/<ID>}“ gesendet. 
+  \par Die PIN-Eingaben werden über MQTT übertragen. Bei der Eingabe der PIN, wird eine MQTT-Nachricht an den Server gesendet. Dabei wird übermittelt, ob die PIN richtig oder falsch eingegeben wurde. Wurde die PIN geändert, wird dies ebenfalls an den Server übermittelt.
+  \par Außerdem muss der Arduino auf die eingehende Handshake-Nachricht reagieren. Beim Empfang einer MQTT-Nachricht im Topic „\texttt{command/<ID>}“ wird die Funktion \texttt{callback()} aufgerufen. Falls der empfangene Text „handshake“ lautet, wird ein JSON-Objekt mit strukturierten Konfigurationsdaten erstellt und in das Topic „\texttt{handshake/<ID>}“ gesendet.
+  \par Die Konfigurationsdaten haben folgende Struktur:
+  \begin{Verbatim}[frame=single]
+    {
+      "data_fields": ["fire", "gas", "pin"],
+      "commands": ["alarm_off"]
+    }
+  \end{Verbatim}
+  \par Der Arduino übernimmt die sicherheitskritischen Aufgaben des Systems. Die Meldungen über gefährliche Vorgänge werden unverzüglich an den Server gesendet. 
+  % „“
+  
   \subsection{Einrichtung der ESP-Module}
   \par In diesem Projekt werden drei verschiedene ESP-Module verwendet: ESP8266, ESP32 und der auf dem ESP32 basierende M5Stick. Jedes Modul erfüllt spezifische Aufgaben, aber alle Module müssen sowohl mit dem WLAN als auch mit dem MQTT-Broker verbunden sein. Daher ist die Implementierung der \texttt{setup()}-Funktion für alle drei Module ähnlich aufgebaut.
   \par Die Setup-Funktion wird beim Start des ESP-Moduls aufgerufen. Zunächst wird das Modul mit der Funktion \texttt{setup\_esp} entsprechend eingerichtet. Je nach Modul umfasst diese Funktion verschiedene Anfahrroutinen. Dazu gehört unter anderem die Initialisierung der seriellen oder I2C-Kommunikation, die Einrichtung der angeschlossenen Sensoren o. ä. 
@@ -784,6 +806,8 @@ captionpos=b,
       return False;
     }f
   \end{lstlisting}
+  \paragraph{Verwaltung eingehender MQTT-Nachrichten}
+  \par \textbf{}
   \par Die Funktion \texttt{callback} wird beim Empfang einer MQTT-Nachricht ausgeführt. In dieser Funktion sind die Reaktionen auf den erhaltenen Nachriten aus dem Topic „\texttt{command/ID}“ festgelegt.  Abhängig vom Gerät kann diese Funktion angepasst und erweitert werden. 
   \par Der Text der empfangenen MQTT-Nachricht wird als \texttt{payload} an die Funktion übergeben und zunächst im \texttt{String message} gespeichert. Dieser enthält die auszuführenden Befehle, die je nach Gerät unterschiedlich interpretiert werden können. Jedes Gerät muss jedoch auf das Kommando „\texttt{handshake}“ reagieren.
   \par Wenn eine Handshake-Nachricht empfangen wurde, muss das Gerät mit seinen Konfiguration antworten (Listing \ref{lst:espcallback}). Zunächst werden zwei Arrays definiert: eines für die relevanten Datenfelder und eines für die möglichen Befehle. Im Array „\texttt{data\_fields}“ sind die Schlüssel gelistet, die das Modul in das Topic \texttt{data/ID} sendet. Im Array „\texttt{commands}“ sind die Befehle gelistet, die das Modul ausführen kann. Je nach Modul variiert der Inhalt. Diese Arrays werden in einem JSON-Dokument strukturiert, wobei die Datenfelder und Befehle jeweils als separate Arrays innerhalb des Dokuments abgelegt werden:
@@ -1503,7 +1527,7 @@ captionpos=b,
     \label{abb:createscenario}
   \end{figure}
   \par Das \texttt{div}-Element „\texttt{scenarioList}“ wird mit den von Benutzer erstellten Szenarien befüllt. Für jedes Szenario wird ein \texttt{div}-Element „\texttt{scenario\_element}“ mit der ID des Szenarios erstellt. 
-  \par Die Abbildung stellt \ref{abb:scenarioelement} ein \texttt{scenario\_element} dar. Das dargestellte Szenario hat den Namen „Abend“. Wenn das Datenfeld „\texttt{light}“ des Gerätes mit der ID „\texttt{m5bmevcnl}“ den Wert unter 20 liefert, so wird das Befehl „\texttt{light\_turn\_on}“ an das Gerät mit der ID „\texttt{esp32light}“ gesendet. 
+  \par Die Abbildung \ref{abb:scenarioelement} stellt ein „\texttt{scenario\_element}“ dar. Das dargestellte Szenario hat den Namen „Abend“. Wenn das Datenfeld „\texttt{light}“ des Gerätes mit der ID „\texttt{m5bmevcnl}“ den Wert unter 20 liefert, so wird das Befehl „\texttt{light\_turn\_on}“ an das Gerät mit der ID „\texttt{esp32light}“ gesendet. 
   \par Durch das Anklicken auf die Schaltfläche „Delete“ wird ein Delete-Request auf die Route „delete\_scenario“ mit dem Primärschlüssel des Szenarios gesendet und das Szenario wird damit aus der Datenbank gelöscht.
   \begin{figure}[h]
     \centering
