@@ -276,7 +276,7 @@ captionpos=b,
 \par In einer Welt, die zunehmend von vernetzten Geräten und dem Internet der Dinge geprägt ist, wird die Entwicklung effizienter und benutzerfreundlicher Systeme zur Steuerung und Überwachung von Gebäuden immer relevanter. Im Jahr 2024 wurde in Deutschland die Anzahl von über 19 Millionen Haushalten, die ein oder mehrere smarte Geräte besaßen, verzeichnet. Prognosen zufolge wird sich diese Zahl in den nächsten drei Jahren verdoppeln \cite{statita_smhomes}.
 \par Moderne Steuerungs- und Sicherheitssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Diese Systeme übernehmen einen Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Regelung der Raumtemperatur oder das Aufräumen des Hauses. Die möglichen Funktionen sind dabei nur durch die Bedürfnisse der Benutzerinnen und Benutzer begrenzt.
 \par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Es wird eine Web-Schnittstelle erstellt, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht, die von Geräten erfassenen Daten darstellt und den Benutzer über gefährliche Vorgänge in seinem Haus informiert. 
-\par Zur Erfassung und Verarbeitung der Sensordaten werden Mikrocontroller eingesetzt. Diese sind entsprechend programmiert, um die Sensordaetn zu erfassen und die Daten über das Netzwerk an den zentralen Server zu übermitteln.
+\par Zur Erfassung und Verarbeitung der Sensordaten werden Mikrocontroller eingesetzt. Diese sind entsprechend programmiert, um die Sensordaten zu erfassen und die Daten über das Netzwerk an den zentralen Server zu übermitteln.
 \par Im Rahmen der Entwicklung dieses Systems wurden die aktuellen Technologien zur Erstellung eines Webinterfaces und zur Kommunikation zwischen den Geräten eingesetzt. Das System bleibt dabei flexibel und erweiterbar. 
 \par Die Bachelorarbeit gliedert sich in mehrere Kapitel. Kapitel 2 behandelt die Ziele des Projekts sowie die allgemeine Systemarchitektur und die einzelnen Komponenten des Systems.
 \par In Kapitel 3 werden die theoretischen Grundlagen sowie die eingesetzten Technologien und Protokolle erläutert. Kapitel 4 beschreibt die Einrichtung der im Projekt verwendeten Hardwarekomponenten.
@@ -379,7 +379,7 @@ captionpos=b,
   \end{table}
   \par Im Rahmen dieses Projekts wird der Arduino Uno zur Erfassung und Verarbeitung von Sensordaten für die Branderkennung eingesetzt. Darüber hinaus übernimmt er die Steuerung des kontrollierten Zugangs zum Gebäude. Durch die Anbindung an verschiedene Sensoren ermöglicht er eine kontinuierliche Überwachung der Umgebung und kann im Gefahrenfall entsprechende Meldungen auslösen.
   \subsubsection{ESP8266}
-  \par Der ESP8266 ist ein kompakter Mikrocontroller mit integriertem WLAN-Modul. Aufgrund seiner kompakten Größe, seines geringen Stromverbrauchs und seiner integrierten WLAN-Schnittstelle eignet er sich besonders für drahtlose Sensornetzwerke und eingebettete Systeme.
+  \par Das ESP8266 ist ein kompakter Mikrocontroller mit integriertem WLAN-Modul. Aufgrund seiner kompakten Größe, seines geringen Stromverbrauchs und seiner integrierten WLAN-Schnittstelle eignet er sich besonders für drahtlose Sensornetzwerke und eingebettete Systeme.
   \par Ein zentrales Funktionsmerkmal des ESP8266 ist seine integrierte WLAN-Funktionalität. Das Modul kann direkt mit einem WLAN-Netzwerk verbunden werden oder als Access Point ein WLAN-Netzwerk zur Verfügung stellen. Zusätzlich kann auf dem Mikrocontroller ein einfacher Webserver eingerichtet werden. Damit kann es sowohl als eigenständiger Mikrocontroller als auch als Wi-Fi-Erweiterung für andere Mikrocontroller, z.B. einen Arduino, verwendet werden. 
   \par Das Modul basiert auf dem ESP8266 Chip von Espressif Systems. Es verfügt über Flash, SRAM und EEPROM Speicher. Außerdem unterstützt es das UART-Kommunikationsprotokoll.
   \par Die technischen Spezifikationen des ESP8266-01 sind in der Tabelle \ref{tab:esp8266td} dargestellt.
@@ -403,7 +403,7 @@ captionpos=b,
   \caption{Technische Daten des ESP8266}
   \label{tab:esp8266td}
   \end{table}
-  \par In meinem Projekt wird der ESP8266 als Schnittstelle zwischen dem Arduino und dem zentralen Server verwendet. Er ermöglicht die drahtlose Übertragung von Sensordaten an das Backend und kann auch Steuerbefehle empfangen, um entsprechende Aktionen auszulösen. Durch die direkte WLAN-Anbindung trägt der ESP8266 wesentlich zur flexiblen und ortsunabhängigen Systemsteuerung bei.
+  \par In meinem Projekt wird das ESP8266 als Schnittstelle zwischen dem Arduino und dem zentralen Server verwendet. Er ermöglicht die drahtlose Übertragung von Sensordaten an das Backend und kann auch Steuerbefehle empfangen, um entsprechende Aktionen auszulösen. Durch die direkte WLAN-Anbindung trägt das ESP8266 wesentlich zur flexiblen und ortsunabhängigen Systemsteuerung bei.
   \subsubsection{ESP32}
   \par Das ESP32 ist ein leistungsstarker Mikrocontroller von Espressif Systems. In der Literatur wird das Modul auch als SoC\footnote{Eng. System-on-a-Chip, Deutsch: Ein-Chip-System} bezeichnet, was bedeutet, dass alle Funktionen des Moduls auf einem Chip integriert sind.
   \par Das ESP32 unterstützt WLAN und Bluetooth. Außerdem verfügt es über Schnittstellen wie I2C, UART, GPIOs, die eine flexible Integration mit Sensoren und anderen Peripheriegeräten ermöglichen.
@@ -673,13 +673,23 @@ captionpos=b,
   \par Der Arduino mit den angeschlossenen Sensoren stellt die Sicherheitskomponente des Systems dar.
   \par Die am Arduino angeschlossenen Sensoren erkennen die Gefahren, wie Gas oder Feuer. Im Falle einer Gefahrensituation sendet der Arduino eine Warnmeldung an den Server und aktiviert den Alarm.
   \par Zusätzlich dient der Arduino als Zugangskontrolle zum Haus. Über ein angeschlossenes Tastenfeld kann eine PIN eingegeben werden, um den Zugang zum Haus zu sichern. Die genaue Anbindung der Sensoren und Aktoren ist in der Projektdokumentation PA1 \cite{pa1} beschrieben.
-  \par Da der Arduino kein WLAN-Modul besitzt, wird für die drahtlose Kommunikation ein ESP8266-Modul verwendet. Das Modul wird über eine UART-Schnittstelle mit dem Arduino verbunden. Der Arduino sendet die Daten für die MQTT-Nachrichten über \texttt{Serial} an das ESP8266. Das Modul verarbeitet diese und sendet die generierte MQTT-Nachricht.
+  \par Da der Arduino kein WLAN-Modul besitzt, wird für die drahtlose Kommunikation ein ESP8266-Modul verwendet. Das Modul wird über eine UART-Schnittstelle mit dem Arduino verbunden. Der Arduino sendet die Daten für die MQTT-Nachrichten über \texttt{Serial} an das ESP8266. Die Daten werden im Format „\texttt{topic:message}“ gesendet. Das Modul verarbeitet diese und sendet die generierte MQTT-Nachricht.
   \par Die detaillierte Beschreibung der Verbindung von Arduino und ESP8266 ist in dem Bericht zu meiner Projektarbeit 2 \cite{pa2} Kapitel 4.1 zu finden.
-
-  \par In diesem Projekt wird der Programmcode des Arduinos erweitert, um eine optimierte Interaktion mit der API zu ermöglichen. 
-  \par Der Arduino sendet einmal pro Sekunde eine MQTT-Nachricht an das Topic „\texttt{data/<ID>}“ in der der aktuelle Status der angeschlossenen Sensoren übermittelt wird. Wird eine Gefahr erkannt, wird sofort der Alarm ausgelöst und die entsprechende Meldung in das Topic „\texttt{alarm/<ID>}“ gesendet. 
-  \par Die PIN-Eingaben werden über MQTT übertragen. Bei der Eingabe der PIN, wird eine MQTT-Nachricht an den Server gesendet. Dabei wird übermittelt, ob die PIN richtig oder falsch eingegeben wurde. Wurde die PIN geändert, wird dies ebenfalls an den Server übermittelt.
-  \par Außerdem muss der Arduino auf die eingehende Handshake-Nachricht reagieren. Beim Empfang einer MQTT-Nachricht im Topic „\texttt{command/<ID>}“ wird die Funktion \texttt{callback()} aufgerufen. Falls der empfangene Text „handshake“ lautet, wird ein JSON-Objekt mit strukturierten Konfigurationsdaten erstellt und in das Topic „\texttt{handshake/<ID>}“ gesendet.
+  \par In diesem Projekt wird der Programmcode des Arduinos erweitert, um eine optimierte Interaktion mit der API zu ermöglichen.
+  \par Der aktuelle Status der an dem Arduino angeschlossenen Sensoren wird einmal pro Sekunde an dem Server gesendet. Der Status wird in einem JSON-Objekt strukturiert, der für das Senden über \texttt{Serial} in einem String serialisiert wird. Das JSON-Objekt hat folgende Struktur:
+  \begin{Verbatim}[frame=single]
+    {
+      "fire": "OK",
+      "gas": "OK",
+      "lock": "Closed",
+      "pin": pin_status   
+    }
+  \end{Verbatim}
+  \par Anschließend werden das Haupttopic „\texttt{data}“ und das serialisierte JSON-Objekt an das ESP8266 gesendet.
+   \par Wird eine Gefahr erkannt, löst der Arduino sofort den Alarm aus. Weiterhin sendet der Arduino das Topic „\texttt{alarm}“ und die entsprechende Meldung an das ESP8266. 
+  \par Die PIN-Eingabe wird über MQTT übertragen. Bei der Eingabe der PIN wird eine MQTT-Nachricht an den Server gesendet. Dabei wird übermittelt, ob die PIN richtig oder falsch eingegeben wurde. Wurde die PIN geändert, wird dies ebenfalls an den Server gesendet.
+  \par Außerdem muss der Arduino auf die eingehende Befehle reagieren. Die eingehenden Daten werden mit der Funktion „\texttt{readSerialData()}“ ausgelesen und verarbeitet.
+  \par Beim Empfang des Befehls „\texttt{handshake}“ vom ESP8266, wird ein JSON-Objekt mit strukturierten Konfigurationsdaten erstellt und zusammen mit dem Topic „\texttt{handshake}“ an dem ESP8266 gesendet.
   \par Die Konfigurationsdaten haben folgende Struktur:
   \begin{Verbatim}[frame=single]
     {
@@ -687,15 +697,16 @@ captionpos=b,
       "commands": ["alarm_off"]
     }
   \end{Verbatim}
+  \par Beim Empfang des Befehls „\texttt{alarm\_off}“ wird der Alarmton ausgeschaltet.
   \par Der Arduino übernimmt die sicherheitskritischen Aufgaben des Systems. Die Meldungen über gefährliche Vorgänge werden unverzüglich an den Server gesendet. 
   % „“
   
   \subsection{Einrichtung der ESP-Module}
   \par In diesem Projekt werden drei verschiedene ESP-Module verwendet: ESP8266, ESP32 und der auf dem ESP32 basierende M5Stick. Jedes Modul erfüllt spezifische Aufgaben, aber alle Module müssen sowohl mit dem WLAN als auch mit dem MQTT-Broker verbunden sein. Daher ist die Implementierung der \texttt{setup()}-Funktion für alle drei Module ähnlich aufgebaut.
   \par Die Setup-Funktion wird beim Start des ESP-Moduls aufgerufen. Zunächst wird das Modul mit der Funktion \texttt{setup\_esp} entsprechend eingerichtet. Je nach Modul umfasst diese Funktion verschiedene Anfahrroutinen. Dazu gehört unter anderem die Initialisierung der seriellen oder I2C-Kommunikation, die Einrichtung der angeschlossenen Sensoren o. ä. 
-  \paragraph{Verbidnung mit WLAN}
+  \paragraph{Verbindung mit WLAN}
   \par \textbf{}
-  \par Anschließend werden mit der Funktion \texttt{connect\_wifi\_mqtt} (Listing \ref{lst:espconnwifimqtt}) die WLAN- und MQTT-Verbidnungen aufgebaut. Zunächst wird versucht die WLAN-Daten aus dem EEPROM zu laden. Bevor die Daten aus dem EEPROM gelesen werden können, muss es mit einer Buffer-Größe von 64 bit initialisiert werden (Zeile 3). 
+  \par Anschließend werden mit der Funktion \texttt{connect\_wifi\_mqtt} (Listing \ref{lst:espconnwifimqtt}) die WLAN- und MQTT-Verbindungen aufgebaut. Zunächst wird versucht die WLAN-Daten aus dem EEPROM zu laden. Bevor die Daten aus dem EEPROM gelesen werden können, muss es mit einer Buffer-Größe von 64 bit initialisiert werden (Zeile 3). 
   \par Es werden zwei Felder vom Typ \texttt{char} mit vordefinierten maximalen Längen zum Speichern der Daten aus dem EEPROM erstellt (Zeile 4-5). Der Name des WLAN-Netzes (SSID) wird ab Adresse 0 bis 31 des EEPROM ausgelesen und mit der Funktion \texttt{EEPROM.get(0, eeprom\_ssid)} im Char-Feld gespeichert. Das Passwort wird ab Adresse 32 aus dem EEPROM ausgelesen und in das zweite Char-Feld gespeichert.
   \par Anschließend wird mit der Boolean-Funktion \texttt{is\_valid\_string()} geprüft, ob die aus dem EEPROM abgelesenen Daten sinvoll sind. Die Funktion gibt den Wert \texttt{False} zurück, wenn ein Standard-EEPROM-Zeichen mit dem Wert \texttt{0xFF} gefunden wurde. Dies bedeutet, dass EEPROM noch leer ist und es keine gültigen WLAN-Daten im EEPROM vorhanden sind.
   \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnwifimqtt}, caption={ESP: connect\_wifi\_mqtt()}]
@@ -726,15 +737,13 @@ captionpos=b,
   
   \par Sind die gültigen Werte im EEPROM gespeichert, versucht das Modul, sich mit diesen Zugangsdaten mit dem WLAN zu verbinden (Zeile 13). Die Funktion \texttt{connect\_wifi()} schaltet das WLAN-Modul in den Modus „Station“ um, was die Verbindung mit anderen WLAN-Netzwerken erlaubt. Danach wird es versucht mit dem WLAN mit übergebenen Zugangsdaten zu verbinden. Die Anzahl der Versuche zur Erstellung der Verbindung ist in der Variable \texttt{wifi\_repeat} gespeichert. Ein Mal pro Sekunde versucht das Modul sich mit dem WLAN-Netzwerk zu verbinden. Wenn die Verbindung erfolgreich erstellt wurde, gibt die Funktion ein \texttt{True} zurück. Soll die Anzahl der Versuche überschritten sein, so wird ein \texttt{False} zurückgegeben.
   % „“
-  \paragraph{Aktualisierung von WLAN-Daten}
+  \paragraph{Aktualisierung der gespeicherten WLAN-Daten}
   \par \textbf{}
   \par Sind die aus dem EEPROM ausgelesenen Daten ungültig oder kann keine erfolgreiche WLAN-Verbindung aufgebaut werden, müssen die WLAN-Daten aktualisiert werden. Zu diesem Zweck wird ein Webserver zur Verfügung gestellt, der ein Formular zur Eingabe der WLAN-Daten bereitstellt.
   \par Die Funktion \texttt{setup\_ap()} (Listing \ref{lst:espsetupap}) stellt den Webserver bereit. Das WLAN-Modul wird in den Modus „Access Point“ versetzt. Die Konfiguration des WLAN-Zugangspunktes erfolgt über die Befehle \texttt{WiFi.softAP()} und \texttt{WiFi.softAPConfig()} (Zeile 3-4), wobei die Parameter des Access Points in Listing \ref{lst:espdefap} definiert sind.   
   \par Der Webserver wird durch das Objekt \texttt{server} der Klasse \texttt{AsyncWebServer} zur Verfügung gestellt und mit dem Befehl \texttt{server.begin()} gestartet (Zeile 36).
   \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espdefap}, caption={ESP: Access Point}]
-    // Name des Netzwerks, entspricht DEVICE_ID
     const char AP_SSID[] = DEVICE_ID;
-    // Passwort = setup + DEVICE_ID
     const char AP_PASSWORD[] = "setupesp32";
     // Gleich fuer alle ESP-Module
     IPAddress ap_ip(10, 0, 0, 1);
@@ -783,11 +792,11 @@ captionpos=b,
   \end{lstlisting}
   \par Die HTTP-Routen werden innerhalb der Funktion \texttt{server.on()} festgelegt. Beim Aufruf der Root-Route ("/") wird eine HTTP-GET-Anfrage bearbeitet, die mit einer HTML-Seite beantwortet wird (Zeile 6). Diese Seite enthält ein Formular mit Input-Felder zur Eingabe der WLAN-Zugangsdaten. Der Benutzer soll der Name des Netzwerks und das Passwort eingeben.
   \par Wenn der Benutzer auf die Taste „Submit“ drückt, wird eine HTTP-POST-Anfrage an die Route „\texttt{/save}“ gesendet. Die Zugangsdaten werden aus dem \texttt{request}-Objekt ausgelesen und auf ihre maximale Länge überprüft. Wenn die Daten gültig sind, werden sie im EEPROM gespeichert. Der EEPROM wird initialisiert, die neuen Zugangsdaten werden gespeichert, und die Änderungen mit \texttt{EEPROM.commit()} übernommen (Zeile 26-30). Anschließend wird ein Hinweis zurückgegeben, dass die Daten übernommen wurden. Das ESP-Modul wird mit dem Befehl \texttt{ESP.restart()} neu gestartet, um die neuen WLAN-Daten zu verwenden.
-  \paragraph{Verbidnung mit MQTT-Broker}
+  \paragraph{Verbindung mit MQTT-Broker}
   \par \textbf{}
   \par Nach erfolgreicher Verbindung mit dem WLAN, wird die Funktion \texttt{mqtt\_connect()} (Listing \ref{lst:espconnectmqtt}) aufgerufen, um die Verbindung zum MQTT-Broker zu erstellen. Zunächst werden die Topics zum Senden und Empfangen der Nachrichten mit der Funktion \texttt{set\_topics()} erstellt (Zeile 3). Dabei werden die Topics mit \texttt{Geräte-ID} für jedes Modul individuell formuliert.
   \par Der \texttt{mqttClient} ist ein Objekt der Klasse \texttt{PubSubClient}. Die Funktion \texttt{setServer()} erhält als Parameter die IP-Adresse des MQTT-Brokers sowie den Port, auf dem der Broker lauscht (Zeile 4). Diese Parameter sind als Konstanten im Programmcode definiert. Die \texttt{callback}-Funktion muss definiert werden und wird beim Empfang einer MQTT-Nachricht ausgeführt. 
-  \par Es wird maximal \texttt{wifi\_repeat}-mal versucht, die Verbidnung zum MQTT-Broker herzustellen. Solltedies nicht erfolgreich sein, wird \texttt{False} zurückgegeben. Andernfalls abonniert der \texttt{mqttClient} das \texttt{SUBSCRIBE\_TOPIC} und die Funktion gibt \texttt{True} zurück.
+  \par Es wird maximal \texttt{wifi\_repeat}-mal versucht, die Verbindung zum MQTT-Broker herzustellen. Solltedies nicht erfolgreich sein, wird \texttt{False} zurückgegeben. Andernfalls abonniert der \texttt{mqttClient} das \texttt{SUBSCRIBE\_TOPIC} und die Funktion gibt \texttt{True} zurück.
   \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnectmqtt}, caption={ESP: mqtt\_connect}]
     void mqtt_connect()
     {
@@ -808,9 +817,9 @@ captionpos=b,
   \end{lstlisting}
   \paragraph{Verwaltung eingehender MQTT-Nachrichten}
   \par \textbf{}
-  \par Die Funktion \texttt{callback} wird beim Empfang einer MQTT-Nachricht ausgeführt. In dieser Funktion sind die Reaktionen auf den erhaltenen Nachriten aus dem Topic „\texttt{command/ID}“ festgelegt.  Abhängig vom Gerät kann diese Funktion angepasst und erweitert werden. 
-  \par Der Text der empfangenen MQTT-Nachricht wird als \texttt{payload} an die Funktion übergeben und zunächst im \texttt{String message} gespeichert. Dieser enthält die auszuführenden Befehle, die je nach Gerät unterschiedlich interpretiert werden können. Jedes Gerät muss jedoch auf das Kommando „\texttt{handshake}“ reagieren.
-  \par Wenn eine Handshake-Nachricht empfangen wurde, muss das Gerät mit seinen Konfiguration antworten (Listing \ref{lst:espcallback}). Zunächst werden zwei Arrays definiert: eines für die relevanten Datenfelder und eines für die möglichen Befehle. Im Array „\texttt{data\_fields}“ sind die Schlüssel gelistet, die das Modul in das Topic \texttt{data/ID} sendet. Im Array „\texttt{commands}“ sind die Befehle gelistet, die das Modul ausführen kann. Je nach Modul variiert der Inhalt. Diese Arrays werden in einem JSON-Dokument strukturiert, wobei die Datenfelder und Befehle jeweils als separate Arrays innerhalb des Dokuments abgelegt werden:
+  \par Die Funktion \texttt{callback} wird beim Empfang einer MQTT-Nachricht aufgerufen. In dieser Funktion sind die Reaktionen auf den erhaltenen Nachrichten aus dem Topic „\texttt{command/ID}“ definiert.  Abhängig vom Gerät wird diese Funktion angepasst und erweitert. 
+  \par Der Text der empfangenen MQTT-Nachricht wird als \texttt{byte payload} an die Funktion übergeben und zunächst im \texttt{String message} gespeichert. Dieser enthält die auszuführenden Befehle, die je nach Gerät unterschiedlich interpretiert werden können. Jedes Gerät muss jedoch auf das Kommando „\texttt{handshake}“ reagieren.
+  \par Wenn eine Handshake-Nachricht empfangen wurde, muss das Gerät mit seinen Konfiguration antworten (Listing \ref{lst:espcallback}). Zunächst werden zwei Arrays definiert: eines für die relevanten Datenfelder und eines für die möglichen Befehle. Im Array „\texttt{data\_fields}“ sind die Schlüssel gelistet, die das Modul in das Topic „\texttt{data/ID}“ sendet. Im Array „\texttt{commands}“ sind die Befehle gelistet, die das Modul ausführen kann. Je nach Modul variiert der Inhalt. Diese Arrays werden in einem JSON-Dokument strukturiert, wobei die Datenfelder und Befehle jeweils als separate Arrays innerhalb des Dokuments abgelegt werden:
   \begin{Verbatim}[frame=single]
     {
       "data_fields": [ "temperature", "humidity"],
@@ -841,35 +850,59 @@ captionpos=b,
   \end{lstlisting}
   \par Diese Setup-Konfiguration wird bei allen ESP-Modulen verwendet. Je nach Modul wird diese Funktion erweitert sein. Beispielsweise wird bei Modulen mit Display angezeigt, ob die Verbindung aufgebaut wurde.
   \subsubsection{ESP8266}
-  \par Der ESP8266 wird für die Verbindung des Arduinos mit dem WLAN verwendet. Zu seinem Aufgaben gehört das Senden und Empfangen der MQTT-Nachrichten in entsprechenden Topics. Wie in meinem Bericht zur Projektarbeit 2 \cite{pa2} Kapitel 4.1 beschrieben, ist der ESP8266 über eine UART-Schnittstelle mit dem Arduino verbunden.
-  \par Beim Start des Moduls wird die Funktion \texttt{setup()} (Listing \ref{lst:esp8266setup}) ausgeführt. Zusätzlich läuchtet der blaue LED während der Einrichtung des Moduls. Der Diode läuchtet, wenn es keine Spannung auf dem GPIO 1 fällt.
-  % \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266led}, caption={ESP: LED}]
+ \par Das ESP8266 stellt die WLAN-Verbindung für den Arduino her und übernimmt die Kommunikation über das MQTT-Protokoll. Er empfängt Steuerbefehle sowohl vom Arduino über die serielle Schnittstelle als auch direkt über MQTT. Empfangene Daten werden über die serielle Schnittstelle an den Arduino weitergeleitet.
+    \par Die genaue Umsetzung und Verwendung des Moduls im System ist in meinem Bericht zur Projektarbeit 2 \cite{pa2} Kapitel 4.1 beschrieben.
+    \par In diesem Projekt wird die Funktionalität des Moduls erweitert.
+  \par Beim Start des Moduls wird die Funktion \texttt{setup()} ausgeführt. Dabei wird versucht, die WLAN- und MQTT-Verbindung zu erstellen. Wenn die Verbindung nicht erstellt werden könnte, stellt das Modul ein Webserver zur Verfügung. Über den Webserver können die aktuelle WLAN-Daten des Zugangspunktes an Modul übergeben werden.
+  \par Zusätzlich läuchtet der blaue LED während der Einrichtung des Moduls. Der Diode läuchtet, wenn es keine Spannung auf dem GPIO 1 fällt.
   \begin{Verbatim}[frame=single]
     digitalWrite(1, LOW);   // Diode einschalten
     digitalWrite(1, HIGH);  // Diode ausschalten
   \end{Verbatim}
-  \par Nach der erfolgreichen Einrichtung und Verbindung mit dem WLAN sowie MQTT-Broker, schaltet der Diode aus. Bei jedem Pogrammdurchlauf wird die Funktion \texttt{readSerialData} (Listing \ref{lst:esp8266readserial}) aufgerufen. Stehen die Daten in der seriellen Schnittstelle zur Verfügung, werden diese zunächst als String ausgelesen und gespeichert. Der String wird auf ihre maximale Länge geprüft. Anschließend muss der String in ein char-Feld konvertiert werden. Um das Topic und den Text der Nachrichten zuzuordnen, wird nach der Position von „:“ gesucht. Alle Zeichen rechts von „:“ gehören zum Text der Nachricht und werden in der Variablen „\texttt{message}“ gespeichert. Aus den Zeichen links von „:“ wird das Topic gebildet. Arduino überträgt nur die Namen der Haupttopics. Das ESP8266 erweitert das von Arduino übergebene Topic mit der ID des Gerätes und formuliert das \texttt{PUBLISH\_TOPIC} (Zeile 22-32). Wenn das Topic aus irgendeinem Grund nicht korrekt formuliert werden kann, wird die Nachricht im Haupttopic gesendet. Damit ist sichergestellt, dass die Nachricht versendet wird. Sobald das ESP8266 die Daten von dem Arduino empfängt, wird die MQTT-Nachricht an den MQTT-Broker mit dem Befehl „\texttt{mqttClient.publish(topic, message)}“ versandt.
-  \par Die Verarbeitung der empfangenen Nachricht erfolgt in der Funktion \texttt{callback} (Listing \ref{lst:espcallback}). Der ESP8266 abonniert nur das Topic, das in der Variablen \texttt{SUBSCRIBE\_TOPIC} definiert ist. Beim Empfang der Nachricht aus dem Topic wird geprüft, ob die Nachricht aus dem dem Gerät zugewiesenen Topic stammt. Wenn dies der Fall ist, wird der Text der Nachricht über Serial an Arduino gesendet.
-
-  
+  \par Nach der erfolgreichen Einrichtung und Verbindung mit dem WLAN sowie MQTT-Broker, schaltet der Diode aus. 
+  \par Bei jedem Programmdurchlauf wird die Funktion \texttt{readSerialData()} aufgerufen, die die Daten vom Arduino empfängt. Die Daten kommen im Format „\texttt{topic:message}“. Nach Empfang der Daten, wird das Topic mit der Geräte-ID erstellt und die MQTT-Nachricht wird an dem MQTT-Broker gesendet.
+  \par Die Verarbeitung der empfangenen MQTT-Nachrichten erfolgt in der Funktion \texttt{callback}. Das ESP8266 abonniert nur das Topic „\texttt{command/ID}“. Das Topic ist individuell für jedes Modul erstellt und in der Variablen \texttt{SUBSCRIBE\_TOPIC} gespeichert. Beim Empfang einer MQTT-Nachricht, wird der Text in ein \texttt{String} konvertiert und über \texttt{Serial} an Arduino weitergeleitet.
   \subsubsection{M5Stick}
-  \par Der M5Stick wird zur Überwachung der Licht- und Luftbedingungen eingesetzt. Die Idee ist, dass der Sensor die aktuelle Wetterbedingungen überwacht und diese an dem Server sendet. Für diesen Zweck soll der Sensor an dem Fenster draußen positioniert werden.
-  \par Am Modul sind die Sensoren BME680 und VCNL4040 angebunden. Der BME680 erfasst Umweltdaten: Temperatur, Luftfeuchtigkeit und Gaswiderstand. Der VCNL4040 dient als Lichtsensor und misst Lichtbedingungen: Umgebungshelligkeit (Ambient Light), weißes Licht sowie Annäherung (Proximity). Diese Daten werden an dem Server via MQTT-Nachrichten gesendet.
+  \par Das M5Stick wird zur Überwachung der Licht- und Luftbedingungen eingesetzt. Die Idee ist, dass der Sensor die aktuelle Wetterbedingungen überwacht und diese an dem Server sendet. Dafür soll das Modul an dem Fenster draußen positioniert werden. Dem Modul wird die Geräte-ID „m5stick“ zugewiesen.
+  \par Am Modul sind die Sensoren BME680 und VCNL4040 über I²C angebunden. Der BME680 erfasst Umweltdaten: Temperatur, Luftfeuchtigkeit und Gaswiderstand. Der VCNL4040 dient als Lichtsensor und misst Lichtbedingungen: Umgebungshelligkeit (Ambient Light), weißes Licht sowie Annäherung (Proximity). Diese Daten werden an dem Server via MQTT-Nachrichten gesendet. 
   \par Für die Verwendung der beiden Sensoren im Programmcode müssen die entsprechenden Bibliotheken importiert werden und die Klassenobjekten für die Sensoren erstellt werden (Listing \ref{lst:m5sensoren}). 
 \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5sensoren}, caption={M5Stick: Sensoren}]
   #include <Adafruit_BME680.h>
   #include <Adafruit_VCNL4040.h>
-  Adafruit_BME680 bme_sensor;
+  Adafruit_BME680 bme_sensor; 
   Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
 \end{lstlisting}
 
-\par Beim Start des Moduls wird die Funktion \texttt{setup()} aufgerufen. Zusätzlich zu der im Listing \ref{lst:espsetup} duchgeführte Einrichtungen müssen noch die beiden Sensoren eingerichtet und im Betriebszustand gebracht werden. Dacher werden im Setup die Funktionen \texttt{vcnl\_setup()} und \texttt{bme\_setup()} für die Einrichtung der Sensoren aufgerufen.
-
-\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5vcnlsetup}, caption={M5Stick: vcnl\_setup}]
-
-\end{lstlisting}
-
+\par Beim Start des Moduls wird die Funktion \texttt{setup()} aufgerufen. Das Modul wird mit dem Befehl \texttt{M5.begin()} initialisiert. Zusätzlich zu den im letzten Abschnitt beschriebenen Einrichtungen müssen auch die beiden angeschlossenen Sensoren eingerichtet und in Betrieb genommen werden. Zum Einstellen der Sensoren werden im Setup die Funktionen \texttt{vcnl\_setup()} und \texttt{bme\_setup()} aufgerufen. Diese Funktionen stellen die I²C-Verbindung zu den Sensoren her und initialisieren diese.
+\par Anschließend wird die WLAN- und MQTT-Verbindung aufgebaut. Der Status der Verbindung wird mit der Funktion \texttt{show\_connections()} bei jedem Programmdurchlauf auf dem Display des Moduls angezeigt. Sollte die Verbindung abbrechen oder nicht aufgebaut werden, wird die entsprechende Meldung ebenfalls angezeigt.
+\par Bei jedem Programmdurchlauf zeigt die Funktion \texttt{show\_sensor\_data()} die von den Sensoren erfassten Daten auf dem Display an. 
+\par Mit der Funktion \texttt{send\_mqtt\_data()} werden die Sensordaten erfasst und an dem MQTT-Broker gesendet. Zunächst werden die Messwerte der Sensoren ausgelesen und in einem JSON-Objekt zusammengefasst. Der BME680 liefert die Temperatur in °C sowie die Luftfeuchtigkeit in \%. Der VCNL4040 erfasst die Umgebungshelligkeit in \texttt{Lux} abgelesen. Anschließend wird das JSON-Objekt serialisiert und im Topic „\texttt{data/m5stick}“ an den MQTT-Broker gesendet. 
+\par Das auf dem Modul laufenden MQTT-Client abonniert das Topic „\texttt{command/m5stick}“. Beim Empfang einer MQTT-Nachricht aus diesem Topic mit dem Text „handshake“, werden die Konfigurationsdaten in das Topic „\texttt{handshake/m5stick}“ gesendet. Die Konfigurationsdaten des Moduls sind wie folgt strukturiert:
+\begin{Verbatim}[frame=single]
+  {
+    "data_fields": ["temperature", "humidity", "light"],
+    "commands": ["none"]
+  }
+\end{Verbatim}
 \subsubsection{ESP32}
+\par Das ESP32 wird zur Überwachung von Luftbedingungen im Raum sowie zur Steuerung der Beleuchtung verwendet. Das Modul besitzt die Geräte-ID „esp32“. 
+\par Ein Display \cite{docdisplay} und ein BME680-Sensor sind über die I²C-Schnittstelle an das ESP32 angeschlossen. Auf dem Display werden Temperatur, Luftfeuchtigkeit und der Verbindungsstatus angezeigt. Zur Ansteuerung des Displays wird die Bibliothek \texttt{MycilaEasyDisplay} \cite{easdisplay} verwendet. 
+\par Zusätzlich ist eine Diode an dem GPIO-Pin 4 des ESP32 angeschlossen, die die Raumbeleuchtung simuliert.
+\par Beim Start des Moduls wird die Funktion \texttt{setup()} aufegerufen. In dieser Funktion wird zunächst das Display mit den Befehlen \texttt{display.begin()} und \texttt{display.setActive(true)} initialisiert und aktiviert. Der BME680-Sensor wird in der Funktion \texttt{bme\_setup()} initialisiert. Anschließend werden die WLAN- und MQTT-Verbindungen standardmäßig aufgebaut. 
+\par Nach dem Setup werden bei jedem Programmdurchlauf die Funktionen \texttt{show\_connections()} und \texttt{show\_sensordata()} aufgerufen. 
+\par Die Funktion \texttt{show\_connections()} gibt den aktuellen Status der WLAN- und MQTT-Verbindung auf dem Display aus. Bei einem Verbindungsausfall wird eine Meldung mit den Daten des erstellten Zugangspunktes angezeigt.
+\par Die Funktion \texttt{show\_sensordata()} liest die aktuellen Werte für die Luftfeuchtigkeit und die Raumtemperatur vom BME680-Sensor aus und stellt diese auf dem Display dar.
+\par Die Funktion \texttt{send\_mqtt\_sensor\_data()} liest die von dem BME680-Sensor erfassten Daten aus und überträgt diese über die bestehende MQTT-Verbindung. Die Sensordaten werden zunächst ausgelesen und in den lokalen Variablen gespeichert. Anschließend wird ein JSON-Objekt erzeugt, in dem die Messwerte den entsprechenden Feldern zugewiesen werden. Dieses JSON-Objekt wird serialisiert und an das Topic „\texttt{data/esp32}“ gesendet.
+\par Der auf dem Modul laufende MQTT-Client abonniert das Topic „\texttt{command/esp32}“. Beim Empfang einer MQTT-Nachricht aus diesem Topic mit dem Text „handshake“, antwortet der Client mit den Konfigurationsdaten. Die Konfigurationsdaten des Moduls haben folgende Struktur:
+\begin{Verbatim}[frame=single]
+  {
+    "data_fields": ["temperature", "humidity"],
+    "commands": ["light_on", "light_off"]
+  }
+\end{Verbatim}
+\par Aus den Konfigurationsdaten ergibt sich, dass das Modul die Werte für die Temperatur und die Luftfeuchtigkeit liefert sowie die Befehle zum Ein- und Ausschalten des Lichts ausführen kann. Beim Empfang einer Nachricht mit dem Text „\texttt{light\_on}“ wird der GPIO-Pin 4 auf HIGH gesetzt, wodurch die angeschlossene Diode eingeschaltet wird. Beim Empfang einer Nachricht mit dem Text „\texttt{"light\_off"}“ wird der GPIO-Pin 4 auf LOW gesetzt und die Diode entsprechend ausgeschaltet.
+\par Das ESP32 liefert kontinuierlich die erfassenen Umweltdaten und reagiert auf die eingehenden Steuerbefehle. Dadurch ist das Modul flexibel in verschiedenen Szenarien einsetzbar.
+% „“
 \newpage
 \section{Softwareentwicklung}
 \par In diesem Abschnitt wird die Aufbau und Entwicklung der Software für das System beschrieben. Für die Entwicklung wurden Programmiersprachen Python und JavaScript mit mehreren Bibliotheken sowie die Markierungssprache HTML und CSS für die Visualisierung der Webseite verwendet.
@@ -1218,7 +1251,7 @@ captionpos=b,
   \par Diese Funktion prüft zunächst, ob sowohl das übergebene Quellgerät (\texttt{source\_dev}) als auch das Zielgerät \texttt({target\_dev}) dem Benutzer zugeordnet sind. Ist dies nicht der Fall, so wird der Vorgang abgebrochen und eine Meldung über den unberechtigten Zugriff zurückgegeben.
   \par Nach erfolgreicher Prüfung werden die Daten des Szenarios an die Funktion \texttt{add\_scenario()} der Klasse \texttt{queries} übergeben, die das neue Szenario in der Datenbank speichert. Abschließend wird mit dem Befehl \texttt{MQTTClient.load\_scenarios()} die Liste der gespeicherten Szenarien in \texttt{MQTTClient} aktualisiert, so dass das System sofort auf die neue Automatisierungsregel reagieren kann.
   \par Das Löschen eines Szenarios erfolgt durch das Senden eines Delete-Requests an die Route „\texttt{delete\_scenario}“. Der Request muss im Header ein JWT-Token und im Body das Primär\-schlüssel des Szenarios enthalten. Zuerst wird die Benutzer-ID aus dem Token extrahiert und zusammen mit dem Primär\-schlüssel des Szenarios an die Funktion \texttt{services.delete\_scenario()} übergeben. 
-  \par Diese Funktion prüft zunächst, ob die übergebene Geräte-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht.
+  \par Diese Funktion prüft zunächst, ob die übergebene Szenario-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht.
   % „“
   \subsection{MQTT-Client}
   % \par \textbf{}
@@ -1491,20 +1524,31 @@ captionpos=b,
   \par Im \texttt{header}-Element wird der Name des Hauses angezeigt. Unterhalb des Headers befindet sich eine Schaltfläche zum Anlegen eines neuen Raumes sowie der Bereich für die Auflistung der Räume. Zusätzlich gibt es eine Schaltfläche zum Löschen des Hauses. Der Button „\texttt{create\_room}“ öffnet ein Formular, in dem der Benutzer den Namen des Raumes eingeben und speichern kann.
   \par Anschließend wird das \texttt{div}-Element „room\_list“ mit den Räumen des Hauses gefüllt. Dieser Vorgang ist ähnlich wie bei der Anzeige der Häuser. Für jeden Raum wird ein \texttt{div}-Element „room\_element“ mit der ID des Raumes erzeugt. Dieses Element enthält den Namen des Raumes, eine Schaltfläche zum Hinzufügen eines Gerätes, den Bereich zur Auflistung der Geräte und eine Schaltfläche zum Löschen des Raumes. 
   \par Die Schaltfläche zum Hinzufügen eines Geräts öffnet ein Formular, in das der Benutzer die ID und den Namen des Gerätes eingeben soll. Durch Bestätigen der Schaltfläche „Speichern“ wird das Gerät gespeichert und dem Raum zugeordnet. 
-  \par Die zu dem Raum zugeordneten Geräte müssen auch angezeigt werden. Für jedes Gerät wird ein \texttt{div}-Element „device\_element“ mit der ID des Gerätes erzeugt. Im Listing \ref{lst:deviceelement} ist die HTML-Struktur des Elements angezeigt. Dieses Element enthält der Name und ID des Geräts, eine Schaltfläche zum Löschen des Gerätes und zwei weitere \texttt{div}-Elemente für die Darstellung der von Gerät gesendeten Daten und den gespeicherten Befehlen, die das Gerät ausführen kann.
-  \begin{lstlisting}[style=htmlcssjs, label={lst:deviceelement}, caption={html: device\_element}]
-    <div id="device_element${device.dev_id}"
-      <div>
-          <p>NAME: ${device.name}</p>
-          <p> ID: ${device.dev_id} </p>
-          <div id="deviceData${device.dev_id}"></div>
-      </div>
-      <div id="commands${device.dev_id}"></div>
-      <button id="deleteDevice${device.dev_id}"> DELETE </button>
-    </div>
-  \end{lstlisting}
+  \par Die zu dem Raum zugeordneten Geräte müssen auch angezeigt werden. Für jedes Gerät wird ein \texttt{div}-Element mit der ID des Gerätes erzeugt (Abbildung ). Dieses Element enthält der Name und ID des Geräts, eine Schaltfläche zum Löschen des Gerätes und zwei weitere \texttt{div}-Elemente für die Darstellung der von Gerät eingehenden Daten und den Befehlen, die das Gerät ausführen kann. 
+  \par Die vom Gerät empfangenen Daten werden im \texttt{div}-Element „\texttt{deviceData}“ dargestellt. Über eine WebSocket-Verbindung werden die Daten in Echtzeit empfangen, angezeigt und kontinuierlich aktualisiert. Eine detaillierte Beschreibung folgt im Paragraph „WebSocket“ dieses Abschnitts.
+  \par 
   \paragraph{My Devices}
   \par \textbf{TOODOOO}
+  \par Durch das Anklicken an die Schaltfläche „My Devices“ an der Navigationsleiste, wird die Funktion \texttt{renderMyDevicesPage()} aufgerufen, die die vom Benutzer angemeldeten Geräte darstellt. 
+  %\par Das \texttt{div}-Element „app“ wird mit den auf der Abbildung \ref{} dargestellten Device-Blocks mit den Daten der Geräte befüllt. 
+  \par Für jedes gespeicherten Gerät wird ein \texttt{div}-Element „device\_element“ mit der im Listing \ref{lst:deviceelement} dargestellten HTML-Struktur erstellt.
+  \begin{lstlisting}[style=htmlcssjs, label={lst:deviceelement}, caption={html: device\_element}]
+  <div id="device_element${device.dev_id}">
+    <p>NAME: ${device.name}</p>
+    <h1>DEV_ID: ${device.dev_id}</h1>
+    <p>Description: ${device.description ? device.description : ""}</p>
+    <p>ROOM: ${device.room ? device.room : "-"}</p>
+    <p>Data fields: ${device.data_fields}</p>
+    <div id="deviceData${device.dev_id}">Waiting for data from device...</div>
+  </div>
+  <div id="commands${device.dev_id}"></div>
+  <div>
+    <button id="BTNhandshake${device.dev_id}">Handshake</button>
+    <button id="BTNdeleteDevice${device.dev_id}">Delete</button>
+  </div>
+  \end{lstlisting} 
+  \par 
+  % „“
   \paragraph{My Scenarios}
   \par \textbf{}
   \par Durch das Anklicken an die Schaltfläche „My Scenarios“ an der Navigationsleiste, wird die Funktion \texttt{renderMyScenariosPage()} aufgerufen, die die vom Benutzer erstellten Szenarien darstellt. 
@@ -1646,13 +1690,12 @@ captionpos=b,
   Raspberry Pi Foundation, \textit{Raspberry Pi 1 B+}, \url{https://www.raspberrypi.com/products/raspberry-pi-1-model-b-plus/}
   \bibitem{esp8266}
   Espressif, \textit{ESP8266}, \url{https://www.espressif.com/}, \url{https://www.electronicwings.com/sensors-modules/esp8266-wifi-module}
-
   \bibitem{bme680}
   Bosh, \textit{BME680 - Datasheet}, \url{https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf}, Zugriff: 4. Februar 2025.
-
   \bibitem{vcnl4040}
   Vishay, \textit{VCNL4040 - Datasheet}, \url{https://www.vishay.com/docs/84274/vcnl4040.pdf}, Zugriff: 5. Februar 2025.
-
+  \bibitem{docdisplay}
+  Adafruit, \textit{OlED FeatherWing}, \url{https://learn.adafruit.com/adafruit-128x64-oled-featherwing/downloads}, Zugriff: 16. Januar 2025 [Online].
   \par \textbf{Links zur verwendeten Software:}
   \bibitem{mqtt}
   Dr Andy Stanford-Clark, Arlen Nipper, \textit{Message Queuing Telemetry Transport}, \url{https://mqtt.org/}
@@ -1672,6 +1715,8 @@ captionpos=b,
   \bibitem{mosquitto}
   Eclipse Foundation, \textit{Eclipse Mosquitto}, \url{https://mosquitto.org/}
   \par \textbf{ESP- und Arduino-Bibliotheken}
+  \bibitem{scholz}
+  R. Scholz, \textit{Syncloop}, Persönliche Mitteilungen
   \bibitem{pubsub} 
   Knolleary, \textit{PubSubClient}, \url{https://pubsubclient.knolleary.net/}, Zugriff am: 21. Oktober 2024 [Online].
   \bibitem{espwifi}
@@ -1680,8 +1725,9 @@ captionpos=b,
   EEPROM.h, \url{https://docs.arduino.cc/learn/built-in-libraries/eeprom/}
   \bibitem{keypad}
   Keypad.h \url{https://docs.arduino.cc/libraries/keypad/}
-  \bibitem{scholz}
-  R. Scholz, \textit{Syncloop}, Persönliche Mitteilungen
+  \bibitem{easdisplay}
+  M. Carbou, \textit{MycilaEasyDisplay}, \url{https://github.com/mathieucarbou/MycilaEasyDisplay}, Zugriff: 16. Januar 2025. [Online]. 
+
   \par \textbf{Python-Bibliotheken}
   \bibitem{json}
   Python Software Foundation, \textit{json}, \url{https://docs.python.org/3/library/json.html}
