@@ -124,17 +124,17 @@ void setup_ap()
 void callback(char *topic, byte *payload, unsigned int length)
 {
   String id = String(topic).substring(String(topic).indexOf('/') + 1);
-  if (id == CLIENT_ID)
+  // if (id == CLIENT_ID)
+  // {
+  String text = "";
+  for (int i = 0; i < length; i++)
   {
-    String text = "";
-    for (int i = 0; i < length; i++)
-    {
-      text += (char)payload[i];
-    }
-    text.trim();
-    // Print in Arduino
-    Serial.println(text);
+    text += (char)payload[i];
   }
+  text.trim();
+  // Print in Arduino
+  Serial.println(text);
+  // }
 }
 
 void connect_mqtt()

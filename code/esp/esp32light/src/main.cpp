@@ -251,7 +251,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     char json[128];
 
     const char *data_fields[] = {"temperature", "humidity"};
-    const char *commands[] = {"light_turn_on", "light_turn_off"};
+    const char *commands[] = {"light_on", "light_off"};
 
     JsonArray json_data_fields = data.createNestedArray("data_fields");
     JsonArray json_commands = data.createNestedArray("commands");
@@ -269,11 +269,11 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.println(HANDSHAKE_TOPIC);
     mqttClient.publish(HANDSHAKE_TOPIC, json);
   }
-  else if (message == "light_turn_on")
+  else if (message == "light_on")
   {
     light_on_off(true);
   }
-  else if (message == "light_turn_off")
+  else if (message == "light_off")
   {
     light_on_off(false);
   }

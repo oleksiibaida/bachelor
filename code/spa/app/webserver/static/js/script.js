@@ -800,6 +800,7 @@ async function renderMyDevicesPage() {
                     <p>Actions: ${device.commands}</p>
                     <div id="deviceData${device.dev_id}">Waiting for data from device...</div>
                 </div>
+                <div id="commands${device.dev_id}">TODO</div>
                 <div class="grid place-items-center m-1 p-2">
                     <button id="BTNhandshake${device.dev_id}" class="add_room-btn my-2">Handshake</button>
                     <button id="BTNeditDevice${device.dev_id}" class="add_room-btn my-1">Edit</button>

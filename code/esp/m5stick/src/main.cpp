@@ -9,12 +9,7 @@ void mqtt_connect();
 void send_mqtt_data();
 void set_topics();
 void bme_setup();
-void bme_displaydata();
-void bme_sendmqtt();
 void vcnl_setup();
-
-void vcnl_displaydata();
-void vcnl_sendmqtt();
 void show_connection();
 void show_sensor_data();
 void eeprom_connect_wifi_mqtt();
@@ -92,7 +87,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     const char *actions[] = {"none"};
 
     JsonArray json_data_fields = data.createNestedArray("data_fields");
-    JsonArray json_actions = data.createNestedArray("actions");
+    JsonArray json_actions = data.createNestedArray("commands");
 
     for (const char *df : data_fields)
     {
@@ -128,8 +123,6 @@ void loop()
   mqttClient.loop();
   show_connection();
   show_sensor_data();
-  // bme_displaydata();
-  // vcnl_displaydata();
   if (WiFi.status() != WL_CONNECTED)
   {
     Serial.println("WIFI NOT CONNECTED");
@@ -331,46 +324,6 @@ void bme_setup()
   bme_sensor.setGasHeater(320, 150); // 320°C for 150ms
 }
 
-void bme_displaydata()
-{
-  if (!bme_sensor.performReading())
-  {
-    Serial.println("Failed to perform reading!");
-    return;
-  }
-
-  M5.Lcd.fillRect(0, 40, M5.Lcd.width(), 20, TFT_BLUE);
-  M5.Lcd.setCursor(X_OFFSET, 40);
-  M5.Lcd.printf("Temperature %.1f C", bme_sensor.temperature);
-  M5.Lcd.setCursor(X_OFFSET, 60);
-  M5.Lcd.printf("Humidity %.1f %", bme_sensor.humidity);
-}
-
-void bme_sendmqtt()
-{
-  if (!bme_sensor.performReading())
-  {
-    Serial.println("Failed to perform reading!");
-    return;
-  }
-
-  char json[128]; // Allocate a buffer for the JSON string
-  snprintf(
-      json,
-      sizeof(json),
-      "{\"id\":\"BME\", \"temperature\":%.1f,\"humidity\":%.2f,\"pressure\":%.2f}",
-      bme_sensor.temperature, bme_sensor.humidity, bme_sensor.pressure / 100);
-
-  if (mqttClient.connected())
-  {
-    mqttClient.publish(PUBLISH_TOPIC, json);
-    Serial.println("\nMQTT SENT:");
-  }
-  else
-    Serial.println("\nNO MQTT SENT:");
-  Serial.print(json);
-}
-
 /*===VCNL===*/
 void vcnl_setup()
 {
@@ -380,17 +333,6 @@ void vcnl_setup()
     M5.Lcd.print("ERROR: VCNL NOT FOUND");
   }
   Serial.println("VCNL FOUND");
-}
-
-void vcnl_displaydata()
-{
-  uint8_t ambient = vcnl4040.getAmbientLight();
-  uint8_t white_light = vcnl4040.getWhiteLight();
-  M5.Lcd.fillRect(0, 60, M5.Lcd.width(), 40, TFT_GREEN);
-  M5.Lcd.setCursor(X_OFFSET, 60);
-  M5.Lcd.printf("Ambient Light %d", ambient);
-  M5.Lcd.setCursor(X_OFFSET, 80);
-  M5.Lcd.printf("White Light %d", white_light);
 }
 
 void vcnl_sendmqtt()
