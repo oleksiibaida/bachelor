@@ -270,6 +270,19 @@ captionpos=b,
 \pagebreak
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
+\par In dieser Bachelorarbeit wurde ein System zur Überwachung der Umgebungsbedingungen und zur Steuerung der IoT-Geräte im Haus entwickelt. Dabei kamen verschiedene Mikrocontroller, Sensoren und Kommunikationsprotokolle zum Einsatz. 
+\par Die Kommunikation zwischen den Geräten erfolgt über das MQTT-Protokoll in einem lokalen Netzwerk ohne Internetverbindung. Zur benutzerfreundlichen Bedienung des Systems wurde eine API mit Webinterface entwickelt. 
+\par Der Raspberry Pi dient als zentraler Knoten im System. Er fungiert gleichzeitig als WLAN-Access-Point, MQTT-Broker und Host für den Webserver. Dadurch ist das gesamte System unabhängig von externer Infrastruktur und kann vollständig autonom betrieben werden – auch in Umgebungen ohne Internetzugang.
+\par Die Erweiterung des Systems um zusätzlichen Sensoren und Aktoren ist mit geringem Aufwand möglich. Neue Komponenten können einfach in die bestehende Infrastruktur integriert werden. Der Programmcode der bereits eingesetzten Mikrocontroller enthält viele Standardfunktionen, die modular aufgebaut und leicht wiederverwendbar sind. Dadurch können weitere Komponenten standardmäßig im System eingebunden werden.
+\par Insgesamt zeigt diese Arbeit, wie mit einfachen Mitteln ein robustes und flexibel erweiterbares IoT-System entwickelt werden kann, das sich besonders für den Einsatz in Privathäusern eignet.
+\par \textbf{}
+\par \textbf{}
+\par \textbf{Englisch}
+\par This bachelor thesis presents the development of a system for monitoring environmental conditions and controlling IoT devices within a house. A variety of microcontrollers, sensors and communication protocols have been used. 
+\par The communication between the devices is based on the MQTT protocol within a local network without internet access. An API with a web interface was developed to make the system accessible to users.
+\par The Raspberry Pi is the central node of the system. It simultaneously acts as a Wi-Fi access point, MQTT broker and host for the web server. This setup allows the entire system to be location-independent and run completely autonomously. 
+\par The system can easily be expanded with additional sensors and actuators. New components can be integrated into the existing infrastructure with minimal effort. The programme code on the microcontrollers used contains modular standard functions that are easy to reuse. This allows additional devices to be easily integrated into the system.
+\par Overall, this work demonstrates how a robust and flexibly expandable IoT system can be developed using simple components, making it suitable for use in private homes.
 \pagebreak
 
 \section{Einleitung}
@@ -337,9 +350,9 @@ captionpos=b,
   \begin{tabular}{|>{\centering\arraybackslash}m{2,5cm}|>{\centering\arraybackslash}m{6cm}|>{\centering\arraybackslash}m{8cm}|}
     \hline
     \textbf{Topic}      & \textbf{Nachricht}                         & \textbf{Beschreibung} \\ \hline
-    handshake/ID   &  \texttt{"data\_fields": ["temperature", "humidity"]},\par \texttt{"commands": ["light\_turn\_on", "light\_turn\_off"]}                                   &   In diesem Topic senden die Geräte ihre Konfigurationen.\\\hline
+    handshake/ID   &  \texttt{"data\_fields": ["temperature", "humidity"]},\par \texttt{"commands": ["light\_on", "light\_off"]}                                   &   In diesem Topic senden die Geräte ihre Konfigurationen.\\\hline
     data/ID     & \texttt{"temperature": 23}, \par \texttt{"humidity": 75} & Hier werden die von den Sensoren erfassten Daten übertragen. \\ \hline
-    command/ID  & \texttt{"light\_turn\_on"}  & Dieses Topic wird von Geräten abonniert. Der in der Nachricht übermittelte Befehl wird vom Gerät ausgeführt. \\ \hline
+    command/ID  & \texttt{"light\_on"}  & Dieses Topic wird von Geräten abonniert. Der in der Nachricht übermittelte Befehl wird vom Gerät ausgeführt. \\ \hline
     alarm/ID    & \texttt{"fire": "fire\_start"} & Dies ist ein spezielles Topic für das Alarmsystem. Wenn der Alarm ausgelöst wird, wird die entsprechende Meldung in diesem Topic gesendet. \\ \hline
   \end{tabular}
   \caption{MQTT-Nachrichten}
@@ -823,7 +836,7 @@ captionpos=b,
   \begin{Verbatim}[frame=single]
     {
       "data_fields": [ "temperature", "humidity"],
-      "commands": [ "light_turn_on", "light_turn_off"]
+      "commands": [ "light_on", "light_off"]
     }    
   \end{Verbatim}
   \par Anschließend wird das JSON-Dokument serialisiert und in eine Zeichenkette umgewandelt. Diese serialisierte Nachricht wird dann über die MQTT-Verbindung an das Topic „\texttt{handshake/ID}“ gesendet.
@@ -833,7 +846,7 @@ captionpos=b,
     if (message == "handshake")
     {
       const char *data_fields[] = {"temperature", "humidity"};
-      const char *commands[] = {"light_turn_on", "light_turn_off"};
+      const char *commands[] = {"light_on", "light_off"};
       
       char json[128];
       JsonDocument data;
@@ -1524,14 +1537,13 @@ captionpos=b,
   \par Im \texttt{header}-Element wird der Name des Hauses angezeigt. Unterhalb des Headers befindet sich eine Schaltfläche zum Anlegen eines neuen Raumes sowie der Bereich für die Auflistung der Räume. Zusätzlich gibt es eine Schaltfläche zum Löschen des Hauses. Der Button „\texttt{create\_room}“ öffnet ein Formular, in dem der Benutzer den Namen des Raumes eingeben und speichern kann.
   \par Anschließend wird das \texttt{div}-Element „room\_list“ mit den Räumen des Hauses gefüllt. Dieser Vorgang ist ähnlich wie bei der Anzeige der Häuser. Für jeden Raum wird ein \texttt{div}-Element „room\_element“ mit der ID des Raumes erzeugt. Dieses Element enthält den Namen des Raumes, eine Schaltfläche zum Hinzufügen eines Gerätes, den Bereich zur Auflistung der Geräte und eine Schaltfläche zum Löschen des Raumes. 
   \par Die Schaltfläche zum Hinzufügen eines Geräts öffnet ein Formular, in das der Benutzer die ID und den Namen des Gerätes eingeben soll. Durch Bestätigen der Schaltfläche „Speichern“ wird das Gerät gespeichert und dem Raum zugeordnet. 
-  \par Die zu dem Raum zugeordneten Geräte müssen auch angezeigt werden. Für jedes Gerät wird ein \texttt{div}-Element mit der ID des Gerätes erzeugt (Abbildung ). Dieses Element enthält der Name und ID des Geräts, eine Schaltfläche zum Löschen des Gerätes und zwei weitere \texttt{div}-Elemente für die Darstellung der von Gerät eingehenden Daten und den Befehlen, die das Gerät ausführen kann. 
-  \par Die vom Gerät empfangenen Daten werden im \texttt{div}-Element „\texttt{deviceData}“ dargestellt. Über eine WebSocket-Verbindung werden die Daten in Echtzeit empfangen, angezeigt und kontinuierlich aktualisiert. Eine detaillierte Beschreibung folgt im Paragraph „WebSocket“ dieses Abschnitts.
-  \par 
+  \par Die zu dem Raum zugeordneten Geräte müssen auch angezeigt werden. Für jedes Gerät wird ein \texttt{div}-Element „device\_element“ mit der ID des Gerätes erzeugt (Abbildung ). Eine detaillierte Beschreibung des Elements folgt im nächsten Paragraph.
   \paragraph{My Devices}
   \par \textbf{TOODOOO}
   \par Durch das Anklicken an die Schaltfläche „My Devices“ an der Navigationsleiste, wird die Funktion \texttt{renderMyDevicesPage()} aufgerufen, die die vom Benutzer angemeldeten Geräte darstellt. 
   %\par Das \texttt{div}-Element „app“ wird mit den auf der Abbildung \ref{} dargestellten Device-Blocks mit den Daten der Geräte befüllt. 
   \par Für jedes gespeicherten Gerät wird ein \texttt{div}-Element „device\_element“ mit der im Listing \ref{lst:deviceelement} dargestellten HTML-Struktur erstellt.
+  \par Die vom Gerät empfangenen Daten werden im \texttt{div}-Element „\texttt{deviceData}“ dargestellt. Über eine WebSocket-Verbindung werden die Daten in Echtzeit empfangen, angezeigt und kontinuierlich aktualisiert. Eine detaillierte Beschreibung folgt im Paragraph „WebSocket“ dieses Abschnitts.
   \begin{lstlisting}[style=htmlcssjs, label={lst:deviceelement}, caption={html: device\_element}]
   <div id="device_element${device.dev_id}">
     <p>NAME: ${device.name}</p>

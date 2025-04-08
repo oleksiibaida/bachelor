@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.25)  6 APR 2025 18:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.25)  8 APR 2025 17:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -839,37 +839,37 @@ l.78 ...ion}{Abbildungsverzeichnis}{57}{section.7}
 \openout7 = `ba_bericht.toc'.
 
  [2] [3] [4]
-Overfull \hbox (15.14375pt too wide) in paragraph at lines 292--293
+Overfull \hbox (15.14375pt too wide) in paragraph at lines 305--306
 []\OT1/cmr/bx/n/12 Sensordatenerfassung\OT1/cmr/m/n/12 : Die an den Mi-kro-con-trol-lern an-ge-schlos-se-nen Sen-so-ren []ubermitteln
  []
 
 [5] [6]
-Overfull \hbox (1.54793pt too wide) in paragraph at lines 340--340
+Overfull \hbox (1.54793pt too wide) in paragraph at lines 353--353
  []|\OT1/cmr/m/n/12 handshake/ID| 
  []
 
 
-Overfull \hbox (23.37355pt too wide) in paragraph at lines 337--345
+Overfull \hbox (23.37355pt too wide) in paragraph at lines 350--358
  [][] 
  []
 
 [7] [8]
-Overfull \hbox (25.19998pt too wide) in paragraph at lines 363--377
+Overfull \hbox (25.19998pt too wide) in paragraph at lines 376--390
  [][] 
  []
 
 [9]
-Overfull \hbox (0.22334pt too wide) in paragraph at lines 384--385
+Overfull \hbox (0.22334pt too wide) in paragraph at lines 397--398
 \OT1/cmr/m/n/12 SRAM und EE-PROM Spei-cher. Au-^^Yer-dem un-terst[]utzt es das UART-Kommunikationsprotokoll. 
  []
 
 
-Overfull \hbox (25.19998pt too wide) in paragraph at lines 390--403
+Overfull \hbox (25.19998pt too wide) in paragraph at lines 403--416
  [][] 
  []
 
 
-Overfull \hbox (25.19998pt too wide) in paragraph at lines 415--431
+Overfull \hbox (25.19998pt too wide) in paragraph at lines 428--444
  [][] 
  []
 
@@ -877,7 +877,7 @@ Overfull \hbox (25.19998pt too wide) in paragraph at lines 415--431
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [10]
-Overfull \hbox (25.19998pt too wide) in paragraph at lines 448--458
+Overfull \hbox (25.19998pt too wide) in paragraph at lines 461--471
  [][] 
  []
 
@@ -885,22 +885,22 @@ Overfull \hbox (25.19998pt too wide) in paragraph at lines 448--458
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Overfull \hbox (0.24677pt too wide) in paragraph at lines 463--464
+Overfull \hbox (0.24677pt too wide) in paragraph at lines 476--477
 \OT1/cmr/m/n/12 (Pro-xi-mi-ty Sen-sor PR), einen Licht-sen-sor (Am-bient Light Sen-sor) und ei-ne Infrarot-Leuchtdiode
  []
 
 [11]
-Overfull \hbox (2.48145pt too wide) in paragraph at lines 465--466
+Overfull \hbox (2.48145pt too wide) in paragraph at lines 478--479
 []\OT1/cmr/m/n/12 Das VCNL4040 verf[]ugt []uber ei-ne I2C-Schnittstelle zur Kom-mu-ni-ka-ti-on mit an-de-ren Ger[]aten. 
  []
 
 
-Overfull \hbox (25.19998pt too wide) in paragraph at lines 470--479
+Overfull \hbox (25.19998pt too wide) in paragraph at lines 483--492
  [][] 
  []
 
 
-Overfull \hbox (25.19998pt too wide) in paragraph at lines 490--505
+Overfull \hbox (25.19998pt too wide) in paragraph at lines 503--518
  [][] 
  []
 
@@ -908,39 +908,39 @@ Overfull \hbox (25.19998pt too wide) in paragraph at lines 490--505
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [12] [13]
-Overfull \hbox (6.8087pt too wide) in paragraph at lines 541--542
+Overfull \hbox (6.8087pt too wide) in paragraph at lines 554--555
 \OT1/cmr/m/n/12 dient. Die ein-zel-nen Ebe-nen ei-nes To-pics wer-den durch einen Slash ([]/\) ge-trennt. Dies erm[]oglicht
  []
 
 
-Overfull \hbox (10.4994pt too wide) in paragraph at lines 542--543
+Overfull \hbox (10.4994pt too wide) in paragraph at lines 555--556
 \OT1/cmr/m/n/12 den Nach-rich-ten im JSON-Format []ubertragen, um ei-ne struk-tu-rier-te Ver-ar-bei-tung zu erm[]oglichen. 
  []
 
 [14] [15] (E:\Soft\MikTex\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
 )
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 581.
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 594.
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 582.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 595.
  [16]
-Overfull \hbox (9.90775pt too wide) in paragraph at lines 597--598
+Overfull \hbox (9.90775pt too wide) in paragraph at lines 610--611
 []\OT1/cmr/m/n/12 In die-sem Pro-jekt wer-den Python-Skripte so-wohl f[]ur die Ver-ar-bei-tung von MQTT-Nachrichten
  []
 
 [17]
-Overfull \hbox (5.21198pt too wide) in paragraph at lines 620--621
+Overfull \hbox (5.21198pt too wide) in paragraph at lines 633--634
 \OT1/cmr/m/n/12 schach-tel-ten Ele-men-ten, die durch so-ge-nann-te Tags ge-kenn-zeich-net sind. Je-des HTML-Dokument
  []
 
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 623.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 636.
 [18] (E:\Soft\MikTex\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2023/02/27 1.9 listings language file
 ) (E:\Soft\MikTex\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
 ) [19]
-Overfull \hbox (4.14114pt too wide) in paragraph at lines 658--659
+Overfull \hbox (4.14114pt too wide) in paragraph at lines 671--672
 \OT1/cmr/m/n/12 die Ver-bin-dung of-fen, so dass bei-de Par-tei-en je-der-zeit Da-ten aus-tau-schen k[]onnen. Dies erm[]oglicht
  []
 
@@ -950,29 +950,29 @@ File: lstlang1.sty 2023/02/27 1.9 listings language file
 File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
 )
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 713.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 726.
  [23] [24]
-Overfull \hbox (15.73627pt too wide) in paragraph at lines 821--822
+Overfull \hbox (15.73627pt too wide) in paragraph at lines 834--835
 []\OT1/cmr/m/n/12 Der Text der emp-fan-ge-nen MQTT-Nachricht wird als \OT1/cmtt/m/n/12 byte payload \OT1/cmr/m/n/12 an die Funk-ti-on []ubergeben
  []
 
 [25]
-Overfull \hbox (9.42197pt too wide) in paragraph at lines 829--830
+Overfull \hbox (9.42197pt too wide) in paragraph at lines 842--843
 \OT1/cmr/m/n/12 Die-se se-ria-li-sier-te Nach-richt wird dann []uber die MQTT-Verbindung an das To-pic []\OT1/cmtt/m/n/12 handshake/ID\OT1/cmr/m/n/12 \
  []
 
 
-Overfull \hbox (1.90088pt too wide) in paragraph at lines 856--857
+Overfull \hbox (1.90088pt too wide) in paragraph at lines 869--870
 \OT1/cmr/m/n/12 WLAN- und MQTT-Verbindung zu er-stel-len. Wenn die Ver-bin-dung nicht er-stellt wer-den k[]onnte,
  []
 
 [26]
-Overfull \hbox (3.05367pt too wide) in paragraph at lines 867--868
+Overfull \hbox (3.05367pt too wide) in paragraph at lines 880--881
 \OT1/cmr/m/n/12 Licht so-wie Ann[]aherung (Pro-xi-mi-ty). Die-se Da-ten wer-den an dem Ser-ver via MQTT-Nachrichten
  []
 
 [27]
-Overfull \hbox (1.38557pt too wide) in paragraph at lines 892--893
+Overfull \hbox (1.38557pt too wide) in paragraph at lines 905--906
 []\OT1/cmr/m/n/12 Nach dem Se-tup wer-den bei je-dem Pro-gramm-durch-lauf die Funk-tio-nen \OT1/cmtt/m/n/12 show[]connections()
  []
 
@@ -980,78 +980,78 @@ Overfull \hbox (1.38557pt too wide) in paragraph at lines 892--893
 <./Bilder/datenbank.png, id=567, 816.80156pt x 362.10281pt>
 File: ./Bilder/datenbank.png Graphic file (type png)
 <use ./Bilder/datenbank.png>
-Package pdftex.def Info: ./Bilder/datenbank.png  used on input line 954.
+Package pdftex.def Info: ./Bilder/datenbank.png  used on input line 967.
 (pdftex.def)             Requested size: 483.69687pt x 214.43443pt.
  [31 <./Bilder/datenbank.png>]
-Overfull \hbox (10.24088pt too wide) in paragraph at lines 988--989
+Overfull \hbox (10.24088pt too wide) in paragraph at lines 1001--1002
 []\OT1/cmr/bx/it/12 data[]fields: \OT1/cmr/m/n/12 Die Da-ten-fel-der, die vom Ger[]at ge-lie-fert und dem Be-nut-zer zur Verf[]ugung
  []
 
 [32] [33]
-Overfull \hbox (0.50015pt too wide) in paragraph at lines 1052--1053
+Overfull \hbox (0.50015pt too wide) in paragraph at lines 1065--1066
 \OT1/cmtt/m/n/12 .base \OT1/cmr/m/n/12 ent-spricht der Da-tei \OT1/cmtt/m/n/12 base.py \OT1/cmr/m/n/12 (Lis-ting [][]8[][]). In die-ser Da-tei wird le-dig-lich \OT1/cmtt/m/n/12 declarative[]base
  []
 
-LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 1065.
+LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 1078.
 (E:\Soft\MikTex\tex/latex/base\ts1cmtt.fd
 File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 ) [34]
-Overfull \hbox (8.47261pt too wide) in paragraph at lines 1088--1089
+Overfull \hbox (8.47261pt too wide) in paragraph at lines 1101--1102
 []\OT1/cmr/m/n/12 Die Klas-sen \OT1/cmtt/m/n/12 RoomModel \OT1/cmr/m/n/12 und \OT1/cmtt/m/n/12 DeviceModel \OT1/cmr/m/n/12 ha-ben ei-ne Be-zie-hung zur Klas-se \OT1/cmtt/m/n/12 RoomDeviceModel\OT1/cmr/m/n/12 .
  []
 
 
-Overfull \hbox (11.54436pt too wide) in paragraph at lines 1093--1094
+Overfull \hbox (11.54436pt too wide) in paragraph at lines 1106--1107
 []\OT1/cmr/m/n/12 ubergebenen Pa-ra-me-tern er-zeugt. Die-ses Ob-jekt wird mit dem Be-fehl \OT1/cmtt/m/n/12 db[]session.add(new[]user)
  []
 
 
-Overfull \hbox (40.95003pt too wide) in paragraph at lines 1095--1096
+Overfull \hbox (40.95003pt too wide) in paragraph at lines 1108--1109
 []\OT1/cmr/m/n/12 Ein \OT1/cmtt/m/n/12 IntegrityError \OT1/cmr/m/n/12 wird aus-gel[]ost, wenn ei-ne Da-ten-ban-k-ope-ra-ti-on ge-gen ei-ne In-te-grit[]atsbedingung
  []
 
 
-Overfull \hbox (5.92574pt too wide) in paragraph at lines 1097--1098
+Overfull \hbox (5.92574pt too wide) in paragraph at lines 1110--1111
 []\OT1/cmr/m/n/12 Alle an-de-ren m[]oglichen Feh-ler, die kei-ne \OT1/cmtt/m/n/12 SQLAlchemy\OT1/cmr/m/n/12 -Fehler sind, wer-den im Block \OT1/cmtt/m/n/12 Exception
  []
 
 [35] [36]
-Overfull \hbox (2.96199pt too wide) in paragraph at lines 1138--1139
+Overfull \hbox (2.96199pt too wide) in paragraph at lines 1151--1152
 \OT1/cmr/m/n/12 schl[]usselten Ver-si-on ver-gli-chen. Ist die Pr[]ufung er-folg-reich, gibt die Funk-ti-on den Prim[]arschl[]ussel
  []
 
 [37]
-Overfull \hbox (6.29485pt too wide) in paragraph at lines 1167--1168
+Overfull \hbox (6.29485pt too wide) in paragraph at lines 1180--1181
 []\OT1/cmtt/m/n/12 token: str = Depends(get[]token) \OT1/cmr/bx/n/12 { \OT1/cmr/m/n/12 Ein Au-then-ti-fi-zie-rungs-to-ken, das []uber die FastAPI-
  []
 
 [38] [39]
-Overfull \hbox (7.49953pt too wide) in paragraph at lines 1242--1243
+Overfull \hbox (7.49953pt too wide) in paragraph at lines 1255--1256
 \OT1/cmr/m/n/12 pr[]uft, ob die aus dem To-ken ex-tra-hier-te Benutzer-ID mit der des Haus-ei-gent[]umers []ubereinstimmt.
  []
 
 
-Overfull \hbox (20.29294pt too wide) in paragraph at lines 1244--1245
+Overfull \hbox (20.29294pt too wide) in paragraph at lines 1257--1258
 \OT1/cmr/m/n/12 zeug-te Benutzer-ID wird zu-sam-men mit der Ger[]ate-ID an die Funk-ti-on \OT1/cmtt/m/n/12 services.delete[]device()
  []
 
 [40] [41]
-Overfull \hbox (2.02579pt too wide) in paragraph at lines 1280--1281
+Overfull \hbox (2.02579pt too wide) in paragraph at lines 1293--1294
 \OT1/cmr/m/n/12 Nach-richt in der Funk-ti-on \OT1/cmtt/m/n/12 process[]message() \OT1/cmr/m/n/12 ent-spre-chend ver-ar-bei-tet (Zei-le 8-12). Das JSON-
  []
 
 [42]
-Overfull \hbox (1.99658pt too wide) in paragraph at lines 1289--1290
+Overfull \hbox (1.99658pt too wide) in paragraph at lines 1302--1303
 \OT1/cmr/m/n/12 ge-pr[]uft, ob f[]ur die emp-fan-gen-de Ger[]ate-ID ein Ein-trag in der Klas-sen-va-ria-blen \OT1/cmtt/m/n/12 saved[]scenarios
  []
 
 [43]
-Overfull \hbox (5.48123pt too wide) in paragraph at lines 1329--1330
+Overfull \hbox (5.48123pt too wide) in paragraph at lines 1342--1343
 \OT1/cmr/m/n/12 folgt []uber die Funk-ti-on \OT1/cmtt/m/n/12 auth[]websocket()\OT1/cmr/m/n/12 . Die-se ak-zep-tiert zun[]achst die WebSocket-Verbindung
  []
 
 
-Overfull \hbox (1.72173pt too wide) in paragraph at lines 1335--1336
+Overfull \hbox (1.72173pt too wide) in paragraph at lines 1348--1349
 []\OT1/cmr/m/n/12 Die Kom-mu-ni-ka-ti-on []uber das WebSocket-Protokoll er-folgt in ei-ner End-los-schlei-fe, die st[]andig
  []
 
@@ -1059,14 +1059,14 @@ Overfull \hbox (1.72173pt too wide) in paragraph at lines 1335--1336
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.14}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1398           </div>
+l.1411           </div>
                        
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.15}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1399         </div>
+l.1412         </div>
                       [46]
-Overfull \hbox (15.50351pt too wide) in paragraph at lines 1441--1442
+Overfull \hbox (15.50351pt too wide) in paragraph at lines 1454--1455
 []\OT1/cmr/m/n/12 Stimmen die []ubermittelten An-mel-de-da-ten mit den hin-ter-leg-ten Be-nut-ze-rin-for-ma-tio-nen []uberein,
  []
 
@@ -1074,104 +1074,104 @@ Overfull \hbox (15.50351pt too wide) in paragraph at lines 1441--1442
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.8}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1450           </div>
+l.1463           </div>
                        
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.12}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1454           </div>
+l.1467           </div>
                        
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.17}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1459         </div>
+l.1472         </div>
                      
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.18}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1460       </div>
+l.1473       </div>
                    `; [48]
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.5}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1505         </div>
+l.1518         </div>
                      
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.8}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1508     </div>
+l.1521     </div>
                  
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.9}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1521     </div>
+l.1534     </div>
                  
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.10}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1522   </div>
+l.1535   </div>
                 [49]
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.8}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1543   </div>
+l.1555   </div>
                
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.13}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1548   </div>
-                [50]
+l.1560   </div>
+               
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1560       </div>
-                   
+l.1572       </div>
+                    [50]
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-2.7}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1563     </div>
+l.1575     </div>
                  
-<./Bilder/createscenario.png, id=927, 440.39531pt x 320.69812pt>
+<./Bilder/createscenario.png, id=929, 440.39531pt x 320.69812pt>
 File: ./Bilder/createscenario.png Graphic file (type png)
 <use ./Bilder/createscenario.png>
-Package pdftex.def Info: ./Bilder/createscenario.png  used on input line 1569.
+Package pdftex.def Info: ./Bilder/createscenario.png  used on input line 1581.
 (pdftex.def)             Requested size: 362.77264pt x 264.18283pt.
-<./Bilder/scenarioelement.png, id=929, 781.41937pt x 94.85437pt>
+<./Bilder/scenarioelement.png, id=931, 781.41937pt x 94.85437pt>
 File: ./Bilder/scenarioelement.png Graphic file (type png)
 <use ./Bilder/scenarioelement.png>
-Package pdftex.def Info: ./Bilder/scenarioelement.png  used on input line 1578.
+Package pdftex.def Info: ./Bilder/scenarioelement.png  used on input line 1590.
 (pdftex.def)             Requested size: 435.32422pt x 52.84308pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [51 <./Bilder/createscenario.png>] [52 <./Bilder/scenarioelement.png>] [53] [54] [55]
-Underfull \hbox (badness 3635) in paragraph at lines 1690--1691
+Underfull \hbox (badness 3635) in paragraph at lines 1702--1703
 []\OT1/cmr/m/n/12 Raspberry Pi Foun-da-ti-on, \OT1/cmr/m/it/12 Raspber-ry Pi 1 B+\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . raspberrypi . com /
  []
 
 
-Underfull \hbox (badness 1072) in paragraph at lines 1692--1693
+Underfull \hbox (badness 1072) in paragraph at lines 1704--1705
 []\OT1/cmr/m/n/12 Espressif, \OT1/cmr/m/it/12 ESP8266\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . espressif . com/$[][]\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . electronicwings .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1694--1695
+Underfull \hbox (badness 10000) in paragraph at lines 1706--1707
 []\OT1/cmr/m/n/12 Bosh, \OT1/cmr/m/it/12 BME680 - Da-tas-heet\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / www . bosch-[]sensortec . com / media /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1698--1699
+Underfull \hbox (badness 10000) in paragraph at lines 1710--1711
 []\OT1/cmr/m/n/12 Adafruit, \OT1/cmr/m/it/12 OlED Fea-ther-Wing\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / learn . adafruit . com /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1723--1724
+Underfull \hbox (badness 10000) in paragraph at lines 1735--1736
 []\OT1/cmr/m/n/12 ESPWIFI.h, [][]$\OT1/cmtt/m/n/12 https : / / arduino-[]esp8266 . readthedocs . io / en / latest / esp8266wifi /
  []
 
 [56]
-Underfull \hbox (badness 10000) in paragraph at lines 1729--1730
+Underfull \hbox (badness 10000) in paragraph at lines 1741--1742
 []\OT1/cmr/m/n/12 M. Car-bou, \OT1/cmr/m/it/12 My-cilaEa-sy-Dis-play\OT1/cmr/m/n/12 , [][]$\OT1/cmtt/m/n/12 https : / / github . com / mathieucarbou /
  []
 
@@ -1204,7 +1204,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  98i,14n,101p,1650b,2229s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\baida\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt1000.pk> <C:\Users\baida\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmitt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr6.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr8.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmti12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on ba_bericht.pdf (59 pages, 590684 bytes).
+Output written on ba_bericht.pdf (59 pages, 592845 bytes).
 PDF statistics:
  1285 PDF objects out of 1440 (max. 8388607)
  592 named destinations out of 1000 (max. 500000)
