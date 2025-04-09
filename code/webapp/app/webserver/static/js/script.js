@@ -500,17 +500,43 @@ async function renderMainPage(data) {
                         <p class="text-4xl">NAME: ${device.name}</p>
                         <p class="text-base"> ID: ${device.dev_id} </p>
                         <div id="deviceData${device.dev_id}" class="device_data">
-                            Waiting for data from device
+                            Device data:
                         </div>
                     </div>
-                    <div id="commands${device.dev_id}"></div>
-                    <button id="deleteDevice${device.dev_id}" class="cancel-sm-btn"> DELETE </button>
+                    <div id="commands${device.dev_id}" class="commands-block"></div>
+                    <div class="grid place-items-center m-1 p-2">
+                        <button id="BTNhandshake${device.dev_id}" class="add_room-btn my-2">Handshake</button>
+                        <button id="deleteDevice${device.dev_id}" class="cancel-sm-btn"> DELETE </button>
+                    </div>
                     `;
 
                     showCommands(device_element.querySelector(`#commands${device.dev_id}`))
 
                     device_element.querySelector(`#deleteDevice${device.dev_id}`).addEventListener('click', async () => {
                         deleteDeviceRoom(room.id, device.dev_id);
+                    });
+
+                    device_element.querySelector(`#BTNhandshake${device.dev_id}`).addEventListener('click', async () => {
+                        try {
+                            const response = await fetch(
+                                `/handshake/${device.dev_id}`,
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'auth': `Bearer ${localStorage.getItem('token')}`
+                                    }
+                                }
+                            )
+                            if (!response.ok) {
+                                throw new Error(response.status);
+                            }
+                            response_data = await response.json();
+                            if (response_data != null && response_data.error) {
+                                throw new Error(response_data.error);
+                            }
+                            appRouter();
+                        }
+                        catch (error) { errorHandler(error); }
                     });
 
                     function showCommands(parent_div) {
@@ -797,16 +823,16 @@ async function renderMyDevicesPage() {
                     <p id="device_desc${device.dev_id}" class="flex mx-2">Description: ${device.description ? device.description : ""}</p>
                     <p>ROOM: ${room_name}</p>
                     <p>Data fields: ${device.data_fields}</p>
-                    <p>Actions: ${device.commands}</p>
                     <div id="deviceData${device.dev_id}">Waiting for data from device...</div>
                 </div>
-                <div id="commands${device.dev_id}">TODO</div>
+                <div id="commands${device.dev_id}" class="commands-block">TODO</div>
                 <div class="grid place-items-center m-1 p-2">
                     <button id="BTNhandshake${device.dev_id}" class="add_room-btn my-2">Handshake</button>
-                    <button id="BTNeditDevice${device.dev_id}" class="add_room-btn my-1">Edit</button>
                     <button id="BTNdeleteDevice${device.dev_id}" class="cancel-sm-btn my-1">Delete</button>
                 </div>
                 `;
+
+                showCommands(device_element.querySelector(`#commands${device.dev_id}`))
 
                 const ws = new WebSocket(`ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`);
 
@@ -864,47 +890,48 @@ async function renderMyDevicesPage() {
                 });
 
                 const BTNeditDevice = device_element.querySelector(`#BTNeditDevice${device.dev_id}`);
-                // edit device
-                BTNeditDevice.addEventListener('click', async () => {
-                    const device_name_element = device_element.querySelector(`#device_name${device.dev_id}`);
-                    const device_description_element = device_element.querySelector(`#device_desc${device.dev_id}`);
-                    if (BTNeditDevice.textContent == "Edit") {
-                        // show input fields to change values
-                        device_name_element.innerHTML = `Name: <input id="input_device_name${device.dev_id}" type="text" value="${device.name}" autocomplete="off" class="device_edit_input" />`;
-                        device_description_element.innerHTML = `DESC: <input id="input_device_description${device.dev_id}" type="text" value="${device.description ? device.description : ""}" autocomplete="off" class="device_edit_input" />`;
+                
+                // edit device doesnt work
+                // BTNeditDevice.addEventListener('click', async () => {
+                //     const device_name_element = device_element.querySelector(`#device_name${device.dev_id}`);
+                //     const device_description_element = device_element.querySelector(`#device_desc${device.dev_id}`);
+                //     if (BTNeditDevice.textContent == "Edit") {
+                //         // show input fields to change values
+                //         device_name_element.innerHTML = `Name: <input id="input_device_name${device.dev_id}" type="text" value="${device.name}" autocomplete="off" class="device_edit_input" />`;
+                //         device_description_element.innerHTML = `DESC: <input id="input_device_description${device.dev_id}" type="text" value="${device.description ? device.description : ""}" autocomplete="off" class="device_edit_input" />`;
 
-                        BTNeditDevice.textContent = "Save";
-                    } else {  // save updated data
-                        const new_name = device_element.querySelector(`#input_device_name${device.dev_id}`).value;
-                        const new_description = device_element.querySelector(`#input_device_description${device.dev_id}`).value;
-                        if (device.name != new_name || device.description != new_description) {
-                            try {
-                                const response = await fetch('/update_device', {
-                                    method: 'POST',
-                                    headers: {
-                                        'auth': `Bearer ${localStorage.getItem('token')}`,
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({ primary: device.primary, dev_id: device.dev_id, name: new_name, description: new_description })
-                                });
-                                const response_data = await response.json()
-                                if (!response.ok) {
-                                    throw new Error(response_data.error);
-                                }
-                                if (response_data.error) {
-                                    errorHandler(response_data.error);
-                                }
-                                device_name_element.innerHTML = `NAME: ${response_data.name}`;
-                                device_description_element.innerHTML = `DESC: ${response_data.description}`;
+                //         BTNeditDevice.textContent = "Save";
+                //     } else {  // save updated data
+                //         const new_name = device_element.querySelector(`#input_device_name${device.dev_id}`).value;
+                //         const new_description = device_element.querySelector(`#input_device_description${device.dev_id}`).value;
+                //         if (device.name != new_name || device.description != new_description) {
+                //             try {
+                //                 const response = await fetch('/update_device', {
+                //                     method: 'POST',
+                //                     headers: {
+                //                         'auth': `Bearer ${localStorage.getItem('token')}`,
+                //                         'Content-Type': 'application/json'
+                //                     },
+                //                     body: JSON.stringify({ primary: device.primary, dev_id: device.dev_id, name: new_name, description: new_description })
+                //                 });
+                //                 const response_data = await response.json()
+                //                 if (!response.ok) {
+                //                     throw new Error(response_data.error);
+                //                 }
+                //                 if (response_data.error) {
+                //                     errorHandler(response_data.error);
+                //                 }
+                //                 device_name_element.innerHTML = `NAME: ${response_data.name}`;
+                //                 device_description_element.innerHTML = `DESC: ${response_data.description}`;
 
-                                BTNeditDevice.textContent = "Edit";
-                            } catch (error) {
-                                console.error(error);
-                            }
-                            await renderMyDevicesPage();
-                        }
-                    }
-                });
+                //                 BTNeditDevice.textContent = "Edit";
+                //             } catch (error) {
+                //                 console.error(error);
+                //             }
+                //             await renderMyDevicesPage();
+                //         }
+                //     }
+                // });
 
                 device_element.querySelector(`#BTNdeleteDevice${device.dev_id}`).addEventListener('click', async () => {
                     try {
@@ -936,6 +963,41 @@ async function renderMyDevicesPage() {
                         errorHandler(error);
                     }
                 });
+
+                function showCommands(parent_div) {
+                    parent_div.innerHTML = "";
+                    console.info(device.commands)
+                    if (device.commands.length > 0 && device.commands[0] != "None") {
+                        parent_div.classList.add("device_commands")
+                        parent_div.innerHTML = '<p class="text-xl font-bold">COMMANDS</p>'
+                        for (num in device.commands) {
+                            // let action_element = document.createElement('div');
+                            let action_button = document.createElement('button');
+                            action_button.classList.add('action-btn');
+                            action_button.setAttribute('type', 'button');
+                            action_button.setAttribute('action', device.commands[num]);
+                            action_button.innerHTML = device.commands[num];
+
+                            // Send command to device
+                            action_button.addEventListener('click', async () => {
+                                try {
+                                    const response = await fetch(
+                                        `/send_command/${device.dev_id}/${action_button.getAttribute('action')}`,
+                                        {
+                                            method: 'POST',
+                                            headers: {
+                                                'auth': `Bearer ${localStorage.getItem('token')}`
+                                            }
+                                        });
+                                    if (!response.ok)
+                                        throw new Error(response.status);
+
+                                } catch (error) { errorHandler(error); }
+                            });
+                            parent_div.appendChild(action_button);
+                        }
+                    }
+                }
 
                 parent_div.appendChild(device_element);
             }

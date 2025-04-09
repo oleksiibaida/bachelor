@@ -37,7 +37,6 @@ class MQTTClient():
             main_topic, device_id = str(message.topic).split('/')
             msg = message.payload.decode()
             data = json.loads(msg)      
-
             # Update data on handshake message
             if main_topic == 'handshake':
                 print(data)

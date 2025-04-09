@@ -25,7 +25,7 @@ async def startup():
     mqtt_client = MQTTClient()
     await mqtt_client.load_scenarios()
     print("S")
-    #asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
+    asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
 
 async def get_token(request: Request):
     auth = request.headers.get('auth')
