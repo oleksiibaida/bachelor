@@ -77,13 +77,6 @@ ISR(INT0_vect)
   event++;
 }
 
-void send_mqtt_message(String topic, String text)
-{
-  String message = topic + ":" + text;
-  // message an ESP senden
-  Serial.println(message);
-}
-
 void pinEingabe()
 {
   // Eingabe eines Zeichens vom Keypad
@@ -208,7 +201,7 @@ void pinEingabe()
       else
       {
         // Serial.println("\nPIN-Aenderung unterbrochen");
-        send_mqtt_message(TOPIC_PIN, PIN_CHANGE_STOP);
+        // send_mqtt_message(TOPIC_PIN, PIN_CHANGE_STOP);
         pinChangeTimeCounter = 0;
         changePas = false;
         checkOldPin = false;
@@ -285,13 +278,14 @@ void gasMelder()
   {
     // Erste Erkennung des Gases
     gasState = HIGH;
-    send_mqtt_message(TOPIC_ALARM, GAS_START);
+    // Send alarm to ESP8266
+    Serial.println("alarm:GAS");
     alarm_free = true;
     // Serial.println("Gas erkannt!");
   }
   else if (gasState && gasRead < gasSens)
   {
-    send_mqtt_message(TOPIC_ALARM, GAS_STOP);
+    Serial.println("alarm:OFF");
     gasState = LOW;
     // Serial.println("Gas ist weg");
   }
@@ -304,14 +298,15 @@ void feuerMelder()
   if (flameRead && !flameState)   // Sensor gibt HIGH aus => Feuer erkannt
   {
     flameState = HIGH;
-    send_mqtt_message(TOPIC_ALARM, FIRE_START);
+    // send_mqtt_message(TOPIC_ALARM, message_text);
+    Serial.println("alarm:FIRE");
     alarm_free = true;
     // Serial.println("Feuer erkannt!");
   }
   else if (flameState && !flameRead) // kein Feuer mehr erkannt
   {
     flameState = LOW;
-    send_mqtt_message(TOPIC_ALARM, FIRE_STOP);
+    Serial.println("alarm:OFF");
     // Serial.println("Feuer geloescht!");
     noTone(BUZ);
   }
@@ -325,7 +320,7 @@ void bewegungsMelder()
   if (!pirStateSaved && pirStateNow) // Erkennung einer Bewegung
   {
     // Serial.println("Bewegung erkannt!");
-    send_mqtt_message(TOPIC_ALARM, PIR_MOVE);
+    // send_mqtt_message(TOPIC_ALARM, PIR_MOVE);
     digitalWrite(LED_DOOR, HIGH); // Diode einschalten
     motionDelay = 0;
   }
@@ -408,13 +403,39 @@ void readSerialData()
   if (Serial.available() > 0)
   {
     String readString = Serial.readStringUntil("\n");
+    Serial.println("RECEIVIED SERIAL: ");
+    Serial.println(readString);
     readString.trim();
     if (readString == "alarm_off")
     {
       alarm_free = false;
       noTone(BUZ);
     }
-    //TODO handshake
+    // TODO handshake
+    if (readString == "handshake")
+    {
+      JsonDocument data;
+
+      const char *data_fields[] = {"fire", "gas", "lock", "pin", "alarm"};
+      const char *commands[] = {"alarm_off"};
+
+      JsonArray json_data_fields = data.createNestedArray("data_fields");
+      JsonArray json_commands = data.createNestedArray("commands");
+
+      for (const char *df : data_fields)
+      {
+        json_data_fields.add(df);
+      }
+
+      for (const char *a : commands)
+      {
+        json_commands.add(a);
+      }
+      String message_text = "";
+      serializeJson(data, message_text);
+      String message = "handshake:" + message_text;
+      Serial.println(message);
+    }
   }
 }
 
@@ -440,7 +461,7 @@ void send_status_mqtt()
 
   String message_text;
   serializeJson(json, message_text);
-  String message = "status:" + message_text;
+  String message = "data:" + message_text;
   Serial.println(message);
 }
 
