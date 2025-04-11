@@ -36,7 +36,13 @@ class MQTTClient():
             # get device_id from topic
             main_topic, device_id = str(message.topic).split('/')
             msg = message.payload.decode()
-            data = json.loads(msg)      
+            
+            # Recieved from alarm
+            if main_topic == "alarm":
+                data = {"alarm":msg}
+            else: 
+                data = json.loads(msg)      
+
             # Update data on handshake message
             if main_topic == 'handshake':
                 print(data)
