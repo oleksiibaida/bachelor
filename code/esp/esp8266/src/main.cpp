@@ -32,7 +32,7 @@ const String html_page = R"rawliteral(
 const char MQTT_BROKER_ADRRESS[] = "192.144.1.1"; // IP von MQTT-Broker
 const int MQTT_PORT = 1883;
 const int buss_serial = 512; // Buffer Groesse fuer UAR-Verbindung
-const char *CLIENT_ID = "DT04";
+const char *CLIENT_ID = "arduino";
 const char *TOPIC_COMMAND = "command";
 char *SUBSCRIBE_TOPIC;
 char *PUBLISH_TOPIC;
@@ -71,8 +71,8 @@ boolean connect_wifi(char *ssid, char *password)
   {
     if (WiFi.status() == WL_CONNECTED)
     {
-      Serial.print("\nCONNECTED WIFI");
-      Serial.print(WiFi.localIP());
+      // Serial.print("\nCONNECTED WIFI");
+      // Serial.print(WiFi.localIP());
       return true;
     }
     delay(1000);
@@ -98,9 +98,9 @@ void setup_ap()
               {
                 return;
               }
-              Serial.print("\nGOT WIFI DATA");
-              Serial.print(ssid);
-              Serial.print(password);
+              // Serial.print("\nGOT WIFI DATA");
+              // Serial.print(ssid);
+              // Serial.print(password);
               // String in char[]
               char new_ssid[MAX_SSID_LENGTH] = {0};
               strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
@@ -123,9 +123,9 @@ void setup_ap()
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  String id = String(topic).substring(String(topic).indexOf('/') + 1);
-  // if (id == CLIENT_ID)
-  // {
+  // Serial.println("RECEIVED MQTT");
+  // String id = String(topic).substring(String(topic).indexOf('/') + 1);
+
   String text = "";
   for (int i = 0; i < length; i++)
   {
@@ -236,8 +236,8 @@ void setup()
 {
   Serial.begin(9600);
   // turn on LED while setting up
-  pinMode(1, OUTPUT);
-  digitalWrite(1, LOW);
+  pinMode(2, OUTPUT);
+  digitalWrite(2, HIGH);
   setup_subscribe();
   // clear_eeprom();
   // GET WiFi Daten aus EEPROM
@@ -247,9 +247,9 @@ void setup()
   EEPROM.get(0, eeprom_ssid);
   EEPROM.get(32, eeprom_password);
   EEPROM.end();
-  Serial.print("\nREAD FROM EEPROM");
-  Serial.print(eeprom_ssid);
-  Serial.print(eeprom_password);
+  // Serial.print("\nREAD FROM EEPROM");
+  // Serial.print(eeprom_ssid);
+  // Serial.print(eeprom_password);
   // Daten gefunden
   if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
   {
@@ -258,7 +258,7 @@ void setup()
       mqttClient.setServer(WiFi.gatewayIP(), MQTT_PORT);
       mqttClient.setCallback(callback);
       connect_mqtt();
-      digitalWrite(1, HIGH);
+      digitalWrite(2, LOW);
     }
     else
     {
@@ -277,11 +277,14 @@ void loop()
   if (WiFi.status() != WL_CONNECTED)
   {
     // connect_wifi();
+    // Serial.println("NO WIFI");
+    digitalWrite(2, HIGH);
   }
   if (!mqttClient.connected())
   {
     connect_mqtt();
   }
+  
   mqttClient.loop();
   readSerialData();
 }
