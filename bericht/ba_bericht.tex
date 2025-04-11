@@ -284,15 +284,21 @@ captionpos=b,
 \par The system can easily be expanded with additional sensors and actuators. New components can be integrated into the existing infrastructure with minimal effort. The programme code on the microcontrollers used contains modular standard functions that are easy to reuse. This allows additional devices to be easily integrated into the system.
 \par Overall, this work demonstrates how a robust and flexibly expandable IoT system can be developed using simple components, making it suitable for use in private homes.
 \pagebreak
-
+\section*{Eigenständigkeitserklärung}
+\addcontentsline{toc}{section}{Abstract}
+\par Hiermit versichere ich, dass ich die vorliegende Arbeit selbständig angefertigt und mich keiner fremden Hilfe bedient sowie keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe.
+\par Alle Stellen, die wörtlich oder sinngemäß veröffentlichten oder nicht veröffentlichten Schriften und anderen Quellen entnommen sind, habe ich als solche kenntlich gemacht. 
+\par Soweit Sprachmodelle für die Texterstellung (z.B. ChatGPT) verwendet wurden, sind die entsprechenden Textstellen gekennzeichnet. Die Nutzung von Korrekturservices ist ebenfalls kenntlich gemacht.
+\par Diese Arbeit hat in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegen.
+\pagebreak
 \section{Einleitung}
 \par In einer Welt, die zunehmend von vernetzten Geräten und dem Internet der Dinge geprägt ist, wird die Entwicklung effizienter und benutzerfreundlicher Systeme zur Steuerung und Überwachung von Gebäuden immer relevanter. Im Jahr 2024 wurde in Deutschland die Anzahl von über 19 Millionen Haushalten, die ein oder mehrere smarte Geräte besaßen, verzeichnet. Prognosen zufolge wird sich diese Zahl in den nächsten drei Jahren verdoppeln \cite{statita_smhomes}.
-\par Moderne Steuerungs- und Sicherheitssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Diese Systeme übernehmen einen Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Regelung der Raumtemperatur oder das Aufräumen des Hauses. Die möglichen Funktionen sind dabei nur durch die Bedürfnisse der Benutzerinnen und Benutzer begrenzt.
-\par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Es wird eine Web-Schnittstelle erstellt, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht, die von Geräten erfassenen Daten darstellt und den Benutzer über gefährliche Vorgänge in seinem Haus informiert. 
+\par Moderne Steuerungs- und Überwachungssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Diese Systeme übernehmen einen Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Regelung der Raumtemperatur oder das Aufräumen des Hauses. Die möglichen Funktionen sind dabei nur durch die Bedürfnisse der Benutzerinnen und Benutzer begrenzt.
+\par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Es wird eine Web-Schnittstelle erstellt, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht. Über diese Schnittstelle werden die von Geräten erfassenen Daten dargestellt und die Benutzer werden über gefährliche Vorgänge im Haus informiert. Außerdem haben die Benutzer die Möglichkeit eigene Szenarien basierend auf den erfassenen Daten zu erstellen.
 \par Zur Erfassung und Verarbeitung der Sensordaten werden Mikrocontroller eingesetzt. Diese sind entsprechend programmiert, um die Sensordaten zu erfassen und die Daten über das Netzwerk an den zentralen Server zu übermitteln.
 \par Im Rahmen der Entwicklung dieses Systems wurden die aktuellen Technologien zur Erstellung eines Webinterfaces und zur Kommunikation zwischen den Geräten eingesetzt. Das System bleibt dabei flexibel und erweiterbar. 
 \par Die Bachelorarbeit gliedert sich in mehrere Kapitel. Kapitel 2 behandelt die Ziele des Projekts sowie die allgemeine Systemarchitektur und die einzelnen Komponenten des Systems.
-\par In Kapitel 3 werden die theoretischen Grundlagen sowie die eingesetzten Technologien und Protokolle erläutert. Kapitel 4 beschreibt die Einrichtung der im Projekt verwendeten Hardwarekomponenten.
+\par In Kapitel 3 werden die theoretischen Grundlagen zur Entwicklung des Systems sowie die eingesetzten Technologien, Hardwarekomponenten und Protokolle erläutert. Kapitel 4 beschreibt die Einrichtung der im Projekt verwendeten Geräte.
 \par In Kapitel 5 werden die Softwarekomponenten des Systems beschrieben. Die Entwicklung des Back- und Frontends sowie die Verarbeitung der im System laufenden MQTT-Nachrichten werden detailliert dargestellt.
 \par In Kapitel 6 wird ein konkreter Anwendungsfall des Systems beschrieben. Daneben werden mögliche Weiterentwicklungen und Optimierungspotenziale aufgezeigt, um das System in Zukunft zu erweitern und zu verbessern.
 \newpage
@@ -343,7 +349,7 @@ captionpos=b,
 \par Die für die SPA entwickelte API kann auch von anderen Anwendungen, z. B. mobilen Anwendungen, genutzt werden. Dadurch können die Anwendungen auf einer gemeinsamen Backend-Struktur aufbauen, was die Wartung vereinfacht und die Wiederverwendbarkeit des Codes erhöht.
 \par Die vorgestellte Architektur bietet eine effiziente, skalierbare und reaktionsfähige Struktur. Der Zugriff auf das System erfolgt über die API. Durch die Verwendung asynchroner Methoden werden Blockierungen vermieden. \texttt{WebSocket} stellt die empfangenen Daten ohne serverseitige Speicherung sofort zur Verfügung. Die SPA bietet eine schnelle und benutzerfreundliche Schnittstelle mit direktem Zugriff auf die API-Endpunkte. Diese Architektur garantiert eine hohe Performance und vereinfacht sowohl die Wartung als auch zukünftige Erweiterungen des Systems.
 \subsubsection{Struktur der MQTT-Kommunikation}
-\par Die im System verwendeten Geräte kommunizieren über das MQTT-Protokol. Der MQTT-Broker wird auf dem Raspberry Pi ausgeführt. 
+\par Die im System verwendeten Geräte kommunizieren über das MQTT-l. Der MQTT-Broker wird auf dem Raspberry Pi ausgeführt. 
 \par Die Geräte verbinden sich mit dem MQTT-Broker und senden ihre Nachrichten in individuelle Topics. Es gibt 4 Haupttopics, die für jedes Gerät mit der entsprechender Geräte-ID erweitert werden. Die Tabelle \ref{tab:mqttnachrichten} listet die Topics auf. ID wird von jedem Gerät ermittelt und beim Senden der Nachricht entsprechend gesetzt.
 \begin{table}[h]
   \centering
@@ -565,11 +571,13 @@ captionpos=b,
   %   \item[\textbullet] \textbf{Transport} –- Welches Protokoll ist für den Transport am besten geeignet? Am meisten wird zwischen TCP, UDP und HTTP entschieden.
   % \end{itemize}
 % „“
-  \subsubsection{UART}
+  \subsubsection{Asynchrone serielle Kommunikation}
+  \par In dieser Arbeit erfolgt die Kommunikation zwsichen Arduino und ESP8266 über eine serielle asynchrone Schnittstelle. Die Daten werden zwsichen den Komponenten bidirektional übertragen. 
   \par UART\footnote{Universal Asynchronous Receiver Transmitter} ist eine Hardwarekomponente, die die serielle Datenübertragung bei der Kommunikation zwischen Mikrocontrollern und anderen Geräten ermöglicht. Eine UART-Schnittstelle ist der Standard für serielle Schnittstellen an PCs und Mikrocontrollern und wird zum Senden und Empfangen von Daten über eine Datenleitung verwendet.
   \par UART arbeitet asynchron, d.h. es gibt keine gemeinsame Taktverbindung zwischen den kommunizierenden Geräten. Stattdessen wird die Datenübertragung durch Start- und Stoppbits synchronisiert. Diese ermöglichen es dem Empfänger, den Beginn und das Ende eines Datenpakets zu erkennen. Ein typisches Datenpaket besteht aus einem Startbit, gefolgt von einer festgelegten Anzahl von Datenbits (normalerweise 8), einem optionalen Paritätsbit zur Fehlerkontrolle und einem oder mehreren Stoppbits. Der Vorteil besteht darin, dass keine permanente Synchronisation zwischen Empfänger und Sender erforderlich ist. Sie müssen nur für die Dauer der Übertragung synchronisiert sein. Wenn keine Daten zu übertragen sind, setzt der Sender die Leitung auf die Polarität des Stopbits.
   \par Ein Vorteil der seriellen Kommunikation ist ihre Einfachheit in der Verkabelung. Um die Kommunikation zwischen den Geräten herzustellen, wird die Rx-Leitung eines Gerätes mit der Tx-Leitung des anderen Gerätes verbunden und umgekehrt: Die Tx-Leitung des ersten Gerätes wird mit der Rx-Leitung des zweiten Gerätes verbunden. Dadurch entsteht eine Master-Slave-Beziehung zwischen den beiden Geräten, auch wenn die Geräte gleichberechtigt kommunizieren können. Zudem ist UART in den meisten Mikrocontrollern integriert, was die Anwendung vereinfacht und die Kosten minimiert.
-  \par In meinem Projekt nutze ich eine UART-Schnittstelle, um den Arduino mit dem ESP8266 zu verbinden und damit die serielle Kommunikation zscihen den beiden Modulen zu ermöglichen. 
+  \par Eine detaillierte Beschreibung der UART-Schnittstelle in ESP-Modulen erfolgt in Kapitel 8.6 des Buches von Brandes \cite[S. 500]{espbuch}.
+  
   \subsubsection{Inter-Integrated Circuit}
   \par Der Inter-Integrated Circuit \cite{i2c} ist ein serielles, synchrones Kommunikationsprotokoll zur Verbindung von Mikrocontrollern.
   \par I²C- Bus verwendet das Controller-Target-Prinzip (früher Master-Slave-Prinzip). Ein Controller ist das Gerät, das die Datenübertragung auf dem Bus initiiert und die Taktsignale erzeugt. Zu diesem Zeitpunkt wird jedes angesprochene Gerät als Target betrachtet. Es können mehrere Target- und Controller-Geräte am Bus angeschlossen sein, wobei jedes Gerät eine eindeutige Adresse besitzt.
@@ -579,8 +587,8 @@ captionpos=b,
   \par I²C wird häufig in Sensoren, IoT-Geräten und Display-Controllern eingesetzt. Insbesondere in Embedded-Systemen und IoT-Anwendungen ist das Protokoll aufgrund seiner geringen Hardwareanforderungen und flexiblen Adressierung weit verbreitet.
   \par In diesem Projekt wird I²C verwendet, um die Sensoren mit den ESP-Modulen zu verbinden.
   \subsection{Software}
-  \subsubsection{PlatformIO}
-  \subsubsection{Python}
+  \subsubsection{C-Programme}
+  \subsubsection{Python-Programme}
   \par Python ist eine weit verbreitete höhere Programmiersprache. Sie wurde 1991 von Guido van Rossum veröffentlicht. Die Sprache wird in verschiedenen Bereichen eingesetzt: von der Webentwicklung und Automatisierung bis hin zu künstlicher Intelligenz und Datenanalyse.
   \par Python ist plattformunabhängig. Der Code von Python-Skripten wird zur Laufzeit in Bytecode übersetzt, der dann von der Python Virtual Machine (PVM) interpretiert und ausgeführt wird. Die PVM übernimmt betriebssystemspezifische Aufgaben wie die Speicherverwaltung, den Zugriff auf Prozessoren und die Nutzung von Systembibliotheken. Dadurch können Python-Programme auf verschiedenen Plattformen ausgeführt werden, sofern eine geeignete PVM für die jeweilige Plattform zur Verfügung steht.
   \par Python zeichnet sich durch eine klare und leicht lesbare Syntax aus. Die Strukturierung von Codeblöcken erfolgt nicht durch geschweifte Klammern, sondern durch Einrückungen.
@@ -678,6 +686,8 @@ captionpos=b,
   \par Der Raspberry Pi dient als zentraler Server des Systems. Als Netzwerkzentrale gewährleistet er eine stabile und sichere Kommunikation zwischen den Komponenten, auch in Umgebungen ohne Internetzugang. Er stellt einen WLAN-Zugriffspunkt zur Verfügung, über den sich die Geräte mit dem Server verbinden.
   \par Die Kommunikation zwischen den Geräten erfolgt über das MQTT-Protokoll. Der Raspberry Pi hostet den MQTT-Broker auf Basis von \texttt{Mosquitto}. Die Geräte senden ihre Daten in individuelle Topics. Diese Daten werden von einem asynchronen MQTT-Client empfangen und verarbeitet.
   \par Der genaue Ablauf für die Einrichtung des Raspberry Pi ist in dem Bericht zu der Projektarbeit 2 \cite{pa2}, Kapitel 2, beschrieben.
+  \par In diesem Projekt wird der Raspberry Pi ausschließlich über ein Netzwerkkabel mit dem Internet verbunden, um die benötigten Linux-Pakete und Python-Bibliotheken herunterzuladen. Nach der Einrichtung ist das System nur über ein lokales, vom Internet getrenntes Netzwerk erreichbar. Dies erhöht die Sicherheit des Systems, da Angriffe aus dem globalen Netzwerk somit ausgeschlossen sind.
+
   \par Der Raspberry Pi hostet zudem den API-Webserver, der als Schnittstelle für die Interaktion mit dem System dient. Die API ist mit \texttt{FastAPI} implementiert und läuft auf dem ASGI-Server \texttt{Uvicorn}. \texttt{Uvicorn} ermöglicht eine effiziente, asynchrone Verarbeitung von Anfragen und sorgt für eine hohe Leistungsfähigkeit.
   \par Die von den Geräten empfangenen Daten werden durch den asynchronen MQTT-Client verarbeitet und über \texttt{WebSocket} direkt an die API weitergeleitet. Dadurch wird eine Echtzeitübertragung an die Benutzeroberfläche ermöglicht, ohne dass die Daten zwischengespeichert oder erneut abgefragt werden müssen.
  
@@ -715,7 +725,7 @@ captionpos=b,
   % „“
   
   \subsection{Einrichtung der ESP-Module}
-  \par In diesem Projekt werden drei verschiedene ESP-Module verwendet: ESP8266, ESP32 und der auf dem ESP32 basierende M5Stick. Jedes Modul erfüllt spezifische Aufgaben, aber alle Module müssen sowohl mit dem WLAN als auch mit dem MQTT-Broker verbunden sein. Daher ist die Implementierung der \texttt{setup()}-Funktion für alle drei Module ähnlich aufgebaut.
+  \par In diesem Projekt werden drei verschiedene WLAN-fähige ESP-Module verwendet: ESP8266, ESP32 und der auf dem ESP32 basierende M5Stick. Jedes Modul erfüllt spezifische Aufgaben, aber alle Module müssen sowohl mit dem WLAN als auch mit dem MQTT-Broker verbunden sein. Daher ist die Implementierung der \texttt{setup()}-Funktion für alle drei Module ähnlich aufgebaut.
   \par Die Setup-Funktion wird beim Start des ESP-Moduls aufgerufen. Zunächst wird das Modul mit der Funktion \texttt{setup\_esp} entsprechend eingerichtet. Je nach Modul umfasst diese Funktion verschiedene Anfahrroutinen. Dazu gehört unter anderem die Initialisierung der seriellen oder I2C-Kommunikation, die Einrichtung der angeschlossenen Sensoren o. ä. 
   \paragraph{Verbindung mit WLAN}
   \par \textbf{}
@@ -765,45 +775,46 @@ captionpos=b,
     AsyncWebServer server(80);
   \end{lstlisting}
   \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espsetupap}, caption={ESP: setup\_ap}]
-    void setup_ap()
+  void setup_ap()
+  {
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP(AP_SSID, AP_PASSWORD);
+    WiFi.softAPConfig(ap_ip, ap_gateway, ap_subnet);
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+    { request->send(200, "text/html", html_page); });
+  
+    server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request)
     {
-      WiFi.mode(WIFI_AP);
-      WiFi.softAP(AP_SSID, AP_PASSWORD);
-      WiFi.softAPConfig(ap_ip, ap_gateway, ap_subnet);
-      server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-        { request->send(200, "text/html", html_page); });
-    
-      server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request)
-        {
-          // GET Daten aus Input
-          String ssid = request->getParam("ssid", true)->value();
-          String password = request->getParam("password", true)->value();
-          if (ssid.length() > MAX_SSID_LENGTH - 1 || password.length() > MAX_PASSWORD_LENGTH - 1)
-          {
-            ap_on = false;
-            return;
-          }
-          // String in char[]
-          char new_ssid[MAX_SSID_LENGTH] = {0};
-          strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
-          char new_password[MAX_PASSWORD_LENGTH] = {0};
-          strncpy(new_password, password.c_str(), MAX_PASSWORD_LENGTH - 1);
+      // GET Daten aus Input
+      String ssid = request->getParam("ssid", true)->value();
+      String password = request->getParam("password", true)->value();
+      if (ssid.length() > MAX_SSID_LENGTH - 1 || 
+        password.length() > MAX_PASSWORD_LENGTH - 1)
+      {
+        ap_on = false;
+        return;
+      }
+      // String in char[]
+      char new_ssid[MAX_SSID_LENGTH] = {0};
+      strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
+      char new_password[MAX_PASSWORD_LENGTH] = {0};
+      strncpy(new_password, password.c_str(), MAX_PASSWORD_LENGTH - 1);
 
-          // in EEPROM speichern
-          EEPROM.begin(64);          
-          EEPROM.put(0, new_ssid);
-          EEPROM.put(32, new_password);
-          EEPROM.commit();
-          EEPROM.end();
+      // in EEPROM speichern
+      EEPROM.begin(64);          
+      EEPROM.put(0, new_ssid);
+      EEPROM.put(32, new_password);
+      EEPROM.commit();
+      EEPROM.end();
 
-          request->send(200, "text/html", "WiFi saved. Rebooting...");
-          delay(1000);
-          ESP.restart(); });
-      ap_on = true;
-      server.begin();
-    }
+      request->send(200, "text/html", "WiFi saved. Rebooting...");
+      delay(1000);
+      ESP.restart(); });
+    ap_on = true;
+    server.begin();
+  }
   \end{lstlisting}
-  \par Die HTTP-Routen werden innerhalb der Funktion \texttt{server.on()} festgelegt. Beim Aufruf der Root-Route ("/") wird eine HTTP-GET-Anfrage bearbeitet, die mit einer HTML-Seite beantwortet wird (Zeile 6). Diese Seite enthält ein Formular mit Input-Felder zur Eingabe der WLAN-Zugangsdaten. Der Benutzer soll der Name des Netzwerks und das Passwort eingeben.
+  \par Die HTTP-Routen werden innerhalb der Funktion \texttt{server.on()} festgelegt. Beim Aufruf der Root-Route („/“) wird eine HTTP-GET-Anfrage bearbeitet, die mit einer HTML-Seite beantwortet wird (Zeile 6). Diese Seite enthält ein Formular mit Input-Felder zur Eingabe der WLAN-Zugangsdaten. Der Benutzer soll der Name des Netzwerks und das Passwort eingeben.
   \par Wenn der Benutzer auf die Taste „Submit“ drückt, wird eine HTTP-POST-Anfrage an die Route „\texttt{/save}“ gesendet. Die Zugangsdaten werden aus dem \texttt{request}-Objekt ausgelesen und auf ihre maximale Länge überprüft. Wenn die Daten gültig sind, werden sie im EEPROM gespeichert. Der EEPROM wird initialisiert, die neuen Zugangsdaten werden gespeichert, und die Änderungen mit \texttt{EEPROM.commit()} übernommen (Zeile 26-30). Anschließend wird ein Hinweis zurückgegeben, dass die Daten übernommen wurden. Das ESP-Modul wird mit dem Befehl \texttt{ESP.restart()} neu gestartet, um die neuen WLAN-Daten zu verwenden.
   \paragraph{Verbindung mit MQTT-Broker}
   \par \textbf{}
@@ -840,7 +851,7 @@ captionpos=b,
     }    
   \end{Verbatim}
   \par Anschließend wird das JSON-Dokument serialisiert und in eine Zeichenkette umgewandelt. Diese serialisierte Nachricht wird dann über die MQTT-Verbindung an das Topic „\texttt{handshake/ID}“ gesendet.
-  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espcallback}, caption={ESP: mqtt\_connect}]
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espcallback}, caption={ESP: callback}]
   void callback(char *topic, byte *payload, unsigned int length)
   {
     if (message == "handshake")
@@ -866,30 +877,26 @@ captionpos=b,
  \par Das ESP8266 stellt die WLAN-Verbindung für den Arduino her und übernimmt die Kommunikation über das MQTT-Protokoll. Er empfängt Steuerbefehle sowohl vom Arduino über die serielle Schnittstelle als auch direkt über MQTT. Empfangene Daten werden über die serielle Schnittstelle an den Arduino weitergeleitet.
     \par Die genaue Umsetzung und Verwendung des Moduls im System ist in meinem Bericht zur Projektarbeit 2 \cite{pa2} Kapitel 4.1 beschrieben.
     \par In diesem Projekt wird die Funktionalität des Moduls erweitert.
-  \par Beim Start des Moduls wird die Funktion \texttt{setup()} ausgeführt. Dabei wird versucht, die WLAN- und MQTT-Verbindung zu erstellen. Wenn die Verbindung nicht erstellt werden könnte, stellt das Modul ein Webserver zur Verfügung. Über den Webserver können die aktuelle WLAN-Daten des Zugangspunktes an Modul übergeben werden.
-  \par Zusätzlich läuchtet der blaue LED während der Einrichtung des Moduls. Der Diode läuchtet, wenn es keine Spannung auf dem GPIO 1 fällt.
-  \begin{Verbatim}[frame=single]
-    digitalWrite(1, LOW);   // Diode einschalten
-    digitalWrite(1, HIGH);  // Diode ausschalten
-  \end{Verbatim}
-  \par Nach der erfolgreichen Einrichtung und Verbindung mit dem WLAN sowie MQTT-Broker, schaltet der Diode aus. 
+  \par Beim Start des Moduls wird die Funktion \texttt{setup()} ausgeführt. Dabei wird versucht, die WLAN- und MQTT-Verbindung zu erstellen. Wenn die Verbindung nicht aufgebaut werden kann, stellt das Modul ein Webserver zur Verfügung. Über den Webserver können die aktuelle WLAN-Daten des Zugangspunktes an Modul übergeben werden.
+  %\par Zusätzlich läuchtet der blaue LED während der Einrichtung des Moduls. Der Diode läuchtet, wenn es der GPIO-Pin 2 auf \texttt{HIGH} gesetzt wird. Nach der erfolgreichen Einrichtung und Verbindung mit dem WLAN sowie MQTT-Broker, wird der GPIO-PIN auf \texttt{LOW} gesetzt und der Diode ausgeschaltet. 
   \par Bei jedem Programmdurchlauf wird die Funktion \texttt{readSerialData()} aufgerufen, die die Daten vom Arduino empfängt. Die Daten kommen im Format „\texttt{topic:message}“. Nach Empfang der Daten, wird das Topic mit der Geräte-ID erstellt und die MQTT-Nachricht wird an dem MQTT-Broker gesendet.
   \par Die Verarbeitung der empfangenen MQTT-Nachrichten erfolgt in der Funktion \texttt{callback}. Das ESP8266 abonniert nur das Topic „\texttt{command/ID}“. Das Topic ist individuell für jedes Modul erstellt und in der Variablen \texttt{SUBSCRIBE\_TOPIC} gespeichert. Beim Empfang einer MQTT-Nachricht, wird der Text in ein \texttt{String} konvertiert und über \texttt{Serial} an Arduino weitergeleitet.
   \subsubsection{M5Stick}
-  \par Das M5Stick wird zur Überwachung der Licht- und Luftbedingungen eingesetzt. Die Idee ist, dass der Sensor die aktuelle Wetterbedingungen überwacht und diese an dem Server sendet. Dafür soll das Modul an dem Fenster draußen positioniert werden. Dem Modul wird die Geräte-ID „m5stick“ zugewiesen.
+  \par Das M5Stick wird zur Überwachung der Licht- und Luftbedingungen eingesetzt. Dem Modul wird die Geräte-ID „m5stick“ zugewiesen.
+  \par Das Modul verfügt über einen integrierten Akku und kann beispielsweise außen am Fenster platziert werden. Dadurch kann das System die Wetterbedingungen erfassen und entsprechend darauf reagieren.
   \par Am Modul sind die Sensoren BME680 und VCNL4040 über I²C angebunden. Der BME680 erfasst Umweltdaten: Temperatur, Luftfeuchtigkeit und Gaswiderstand. Der VCNL4040 dient als Lichtsensor und misst Lichtbedingungen: Umgebungshelligkeit (Ambient Light), weißes Licht sowie Annäherung (Proximity). Diese Daten werden an dem Server via MQTT-Nachrichten gesendet. 
   \par Für die Verwendung der beiden Sensoren im Programmcode müssen die entsprechenden Bibliotheken importiert werden und die Klassenobjekten für die Sensoren erstellt werden (Listing \ref{lst:m5sensoren}). 
-\begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5sensoren}, caption={M5Stick: Sensoren}]
-  #include <Adafruit_BME680.h>
-  #include <Adafruit_VCNL4040.h>
-  Adafruit_BME680 bme_sensor; 
-  Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
-\end{lstlisting}
+  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:m5sensoren}, caption={M5Stick: Sensoren}]
+    #include <Adafruit_BME680.h>
+    #include <Adafruit_VCNL4040.h>
+    Adafruit_BME680 bme_sensor; 
+    Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
+  \end{lstlisting}
 
 \par Beim Start des Moduls wird die Funktion \texttt{setup()} aufgerufen. Das Modul wird mit dem Befehl \texttt{M5.begin()} initialisiert. Zusätzlich zu den im letzten Abschnitt beschriebenen Einrichtungen müssen auch die beiden angeschlossenen Sensoren eingerichtet und in Betrieb genommen werden. Zum Einstellen der Sensoren werden im Setup die Funktionen \texttt{vcnl\_setup()} und \texttt{bme\_setup()} aufgerufen. Diese Funktionen stellen die I²C-Verbindung zu den Sensoren her und initialisieren diese.
 \par Anschließend wird die WLAN- und MQTT-Verbindung aufgebaut. Der Status der Verbindung wird mit der Funktion \texttt{show\_connections()} bei jedem Programmdurchlauf auf dem Display des Moduls angezeigt. Sollte die Verbindung abbrechen oder nicht aufgebaut werden, wird die entsprechende Meldung ebenfalls angezeigt.
 \par Bei jedem Programmdurchlauf zeigt die Funktion \texttt{show\_sensor\_data()} die von den Sensoren erfassten Daten auf dem Display an. 
-\par Mit der Funktion \texttt{send\_mqtt\_data()} werden die Sensordaten erfasst und an dem MQTT-Broker gesendet. Zunächst werden die Messwerte der Sensoren ausgelesen und in einem JSON-Objekt zusammengefasst. Der BME680 liefert die Temperatur in °C sowie die Luftfeuchtigkeit in \%. Der VCNL4040 erfasst die Umgebungshelligkeit in \texttt{Lux} abgelesen. Anschließend wird das JSON-Objekt serialisiert und im Topic „\texttt{data/m5stick}“ an den MQTT-Broker gesendet. 
+\par Mit der Funktion \texttt{send\_mqtt\_data()} werden die Sensordaten erfasst und an dem MQTT-Broker gesendet. Zunächst werden die Messwerte der Sensoren ausgelesen und in einem JSON-Objekt zusammengefasst. Der BME680 liefert die Temperatur in °C sowie die Luftfeuchtigkeit in \%. Der VCNL4040 erfasst die Umgebungshelligkeit in \texttt{Lux} abgelesen. Anschließend wird das JSON-Objekt serialisiert und im Topic „\texttt{data/m5stick}“ an den MQTT-Broker gesendet.  
 \par Das auf dem Modul laufenden MQTT-Client abonniert das Topic „\texttt{command/m5stick}“. Beim Empfang einer MQTT-Nachricht aus diesem Topic mit dem Text „handshake“, werden die Konfigurationsdaten in das Topic „\texttt{handshake/m5stick}“ gesendet. Die Konfigurationsdaten des Moduls sind wie folgt strukturiert:
 \begin{Verbatim}[frame=single]
   {
@@ -1074,19 +1081,20 @@ captionpos=b,
   \par Des Weiteren sorgt die Klassenvariable \texttt{\_\_table\_args\_\_} (Zeile 13) dafür, dass die Kombination der Spalten \texttt{name} und \texttt{user\_id} eindeutig ist. Das bedeutet, dass ein Benutzer nicht mehrere Häuser mit dem gleichen Namen anlegen kann.
 
   \begin{lstlisting}[style=mypython, label={lst:housemodel}, caption={models.py: HouseModel}]
-    class HouseModel(Base):
-      __tablename__ = 'house'
-      
-      primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-      name = Column(String(50), nullable=False)
-      user_id = Column(
-          Integer, nullable=False, 
-          ForeignKey("user.primary_key", ondelete='CASCADE'))
-      rooms = relationship(
-          "RoomModel", backref="house", 
-          cascade="all, delete-orphan", lazy='selectin')
+  class HouseModel(Base):
+    __tablename__ = 'house'
+    
+    primary_key = Column(Integer, primary_key=True, 
+        autoincrement=True, nullable=False)
+    name = Column(String(50), nullable=False)
+    user_id = Column(
+        Integer, nullable=False, 
+        ForeignKey("user.primary_key", ondelete='CASCADE'))
+    rooms = relationship(
+        "RoomModel", backref="house", 
+        cascade="all, delete-orphan", lazy='selectin')
 
-      __table_args__ = (UniqueConstraint('name', 'user_id'),)
+    __table_args__ = (UniqueConstraint('name', 'user_id'),)
   \end{lstlisting}
   \par Die Klasse \texttt{UserModel} (Listing \ref{lst:usermodel}) enthält neben der Definition der Spalten eine Funktion zur Validierung von Passwörtern. Die Funktion erhält ein Passwort als Parameter und vergleicht es mit dem im Modell gespeicherten, gehashten Passwort. Dadurch muss das gespeicherte Passwort nicht entschlüsselt werden.
   \begin{lstlisting}[style=mypython, label={lst:usermodel},caption={models.py: UserModel}]
@@ -1256,15 +1264,27 @@ captionpos=b,
   \par Anschließend wird mit dem Befehl \texttt{queries.add\_new\_device()} das Gerät zunächst ohne direkte Raumzuordnung in der Datenbank gespeichert. Ist eine Raum-ID vorhanden, wird mit dem Befehl \texttt{queries.add\_room\_device()} ein Eintrag in der Tabelle \texttt{roomdevice} erzeugt, der den Primärschlüssel des Gerätes mit der Raum-ID verknüpft.
   \par Um ein Gerät aus der Datenbank zu Löschen, muss ein Delete-Request mit dem JWT-Token und mit der Geräte-ID auf die Route „\texttt{delete\_device}“ gesendet werden. Die aus dem Token erzeugte Benutzer-ID wird zusammen mit der Geräte-ID an die Funktion \texttt{services.delete\_device()} übergeben. Diese Funktion prüft zunächst, ob das übergebene Geräte-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht. 
   \par Diese strukturierte Vorgehensweise gewährleistet nicht nur eine sichere und konsistente Registrierung neuer Geräte, sondern bietet dem Benutzer auch die Möglichkeit, seine Smart-Home-Geräte flexibel zu verwalten und eindeutig zu identifizieren.
-  \paragraph{Szenario}
-  \par \textbf{}
-  \par Der Benutzer hat die Möglichkeit, eigene Szenarien zu definieren. Ein Szenario bezeichnet die automatische Ausführung eines Befehls auf einem Zielgerät, sobald eine im Szenario definierte Bedingung erfüllt ist.
+  \subsection{Szenario}
+  %\par \textbf{}
+  \par Der Benutzer hat die Möglichkeit, eigene Szenarien zu definieren. Ein Szenario bezeichnet die automatische Ausführung eines Befehls auf einem Zielgerät, sobald die im Szenario definierte Bedingung erfüllt ist.
+  \par Ein Szenario besteht aus folgenden Elementen:
+  \begin{itemize}
+    \item \textbf{source\_device:} --- Das Quellgerät, das die Daten liefert, die zur Prüfung der Bedingung verwendet werden.
+    \item \textbf{data\_field:} --- Das spezifische Datenfeld, das die relevanten Informationen enthält, die für die Bedingung geprüft werden.
+    \item \textbf{condition:} --- Die Bedingung, die auf das Datenfeld angewendet wird. Es kann größer, kleiner oder gleich sein.
+    \item \textbf{value:} --- Der Wert, gegen den die Bedingung geprüft wird.
+    \item \textbf{target\_device:} --- Das Zielgerät, auf dem die Aktion ausgeführt wird, wenn die Bedingung erfüllt ist.
+    \item \textbf{command:} --- Der Befehl, der an das Zielgerät gesendet wird, wenn die Bedingung erfüllt ist
+  \end{itemize}
+
+  \par Die im Szenario definierte Bedingung wird beim Empfang der Daten vom Quellgerät geprüft. Die Daten aus dem angegebenen Datenfeld werden mit dem in \texttt{value} gespeicherten Wert verglichen. Ist die Bedingung erfüllt, wird der Steuerbefehl \texttt{command} an das Zielgerät gesendet.
   \par Die Erstellung eines neuen Szenarios erfolgt durch das Senden eines \texttt{POST}-Requests an die Route \texttt{add\_scenario}. Der Request-Header muss ein gültiges JWT-Token enthalten, während der Request-Body die in der Klasse \texttt{services.ScenarioModel} definierten Daten liefern muss. 
   \par Nach Erhalt des Requests wird die Funktion \texttt{add\_scenario()} aufgerufen. Zuerst wird das Token validiert und die Benutzer-ID wird aus dem Token erzeugt. Anschließend wird die Benutzer-ID zusammen mit den Szenariodaten an die Funktion \texttt{services.add\_new\_scenario} übergeben.
   \par Diese Funktion prüft zunächst, ob sowohl das übergebene Quellgerät (\texttt{source\_dev}) als auch das Zielgerät \texttt({target\_dev}) dem Benutzer zugeordnet sind. Ist dies nicht der Fall, so wird der Vorgang abgebrochen und eine Meldung über den unberechtigten Zugriff zurückgegeben.
   \par Nach erfolgreicher Prüfung werden die Daten des Szenarios an die Funktion \texttt{add\_scenario()} der Klasse \texttt{queries} übergeben, die das neue Szenario in der Datenbank speichert. Abschließend wird mit dem Befehl \texttt{MQTTClient.load\_scenarios()} die Liste der gespeicherten Szenarien in \texttt{MQTTClient} aktualisiert, so dass das System sofort auf die neue Automatisierungsregel reagieren kann.
   \par Das Löschen eines Szenarios erfolgt durch das Senden eines Delete-Requests an die Route „\texttt{delete\_scenario}“. Der Request muss im Header ein JWT-Token und im Body das Primär\-schlüssel des Szenarios enthalten. Zuerst wird die Benutzer-ID aus dem Token extrahiert und zusammen mit dem Primär\-schlüssel des Szenarios an die Funktion \texttt{services.delete\_scenario()} übergeben. 
   \par Diese Funktion prüft zunächst, ob die übergebene Szenario-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht.
+  \par 
   % „“
   \subsection{MQTT-Client}
   % \par \textbf{}
@@ -1302,39 +1322,41 @@ captionpos=b,
   \par Beim Empfang einer MQTT-Nachricht wird in der Funktion \texttt{process\_message()} zunächst geprüft, ob für die empfangende Geräte-ID ein Eintrag in der Klassenvariablen \texttt{saved\_scenarios} vorhanden ist (Zeile 15). Ist dies der Fall, werden alle zugehörigen Szenarien iteriert und deren jeweilige Bedingung überprüft (Zeile 16-17).
   \par Die Bedingung wird mit der Funktion \texttt{eval} überprüft (Zeile 18). Wenn die Bedingung erfüllt ist und das Attribut „\texttt{active}“ des Szenarios den Wert „\texttt{False}“ hat, wird es auf „\texttt{True}“ gesetzt und der im Szenario gespeicherte Befehl an das Zielgerät gesendet (Zeile 20-21). 
   \par Wenn die Bedingung nicht erfüllt ist und das Szenario zuvor aktiv war, so wird das Attribut „\texttt{active}“ auf „\texttt{False}“ gesetzt (Zeile 22). 
-  \par Damit wird sichergestellt, dass die Szenarien nur dann ausgelöst werden, wenn die definierten Bedingungen erfüllt sind, und dass Befehle nur dann gesendet werden, wenn ein Szenario ausgelöst wird.
+  \par Dieser Vorgang stellt sicher, dass die Szenarien nur dann ausgelöst werden, wenn die definierte Bedingung erfüllt ist, und dass Befehle nur dann gesendet werden, wenn ein Szenario ausgelöst wird. 
+  \begin{lstlisting}[style=mypython, numbers=left, label={lst:processmessage}, caption={cleint.py: process\_message}]
+    async def process_message(cls, message):
+      
+      main_topic, device_id = str(message.topic).split('/')
+      msg = message.payload.decode()
+      data = json.loads(msg)      
+  
+      # Handshake
+      if main_topic == 'handshake':
+        from app.db import queries, get_direct_session, close_session
+        session =  await get_direct_session()
+        await queries.update_device_handshake(session, device_id, data)
+        await close_session(session)
+  
+      # Szenario
+      scenarios = cls.saved_scenarios.get(device_id)
+      if scenarios is not None: 
+        for sc in scenarios:
+          if eval(f"{data[sc.data_field]} {sc.condition.value} {sc.value}"):  
+            if not sc.active: # scenario is not active
+              sc.active = True
+              await cls.send_command_to_device(sc.target_dev, sc.command)
+          elif sc.active: sc.active = False
+  
+      from app.webserver.services import WebsocketHandler
+      await WebsocketHandler.send_data(device_id, data) 
+    \end{lstlisting}
+
   \paragraph{Bereitstellung der Daten}
   \par \textbf{}
   \par Nach der Verarbeitung und dem Auslösen des Szenarios, werden die Daten über das WebSocket an den Benutzer gesendet. 
   \par Dazu wird die Klasse WebsocketHandler aus dem Skript \texttt{services.py} importiert (Zeile 24). Mit der Funktion \texttt{send\_data()} dieser Klasse werden die Daten an das aktive WebSocket gesendet (Zeile 25).
   \par Durch diese Architektur kann der Webserver in Echtzeit auf neue MQTT-Nachrichten reagieren und die empfangenen Daten effizient an verbundene Clients weiterleiten.
-  \begin{lstlisting}[style=mypython, numbers=left, label={lst:processmessage}, caption={cleint.py: process\_message}]
-  async def process_message(cls, message):
-    
-    main_topic, device_id = str(message.topic).split('/')
-    msg = message.payload.decode()
-    data = json.loads(msg)      
-
-    # Handshake
-    if main_topic == 'handshake':
-      from app.db import queries, get_direct_session, close_session
-      session =  await get_direct_session()
-      await queries.update_device_handshake(session, device_id, data)
-      await close_session(session)
-
-    # Szenario
-    scenarios = cls.saved_scenarios.get(device_id)
-    if scenarios is not None: 
-      for sc in scenarios:
-        if eval(f"{data[sc.data_field]} {sc.condition.value} {sc.value}"):  
-          if not sc.active: # scenario is not active
-            sc.active = True
-            await cls.send_command_to_device(sc.target_dev, sc.command)
-        elif sc.active: sc.active = False
-
-    from app.webserver.services import WebsocketHandler
-    await WebsocketHandler.send_data(device_id, data) 
-  \end{lstlisting}
+  
   \subsection{WebSocket}
   % \par \textbf{}
   \par Die Geräte senden kontinuierlich Daten über die MQTT-Verbindung an den MQTT-Broker. Diese Daten müssen verarbeitet und dem Benutzer in Echtzeit angezeigt werden. Zu diesem Zweck wird eine WebSocket-Schnittstelle bereitgestellt, die eine direkte und effiziente bidirektionale Kommunikation ermöglicht.
@@ -1537,12 +1559,18 @@ captionpos=b,
   \par Im \texttt{header}-Element wird der Name des Hauses angezeigt. Unterhalb des Headers befindet sich eine Schaltfläche zum Anlegen eines neuen Raumes sowie der Bereich für die Auflistung der Räume. Zusätzlich gibt es eine Schaltfläche zum Löschen des Hauses. Der Button „\texttt{create\_room}“ öffnet ein Formular, in dem der Benutzer den Namen des Raumes eingeben und speichern kann.
   \par Anschließend wird das \texttt{div}-Element „room\_list“ mit den Räumen des Hauses gefüllt. Dieser Vorgang ist ähnlich wie bei der Anzeige der Häuser. Für jeden Raum wird ein \texttt{div}-Element „room\_element“ mit der ID des Raumes erzeugt. Dieses Element enthält den Namen des Raumes, eine Schaltfläche zum Hinzufügen eines Gerätes, den Bereich zur Auflistung der Geräte und eine Schaltfläche zum Löschen des Raumes. 
   \par Die Schaltfläche zum Hinzufügen eines Geräts öffnet ein Formular, in das der Benutzer die ID und den Namen des Gerätes eingeben soll. Durch Bestätigen der Schaltfläche „Speichern“ wird das Gerät gespeichert und dem Raum zugeordnet. 
-  \par Die zu dem Raum zugeordneten Geräte müssen auch angezeigt werden. Für jedes Gerät wird ein \texttt{div}-Element „device\_element“ mit der ID des Gerätes erzeugt (Abbildung ). Eine detaillierte Beschreibung des Elements folgt im nächsten Paragraph.
+  \par Die zu dem Raum zugeordneten Geräte müssen auch angezeigt werden. Für jedes Gerät wird ein \texttt{div}-Element „device\_element“ mit der Geräte-ID erzeugt, wie in der Abbildung \ref{abb:devel} gezeigt. Eine detaillierte Beschreibung des Elements folgt weiter unten.
+  \begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{deviceelement.png}
+    \caption{device\_element}
+    \label{abb:devel}
+  \end{figure}
   \paragraph{My Devices}
   \par \textbf{TOODOOO}
   \par Durch das Anklicken an die Schaltfläche „My Devices“ an der Navigationsleiste, wird die Funktion \texttt{renderMyDevicesPage()} aufgerufen, die die vom Benutzer angemeldeten Geräte darstellt. 
   %\par Das \texttt{div}-Element „app“ wird mit den auf der Abbildung \ref{} dargestellten Device-Blocks mit den Daten der Geräte befüllt. 
-  \par Für jedes gespeicherten Gerät wird ein \texttt{div}-Element „device\_element“ mit der im Listing \ref{lst:deviceelement} dargestellten HTML-Struktur erstellt.
+  \par Für jedes gespeicherten Gerät wird ein \texttt{div}-Element „device\_element“ mit der im Listing \ref{lst:deviceelement} dargestellten HTML-Struktur erstellt. Das \texttt{div}-Element ist auf der Abbildung \ref{abb:devel} dargestellt.
   \par Die vom Gerät empfangenen Daten werden im \texttt{div}-Element „\texttt{deviceData}“ dargestellt. Über eine WebSocket-Verbindung werden die Daten in Echtzeit empfangen, angezeigt und kontinuierlich aktualisiert. Eine detaillierte Beschreibung folgt im Paragraph „WebSocket“ dieses Abschnitts.
   \begin{lstlisting}[style=htmlcssjs, label={lst:deviceelement}, caption={html: device\_element}]
   <div id="device_element${device.dev_id}">
@@ -1551,7 +1579,7 @@ captionpos=b,
     <p>Description: ${device.description ? device.description : ""}</p>
     <p>ROOM: ${device.room ? device.room : "-"}</p>
     <p>Data fields: ${device.data_fields}</p>
-    <div id="deviceData${device.dev_id}">Waiting for data from device...</div>
+    <div id="deviceData${device.dev_id}"></div>
   </div>
   <div id="commands${device.dev_id}"></div>
   <div>
@@ -1678,21 +1706,68 @@ captionpos=b,
   % „“
 \newpage
 \section{Ergebnisse und Diskussion}
-\par Hier wird zusammengefasst, was ich mit diesem Projekt gelernt habe, welche Ziele erreicht und nicht erreicht habe, mögliche Weiterentwicklung des Systems etc
+\par Das in dieser Bachelorarbeit entwickelte System dient der Steuerung und Überwachung von Umgebungsbedingungen im Haus. Für diese Aufgaben wurden verschiedene Komponenten und Technologien eingesetzt.
+\par Im Zentrum des Systems liegt ein Raspberry Pi, der als WLAN-Access-Point konfiguriert wurde. Gleichzeitig fungiert er als MQTT-Broker bereitstellt und hostet einen Webserver. Dadruch funktioniert das System vollständig lokal und ist unabhängig von der Internetverbindung.
+\par Die Kommunikation zwischen den Komponenten erfolgt über das MQTT-Protkoll. Die Geräte verbinden sich mit dem WLAN-Access-Point und senden ihre Daten in eigenen Topics an den MQTT-Broker. Zudem können sie die Steuerbefehle empfangen, die über das Webinterface von Benutzer gesendet werden. 
+\par Zur Verwaltung der Geräte und zur Darstellung der empfangenen Daten wurde eine Webschnittstelle entwickelt. Diese Schnittstelle bietet eine intuitive Bedingung des Systems. Die Benutzer können sich registrieren, eigene Häuser mit Räumen anlegen und die Geräte hinzufügen. Die von Geräten gesendeten Daten werden auf der Weboberfläche dargestellt. Darüber hinaus haben die Benutzer die Möglichkeit eigene Szenarien zu erstellen, die bei Erfüllung eingegebener Bedingungen automatisch ausgeführt werden.
+\par Die modulare Architektur des Sytems erlaub es, verschiedene Mikrocontroller und Sensoren flexibel in das System zu integrieren. Prinzipiell kann jedes Gerät, das sich mit dem WLAN verbindet und MQTT unterstützt, in das System integriert werden. 
+\par Im Folgenden wird ein Anwendungsfall beschrieben, der exemplarisch zeigt, wie das entwickelte System in der Praxis eingesetzt werden kann.
+\subsection{Anwendung des Systems}
+\paragraph{Vorbereitung der Komponenten}
+\par \textbf{}
+\par Vor der Verwendung des Systems ist die Einrichtung aller Komponenten erforderlich. 
+\par Zunächst muss der Raspberry als WLAN-Access-Point und MQTT-Broker eingerichtet werden. Dafür wird der Raspberry Pi über das Netzwerkkabel mit dem Internet verbunden und die erforderliche Linux-Pakete werden geladen. Die Software \texttt{hostapd} \cite{hostapd} richtet den WLAN-Access-Point auf dem Raspberry Pi ein, während \texttt{dnsmasq} \cite{dnsmasq} das lokale Netzwerk konfiguriert. Der MQTT-Broker \texttt{mosquitto} \cite{mosquitto} wird ebenfalls geladen und gestartet. 
+\par Anschließend wird die Webanwendung auf dem Raspberry Pi installiert. Dazu ist Python in Version 3.9 erforderlich. Der Quellcode der Anwendung befindet sich im Projektordner „\texttt{code/webapp}“ und muss auf den Raspberry Pi übertragen werden. Die benötigten Python-Bibliotheken sind in der Datei \texttt{requirements.txt} gelistet und müssen installiert werden. Die Anwendung wird mit dem Befehl „\texttt{python3 -m app}“ gestartet.
+\par Der Raspberry Pi ist nun vollständig eingerichtet und wird von dem Internet getrennt.
+\par Als Nächstes werden die Hardwarekomponenten eingerichtet. 
+\par Die Anbindung der Komponenten an den Arduino ist in der Projektarbeit 1 \cite{pa1} ausführlich beschrieben. Der Programmcode für den Arduino befindet sich im Projektordner „\texttt{code/arduino}“ und muss auf den Mikrocontroller übertragen werden.
+\par An den ESP-Modulen müssen die erforderlichen Sensoren und Aktoren entsprechend der Beschreibung in Kapitel 4.3 angebunden werden. Der zugehörige Programmcode befindet sich im Projektordner „\texttt{code/esp}“ in jeweils einem Unterordner pro Modul und muss auf das entsprechende Modul übertragen werden.
+\par Damit ist das gesamte System komplett eingerichtet und betriebsbereit.
+\paragraph{Verwendung des Systems}
+\par \textbf{}
+\par Der Benutzer verbindet sich mit dem vom Raspberry Pi bereitgestellten WLAN-Netzwerk und ruft die Adresse \texttt{127.0.0.1:8000} im Webbrowser auf. Es wird dem Benutzer angeboten ein Benutzerkonto anzulegen oder sich mit bereits erstellten Konto anzumelden.
+\par Für die Anmeldung gibt der Benutzer einen beliebigen Benutzernamen, seine Email-Adresse und ein beliebiges Passwort ein. Damit ist das Konto erstellt und der Benutzer wird zur Hauptseite weitergeleitet.
+\par Auf der Hauptseite kann der Benutzer durch Klicken auf die Schaltfläche „\texttt{Create New House}“ ein neues Haus mit beliebigem Namen anlegen. 
+\par Beim Klicken auf den House-Block erscheint eine Taste zum Erstellen eines Raums im Haus. Der Benutzer kann Räume mit eindeutigen Namen hinzufügen.
+\par Im Raum-Block gibt es eine Schaltfläche zur Anmeldung eines Geräts. Durch Klicken auf diese Schaltfläche öffnet sich ein Formular zur Anmeldenung eines Geräts, das auf der Abbildung \ref{abb:adddevform} dargestellt ist. 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{adddevform.png}
+  \caption{Formular zur Anmeldenung eines Geräts im Raum}
+  \label{abb:adddevform}
+\end{figure}
+\par Der Benutzer gibt die Geräte-ID und einen eindeutigen Namen ein und speichert diese. Damit wird das Gerät angemeldet und dem Raum zugewiesen. Die Abbildung \ref{abb:deviceinroom} stellt das angemeldete Gerät in dem Raum-Block dar.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{deviceinroom.png}
+  \caption{Darstellung der Gerätedaten}
+  \label{abb:deviceinroom}
+\end{figure}
+
+% „“
+
+
+\subsection{Vorschläge zur Weiterentwicklung und Erweiterung}
+\par Das in dieser Bachelorarbeit entwickelte System stell t eine Grundlage für ein großes Smart-Home-System dar. Das System eignet sich besonders für die Häuser mit weniger als 10 gleichzeitig verwendeten Geräten. Für die Anwendung im realen Betrieb muss das System noch weiterentwickelt werden.
+\par Derzeit dient der Raspberry Pi als zentraler Server des Systems und das System ist ausschließlich über das lokale Netzwerk erreichbar. Für die Weiterentwicklung ist es sinvoll das System über das Internet erreichbar zu machen. Dadurch könnten die Benutzer ihre Geräte aus der Ferne steuern und überwachen. Zu diesem Zweck müssten der Webserver sowie der MQTT-Broker auf einen externen Server mit fester IP-Adresse und Domainnamen ausgelagert werden. Die Geräte würden sich dann mit dem Internetrouter im Haus verbinden und über das Internet mit dem MQTT-Broker kommunizieren.
+\par Dabei sind verschiedene Sicherheitsaspekte zu berücksichtigen. Das System muss zuverlässig gegen externe Angriffe geschützt werden. 
+\par Einer dieser Aspekten betrifft die Anmeldenung neuer Geräte im System. Derzeit kann jeder, der die Geräte-ID eingibt, das Gerät anmelden und steuern. Angreifer könnten durch sogenanntes „Brute-Forcing“ eine gültige Geräte-ID finden und somit die Kontrolle über ein Gerät übernehemen. 
+\par Um das zu verhindern, könnte eine physische Taste am Gerät angebracht werden, die das Gerät in den Anmeldungsmodus umschaltet. Nach dem Drücken dieser Taste hätte der Benutzer ein begrenztes Zeitfenster, um das Gerät im System anzumelden. Dadurch muss der Benutzer physischen Zugriff auf das Gerät haben, um es anmelden zu können.
+
 \newpage
 \section{Quellen}
 \begin{thebibliography}{20}
   \bibitem{pa1}
-  O. Baida,
-  \textit{Anbindung der Sensoren und Aktoren an den Arduino zur Realisierung eines Sicherheitssystems},
+  O. Baida,  \textit{Anbindung der Sensoren und Aktoren an den Arduino zur Realisierung eines Sicherheitssystems},
   Projektarbeit 1, 2024.
 
   \bibitem{pa2}
   O. Baida, Projektarbeit 2 \textit{Sicherheitssystem fur das Haus basierend auf Arduino, ESP8266 \& Raspberry Pi} \url{https://github.com/oleksiibaida/PA2.git}
-  \bibitem{video}
   
   \bibitem{statita_smhomes}
-  Statista, \textit{„Smart Home - Anzahl der Haushalte in Deutschland 2028“}, Zugegriffen: 13. Januar 2025. [Online]. Verfügbar unter \url{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}
+  Statista, \textit{„Smart Home - Anzahl der Haushalte in Deutschland 2028“},  Verfügbar unter \url{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland} Zugriff: 13. Januar 2025. [Online].
+  \bibitem{espbuch}
+  Udo Brandes: \textit{Mikrocontroller ESP32: Das Umfassende Handbuch}. Bonn: Rheinwerk Verlag, 2024, ISBN 9783367102860. 
 
 
   \par \textbf{Links zur verwendeten Hardware:}
@@ -1710,15 +1785,14 @@ captionpos=b,
   Adafruit, \textit{OlED FeatherWing}, \url{https://learn.adafruit.com/adafruit-128x64-oled-featherwing/downloads}, Zugriff: 16. Januar 2025 [Online].
   \par \textbf{Links zur verwendeten Software:}
   \bibitem{mqtt}
-  Dr Andy Stanford-Clark, Arlen Nipper, \textit{Message Queuing Telemetry Transport}, \url{https://mqtt.org/}
+  Dr Andy Stanford-Clark, Arlen Nipper, \textit{Message Queuing Telemetry Transport}, \url{https://mqtt.org/} Zugriff am 15. Februar 2025 [Online].
 
   \bibitem{i2c}
-  NXP Semiconductors, \textit{I2C-bus specification and user manual}, \url{https://www.nxp.com/docs/en/user-guide/UM10204.pdf}
+  NXP Semiconductors, \textit{I2C-bus specification and user manual}, \url{https://www.nxp.com/docs/en/user-guide/UM10204.pdf} Zugriff am 15. Februar 2025 [Online].
 
 
 
-  \bibitem{python}
-  Guido van Rossum, Python Software Foundation, \textit{Python}, \url{https://www.python.org/}
+  
   \par \textbf{Linux-Packete}:
   \bibitem{hostapd}
   Jouni Malinen, \textit{hostapd}, \url{https://w1.fi/hostapd/}, Zugriff am: 19. September 2024.
@@ -1730,23 +1804,23 @@ captionpos=b,
   \bibitem{scholz}
   R. Scholz, \textit{Syncloop}, Persönliche Mitteilungen
   \bibitem{pubsub} 
-  Knolleary, \textit{PubSubClient}, \url{https://pubsubclient.knolleary.net/}, Zugriff am: 21. Oktober 2024 [Online].
+  Knolleary, \textit{PubSubClient}, \url{https://pubsubclient.knolleary.net/}, Zugriff am: 12. Februar 2025 [Online].
   \bibitem{espwifi}
   ESPWIFI.h, \url{https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html}
   \bibitem{eeprom}
   EEPROM.h, \url{https://docs.arduino.cc/learn/built-in-libraries/eeprom/}
-  \bibitem{keypad}
-  Keypad.h \url{https://docs.arduino.cc/libraries/keypad/}
   \bibitem{easdisplay}
   M. Carbou, \textit{MycilaEasyDisplay}, \url{https://github.com/mathieucarbou/MycilaEasyDisplay}, Zugriff: 16. Januar 2025. [Online]. 
 
   \par \textbf{Python-Bibliotheken}
+  \bibitem{python}
+  Guido van Rossum, Python Software Foundation, \textit{Python}, \url{https://www.python.org/} Zugriff am 10. Februar 2025 [Online].
   \bibitem{json}
-  Python Software Foundation, \textit{json}, \url{https://docs.python.org/3/library/json.html}
+  Python Software Foundation, \textit{json}, \url{https://docs.python.org/3/library/json.html} Zugriff am: 23. Februar 2025 [Online].
   \bibitem{sqlalchemy}
   Mike Bayer, \textit{SQLAlchemy}, \url{https://www.sqlalchemy.org} Zugriff am: 11. März 2025 [Online].
   \bibitem{fastapidoc}
-  Sebastián Ramírez (Tiangolo), \textit{FastAPI}, \url{https://fastapi.tiangolo.com/} Zugriff am: 24. März 2025s [Online].
+  Sebastián Ramírez (Tiangolo), \textit{FastAPI}, \url{https://fastapi.tiangolo.com/} Zugriff am: 24. März 2025 [Online].
 
 \end{thebibliography}
 
@@ -1761,219 +1835,7 @@ captionpos=b,
 \addcontentsline{toc}{section}{Programmcode}
 
 \lstlistoflistings
-%\newpage
-%\section{Programmcode}
 
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266setup}, caption={ESP: setup}]
-%   void setup()
-%   {
-%     Serial.begin(9600);
-%     // GET WiFi Daten aus EEPROM
-%     EEPROM.begin(128);
-%     char eeprom_ssid[MAX_SSID_LENGTH] = {0};
-%     char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
-%     EEPROM.get(0, eeprom_ssid);
-%     EEPROM.get(32, eeprom_password);
-%     EEPROM.end();
-%     // Daten gefunden
-%     if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
-%     {
-%       if (connect_wifi(eeprom_ssid, eeprom_password))
-%       {
-%         connect_mqtt();
-%         return;
-%       }
-%     }
-%     // keine WLAN-DAten gefunden
-%     setup_ap();
-%   }
-% \end{lstlisting}
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266validstring}, caption={ESP: is\_valid\_string}]
-%   bool is_valid_string(char *data, int max_length)
-%   {
-%     if (strlen(data) == 0 or strlen(data) > max_length)
-%       return false;
-%     for (int i = 0; i < max_length; i++)
-%     {
-%       if (data[i] == '\0')
-%         return true; // End of valid String
-%       if (data[i] == 0xFF) // Default EEPROM
-%         return false;
-%     }
-%     return false;
-%   }
-% \end{lstlisting}
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnectwifi}, caption={ESP: connect\_wifi}]
-%   bool connect_wifi(char *ssid, char *password)
-%   {
-%     WiFi.mode(WIFI_STA);
-%     WiFi.begin(ssid, password);
-  
-%     for (uint8_t i = 0; i < wifi_repeat; i++)
-%     {
-%       if (WiFi.status() == WL_CONNECTED)
-%       {
-%         Serial.println(WiFi.localIP());
-%         return true;
-%       }
-%       delay(1000);
-%     }
-%     return false;
-%   }
-% \end{lstlisting}
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnectmqtt}, caption={ESP: connect\_mqtt}]
-%   void mqtt_connect()
-%   {
-%     set_topics();
-%     mqttClient.setServer(MQTT_BROKER_ADRRESS, MQTT_PORT);
-%     mqttClient.setCallback(callback);
-%     for (int i = 0; i < wifi_repeat; i++)
-%     {
-%       if (mqttClient.connect(DEVICE_ID))
-%         mqttClient.subscribe(SUBSCRIBE_TOPIC);
-%         return;
-%       else
-%         delay(1000);
-%     }
-%   }
-% \end{lstlisting}
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espsettopics}, caption={ESP: set\_topics}]
-%   void set_topics()
-%   {
-%     SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(DEVICE_ID) + 2);
-%     PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
-  
-%     strcpy(SUBSCRIBE_TOPIC, TOPIC_COMMAND);
-%     strcat(SUBSCRIBE_TOPIC, "/");
-%     strcat(SUBSCRIBE_TOPIC, DEVICE_ID);
-  
-%     strcpy(PUBLISH_TOPIC, "data");
-%     strcat(PUBLISH_TOPIC, "/");
-%     strcat(PUBLISH_TOPIC, DEVICE_ID);
-%   }
-% \end{lstlisting}
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266defap}, caption={ESP8266: ap\_konfiguration}]
-%   const char AP_SSID[] = "ESP8266";
-%   const char AP_PASSWORD[] = "setupesp";
-%   IPAddress ap_ip(10, 0, 0, 1);
-%   IPAddress ap_gateway(10, 0, 0, 1);
-%   IPAddress ap_subnet(255, 255, 255, 0);
-%   AsyncWebServer server(80);
-%   const String html_page = R"rawliteral(
-%     <html>
-%     <body>
-%       <h2>Wi-Fi Configuration</h2>
-%       <form action="/save" method="POST">
-%         SSID:<br>
-%         <input type="text" name="ssid" required><br>
-%         Password:<br>
-%         <input type="password" name="password" required><br><br>
-%         <input type="submit" value="Submit">
-%       </form>
-%     </body>
-%     </html>
-%   )rawliteral";
-% \end{lstlisting}
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266setupap}, caption={ESP: setup\_ap}]
-%   void setup_ap()
-%   {
-%     WiFi.mode(WIFI_AP);
-%     WiFi.softAP(AP_SSID, AP_PASSWORD);
-%     WiFi.softAPConfig(ap_ip, ap_gateway, ap_subnet);
-  
-%     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-%               { request->send(200, "text/html", html_page); });
-  
-%     server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request)
-%               {
-%                 // get input data
-%                 String ssid = request->getParam("ssid", true)->value();
-%                 String password = request->getParam("password", true)->value();
-%                 if (ssid.length() > MAX_SSID_LENGTH - 1 || password.length() > MAX_PASSWORD_LENGTH - 1)
-%                 {
-%                   return;
-%                 }
-%                 // String in char[]
-%                 char new_ssid[MAX_SSID_LENGTH] = {0};
-%                 strncpy(new_ssid, ssid.c_str(), MAX_SSID_LENGTH - 1);
-%                 char new_password[MAX_PASSWORD_LENGTH] = {0};
-%                 strncpy(new_password, password.c_str(), MAX_PASSWORD_LENGTH - 1);
-  
-%                 // in EEPROM speichern
-%                 EEPROM.begin(128);
-%                 EEPROM.put(0, new_ssid);
-%                 EEPROM.put(32, new_password);
-%                 EEPROM.commit();
-%                 EEPROM.end();
-  
-%                 request->send(200, "text/html", "WiFi saved. Rebooting...");
-%                 ESP.restart(); });
-  
-%     server.begin();
-%   }
-% \end{lstlisting}
-
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266readserial}, caption={ESP8266: readSerialData}]
-%   void readSerialData()
-%   {
-%     if (Serial.available() > 0)
-%     {
-%       String readString = "";
-%       // Lese Daten aus Serial als String ab
-%       readString = Serial.readStringUntil('\n');
-%       if (sizeof(readString) > buss_serial)
-%         return;
-%       // String in char-Feld konvertieren
-%       char readSerialChar[readString.length() + 1];
-%       readString.toCharArray(readSerialChar, readString.length() + 1);    
-%       // Suche Position von ':'
-%       char *delim_pos = strchr(readSerialChar, ':');
-%       if (delim_pos != NULL)
-%       {
-%         size_t topic_length = delim_pos - readSerialChar;
-%         char topic[topic_length + 1];
-%         strncpy(topic, readSerialChar, topic_length);
-%         topic[topic_length] = '\0';
-%         char *message = delim_pos + 1;
-%         PUBLISH_TOPIC = (char *)malloc(strlen(CLIENT_ID) + strlen(topic) + 2);
-%         if (PUBLISH_TOPIC == NULL)
-%         {
-%           PUBLISH_TOPIC = topic;
-%         }
-%         else
-%         {
-%           strcpy(PUBLISH_TOPIC, topic);
-%           strcat(PUBLISH_TOPIC, "/");
-%           strcat(PUBLISH_TOPIC, CLIENT_ID);
-%         }
-%         // MQTT-Nachricht senden
-%         mqttClient.publish(PUBLISH_TOPIC, message);
-%       }
-%       else // kein : gefunden
-%         return;
-%     }
-%   }
-% \end{lstlisting}
-
-% \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:esp8266callback}, caption={ESP8266: callback}]
-%   void callback(char *topic, byte *payload, unsigned int length)
-%   {
-%     String id = String(topic).substring(String(topic).indexOf('/') + 1);
-%     if (id == CLIENT_ID)
-%     {
-%       String text = "";
-%       for (int i = 0; i < length; i++)
-%       {
-%         text += (char)payload[i];
-%       }
-%       text.trim();
-%       // Print in Arduino
-%       Serial.println(text);
-%     }
-%   }
-% \end{lstlisting}
-
-%
 
 
 \end{document}
