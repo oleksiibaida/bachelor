@@ -43,7 +43,7 @@ html, body {
 }
 
 .house_element_details {
-    @apply w-full p-2 bg-gray-200 justify-start items-start text-start
+    @apply w-full p-2 bg-amber-100 justify-start items-start text-start
 }
 
 .create_room_element {

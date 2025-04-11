@@ -500,7 +500,7 @@ async function renderMainPage(data) {
                         <p class="text-4xl">NAME: ${device.name}</p>
                         <p class="text-base"> ID: ${device.dev_id} </p>
                         <div id="deviceData${device.dev_id}" class="device_data">
-                            Device data:
+                            <p class="text-3xl">Device data:</p>
                         </div>
                     </div>
                     <div id="commands${device.dev_id}" class="commands-block"></div>
