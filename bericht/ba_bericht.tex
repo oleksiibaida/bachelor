@@ -316,7 +316,6 @@ captionpos=b,
   \item \textbf{Automatisierung}: Die Benutzer können eigene Szenarien erstellen, die auf Basis der erfassten Sensordaten automatisch ausgelöst werden.
 \end{enumerate}
 \par 
-\newpage
 \subsection{Komponenten des Systems}
 \par Das System besteht aus mehreren Komponenten, die zusammenarbeiten, um eine effiziente Steuerung und Datenerfassung zu gewährleisten: 
 \begin{itemize} 
@@ -330,16 +329,23 @@ captionpos=b,
 \end{itemize}
 
 \subsection{Architektur und Datenfluss}
-\par Das entwickelte System basiert auf einer modularen Architektur, die mehrere Komponenten integriert.
-\par Der Raspberry Pi dient als zentraler Server des Systems. Der Minicomputer stellt ein WLAN-Netzwerk zur Verfügung und hostet den Webserver mit der Datenbank sowie den MQTT-Broker. Alle Benutzerinteraktionen, Sensordaten, Datenflüsse und Datenverarbeitungen finden auf dem Server statt. Das System ist somit stark zentralisiert und arbeitet nur lokal. Das bedeutet, dass sich alle Benutzer in einem lokalen Netzwerk mit dem Raspberry Pi befinden müssen. 
-\par Die Geräte verbinden sich mit dem WLAN und mit dem MQTT-Broker, die vom Raspberry Pi zur Verfügung gestellt werden. Jedes Gerät verfügt über eine eindeutige Geräte-ID. Die Sensoren senden ihre Daten an den MQTT-Broker, der auf dem Raspberry Pi läuft. Die Aktoren abonnieren die Command-Topics mit der entsprechenden "Geräte-ID".
-\par Im Kern des Systems befindet sich ein Webserver, der auf dem Raspberry Pi ausgeführt wird. Dieser Webserver stellt eine RESTful-API zur Verfügung. Für den Zugriff zu der API wurde eine Webseite aufgebaut. Die API bietet folgende Funktionen an:
+\par Das entwickelte System basiert auf einer modularen Architektur, die mehrere Komponenten integriert. Die Abbildung \texttt{abb:gesamtsystem} stellt das gesamte System dar.
+\par Der Raspberry Pi dient als zentraler Server des Systems. Der Minicomputer stellt ein WLAN-Netzwerk zur Verfügung und hostet den Webserver sowie den MQTT-Broker. Alle Benutzerinteraktionen, Sensordaten, Datenflüsse und Datenverarbeitungen werden auf dem Raspberry Pi durchgeführt. Das System ist somit stark zentralisiert und arbeitet nur in einem lokalen Netzwerk. Daher müssen sich alle Benutzer mit dem vom Raspberry Pi bereitgestellten WLAN-Netzwerk verbinden.
+\par Die Geräte verbinden sich mit dem WLAN und mit dem MQTT-Broker, die vom Raspberry Pi zur Verfügung gestellt werden. Jedes Gerät verfügt über eine eindeutige Geräte-ID. Die Sensoren senden ihre Daten an den MQTT-Broker, der auf dem Raspberry Pi läuft. Die Aktoren abonnieren die Command-Topics, die für jedes Gerät mit der entsprechenden "Geräte-ID" erstellt werden.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{gesamt.png}
+  \caption{Gesamtsystem}
+  \label{abb:gesamtsystem}
+\end{figure}
+\par Die Schnittstelle zu den Benutzer wurde über einen Webserver realisiert. Der Webserver stellt eine RESTful-API zur Verfügung. Für die Kommunikation mit der API wurde eine Weboberfläche entwickelt, die den Benutzern zur Verfügung steht. Die Benutzer können auf das System ausschließlich über den Webserver zugreifen. Die API bietet folgende Funktionen an:
 \begin{itemize}
-  \item Authentifizierung und Autorisierung der Benutzer
-  \item Verwaltung der Gerätekonfigurationen und Benutzerprofile
-  \item Bereitstellung von Endpunkten zur Abfrage und Steuerung von IoT-Geräten
-  \item Bereitstellung der Daten von den Geräten in Echtzeit
-  \item Bidirektionale Kommunikation mit den IoT-Geräten
+  \item Authentifizierung und Autorisierung der Benutzer.
+  \item Verwaltung der Gerätekonfigurationen und Benutzerprofile.
+  \item Bereitstellung von Endpunkten zur Abfrage und Steuerung von IoT-Geräten.
+  \item Bereitstellung der Daten von den Geräten in Echtzeit.
+  \item Bidirektionale Kommunikation mit den IoT-Geräten.
+  \item Erstellung der Automatisierungsszenarien.
 \end{itemize}
 \par Die Benutzerauthentifizierung erfolgt über JSON Web Tokens (JWT). Bei der Anmeldung wird ein JWT erzeugt, das eine verschlüsselte Benutzer-ID enthält. Dieses Token wird auf der Seite des Benutzers gespeichert und bei jeder Anfrage an den Server gesendet, um die Identität des Benutzers zu verifizieren. JWTs haben eine festgelegte Lebensdauer, nach deren Ablauf eine erneute Anmeldung oder eine Token-Erneuerung erforderlich ist. Die Verwendung von JWT ermöglicht eine sichere, zustandslose Authentifizierung, da der Server keine Sitzungsdaten speichern muss.
 \par Die Benutzerdaten und Gerätekonfigurationen werden in einer lokalen Datenbank gespeichert, die mit \texttt{SQLite} implementiert wird. \texttt{SQLite} hat den Vorteil, dass die gesamte Datenbank in einer einzigen Datei gespeichert wird, wodurch der Ressourcenverbrauch des Servers minimiert wird. Der Zugriff auf die Datenbank erfolgt über \texttt{SQLAlchemy}, eine leistungsfähige ORM-Bibliothek für Python. \texttt{SQLAlchemy} ermöglicht asynchrone Datenbankzugriffe, was die Leistung und Skalierbarkeit der Anwendung verbessert.
@@ -349,7 +355,7 @@ captionpos=b,
 \par Die für die SPA entwickelte API kann auch von anderen Anwendungen, z. B. mobilen Anwendungen, genutzt werden. Dadurch können die Anwendungen auf einer gemeinsamen Backend-Struktur aufbauen, was die Wartung vereinfacht und die Wiederverwendbarkeit des Codes erhöht.
 \par Die vorgestellte Architektur bietet eine effiziente, skalierbare und reaktionsfähige Struktur. Der Zugriff auf das System erfolgt über die API. Durch die Verwendung asynchroner Methoden werden Blockierungen vermieden. \texttt{WebSocket} stellt die empfangenen Daten ohne serverseitige Speicherung sofort zur Verfügung. Die SPA bietet eine schnelle und benutzerfreundliche Schnittstelle mit direktem Zugriff auf die API-Endpunkte. Diese Architektur garantiert eine hohe Performance und vereinfacht sowohl die Wartung als auch zukünftige Erweiterungen des Systems.
 \subsubsection{Struktur der MQTT-Kommunikation}
-\par Die im System verwendeten Geräte kommunizieren über das MQTT-l. Der MQTT-Broker wird auf dem Raspberry Pi ausgeführt. 
+\par Die im System verwendeten Geräte kommunizieren über das MQTT-Protokoll. Der MQTT-Broker wird auf dem Raspberry Pi ausgeführt. 
 \par Die Geräte verbinden sich mit dem MQTT-Broker und senden ihre Nachrichten in individuelle Topics. Es gibt 4 Haupttopics, die für jedes Gerät mit der entsprechender Geräte-ID erweitert werden. Die Tabelle \ref{tab:mqttnachrichten} listet die Topics auf. ID wird von jedem Gerät ermittelt und beim Senden der Nachricht entsprechend gesetzt.
 \begin{table}[h]
   \centering
@@ -366,7 +372,6 @@ captionpos=b,
 \end{table}
 \par Beim Hinzufügen eines neuen Geräts zum System sendet der dem Broker eine Handshake-Nachricht in das Topic „\texttt{command/ID}“ mit dem Text „\texttt{handshake}“ gesendet. Das Gerät antwortet darauf im Topic „\texttt{handshake/ID}“ mit seiner Konfiguration in JSON-Format. Im Feld „\texttt{data\_fields}“ werden die Felder angegeben, die von den Sensoren erfasst werden. Im Feld „\texttt{commands}“ werden die Befehle angegeben, die das Gerät ausführen kann. Diese Daten werden in der Datenbank gespeichert, können jedoch durch erneutes Senden der Handshake-Nachricht aktualisiert werden. Nach der Handshake-Nachricht werden in das Topic „\texttt{command/ID}“ ausschließlich Nachriten mit gespeicherten Befehlen gesendet. 
 \par Die Nachrichten, die in das Topic „\texttt{data/ID}“ gesendet werden, müssen ein JSON-Format haben. Das erleichtert die Verarbeitung der Daten. 
-\par \textbf{TOODOO} Diagram zum Zeigen der Kommunikation.
 \newpage
 \section{Grundlagen \& Theorie}
 \par In diesem Abschnitt werden die technischen Spezifikationen der verwendeten Komponenten und Technologien detailliert beschrieben.
@@ -588,6 +593,15 @@ captionpos=b,
   \par In diesem Projekt wird I²C verwendet, um die Sensoren mit den ESP-Modulen zu verbinden.
   \subsection{Software}
   \subsubsection{C-Programme}
+  \par Die Programmiersprache C ist eine prozeduale und leistungsfähige Sprache. Sie wurde im Jahr 1972 von Dennis Ritchie entwickelt. Sie zeichnet sich durch ihre Effizienz und direkte Speicherverwaltung aus. Aufgrund ihrer Eigenschaften wird C vorrangig in der Entwicklung von Betriebssystemen sowie in der Embedded-Programmierung eingesetzt. Insbesondere bei Mikrocontrollern findet C häufig Anwendung.
+
+  \par In diesem Projekt wurde C zur Programmierung der Mikrocontroller verwendet. Für die Entwicklung, Übersetzung und Übertragung des Codes auf die Mikrocontroller wurde die Entwicklungsumgebung \texttt{PlatformIO} verwendet.
+  \par  \texttt{PlatformIO} ist eine Open-Source-Entwicklungsumgebung für eingebettete Systeme, die als Erweiterung in Visual Studio Code verfügbar ist. Sie unterstützt zahlreiche Mikrocontroller-Plattformen, darunter Arduino und ESP-basierte Module.
+  \par \texttt{PlatformIO} übernimmt den gesamten Build-Prozess: Der Quellcode wird übersetzt, kompiliert und auf das Gerät übertragen. Über die Konfigurationsdatei „\texttt{platformio.ini}“ wird das Projekt konfiguriert.In dieser Datei werden das verwendete Plattform-Framework, das Ziel-Board und die benötigten Bibliotheken angegeben. Weitere Weitere erforderliche Build- und Upload-Optionen können dort ebenfalls festgelegt werden.
+  \par Durch die Verwendung von \texttt{PlatformIO} wird die Entwicklung der Software für die Mikrocontroller effizienter. Der Quellcode kann direkt auf dem Rechner kompiliert und gebildet werden. Somit werden die Fehlöer vor dem Laden auf das Gerät erkannt.
+  \par Durch die Verwendung von \texttt{PlatformIO} gestaltet sich die Softwareentwicklung für die Mikrocontroller effizienter. Der Quellcode wird direkt auf dem Rechner kompiliert und überprüft. Somit können die Fehler bereits vor dem Hochladen auf das Gerät erkannt werden.
+
+
   \subsubsection{Python-Programme}
   \par Python ist eine weit verbreitete höhere Programmiersprache. Sie wurde 1991 von Guido van Rossum veröffentlicht. Die Sprache wird in verschiedenen Bereichen eingesetzt: von der Webentwicklung und Automatisierung bis hin zu künstlicher Intelligenz und Datenanalyse.
   \par Python ist plattformunabhängig. Der Code von Python-Skripten wird zur Laufzeit in Bytecode übersetzt, der dann von der Python Virtual Machine (PVM) interpretiert und ausgeführt wird. Die PVM übernimmt betriebssystemspezifische Aufgaben wie die Speicherverwaltung, den Zugriff auf Prozessoren und die Nutzung von Systembibliotheken. Dadurch können Python-Programme auf verschiedenen Plattformen ausgeführt werden, sofern eine geeignete PVM für die jeweilige Plattform zur Verfügung steht.
@@ -879,8 +893,9 @@ captionpos=b,
     \par In diesem Projekt wird die Funktionalität des Moduls erweitert.
   \par Beim Start des Moduls wird die Funktion \texttt{setup()} ausgeführt. Dabei wird versucht, die WLAN- und MQTT-Verbindung zu erstellen. Wenn die Verbindung nicht aufgebaut werden kann, stellt das Modul ein Webserver zur Verfügung. Über den Webserver können die aktuelle WLAN-Daten des Zugangspunktes an Modul übergeben werden.
   %\par Zusätzlich läuchtet der blaue LED während der Einrichtung des Moduls. Der Diode läuchtet, wenn es der GPIO-Pin 2 auf \texttt{HIGH} gesetzt wird. Nach der erfolgreichen Einrichtung und Verbindung mit dem WLAN sowie MQTT-Broker, wird der GPIO-PIN auf \texttt{LOW} gesetzt und der Diode ausgeschaltet. 
-  \par Bei jedem Programmdurchlauf wird die Funktion \texttt{readSerialData()} aufgerufen, die die Daten vom Arduino empfängt. Die Daten kommen im Format „\texttt{topic:message}“. Nach Empfang der Daten, wird das Topic mit der Geräte-ID erstellt und die MQTT-Nachricht wird an dem MQTT-Broker gesendet.
-  \par Die Verarbeitung der empfangenen MQTT-Nachrichten erfolgt in der Funktion \texttt{callback}. Das ESP8266 abonniert nur das Topic „\texttt{command/ID}“. Das Topic ist individuell für jedes Modul erstellt und in der Variablen \texttt{SUBSCRIBE\_TOPIC} gespeichert. Beim Empfang einer MQTT-Nachricht, wird der Text in ein \texttt{String} konvertiert und über \texttt{Serial} an Arduino weitergeleitet.
+  \par Die Kommunikation zwischen ESP8266 und Arduino erfolgt über eine UART-Schnittstelle. Der Arduino sendet seine Daten für die Übertragung über die MQTT-Verbindung. Die Daten werden im Format „\texttt{topic:message}“ gesendet.
+  \par Bei jedem Programmdurchlauf wird die Funktion \texttt{readSerialData()} auf dem ESP8266 aufgerufen. Diese Funktion liest die Daten aus der serielle Schnittstelle aus. Nach Empfang der Daten, wird das Topic mit der Geräte-ID erstellt und die MQTT-Nachricht wird an dem MQTT-Broker gesendet.
+  \par Die Verarbeitung der empfangenen MQTT-Nachrichten erfolgt in der Funktion \texttt{callback()}. Das ESP8266 abonniert nur das Topic „\texttt{command/arduino}“. Beim Empfang einer MQTT-Nachricht, wird der Text in ein \texttt{String} konvertiert und über \texttt{Serial} an Arduino weitergeleitet.
   \subsubsection{M5Stick}
   \par Das M5Stick wird zur Überwachung der Licht- und Luftbedingungen eingesetzt. Dem Modul wird die Geräte-ID „m5stick“ zugewiesen.
   \par Das Modul verfügt über einen integrierten Akku und kann beispielsweise außen am Fenster platziert werden. Dadurch kann das System die Wetterbedingungen erfassen und entsprechend darauf reagieren.
