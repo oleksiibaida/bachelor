@@ -285,7 +285,7 @@ captionpos=b,
 \par Overall, this work demonstrates how a robust and flexibly expandable IoT system can be developed using simple components, making it suitable for use in private homes.
 \pagebreak
 \section*{Eigenständigkeitserklärung}
-\addcontentsline{toc}{section}{Abstract}
+\addcontentsline{toc}{section}{Eigenständigkeitserklärung}
 \par Hiermit versichere ich, dass ich die vorliegende Arbeit selbständig angefertigt und mich keiner fremden Hilfe bedient sowie keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe.
 \par Alle Stellen, die wörtlich oder sinngemäß veröffentlichten oder nicht veröffentlichten Schriften und anderen Quellen entnommen sind, habe ich als solche kenntlich gemacht. 
 \par Soweit Sprachmodelle für die Texterstellung (z.B. ChatGPT) verwendet wurden, sind die entsprechenden Textstellen gekennzeichnet. Die Nutzung von Korrekturservices ist ebenfalls kenntlich gemacht.
@@ -1582,7 +1582,7 @@ captionpos=b,
     \label{abb:devel}
   \end{figure}
   \paragraph{My Devices}
-  \par \textbf{TOODOOO}
+  \par \textbf{}
   \par Durch das Anklicken an die Schaltfläche „My Devices“ an der Navigationsleiste, wird die Funktion \texttt{renderMyDevicesPage()} aufgerufen, die die vom Benutzer angemeldeten Geräte darstellt. 
   %\par Das \texttt{div}-Element „app“ wird mit den auf der Abbildung \ref{} dargestellten Device-Blocks mit den Daten der Geräte befüllt. 
   \par Für jedes gespeicherten Gerät wird ein \texttt{div}-Element „device\_element“ mit der im Listing \ref{lst:deviceelement} dargestellten HTML-Struktur erstellt. Das \texttt{div}-Element ist auf der Abbildung \ref{abb:devel} dargestellt.
@@ -1617,7 +1617,11 @@ captionpos=b,
       <div id="scenarioList" class="device_list"></div>
     </div>
   \end{lstlisting}
-  \par Ein Druck auf die Schaltfläche mit der ID „\texttt{BTNcreateScenario}“ füllt das \texttt{div}-Element „\texttt{MNcreateScenario}“ mit dem auf die Abbildung \ref{abb:createscenario} dargestellten Formular zur Erstellung eines neuen Szenarios. Das Formular enthält die Felder zur Eingabe der nötigen Szenariodaten. Dabei werden Quell- und Zielgerät sowie ihre Datenfelder und Befehle dynamisch aus der lokalen Variable \texttt{stored\_data} geladen.
+  \par Ein Klick auf die Schaltfläche mit der ID „\texttt{BTNcreateScenario}“ füllt das \texttt{div}-Element „\texttt{MNcreateScenario}“ mit dem auf die Abbildung \ref{abb:createscenario} dargestellten Formular zur Erstellung eines neuen Szenarios. Das Formular enthält die Felder zur Eingabe der nötigen Szenariodaten. 
+  \par Das Szenario kann ein beliebiger Name haben. In den Auswahllisten „\texttt{Source Device}“ und „\texttt{Target Device}“ werden die Namen der bereits registrierten Geräte angezeigt. Nach dem Auswahl des Quellgeräts werden die zugehörigen Datenfelder dynamisch in der Auswahlliste „\texttt{Data Field}“ geladen. 
+  \par \par Als Bedingung („\texttt{Condition}“) kann der Benutzer zwischen den Vergleichsoperatoren „\texttt{<}“, „\texttt{>}“ und „\texttt{=}“ wählen. Im Feld „\texttt{Value}“ wird eine Zahl eingegeben, der als Vergleichswert in der Bedingung dient. 
+  \par Nach Auswahl des Zielgeräts werden in die Liste „\texttt{Command}“ die gespeicherten Befehle geladen, die das Zielgerät ausführen kann.
+  \par Dabei werden Quell- und Zielgerät sowie ihre Datenfelder und Befehle dynamisch aus der lokalen Variable \texttt{stored\_data} geladen. 
   \par Durch das Anklicken auf die Schaltfläche „\texttt{BTNaddScenario}“ des Formulars wird ein Post-Request auf die Route „add\_scenario“ mit der Szenariodaten im Body gesendet. Damit wird das Szenario in der Datenbank gespeichert.
   \begin{figure}[h]
     \centering
@@ -1739,29 +1743,51 @@ captionpos=b,
 \par An den ESP-Modulen müssen die erforderlichen Sensoren und Aktoren entsprechend der Beschreibung in Kapitel 4.3 angebunden werden. Der zugehörige Programmcode befindet sich im Projektordner „\texttt{code/esp}“ in jeweils einem Unterordner pro Modul und muss auf das entsprechende Modul übertragen werden.
 \par Damit ist das gesamte System komplett eingerichtet und betriebsbereit.
 \paragraph{Verwendung des Systems}
+
+\paragraph{Verwendung des Systems}
 \par \textbf{}
-\par Der Benutzer verbindet sich mit dem vom Raspberry Pi bereitgestellten WLAN-Netzwerk und ruft die Adresse \texttt{127.0.0.1:8000} im Webbrowser auf. Es wird dem Benutzer angeboten ein Benutzerkonto anzulegen oder sich mit bereits erstellten Konto anzumelden.
-\par Für die Anmeldung gibt der Benutzer einen beliebigen Benutzernamen, seine Email-Adresse und ein beliebiges Passwort ein. Damit ist das Konto erstellt und der Benutzer wird zur Hauptseite weitergeleitet.
-\par Auf der Hauptseite kann der Benutzer durch Klicken auf die Schaltfläche „\texttt{Create New House}“ ein neues Haus mit beliebigem Namen anlegen. 
-\par Beim Klicken auf den House-Block erscheint eine Taste zum Erstellen eines Raums im Haus. Der Benutzer kann Räume mit eindeutigen Namen hinzufügen.
-\par Im Raum-Block gibt es eine Schaltfläche zur Anmeldung eines Geräts. Durch Klicken auf diese Schaltfläche öffnet sich ein Formular zur Anmeldenung eines Geräts, das auf der Abbildung \ref{abb:adddevform} dargestellt ist. 
+\par Nach der Einrichtung aller Komponenten, müssen sich die WLAN-fähigen Module mit dem von Raspberry Pi bereitgestellten Netzwerk verbinden. Das Netzwerk hat folgende Zugangsdaten:
+\begin{Verbatim}[frame=single]
+      SSID:   RaspEsp
+  Password:   mqtt1234
+\end{Verbatim}
+\par Wie auf an der Seite 24 beschrieben, müssen die Daten des Netzwerks an die Geräten übergeben werden. Geräte mit integriertem Display zeigen einen entsprechenden Hinweis zur Verbindung an.
+\par Sobald die Geräte mit dem Netzwerk verbunden sind, beginnen sie ihre Daten zu senden. Die Steuerung der Geräte und die Überwachung der Daten ist jedoch erst möglich, wenn sowohl der Benutzer als auch die Geräte im System registriert sind.
+\par Der Benutzer verbindet sich mit seinem eigenem Smartphone oder Laptop mit dem vom Raspberry Pi bereitgestellten WLAN und ruft im Webbrowser die Adresse \texttt{127.0.0.1:8000} auf. Es wird dem Benutzer angeboten ein Benutzerkonto anzulegen oder sich mit bereits erstellten Konto anzumelden.
+\par Für die Registrierung gibt der Benutzer einen beliebigen Benutzernamen, seine Email-Adresse und ein beliebiges Passwort ein. Damit ist das Konto erstellt und der Benutzer wird eingeloggt und zur Hauptseite weitergeleitet.
+\par Auf der Hauptseite kann der Benutzer ein neues Haus anlegen. Durch das Anklicken auf die Schaltfläche „\texttt{Create New House}“ öffnet sich ein Formular, in das der Benutzer einen beliebigen Namen für das Haus eingeben kann. Der Benutzer kann mehrere Häuser anlegen.
+\par Wenn der Benutzer auf den Haus-Block klickt, erscheint eine Schaltfläche, mit der ein Raum im Haus erstellt werden kann. Der Benutzer kann ein Raum mit eindeutigen Namen hinzufügen. In einem Haus können mehrere Räume erstellt werden.
+\par Im Raum-Block gibt es eine Schaltfläche, um ein Gerät anzumelden. Ein Klick auf diese Taste öffnet ein Formular zur Geräteanmeldung, das in der Abbildung \ref{abb:adddevform} dargestellt ist.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{adddevform.png}
   \caption{Formular zur Anmeldenung eines Geräts im Raum}
   \label{abb:adddevform}
 \end{figure}
-\par Der Benutzer gibt die Geräte-ID und einen eindeutigen Namen ein und speichert diese. Damit wird das Gerät angemeldet und dem Raum zugewiesen. Die Abbildung \ref{abb:deviceinroom} stellt das angemeldete Gerät in dem Raum-Block dar.
+\par Der Benutzer gibt die Geräte-ID und einen eindeutigen Namen ein und speichert diese. Damit ist das Gerät registriert und dem Raum zugeordnet. 
+\par In diesem Beispiel wird ein ESP-Modul mit dem Namen „\texttt{ESP32}“ und mit der Geräte-ID „\texttt{esp32}“ registriert. Die Abbildung \ref{abb:deviceinroom} zeigt das angemeldete Gerät in dem Raum-Block. 
+\par Links im Geräte-Block sind die Gerätedaten angezeigt. In der Mitte sind die Befehle gelistet, die das Gerät ausführen kann. Das Befehl wird bein Klick sofort an das Gerät gesendet. Rechts gibt es eine Schaltfläche zum manuellen Senden der Handshake-Nachricht sowie zum Löschen des Geräts.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{deviceinroom.png}
-  \caption{Darstellung der Gerätedaten}
+  \caption{Gerät in dem Raum}
   \label{abb:deviceinroom}
 \end{figure}
+\par Mit dem gleichen Verfahren kann der Benutzer weitere Geräte hinzufügen. Für die Registrierung ist es nicht erforderlich, dass das Gerät eingeschaltet oder mit dem Raspberry Pi verbunden ist. 
+\par Die Registrierung erfolgt unabhängig davon, ob bereits Daten vom Gerät empfangen wurden. Sobald das Gerät seine Daten an den MQTT-Broker sendet, werden diese unmittelbar auf der Benutzeroberfläche angezeigt. In diesem Fall kann der Benutzer über die Schaltfläche „\texttt{Handshake}“ manuell eine Handshake-Nachricht an das Gerät zu senden. Dadurch werden die Konfigurationsdaten wie verfügbare Datenfelder und unterstützte Befehle abgerufen und aktualisiert.
+\par Nun sind die Geräte angemeldet und der Benutzer kann sowohl ihre Daten sehen, als auch die Steuerbefehle an die Geräte senden. 
+\par Zusätzlich hat der Benutzer die Möglichkeit eigene Automatisierungsszenarien zu erstellen. Ein Klick auf die Schaltfläche „\texttt{My Scenarios}“ öffnet die Seite mit den erstellten Szenarien. Oben auf der Seite liegt die Taste „\texttt{Create Scenario}“, die das in Abbildung \ref{abb:createscenario} dargestellte Formular zum Erstellen des Szenarios öffnet.
+\par In diesem Beispiel wird ein Szenario zum Einschalten der Beleuchtung erstellt. Das Ziel ist es, die Beleuchtung einzuschalten, wenn das Datenfeld „light“ einen Wert kleiner als 20 aufweist.
+\par Das Szenario wurde „Abend“ genannt. Als Quellgerät wurde das Modul „\texttt{M5StickC}“ ausgewählt, das Helligkeitswerte liefert. Als Datenfeld wurde „light“ und als „\texttt{Condition}“ das Symbol „\texttt{<}“ ausgewählt. Im Feld „\texttt{Value}“ wurde der Wert 20 eingegeben. Als Zielgerät wurde das \texttt{ESP32} gewählt, und als „\texttt{Command}“ wurde „\texttt{light\_on}“ ausgewählt, um die Beleuchtung einzuschalten. Die Abbildung stellt das ausgefüllte Formular dar.
+\par In diesem Beispiel wäre es sinnvoll, ein zusätzliches Szenario zum Ausschalten des Lichts zu erstellen. Als „\texttt{Condition}“ wird hierfür das Symbol „\texttt{>}“ gewählt und im Feld „\texttt{Value}“ der Wert 30 eingetragen. Das Zielgerät \texttt{ESP32} soll in diesem Fall den Befehl „\texttt{light\_off}“ ausführen.
+\par Die beiden Szenarien werden wie auf der Abbildung 111 an der Benutzeroberfläche dargestellt.
+\par Nach dem Speichern wird das Szenario automatisch ausgeführt. Der Benutzer kann es jederzeit über die Schaltfläche „\texttt{Delete}“ löschen. 
+\par Damit wird die Beleuchtung automatisch eingeschaltet, wenn es dunkel wird, und automatisch ausgeschaltet, wenn es hell genug ist.
+\par Mit diesem Verfahren wurde gezeigt, dass das System wie geplant funktioniert. Das System zeigt sich in der Praxis als zuverlässig und stabil. Alle Komponenten konnten erfolgreich eingerichtet und reibungslos in das System integeriert werden. Die Geräte lassen sich ohne Probleme registrieren und steuern. Die Interaktion zwischen Benutzer und seine Geräte erfolgt schnell und stabil. Die erstellte Szenarien werden automatisch und ohne Konflikte ausgelöst. Damit erfüllt das System alle gestellten Anforderungen und ist einsatzbereit.
+
+
 
 % „“
-
-
 \subsection{Vorschläge zur Weiterentwicklung und Erweiterung}
 \par Das in dieser Bachelorarbeit entwickelte System stell t eine Grundlage für ein großes Smart-Home-System dar. Das System eignet sich besonders für die Häuser mit weniger als 10 gleichzeitig verwendeten Geräten. Für die Anwendung im realen Betrieb muss das System noch weiterentwickelt werden.
 \par Derzeit dient der Raspberry Pi als zentraler Server des Systems und das System ist ausschließlich über das lokale Netzwerk erreichbar. Für die Weiterentwicklung ist es sinvoll das System über das Internet erreichbar zu machen. Dadurch könnten die Benutzer ihre Geräte aus der Ferne steuern und überwachen. Zu diesem Zweck müssten der Webserver sowie der MQTT-Broker auf einen externen Server mit fester IP-Adresse und Domainnamen ausgelagert werden. Die Geräte würden sich dann mit dem Internetrouter im Haus verbinden und über das Internet mit dem MQTT-Broker kommunizieren.
