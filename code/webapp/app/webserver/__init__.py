@@ -12,6 +12,6 @@ _logger.info("INIT WEBSERVER")
 app = FastAPI()
 # def init_fastapi():
 static_path = os.path.join(os.path.dirname(__file__), "static")
-app.add_middleware(SessionMiddleware, secret_key=Config.SQLALCHEMY_SECRET_KEY)
+#app.add_middleware(SessionMiddleware, secret_key=Config.SESSION_SECRET_KEY)
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 app.include_router(router)

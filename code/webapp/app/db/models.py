@@ -47,7 +47,7 @@ class ScenarioModel(Base):
     name = Column(String(20), nullable=False)
     user_id = Column(Integer, ForeignKey("user.primary_key", ondelete='CASCADE'), nullable=False)
     source_dev = Column(String(20), ForeignKey("device.dev_id", ondelete='CASCADE'), nullable=False)
-    data_field = Column(String(20), nullable=False)  # Trigger value (e.g., temperature)
+    data_field = Column(String(20), nullable=False)
     condition = Column(Enum(ScenarioConditionsEnum), nullable=False)
     value = Column(Integer, nullable=False)
     target_dev = Column(String(20), ForeignKey("device.dev_id", ondelete='CASCADE'), nullable=False)

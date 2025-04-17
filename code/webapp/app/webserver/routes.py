@@ -319,7 +319,7 @@ async def add_scenario(request: Request, scenario_data: services.ScenarioModel, 
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         print("SCENARIO DATA:", scenario_data)
-        res = await services.add_new_scenario(db_session, user_id, scenario_data)
+        res = await services.add_scenario(db_session, user_id, scenario_data)
         print(res)
         return res
     except HTTPException as e:

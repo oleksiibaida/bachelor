@@ -4,7 +4,7 @@ import logging
 class Config:
     SQLALCHEMY_DATABASE_URL = os.environ.get('DATABASE_URL') or 'sqlite+aiosqlite:///app/db/database.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_SECRET_KEY = 'mysercret' #os.environ.get('SECRET_KEY') or os.urandom(24)
+    SESSION_SECRET_KEY = 'mysercret' 
     # MQTT_BROKER_ADDRESS = '192.144.1.10'
     MQTT_BROKER_ADDRESS = '169.254.182.194'
     MQTT_PORT = 1883

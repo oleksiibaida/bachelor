@@ -478,7 +478,7 @@ async def delete_device(db_session, user_id: int, device_id: str, room_id: int =
         _logger.critical(f"Unexpected error: {e}")
         return {'error': e}
     
-async def add_new_scenario(db_session, user_id, scenario_data: ScenarioModel):
+async def add_scenario(db_session, user_id, scenario_data: ScenarioModel):
     try:
         # Check if user has provided devices
         device_owner = await queries.verify_user_device(db_session, user_id, scenario_data.source_dev)
