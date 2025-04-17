@@ -331,7 +331,7 @@ captionpos=b,
 \subsection{Architektur und Datenfluss}
 \par Das entwickelte System basiert auf einer modularen Architektur, die mehrere Komponenten integriert. Die Abbildung \texttt{abb:gesamtsystem} stellt das gesamte System dar.
 \par Der Raspberry Pi dient als zentraler Server des Systems. Der Minicomputer stellt ein WLAN-Netzwerk zur Verfügung und hostet den Webserver sowie den MQTT-Broker. Alle Benutzerinteraktionen, Sensordaten, Datenflüsse und Datenverarbeitungen werden auf dem Raspberry Pi durchgeführt. Das System ist somit stark zentralisiert und arbeitet nur in einem lokalen Netzwerk. Daher müssen sich alle Benutzer mit dem vom Raspberry Pi bereitgestellten WLAN-Netzwerk verbinden.
-\par Die Geräte verbinden sich mit dem WLAN und mit dem MQTT-Broker, die vom Raspberry Pi zur Verfügung gestellt werden. Jedes Gerät verfügt über eine eindeutige Geräte-ID. Die Sensoren senden ihre Daten an den MQTT-Broker, der auf dem Raspberry Pi läuft. Die Aktoren abonnieren die Command-Topics, die für jedes Gerät mit der entsprechenden "Geräte-ID" erstellt werden.
+\par Die Geräte verbinden sich mit dem WLAN und mit dem MQTT-Broker, die vom Raspberry Pi zur Verfügung gestellt werden. Jedes Gerät verfügt über eine eindeutige Geräte-ID. Die Sensoren senden ihre Daten an den MQTT-Broker, der auf dem Raspberry Pi läuft. Die Aktoren abonnieren die Command-Topics, die für jedes Gerät mit der entsprechenden Geräte-ID erstellt werden.
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{gesamt.png}
@@ -369,7 +369,7 @@ captionpos=b,
   \end{tabular}
   \caption{MQTT-Nachrichten}
   \label{tab:mqttnachrichten}
-\end{table}
+\end{table} 
 \par Beim Hinzufügen eines neuen Geräts zum System sendet der dem Broker eine Handshake-Nachricht in das Topic „\texttt{command/ID}“ mit dem Text „\texttt{handshake}“ gesendet. Das Gerät antwortet darauf im Topic „\texttt{handshake/ID}“ mit seiner Konfiguration in JSON-Format. Im Feld „\texttt{data\_fields}“ werden die Felder angegeben, die von den Sensoren erfasst werden. Im Feld „\texttt{commands}“ werden die Befehle angegeben, die das Gerät ausführen kann. Diese Daten werden in der Datenbank gespeichert, können jedoch durch erneutes Senden der Handshake-Nachricht aktualisiert werden. Nach der Handshake-Nachricht werden in das Topic „\texttt{command/ID}“ ausschließlich Nachriten mit gespeicherten Befehlen gesendet. 
 \par Die Nachrichten, die in das Topic „\texttt{data/ID}“ gesendet werden, müssen ein JSON-Format haben. Das erleichtert die Verarbeitung der Daten. 
 \newpage
@@ -379,7 +379,7 @@ captionpos=b,
   \par Das Projekt umfasst verschiedene Hardware-Komponenten, darunter Mikrocontroller, Sensoren und einen Einplatinencomputer.
   \subsubsection{Arduino Uno}
     \par Der Arduino Uno ist ein Mikrocontroller-Board, das sich besonders für die Erfassung und Verarbeitung von Sensordaten eignet. Aufgrund seiner einfachen Programmierbarkeit und vielseitigen Schnittstellen wird es häufig in eingebetteten Systemen sowie in IoT-Anwendungen eingesetzt.
-    \par Das Herz des Boards bildet der Mikrocontroller ATmega328P, der über Flash-Speicher und EEPROM{Electrically Erasable Programmable Read-Only Memory} verfügt. Das EEPROM ermöglicht die nichtflüchtige Speicherung von Daten, so dass diese auch nach dem Ausschalten des Gerätes erhalten bleiben.
+    \par Das Herz des Boards bildet der Mikrocontroller ATmega328P, der über Flash-Speicher und EEPROM\footnote{Electrically Erasable Programmable Read-Only Memory} verfügt. Das EEPROM ermöglicht die nichtflüchtige Speicherung von Daten, so dass diese auch nach dem Ausschalten des Gerätes erhalten bleiben.
     \par Die technischen Spezifikationen des Arduino Uno sind in Tabelle \ref{tab:arduinounotd} dargestellt.
     \begin{table}[h]
       \centering
@@ -949,7 +949,7 @@ captionpos=b,
   |   |--- config/
   |   |--- db/
   |   |--- mqtt/
-  |   |--- webserver/
+  |   |--- webapp/
   |   |--- __init__.py
   |   |--- __main__.py
   |
@@ -958,7 +958,7 @@ captionpos=b,
 \end{Verbatim}
 \begin{itemize}
   \item \textbf{app/} --- Haputmodul des Programms. Enthält die Startdatei \texttt{\_\_main\_\_.py} sowie eine Initialisierungsdatei \texttt{\_\_init\_\_.py}, um das gesamte Modul als Package erkennbar zu machen.
-  \item \textbf{confif/} --- Enthält die Einstellungen für die Datenbankverbindungen, MQTT-Client, Logger und den Webserver.
+  \item \textbf{config/} --- Enthält die Einstellungen für die Datenbankverbindungen, MQTT-Client, Logger und den Webserver.
   \item \textbf{db/} --- Verwaltet der Datenbank. Enthält die Funktionen für die Verbindung zur Datenbank, die Erstellung von Tabellen und die Interaktion mit der Datenbank.
   \item \textbf{mqtt/} --- Enthält die Logik für die Kommunikation über das MQTT-Protokoll. Enthält Code für den Empfang, die Verarbeitung und das Senden von MQTT-Nachrichten.
   \item \textbf{webserver/} --- Stellt die API-Endpunkte und eine Webseite zur Verfügung. Enthält Klassen zur Verwaltung der Benutzerinteraktionen und zur Bereitstellung der Webseite.
@@ -970,8 +970,8 @@ captionpos=b,
   \subsection{Datenbank}
   \paragraph{Struktur der Datenbank}
   \par \textbf{}
-  \par Die Datenbank für dieses Projekt wurde mit SQLAlchemy implementiert. Ziel war es, eine relationale Datenbank zu erstellen, die modular und flexibel aufgebaut ist, sowie die Möglichkeit bietet die Datenbankoperationen ohne direkten SQL-Abfragen durchzufüchren.
-  \par Die Funktionen zur Verwaltung der Datenbank sind in dem Paket „db“ zusammengefasst. Dieses Paket bündelt alle relevanten Komponenten, wie die Konfiguration der Datenbankverbindung, das Session-Management sowie die Definition der Datenbankmodelle. Durch diese modulare Struktur kann das Datenbankpaket in anderen Klassen oder Paketen problemlos importiert werden, um eine zentrale und einheitliche Interaktion mit der Datenbank zu ermöglichen.
+  \par Die Datenbank für dieses Projekt wurde mit \texttt{SQLAlchemy} implementiert. Ziel war es, eine relationale Datenbank zu erstellen, die modular und flexibel aufgebaut ist, sowie die Möglichkeit bietet die Datenbankoperationen ohne direkten SQL-Abfragen durchzufüchren.
+  \par Die Funktionen zur Verwaltung der Datenbank sind in dem Paket „db“ zusammengefasst. Dieses Paket bündelt alle relevanten Komponenten, wie die Konfiguration der Datenbankverbindung, das Session-Management sowie die Definition der Datenbankmodelle. Durch diese modulare Struktur kann das Datenbankpaket in anderen Klassen importiert werden, um eine zentrale und einheitliche Interaktion mit der Datenbank zu ermöglichen.
   \par Die Struktur des Packets sieht wie folgt aus:
   \begin{Verbatim}[frame=single]
     bachelor/code/spa/db/
@@ -1037,7 +1037,7 @@ captionpos=b,
                           \item \textit{\textbf{name:}} Der vom Benutzer erstellte Name des Szenarios
                           \item \textit{\textbf{source\_dev:}} Gerät, das das Szenario auslöst. Ein Fremdschlüssel, der auf der Spalte \texttt{dev\_id} der Tabelle \texttt{device} verweist.
                           \item \textit{\textbf{data\_field:}} Datenfeld des Quellgeräts.
-                          \item \textit{\textbf{condition:}} Bedingung für das Auslösen der Szenario. Mögliche Werte sind „\texttt{>}“, „\texttt{>}“  und „==“, die die Bedingungen „größer als“, „kleiner als“ und „gleich“ repräsentieren.
+                          \item \textit{\textbf{condition:}} Bedingung für das Auslösen der Szenario. Mögliche Werte sind „\texttt{>}“, „\texttt{>}“  und „==“. Diese Werte repräsentieren die Bedingungen „größer als“, „kleiner als“ und „gleich“.
                           \item \textit{\textbf{value:}} Der Wert des Datenfeldes. 
                           \item \textit{\textbf{target\_dev:}} Zielgerät, der ein Befehl beim Auslösen des Szenarios ausführt.
                           \item \textit{\textbf{command:}} Der Befehl, der das Zielgerät ausführt.
@@ -1046,24 +1046,16 @@ captionpos=b,
   \end{itemize}
   \paragraph{Initialisierung der Datenbank}
   \par \textbf{}
-  \par Beim Import des Moduls \texttt{db} wird der Skript \texttt{\_\_init\_\_} aufgerufen. Nach dem Import von benötigten Modulen wird zunächst der Logger initialisiert (Zeile 7). 
-  \par Anschließend wird eine asynchrone Datenbank-Engine \texttt{AsyncEngine} erstellt, die die Verbindungen zur Datenbank verwaltet (Zeile 10). Als Parameter erhält sie den Pfad zur Datenbank. In diesem Programm ist der Pfad im Paket „config“ gespeichert und hat folgende Struktur:
-  \begin{Verbatim}[frame=single]
-    config/__init__.py:
-
-      SQLALCHEMY_DATABASE_URL = 'sqlite+aiosqlite:///app/db/database.db'
-  \end{Verbatim}
-  \par Der \texttt{sessionmaker} (Zeile 12-14) ist eine Fabrikfunktion zur Erstellung von Sessions. Er erhält die Datenbank-Engine sowie zusätzliche Parameter, die das Verhalten der erstellten Sessions steuern. Mit der Funktion \texttt{get\_session()} (Zeile 16-18) wird eine asynchrone \texttt{AsyncSession} erzeugt.
-  \par Die Funktion \texttt{create\_tables()} (Zeile 20-24) initialisiert alle Tabellen in den Klassenmodellen, die von der Klasse \texttt{Base} erben. Somit ist die Datenbankverbindung mit \texttt{SQLAlchemy} initialisiert.
-  \begin{lstlisting}[style=mypython]
+  \par Beim Import des Moduls „\texttt{db}“ wird der Skript „\texttt{\_\_init\_\_}“ aufgerufen (Listing \ref{lst:dbinit}), der die Datenbank initialisiert.
+  \par Zunächst wird eine asynchrone Datenbank-Engine „\texttt{AsyncEngine}“ erstellt, die die Verbindungen zur Datenbank verwaltet (Zeile 7). Als Parameter erhält sie den Pfad zur Datenbank, die im Paket „\texttt{config}“ gespeichert ist.
+  \par Der „\texttt{sessionmaker}“ (Zeile 9-11) ist eine Fabrikfunktion zur Verwaltung von Datenbank-Sessions. Er erhält die Datenbank-Engine sowie zusätzliche Parameter, die das Verhalten der erstellten Sessions steuern. Mit der Funktion \texttt{get\_session()} (Zeile 13-15) wird eine asynchrone \texttt{AsyncSession} erzeugt, die Zugriff auf die Datenbank ermöglicht.
+  \par Die Funktion \texttt{create\_tables()} (Zeile 17-20) initialisiert alle Tabellen in den Klassenmodellen, die von der Klasse \texttt{Base} erben. Somit ist die Datenbankverbindung mit \texttt{SQLAlchemy} initialisiert.
+  \begin{lstlisting}[style=mypython, label={lst:dbinit}, caption={db:\_\_init\_\_}]
     from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
     from sqlalchemy.orm import sessionmaker
     from app.config import Config
     from . import models
     from .base import Base
-    
-    logger = Config.logger_init()
-    logger.info("START DB")
     
     async_engine = create_async_engine(Config.SQLALCHEMY_DATABASE_URL)
     
@@ -1079,26 +1071,24 @@ captionpos=b,
       async with async_engine.begin() as connection:
         await connection.run_sync(Base.metadata.create_all)
         await connection.commit()
-        logger.info("TABLES CREATED")
   \end{lstlisting}
   \paragraph{Modelle}
   \par \textbf{}
-  \par In der Datei „models.py“ sind die Datenbank-Tabelle als Python-Klassen dargestellt, die von der \texttt{Base} erben. 
-  \par Zunächst müssen die benötigten Module importiert werden. Das Modul \texttt{bcrypt} wird für die Entschlüssertung und Verifizierung der Passwörter verwendet. Die Module aus der Bibliothek \texttt{SQLAlchemy} enthalten die Funktionen für die Interaktionen mit der Datenbank. Das Modul \texttt{.base} entspricht der Datei \texttt{base.py} (Listing \ref{lst:dbbase}). In dieser Datei wird lediglich \texttt{declarative\_base} importiert und in der Variablen \texttt{Base} initialisiert. Dieser Schritt ist notwendig, um auf die \texttt{Base} in anderen Skripten zugreifen zu können.
+  \par In der Datei „\texttt{models.py}“ sind die Datenbank-Tabelle als Python-Klassen definiert. 
+  \par Zunächst müssen die benötigten Module importiert werden. Das Modul „\texttt{bcrypt}“ wird für die Entschlüssertung und Verifizierung der Passwörter verwendet. Die Module aus der Bibliothek „\texttt{SQLAlchemy}“ enthalten die Funktionen für die Interaktionen mit der Datenbank. 
+  \par Das Modul „\texttt{.base}“ entspricht der Datei „\texttt{base.py}“ (Listing \ref{lst:dbbase}). In dieser Datei wird lediglich „\texttt{declarative\_base}“ importiert und in der Variablen \texttt{Base} initialisiert. Dieser Schritt ist notwendig, um auf die \texttt{Base} in anderen Skripten zugreifen zu können.
   \begin{lstlisting}[frame=single, style=py, numbers=left, label={lst:dbbase}, caption={db: base.py}]
     from sqlalchemy.orm import declarative_base
     Base = declarative_base()
   \end{lstlisting}   
  
-  \par Im Listing \ref{lst:housemodel} wird die Tabelle „house“ als Python-Klasse „\texttt{HouseModel}“ definiert. Der Name der Tabelle wird über die Variable \texttt{\_\_tablename\_\_} festgelegt. Die Spalten sind als Objekte der Klasse \texttt{Column} definiert, wobei jedem Objekt entsprechende Parameter zugewiesen werden.
+  \par Im Listing \ref{lst:housemodel} ist die Tabelle „\texttt{house}“ als Python-Klasse „\texttt{HouseModel}“ definiert. Der Name der Tabelle wird über die Variable „\texttt{\_\_tablename\_\_}“ festgelegt. Die Spalten sind als Objekte der Klasse „\texttt{Column}“ aus der Bibliothek „\texttt{SQLAlchemy}“ definiert, wobei jedem Objekt entsprechende Parameter zugewiesen werden.
   \par In \texttt{SQLAlchemy} muss eine Beziehung zwischen dem \texttt{ParentModel} und dem \texttt{ChildModel} definiert werden, wenn der Fremdschlüssel des \texttt{ChildModel} auf das \texttt{ParentModel} verweist. Diese Beziehung dient dazu, Konflikte beim Löschen oder Aktualisieren von Einträgen zu vermeiden.
-  \par In der \texttt{HouseModel}-Klasse  wird die Beziehung zwischen der Tabelle „house“ und der Tabelle „room“ durch das Attribut \texttt{rooms} (Zeile 9-11) definiert. Diese Beziehung legt fest, dass alle zugehörigen Räume gelöscht werden, wenn das Haus gelöscht wird.
-  \par Des Weiteren sorgt die Klassenvariable \texttt{\_\_table\_args\_\_} (Zeile 13) dafür, dass die Kombination der Spalten \texttt{name} und \texttt{user\_id} eindeutig ist. Das bedeutet, dass ein Benutzer nicht mehrere Häuser mit dem gleichen Namen anlegen kann.
-
+  \par In der Klasse \texttt{HouseModel} wird die Beziehung zwischen der Tabelle „\texttt{house}“ und der Tabelle „\texttt{room}“ durch das Attribut \texttt{rooms} (Zeile 10-12) definiert. Diese Beziehung legt fest, dass alle zugehörigen Räume gelöscht werden, wenn das Haus gelöscht wird.
+  \par Des Weiteren sorgt die Klassenvariable „\texttt{\_\_table\_args\_\_}“ (Zeile 14) dafür, dass die Kombination der Spalten „\texttt{name}“ und „\texttt{user\_id}“ eindeutig ist. Damit wird festgelegt, dass die Namen der Häuser eines Benutzers eindeutig sein müssen.
   \begin{lstlisting}[style=mypython, label={lst:housemodel}, caption={models.py: HouseModel}]
   class HouseModel(Base):
     __tablename__ = 'house'
-    
     primary_key = Column(Integer, primary_key=True, 
         autoincrement=True, nullable=False)
     name = Column(String(50), nullable=False)
@@ -1111,33 +1101,169 @@ captionpos=b,
 
     __table_args__ = (UniqueConstraint('name', 'user_id'),)
   \end{lstlisting}
-  \par Die Klasse \texttt{UserModel} (Listing \ref{lst:usermodel}) enthält neben der Definition der Spalten eine Funktion zur Validierung von Passwörtern. Die Funktion erhält ein Passwort als Parameter und vergleicht es mit dem im Modell gespeicherten, gehashten Passwort. Dadurch muss das gespeicherte Passwort nicht entschlüsselt werden.
+  \par Die Klasse „\texttt{UserModel}“ (Listing \ref{lst:usermodel}) repräsentiert die Tabelle „\texttt{user}“. Neben der Definition der Spaltenenthält enthält diese Klasse eine Funktion zur Validierung von Passwörtern. Die Funktion erhält ein Passwort als Parameter und vergleicht es mit dem im Modell gespeicherten und verschlüsselten Passwort. Dadurch muss das gespeicherte Passwort nicht entschlüsselt werden.
   \begin{lstlisting}[style=mypython, label={lst:usermodel},caption={models.py: UserModel}]
     class UserModel(Base):
     __tablename__ = 'user'
     def verify_password(self, password:str):
         return bcrypt.checkpw(password.encode('utf-8'), self.password) 
-    
     # Definition der Spalten ...
   \end{lstlisting}
-  \par \textbf{WEIß NICHT OB HIER SINVOLL IST; VLT EINFAHC WEG}
-  \par Die Klassen \texttt{RoomModel} und \texttt{DeviceModel} haben eine Beziehung zur Klasse \texttt{RoomDeviceModel}. In der Klasse \texttt{RoomDeviceModel} werden die Beziehungen zu den beiden Klassen definiert. Damit wird sichergestellt, dass beim Löschen eines Raumes oder eines Gerätes auch die entsprechende Verknüpfung gelöscht wird. Dabei ist zu beachten, dass beim Löschen eines Raumes das zum Raum gehörende Gerät nicht gelöscht wird und umgekehrt.
+  
+  \par Die Klasse „\texttt{RoomModel}“ (Listing \ref{lst:roommodel}) stellt die Datenbanktabelle „\texttt{room}“ dar. 
+  \par Diese Klasse enthält eine Beziehung zu der Klasse „\texttt{RoomDeviceModel}“. Dies ist erforderlich, um vom Eintrag in der Tabelle „\texttt{room\_device}“ direkt auf das zugehörige Raum-Objekt zugreifen zu können. 
+  \par Der Parameter „\texttt{cascade='all, delete-orphan'}“ stellt sicher, dass beim Löschen eines Raumes automatisch alle zugehörigen Einträge in der Verknüpfungstabelle gelöscht werden.
+  \par Zusätzlich wird durch „\texttt{back\_populates}“ die Beziehung bidirektional definiert. Das bedeutet, dass von einem Geräteeintrag auf den zugehörigen Raum zugegriffen werden kann.
+  \par Der Parameter „\texttt{lazy='selectin'}“ legt fest, dass verknüpfte Geräte zusammen mit dem Raum geladen werden. Dadurch wird die Anzahl der Datenbankabfragen reduziert. 
+  \begin{lstlisting}[style=mypython, label={lst:roommodel}, caption={models.py: RoomModel}]
+  class RoomModel(Base):
+    __tablename__ = 'room'
+
+    # Definition der Spalten ...    
+
+    devices = relationship("RoomDeviceModel", back_populates="room", cascade="all, delete-orphan", lazy='selectin')
+    __table_args__ = (UniqueConstraint('name', 'house_id'),)
+
+  \end{lstlisting}
+  \par Die Klasse „\texttt{DeviceModel}“ \ref{lst:devicemodel} repräsentiert die Datenbanktabelle „\texttt{device}“, in der alle registrierten Geräte gespeichert werden.
+  \par Die Tabelle enthält einen Fremdschlüssel „\texttt{user\_id}“, der auf die Tabelle „\texttt{user}“ verweist. Dieser Fremdschlüssel gibt an, welchem Benutzer das jeweilige Gerät zugeordnet ist. Mit dem Parameter „\texttt{ondelete='CASCADE'}“ wird sichergestellt, dass beim Löschen eines Benutzers auch alle zugehörigen Geräteeinträge automatisch entfernt werden. 
+  \par Die Klassenvariable „\texttt{\_\_table\_args\_\_}“ stellt sicher, dass ein Benutzer nicht mehrere Geräte mit der gleichen Geräte-ID registrieren kann. 
+  \par In Zeile 15 ist die Beziehung zur Klasse „\texttt{RoomDeviceModel}“ definiert. Dies ist notwendig, um von einem Geräteeintrag auf die zugehörigen Verknüpfungen in der Tabelle „\texttt{room\_device}“ zugreifen zu können. 
+  \par Ähnlich wie in der Klasse „\texttt{RoomModel}“ sorgen die Parameter dafür, dass verknüpfte Räume zusammen mit dem Gerät geladen werden und dass beim Löschen eines Geräts auch alle zugehörigen Einträge in der Verknüpfungstabelle automatisch entfernt werden.
+  \par Zusätzlich sind in der Klasse „\texttt{DeviceModel}“ die Beziehungen zu der Klasse „\texttt{ScenarioModel}“ definiert. Diese Beziehungen stellen sicher, dass beim Löschen eines Geräts alle zugehörigen Szenarien entfernt werden. Gleichzeitig ermöglichen sie den direkten Zugriff auf die entsprechenden Szenarien aus dem Geräteeintrag heraus.
+  \par Insgesamt sorgen diese \texttt{relationship}-Definitionen für eine konsistente und wartungsfreundliche Datenbankstruktur. Sie stellen sicher, dass abhängige Objekte automatisch verwaltet werden und verhindern typische Fehler beim Löschen oder Bearbeiten von Einträgen.
+  \par Die Klasse „\texttt{RoomDeviceModel}“ (Listing \ref{lst:roomdevmodel}) stellt die Datenbanktabelle „\texttt{roomdevice}“ dar. In dieser Tabelle werden die Verknüpfungen zwischen Räumen und Geräten gespeichert.
+  \par Die Tabelle enthält zwei Fremdschlüssel „\texttt{room\_id}“ und „\texttt{device\_primary}“. Der Fremdschlüssel „\texttt{room\_id}“ verweist auf die Tabelle „\texttt{room}“. Der Fremdschlüssel „\texttt{device\_primary}“ verweist auf die Tabelle „\texttt{device}“. 
+  \par Der Parameter „\texttt{ondelete='CASCADE'}“ stellt sicher, dass beim Löschen des zugehörigen Raumes oder Gerätes die entsprechende Zuordnung automatisch gelöscht wird.
+  \par Die Klasse definiert auch die Beziehungen zu den Klassen „\texttt{RoomModel}“ und „\texttt{DeviceModel}“. Dies ermöglicht den direkten Zugriff auf die entsprechenden Objekte.
+  \par Zusätzlich wird in Zeile 14 definiert, dass ein Gerät nicht mehrfach demselben Raum zugeordnet werden kann. 
+  \begin{lstlisting}[style=mypython, label={lst:devicemodel}, caption={models.py: DeviceModel}]
+  class DeviceModel(Base):
+    __tablename__ = 'device'
+
+    primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    dev_id = Column(String(20), nullable=False)
+    name = Column(String(50), nullable=False)
+    user_id = Column(Integer,  
+        ForeignKey('user.primary_key', ondelete='CASCADE'), 
+        nullable=False, unique=False)
+    description = Column(String(250), nullable=True)
+    data_fields = Column(String(256), nullable=True)
+    commands = Column(String(256), nullable=True)
+    __table_args__ = (UniqueConstraint('user_id', 'dev_id'),)
+
+    dev_rooms = relationship("RoomDeviceModel", back_populates="device", 
+        cascade="all, delete-orphan", lazy='selectin')
+
+    scenarios_if = relationship("ScenarioModel", 
+        foreign_keys=[ScenarioModel.source_dev], 
+        back_populates="if_device", cascade="all, delete-orphan", 
+        lazy="selectin")
+    scenarios_then = relationship("ScenarioModel", 
+        foreign_keys=[ScenarioModel.target_dev], 
+        back_populates="then_device", 
+        cascade="all, delete-orphan", lazy="selectin")
+  \end{lstlisting}
+  \begin{lstlisting}[style=mypython, label={lst:roomdevmodel}, caption={models.py: RoomDeviceModel}]
+  class RoomDeviceModel(Base):
+    __tablename__ = 'room_device'
+    primary_key = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    room_id = Column(Integer, 
+        ForeignKey('room.primary_key', ondelete='CASCADE'), 
+        nullable=False)
+    device_primary = Column(Integer, 
+        ForeignKey('device.primary_key', ondelete='CASCADE'), 
+        nullable=False)
+
+    room = relationship("RoomModel", back_populates="devices")
+    device = relationship("DeviceModel", back_populates="dev_rooms")
+
+    __table_args__ = (UniqueConstraint('room_id', 'device_primary'),)
+  \end{lstlisting}
+  \par Die Klasse „\texttt{ScenarioModel}“ (Listing \ref{lst:scenariomodel}) repräsentiert die Datenbanktabelle „\texttt{scenario}“, in der benutzerdefinierte Automatisierungsszenarien gespeichert werden.
+  \par Der Fremdschlüssel „\texttt{user\_id}“ (Zeile 12-14) verknüpft das Szenario mit dem zugehörigen Benutzer. Durch die Angabe von „\texttt{ondelete='CASCADE'}“ wird sichergestellt, dass beim Löschen eines Benutzers auch alle zugehörigen Szenarien automatisch entfernt werden.
+  \par Die Spalte „\texttt{source\_dev}“ (Zeile 15-17) speichert die Geräte-ID des Quellgeräts. In der Spalte „\texttt{target\_dev}“ (Zeile 21-23) wird die Geräte-ID des Zielgeräts gespeichert. Beide Spalten verweisen auf die Spalte „\texttt{dev\_id}“ der Tabelle „\texttt{device}“.
+  \par In der Spalte „\texttt{data\_field}“ (Zeile 18) wird das Datenfeld gespeichert, dessen Wert als Auslöser für das Szenario geprüft wird.
+  \par Die Spalte „\texttt{condition}“ (Zeile 19) stellt die Bedingung, die erfüllt sein muss, damit das Szenario ausgelöst wird. Mögliche Vergleichsoperatoren sind in der zugehörigen Enum-Klasse „\texttt{ScenarioConditionsEnum}“ (Zeile 2-5) festgelegt.
+  \par Die Beziehungen „\texttt{if\_device}“ und „\texttt{then\_device}“ verweisen auf die Spalte „\texttt{device\_id}“ der Klasse „\texttt{DeviceModel}“. Sie ermöglichen den direkten Zugriff auf die zugehörigen Geräte. In der Klasse „\texttt{DeviceModel}“ sind diese unter den Bezeichungen „\texttt{scenarios\_if}“ und „\texttt{scenarios\_then}“ (Listing \ref{lst:devicemodel}, Zeile 18–25) definiert.
+  \begin{lstlisting}[style=mypython, label={lst:scenariomodel}, caption={models.py: ScenarioModel}]
+  class ScenarioModel(Base):
+    class ScenarioConditionsEnum(enum.Enum):
+        greater = ">"
+        less = "<"
+        equal = "=="
+
+    __tablename__ = "scenario"
+
+    primary_key = Column(Integer, primary_key=True, 
+        autoincrement=True, nullable=False)
+    name = Column(String(20), nullable=False)
+    user_id = Column(Integer, 
+        ForeignKey("user.primary_key", ondelete='CASCADE'), 
+        nullable=False)
+    source_dev = Column(String(20), 
+        ForeignKey("device.dev_id", ondelete='CASCADE'), 
+        nullable=False)
+    data_field = Column(String(20), nullable=False)
+    condition = Column(Enum(ScenarioConditionsEnum), nullable=False)
+    value = Column(Integer, nullable=False)
+    target_dev = Column(String(20), 
+        ForeignKey("device.dev_id", ondelete='CASCADE'), 
+        nullable=False)
+    command = Column(String(50), nullable=False)
+
+    if_device = relationship("DeviceModel", 
+        foreign_keys=[source_dev], lazy='selectin')
+    then_device = relationship("DeviceModel", 
+        foreign_keys=[target_dev], lazy='selectin')
+  \end{lstlisting}
+  \par Die beschriebenen Datenbankmodelle bilden ein konsistentes Schema. Die Beziehungen zwischen den Tabellen sind logisch strukturiert und berücksichtigen potenzielle Konflikte bei Datenänderungen. Sie ermöglichen einen effizienten Zugriff auf zusammengehörige Objekte. Mithilfe bidirektionaler Beziehungen sowie automatischer Löschregeln wird die Datenintegrität gewahrt und die Handhabung im Programmcode vereinfacht.
   \paragraph{Interaktionen mit der Datenbank}
   \textbf{}
-  \par In der Datei \texttt{queries.py} sind die benötigten Funktionen für die Interaktion mit der Datenbank definiert. Diese Funktionen ermöglichen das Einfügen, Löschen, Abrufen und Aktualisieren der Daten in der Datenbank.
-  \par Jede Funktion bekommt ein \texttt{AsyncSession} als erster Parameter. Über diese Session werden die Operationen in der Datenbank duchgeführt. Das erlaubt auch asynchroner Zugriff zur Datenbank.
-  \par Als Beispiel werde ich die Struktur der Funktion \texttt{add\_user()} näher erläutern. Diese Funktion fügt einen neuen Benutzer in die Datenbank ein. Die Funktion erhält als Parameter \texttt{AsyncSession} und die Benutzerdaten, d.h. Benutzername, Email und Passwort. Zuerst wird das Passwort verschlüsselt. Anschließend wird ein Objekt \texttt{new\_user} der Klasse \texttt{UserModel} mit den übergebenen Parametern erzeugt. Dieses Objekt wird mit dem Befehl \texttt{db\_session.add(new\_user)} in die Datenbank eingefügt. Nach dem Einfügen muss der Befehl \texttt{db\_session.commit()} aufgerufen werden, um die Änderungen in der Datenbank zu speichern. Anschließend wird das \texttt{new\_user} aktualisiert und der Primärschlüssel zurückgegeben.
-  \par Beim Arbeiten mit der Datenbank müssen mögliche Fehler behandelt werden. Deshalb enthält jede Funktion einen \texttt{Try-Catch-Block}. 
-  \par Ein \texttt{IntegrityError} wird ausgelöst, wenn eine Datenbankoperation gegen eine Integritätsbedingung der Datenbank verletzt. Er wird bei Verletzung einer Fremdschlüsselbeziehung, der Unique Constraints oder beim Einfügen von Daten des falschen Typs erzeugt. 
+  \par In der Datei „\texttt{queries.py}“ sind die benötigten Funktionen für die Interaktion mit der Datenbank definiert. Diese Funktionen ermöglichen das Einfügen, Löschen, Abrufen und Aktualisieren der Daten in der Datenbank.
+  \par Jede Funktion bekommt ein \texttt{AsyncSession}-Objekt als erster Parameter. Über dieses Session-Objekt werden die Datenbankoperationen asynchron ausgeführt.
+  \par Zur Behandlung möglicher Datenbankfehler enthält jede Funktion einen Try-Catch-Block. 
+  \par Ein \texttt{IntegrityError} wird ausgelöst, wenn eine Operation gegen eine Integritätsbedingung der Datenbank verstößt. Diese Fehler wird bei Verletzung einer Fremdschlüsselbeziehung, eines Unique Constraints oder beim Einfügen von Werten mit einem falschen Typ erzeugt. 
   \par Ein \texttt{SQLAlchemyError} umfasst alle Fehler, die von SQLAlchemy ausgelöst werden, wenn die Operation nicht erfolgreich war. Dieser Fehler wird bei Syntaxfehlern in der SQL-Abfrage oder bei Fehlern in der Datenbankverbindung ausgelöst.
-  \par Alle anderen möglichen Fehler, die keine \texttt{SQLAlchemy}-Fehler sind, werden im Block \texttt{Exception} gesammelt.
+  \par Alle sonstigen Fehler, die nicht durch \texttt{SQLAlchemy} verursacht sind, werden in einem \texttt{Exception}-Block behandelt.
   \par Bei jedem Fehler wird der Fehler geloggt und die Session zurückgesetzt, damit keine unvollständigen Daten in der Datenbank gespeichert werden. Anschließend wird eine \texttt{HTTPException} mit Status und Beschreibung des Fehlers zurückgegeben.
-
+  \par Diese ist eine standardisierte Behandlung der Fehler in allen Funktionen, die Datenbankoperationen ausführen. 
+  \par Als Beispiel wird im Folgenden die Struktur der Funktion \texttt{add\_user()} näher erläutert. Diese Funktion fügt einen neuen Benutzer in die Datenbank ein. 
+  \par Die Funktion erhält als Parameter ein \texttt{AsyncSession}-Objekt sowie die Benutzerdaten: Benutzername, Email und Passwort. 
+  \par Zunächst wird das Passwort verschlüsselt und in der Variable „\texttt{password\_hash}“ gespeichert (Zeile 3-4). 
+  \par Anschließend wird ein Objekt „\texttt{new\_user}“ der Klasse \texttt{UserModel} mit den übergebenen Parametern erzeugt (Zeile 5-6). Dieses Objekt wird der Session hinzugefügt (Zeile 7). Danach werden die Änderungen in der Datenbank gespeichert (Zeile 8). Anschließend wird das \texttt{new\_user}-Objekt aktualisiert (Zeile 9), um den generiert Primärschlüssel zu bekommen. Dieser wird zurückgegeben (Zeile 10).
+  \par Existiert der übergebene Benutzername oder die E-Mail-Adresse bereits in der Datenbank, wird ein \texttt{IntegrityError} ausgelöst, und die entsprechende Fehlermeldung wird zurückgegeben.
+  \par Tritt ein Fehler bei der Ausführung der SQL-Abfrage auf so wird ein \texttt{SQLAlchemyError} ausgelöst.
+  \par Alle sonstigen Fehler, die nicht direkt durch SQLAlchemy verursacht werden, werden durch den \texttt{Exception}-Block behandelt.
+  \begin{lstlisting}[style=mypython, label={lst:adduser}, caption={queries.py: add\_user}]
+async def add_user(db_session: AsyncSession, username: str, email: str, password: str):
+  try:
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), 
+                        bcrypt.gensalt())
+    new_user = UserModel(username=username, email=email, 
+        password=password_hash)
+    db_session.add(new_user)
+    await db_session.commit()
+    await db_session.refresh(new_user)
+    return new_user.primary_key
+  except IntegrityError as e:
+    _logger.error(f"IntegrityError: {e}")
+    await db_session.rollback()
+    raise HTTPException(status_code=422, detail="ALREADY EXISTS")
+  except SQLAlchemyError as e:
+    _logger.error(f"SQLAlchemyError: {e}")
+    await db_session.rollback()
+    raise HTTPException(status_code=500, detail="DATABASE ERROR")
+  except Exception as e:
+    _logger.error(f"Exception: {e}")
+    await db_session.rollback()
+    raise HTTPException(status_code=500, detail="UNEXPECTED ERROR")
+  \end{lstlisting}
 % 
   \subsection{Webbasierte Schnittstelle (API)} 
   \par Um die Benutzerinteraktionen mit dem System zu ermöglichen, muss eine Schnittstelle gebaut werden. Diese Schnittstelle muss den gesicherten Zugriff zu dem System bieten, die notwendigen Informationen bereitstellen, auf die Benutzerinteraktionen reagieren und die Daten verwalten. Nach sorgfältiger Abwägung verschiedener Optionen habe ich mich für die Implementierung einer webbasierten Schnittstelle auf Basis von \texttt{FastAPI} entschieden.
   \par Die zentrale Idee hinter der Entwicklung der API besteht darin, dem Benutzer eine effiziente und sichere Möglichkeit zu bieten, IoT-Geräte in einer strukturierten Umgebung zu verwalten. Dies umfasst das Hinzufügen neuer Geräte, die Gruppierung dieser Geräte in Räumen sowie die Verwaltung mehrerer Räume innerhalb eines Hauses. Darüber hinaus ermöglicht die API die kontinuierliche Überwachung und Steuerung der hinzugefügten Geräte.
-  \par Der Webserver ist, wie auch anderen Komponenten, in einem Paket namens \texttt{webserver} srukturiert. Die Struktur des Packets ist wie folgt aufgebaut:
+  \par Der Webserver ist, wie auch anderen Komponenten, in einem Paket namens „\texttt{webserver}“ srukturiert. Die Struktur des Packets ist wie folgt aufgebaut:
   \begin{Verbatim}[frame=single]
     bachelor/code/spa/webserver
     |
@@ -1147,40 +1273,54 @@ captionpos=b,
     |--- templates/
     |--- static/
   \end{Verbatim} 
-  % „“
+  \par Die Datei „\texttt{\_\_init\_\_.py}“ dient zur Initialisierung der Webanwendung. Zunächst wird eine Instanz der Klasse \texttt{FastAPI} erzeugt, die als zentrales Anwendungsobjekt dient. Anschließend wird das statische Verzeichnis eingebunden, sodass HTML-, CSS- und JavaScript-Dateien direkt vom Server ausgeliefert werden können. Abschließend wird der \texttt{Router} eingebunden, über den die definierten HTTP-Routen der Anwendung bereitgestellt werden.
+  \par In der Datei „\texttt{routes.py}“ sind alle HTTP-Routen definiert. Diese werden in einem Router gesammelt und an das zentrale Anwendungsobjekt angebunden. 
+  \par Die Datei „\texttt{services.py}“ enthält die Funktionen zur Verarbeitung der HTTP-Anfragen, die in der Datei „\texttt{routes.py}“ aufgerufen werden. Außerdem sind in der Datei die \texttt{Pydantic}-Modelle sowie die Funktionen zur Verwaltung des WebSockets implementiert. 
+  \par Im Ordner „\texttt{templates}“ befinden sich die HTML-Dateien, die von dem Server ausgeliefert werden. Der Ordner „\texttt{static}“ enthält die Styling-Dateien und der Unterordner „\texttt{js}“ das JavaScript-Skript zur dynamische Erstellung der Weboberfläche.
   \subsubsection{Sicherheit}
   \par \textbf{}
-  \par Sicherheit spielt bei diesem System eine wichtige Rolle. Für die API gibt es zwei kritische Sicherheitspunkte: die Übertragung sensibler Daten und die Authentifizierung der Benutzer.
-  \par Um sensible Daten, wie Passwörter, sicher zu speichern, wird der Algorithmus \texttt{bcrypt} verwendet. Anstatt Passwörter im Klartext zu speichern, wird bei der Registrierung eines Benutzers das Passwort gehasht. Der Hash wird in der Datenbank gespeichert, nicht das Passwort selbst. Bei der Anmeldung wird das eingegebene Passwort mit dem gespeicherten Hash verglichen, ohne dass das Originalpasswort jemals entschlüsselt wird. Dadurch sind die Benutzerdaten auch dann geschützt, wenn die Datenbank kompromittiert wird.
-  \par Zur Authentifizierung und Identifizierung des Benutzers nach erfolgreicher Anmeldung wird das JWT-Verfahren\footnote{JSON Web Token} verwendet. Die Funktion \texttt{services.create\_jwt\_token()} generiert ein JWT-Token, das an den Benutzer zurückgegeben wird. Dieses Token enthält die Benutzer-ID in verschlüsselter Form, besitzt eine in der Konfigurationsdatei definierte Ablaufzeit und wird mit einem geheimen Schlüssel signiert.
+  \par Sicherheit spielt in diesem System eine wichtige Rolle. Für die API gibt es zwei kritische Sicherheitspunkte: die Übertragung sensibler Daten und die Authentifizierung der Benutzer.
+  \par Um sensible Daten, wie Passwörter, sicher zu speichern, wird der Algorithmus „\texttt{bcrypt}“ verwendet. Anstatt Passwörter im Klartext zu speichern, wird bei der Registrierung eines Benutzers das Passwort gehasht. Der Hash wird in der Datenbank gespeichert, nicht das Passwort selbst. Bei der Anmeldung wird das eingegebene Passwort mit dem gespeicherten Hash verglichen, ohne dass das Originalpasswort jemals entschlüsselt wird. Dadurch sind die Benutzerdaten auch dann geschützt, wenn die Datenbank kompromittiert wird.
+  \par Zur Authentifizierung und Identifizierung des Benutzers nach erfolgreicher Anmeldung wird das JWT-Verfahren\footnote{JSON Web Token} verwendet. Die Funktion \texttt{create\_jwt\_token()} in der Datei „\texttt{services.py}“ generiert ein JWT-Token, das an den Benutzer zurückgegeben wird. Dieses Token enthält die Benutzer-ID in verschlüsselter Form, besitzt eine in der Konfigurationsdatei definierte Ablaufzeit und wird mit einem geheimen Schlüssel signiert.
   \par Das Token muss clientseitig gespeichert und bei jeder Anfrage im HTTP-Header mitgesendet werden, um die Authentifizierung des Benutzers sicherzustellen. Der entsprechende Header muss dabei die folgende Struktur aufweisen:
   \begin{Verbatim}[frame=single]
     headers: {
         "auth": "Bearer <JWT TOKEN>"
     }
   \end{Verbatim}
-  \par Das Request-Objekt wird an die Funktion \texttt{routes.get\_token()} übergeben, die das JWT-Token aus dem HTTP-Header extrahiert. Dabei wird geprüft, ob der Header das Feld „\texttt{auth}“ enthält und ob dessen Wert mit dem Schlüsselwort „\texttt{Bearer}“ beginnt. Ist dies nicht der Fall, wird eine Exception ausgelöst, da das Token in einem ungültigen Format vorliegt. Im normalen Ablauf wird das Token aus dem Header extrahiert und zur weiteren Verarbeitung zurückgegeben.
+  \par Das Request-Objekt wird an die Funktion \texttt{get\_token()} in der Datei „\texttt{routes.py}“ übergeben, die das JWT-Token aus dem HTTP-Header extrahiert. Dabei wird geprüft, ob der Header das Feld „\texttt{auth}“ enthält und ob dessen Wert mit dem Schlüsselwort „\texttt{Bearer}“ beginnt. Ist dies nicht der Fall, wird eine Exception ausgelöst, da das Token in einem ungültigen Format vorliegt. Im normalen Ablauf wird das Token aus dem Header extrahiert und zur weiteren Verarbeitung zurückgegeben.
   \par Die Verifizierung des Tokens stellt eine grundlegende Voraussetzung für alle API-Funktionen dar. Nur gültige und nicht abgelaufene Tokens ermöglichen den Zugriff auf geschützte Ressourcen der API.
-  \par Das erhaltene Token wird an die Funktion \texttt{services.verify\_token()} übergeben, um seine Gültigkeit zu überprüfen. Zunächst wird das Token entschlüsselt, und die darin enthaltene Benutzer-ID wird extrahiert.  Ist das Token abgelaufen, ungültig, fehlerhaft oder fehlen notwendige Informationen, wird eine entsprechende Fehlermeldung ausgegeben und eine HTTP-Exception mit dem entsprechenden Statuscode ausgelöst. Andernfalls wird die Benutzerkennung für nachfolgende Verarbeitungsschritte zur Verfügung gestellt.
+  \par Das erhaltene Token wird an die Funktion \texttt{verify\_token()} in der Datei „\texttt{services.py}“ übergeben, um dessen Gültigkeit zu prüfen. Zunächst wird das Token entschlüsselt, und die darin enthaltene Benutzer-ID wird extrahiert. 
+  \par Ist das Token abgelaufen, ungültig, fehlerhaft oder unvollständig, wird eine entsprechende Fehlermeldung ausgegeben und eine HTTP-Exception mit dem entsprechenden Statuscode ausgelöst. Andernfalls wird die Benutzer-ID für nachfolgende Verarbeitungsschritte zur Verfügung gestellt.
   \paragraph{Anmeldung}
   \par \textbf{}
-  \par Damit ein Benutzer die Funktionen der API nutzen kann, muss zunächst ein Konto erstellt werden. Dies erfolgt durch Senden eines \texttt{POST}-Requests an die Route \texttt{/sign\_up}. Der Request muss die erforderlichen Parameter \texttt{username}, \texttt{email} und \texttt{password} enthalten. Nach Erhalt der Anfrage wird die Funktion \texttt{signup\_post()} aufgerufen, die die eingegebenen Daten verarbeitet und die Benutzerregistrierung durchführt.
-  \par Die Registrierungsdaten werden als \texttt{SignUpModel}-Objekt entgegengenommen und an die Funktion \texttt{services.signup\_user()} weitergeleitet. Diese Funktion übernimmt die Validierung der Eingaben, indem sie prüft, ob alle erforderlichen Felder ausgefüllt wurden. Wenn ein Wert fehlt, wird die entsprechende Fehlermeldung geloggt und zurückgegeben. Sind alle Daten vollständig, wird der Benutzer mit der Funktion \texttt{queries.add\_user()} in der Datenbank gespeichert. Diese Funktion gibt ein Fehler zurück, wenn der Benutzername oder die Email schon in der Datenbank gespeichert sind.
-  \par Nach erfolgreicher Speicherung wird ein JWT-Token generiert und zurückgegeben, das die Benutzer-ID enthält. Mit diesem Token kann der Benutzer direkt angemeldet werden. Tritt während des Prozesses eine Exception auf, so wird diese geloggt und eine entsprechende Fehlermeldung ausgegeben.
+  \par Damit ein Benutzer die Funktionen der API nutzen kann, muss zunächst ein Konto erstellt werden. Dies erfolgt durch Senden eines \texttt{POST}-Requests an die Route „\texttt{/sign\_up}“. Der Request muss die erforderlichen Parameter enthalten: \texttt{username}, \texttt{email} und \texttt{password}. Nach Erhalt der Anfrage wird die Funktion \texttt{signup\_post()} aufgerufen, die die eingegebenen Daten verarbeitet und die Benutzerregistrierung durchführt.
+  \par Die Registrierungsdaten werden als \texttt{SignUpModel}-Objekt entgegengenommen und an die Funktion \texttt{services.signup\_user()} weitergeleitet. Diese Funktion übernimmt die Validierung der Eingaben, indem sie prüft, ob alle erforderlichen Werten übergeben wurden. Wenn ein Wert fehlt, wird die entsprechende Fehlermeldung geloggt und zurückgegeben. 
+  \par Sind alle Daten vollständig, wird der Benutzer mit der Funktion \texttt{queries.add\_user()} in der Datenbank gespeichert. Diese Funktion gibt ein Fehler zurück, wenn der Benutzername oder die Email schon in der Datenbank gespeichert sind.
+  \par Nach erfolgreicher Speicherung wird ein JWT-Token generiert und zurückgegeben. Dieses Token enthält das die Benutzer-ID und hat eine begrenzte Lebensdauer. Mit diesem Token kann der Benutzer direkt angemeldet werden. Tritt während des Prozesses eine Exception auf, so wird diese geloggt und eine entsprechende Fehlermeldung ausgegeben.
   \paragraph{Einloggen}
   \par \textbf{}
-  \par Um einem bereits registrierten Benutzer den Zugriff auf die API zu ermöglichen, ist eine Authentifizierung erforderlich. Diese erfolgt durch das Senden eines \texttt{POST}-Requests an die Route \texttt{/login}. Der Request muss die Parameter \texttt{username} und \texttt{password} enthalten, die im \texttt{user\_data}-Objekt übergeben werden. Nach Erhalt der Anfrage wird die Funktion \texttt{login\_post()} aufgerufen, die die Authentifizierung des Benutzers vornimmt.
-  \par Die Benutzerdaten werden als \texttt{UserLoginModel} entgegengenommen und an die Funktion \texttt{services.auth\_user()} übergeben. Diese Funktion überprüft, ob die erforderlichen Felder \texttt{username} und \texttt{password} ausgefüllt wurden. Ist es nicht der Fall, wird eine entsprechende Fehlermeldung ausgegeben. Anschließend wird mit der Funktion \texttt{queries.get\_user\_data()} geprüft, ob ein Benutzer mit dem angegebenen \texttt{username} in der Datenbank existiert. Wird kein entsprechender Datensatz gefunden, wird eine \texttt{HTTPException} mit dem Statuscode \texttt{401} und der Meldung „Invalid username“ ausgelöst.
+  \par Um einem bereits registrierten Benutzer den Zugriff auf die API zu ermöglichen, ist eine Authentifizierung erforderlich. Diese erfolgt durch das Senden eines \texttt{POST}-Requests an die Route „\texttt{/login}“. Der Request muss die Parameter \texttt{username} und \texttt{password} enthalten. Nach Erhalt der Anfrage wird die Funktion \texttt{login\_post()} aufgerufen, die die Authentifizierung des Benutzers vornimmt.
+  \par Die Benutzerdaten werden als \texttt{UserLoginModel} entgegengenommen und an die Funktion \texttt{services.auth\_user()} übergeben. Diese Funktion überprüft, ob die erforderlichen Werte \texttt{username} und \texttt{password} übergeben wurden. Ist es nicht der Fall, wird eine entsprechende Fehlermeldung ausgegeben. 
+  \par Anschließend wird mit der Funktion \texttt{queries.get\_user\_data()} geprüft, ob ein Benutzer mit dem angegebenen \texttt{username} in der Datenbank existiert. Wird kein entsprechender Datensatz gefunden, wird eine \texttt{HTTPException} mit dem Statuscode \texttt{401} und der Meldung „Invalid username“ ausgelöst.
   \par Wenn der Benutzer existiert, wird das eingegebene Passwort mit der gespeicherten verschlüsselten Version verglichen. Ist die Prüfung erfolgreich, gibt die Funktion den Primärschlüssel zurück. Andernfalls wird die Fehlermeldung „Wrong password“ zurückgegeben.
-  \par Nach erfolgreicher Authentifizierung wird in der Funktion \texttt{loin\_post()} ein JWT-Token erzeugt und zurückgegeben, das die Benutzerkennung enthält. Tritt während des Prozesses eine Exception auf, wird diese protokolliert und eine entsprechende Fehlermeldung ausgegeben.
+  \par Nach erfolgreicher Authentifizierung wird in der Funktion \texttt{loin\_post()} ein JWT-Token erzeugt und zurückgegeben. Tritt während des Prozesses eine Exception auf, wird diese protokolliert und eine entsprechende Fehlermeldung ausgegeben.
   \par Nach dem erfolgreichen Eingloggen und Erhalt des Tokens, kann der Benutzer zu den Funktionen der API zugreifen. 
   \subsubsection{API-Endpunkte}
-  \par Im Skript \texttt{routes.py} sind die API-Endpunkte definiert, die verschiedene Funktionen des Systems bereitstellen. Jeder Endpunkt ist dabei einer bestimmten Aufgabe zugeordnet. 
+  \par In der Datei „\texttt{routes.py}“ sind die API-Endpunkte definiert, die verschiedene Funktionen des Systems bereitstellen. Jeder Endpunkt ist dabei einer bestimmten Aufgabe zugeordnet. 
   \par Zur besseren Strukturierung und Modularisierung des Codes wurden die Hilfsfunktionen in das Skript \texttt{services.py} ausgelagert. Diese Funktionen enthalten die Anwendungslogik, verarbeiten die Daten und stellen sie zur Verfügung, verwalten die Verbindungen zum WebSocket.
-  \par Nach dem Import der erforderlichen Module wird ein Router mit \texttt{APIRouter()} erstellt, der die API-Endpunkte verwaltet. Die API-Endpunkte werden am Router registriert und anschließend mit der Funktion \texttt{include\_router()} in das Hauptobjekt der FastAPI-Anwendung integriert. Durch die Verwendung von FastAPI-Routern und einer klar strukturierten Modulanordnung bleibt die API übersichtlich, leicht wartbar und erweiterbar.
-  \par Um auf Anfragen mit HTML-Dateien zu antworten, wird ein \texttt{Jinja2Templates}-Objekt erstellt. Dabei wird der Pfad zum Ordner \texttt{templates/} angegeben, der die HTML-Vorlagen enthält. Dieses Objekt ermöglicht es, dynamische HTML-Antworten zu generieren, indem Daten aus den Endpunkten in die Vorlagen eingebunden werden.
-  \par Jede Funktion, die auf die Datenbank zugreift, benötigt als Parameter eine Instanz der Klasse \texttt{AsyncSession}. Im Modul \texttt{routes.py} wird dazu die Funktion \texttt{get\_session()} aus dem Paket \texttt{db} verwendet, die für die Erzeugung der Datenbanksitzungen zuständig ist. Durch die Verwendung des Abhängigkeitsmechanismus \texttt{Depends(get\_session)} wird bei jedem Aufruf einer Router-Funktion automatisch eine neue Datenbanksitzung erzeugt und an die entsprechenden Unterfunktionen weitergegeben. Dies ermöglicht eine effiziente und asynchrone Kommunikation mit der Datenbank, wodurch mehrere Anfragen gleichzeitig ohne blockierende Wartezeiten bearbeitet werden können.
+  \par Nach dem Import der erforderlichen Module wird ein Router mit \texttt{APIRouter()} erstellt, der die API-Endpunkte verwaltet. Die API-Endpunkte werden am Router registriert und anschließend mit der Funktion \texttt{include\_router()} in das Anwendungsobjekt angebunden. Durch die Verwendung von FastAPI-Routern und einer klar strukturierten Modulanordnung bleibt die API übersichtlich, leicht wartbar und erweiterbar.
+  \par Um auf Anfragen mit HTML-Dateien zu antworten, wi rd ein \texttt{Jinja2Templates}-Objekt erstellt. Dabei wird der Pfad zum Ordner „\texttt{templates/}“ angegeben, der die HTML-Vorlagen enthält. Dieses Objekt ermöglicht es, dynamische HTML-Antworten zu generieren, indem Daten aus den Endpunkten in die Vorlagen eingebunden werden.
+  \par Jede Funktion, die auf die Datenbank zugreift, benötigt als Parameter eine Instanz der Klasse \texttt{AsyncSession}. Im der Datei „\texttt{routes.py}“ wird dazu die Funktion \texttt{get\_session()} aus dem Paket „\texttt{db}“ verwendet, die für die Erzeugung der Datenbanksitzungen zuständig ist. 
+  \par Durch die Verwendung des Abhängigkeitsmechanismus \texttt{Depends(get\_session)} wird bei jedem Aufruf einer Router-Funktion automatisch eine neue Datenbanksitzung erzeugt und an die entsprechenden Unterfunktionen weitergegeben. 
+  \par Dies ermöglicht eine effiziente und asynchrone Kommunikation mit der Datenbank, wodurch mehrere Anfragen gleichzeitig ohne blockierende Wartezeiten bearbeitet werden können.
   \par Im Listing \ref{lst:getuserdata} ist ein API-Endpunkt „\texttt{/get\_user\_data}“ definiert, der an dem \texttt{router}-Objekt registriert ist (Zeile 1). Beim Empfang einer GET-Anfrage auf dieser Route wird die asynchrone Funktion \texttt{get\_user\_data()} ausgeführt.
+  \par Die Funktion erwartet drei Parameter:
+  \begin{itemize}
+  \item \textbf{\texttt{request: Request} –} Das Anfrageobjekt, das die vollständige HTTP-Anfrage des Clients enthält.
+  \item \textbf{\texttt{token: str = Depends(get\_token)} –} Ein Authentifizierungstoken, das über die FastAPI-Abhängigkeitsfunktion \texttt{Depends()} aus der Funktion \texttt{get\_token()} abgeleitet wird.
+  \item \textbf{\texttt{db\_session: AsyncSession = Depends(get\_session)} –} Eine asynchrone Datenbank-Session, die über die Funktion \texttt{get\_session()} erzeugt wird.
+  \end{itemize}
   \begin{lstlisting}[style=mypython, label={lst:getuserdata}, caption={routes.py: get\_user\_data}]
     @router.get('/get_user_data')
     async def get_user_data(
@@ -1197,88 +1337,57 @@ captionpos=b,
         except Exception as e:
             return {'error': e}
   \end{lstlisting}
-  \par Die Funktion erwartet drei Parameter:
-  \begin{itemize}
-  \item \textbf{\texttt{request: Request} –} Das Anfrageobjekt, das die vollständige HTTP-Anfrage des Clients enthält.
-  \item \textbf{\texttt{token: str = Depends(get\_token)} –} Ein Authentifizierungstoken, das über die FastAPI-Abhängigkeitsfunktion \texttt{Depends()} aus der Funktion \texttt{get\_token()} abgeleitet wird.
-  \item \textbf{\texttt{db\_session: AsyncSession = Depends(get\_session)} –} Eine asynchrone Datenbank-Session, die über die Funktion \texttt{get\_session()} erzeugt wird.
-  \end{itemize}
-  \par Nach dem Empfang der Anfrage wird innerhalb eines \texttt{try}-Blocks die Benutzer-ID mithilfe der Funktion \texttt{services.verify\_token()} aus dem erhaltenen Token ermittelt (Zeile 8–10). Detaillierter wird dieser Vorgang in Abschnitt 5.2.2 erklärt.
+
+  \par Nach dem Empfang der Anfrage wird innerhalb eines \texttt{try}-Blocks die Benutzer-ID mithilfe der Funktion \texttt{services.verify\_token()} aus dem erhaltenen Token ermittelt (Zeile 8–10). Detaillierter wurde dieser Vorgang in Abschnitt 5.2.1 erklärt.
   \par Anschließend wird die asynchrone Funktion \texttt{services.get\_user\_data()} aufgerufen, die als Parameter die Datenbank-Session sowie die Benutzer-ID erhält (Zeile 11). Diese Funktion liefert die in der Datenbank gespeicherten Benutzerdaten im JSON-Format. Das erhaltene JSON-Objekt wird mit \texttt{JSONResponse()} an den Client zurückgegeben.
   \par Dies stellt den Standardvorgang zur Verarbeitung von HTTP-Anfragen in FastAPI dar. Die HTTP-Anfragen werden mit entsprechenden Funktionen verknüpft. Nach der Bearbeitung der Anfrage wird eine Antwort an dem Client geliefert. Im Fehlerfall wird das Fehler an den Client zurückgegeben.
-  % \paragraph{Überblick auf die API-Endpunkte}
-  % \par \textbf{}
-  % \par \textbf{KA ob das passt. Vlt hinweis geben, dass Doku auf /docs augerufen werden kann }
-  % \par \textbf{TODOO jede funktion liefer error im fehlerfall.}
-  % \begin{itemize}
-  %   \item \texttt{/} (GET): Root-Enpunkt. Antwortet mit HTML-Datei „index.html“. 
-  %   \item \texttt{/login} (POST):  Prüft, ob die übergebene Benutzername-Passwort-Kombination mit der in der Datenbank gespeicherten übereinstimmt.  
-  %     \par \textbf{Parameter:} \{\texttt{username}: str, \texttt{password} : str\}
-  %     \par \textbf{Antwort:} \texttt{\{"token": str\}}
-  %   \item \texttt{/sign\_up} (POST): Fügt der neue Benutzer mit übergebenen Benutzerdaten in die Datenbank ein. 
-  %     \par\textbf{Parameter:} \{\texttt{username}: str, \texttt{password} : str, \texttt{email}: str\}
-  %     \par \textbf{Antwort:} \texttt{\{"token": str\}}
-  %   \item \texttt{/get\_user\_data} (GET): Liefert die in der Datenbank gespeicherten Benutzerdaten als JSON-Objekt. 
-  %     \par \textbf{Header:} \{\texttt{"token": str}\}
-  %     \par \textbf{Antwort:}
-  %     \begin{Verbatim}
-  %       {
-  %         "user_data": {"user_id": "username": str, "email":str},
-  %         "houses": [HouseModel],
-  %         "devices": [DeviceModel],
-  %         "scnearios": [ScenarioModel],
-  %         "conditions": [str]
-  %       }
-  %     \end{Verbatim}
-  %   \item \texttt{/add\_house} (POST): Fügt ein neues Haus in die Datenbank ein. 
-  %     \par \textbf{Header:} \{\texttt{"token": str}\}
-  %     \par \textbf{Parameter:} \{\texttt{"name": str}\}
-  %     \par \textbf{Antwort: } \{\texttt{"house": HouseModel}\}
-  %   \item \texttt{/get\_houses} (GET): Gibt eine Liste der vom Benutzer erstellten Häuser zurück.
-  %     \par \textbf{Header:} \{\texttt{"token": str}\}
-  %     \par \textbf{Antwort: } [\texttt{HouseModel}]
-  %   \item \texttt{/delete\_house} (DELETE): Löscht das Haus mit übergebener House-ID. Prüft zunächst, ob das Haus dem Benutzer gehört.
-  %     \par \textbf{Header:} \{\texttt{"token": str}\}
-  %     \par \textbf{Parameter:} \{\texttt{"house\_id": int}\}
-  %     \par \textbf{Antwort: } \{\texttt{"success": str}\}
-  %   \item \texttt{/add\_room} (POST): Erstellt ein neues Raum im Haus. Prüft zunächst, ob ein Raum mit gleichem Raum bereits im Haus existiert.
-  %     \par \textbf{Header:} \{\texttt{"token": str}\}
-  %     \par \textbf{Parameter:} \{\texttt{"house\_id": int, "name": str}\}
-  %     \par \textbf{Antwort: } \{\texttt{"room": RoomModel}\}
-  %   \item \texttt{/deleste\_room} (DELETE): Löscht den Raum mit der übergebenen Raum-ID. Zuerst wird geprüft, ob der Raum zu einem vom Benutzer erstellten House gehört.
-  %     \par \textbf{Header:} \{\texttt{"token": str}\}
-  %     \par \textbf{Parameter:} \{\texttt{"house\_id": int, "name": str}\}
-  %     \par \textbf{Antwort: } \{\texttt{"success": str}\}
-  %   \item \texttt{/add\_new\_device} (POST): Meldet ein neues Gerät an. Prüft zunächst, ob die übergebene Geräte-ID bereits vom Benutzer angemeldet wurde. Optional, wenn die Raum-ID übergeben wurde, wird das Gerät dem Raum hinzugefügt.
-  %     \par \textbf{Header:} \{\texttt{"token": str}\}
-  %     \par \textbf{Parameter:} \{\texttt{"dev\_id": str, "name": str, "room\_id": int = None}\}
-  %     \par \textbf{Antwort: } \{\texttt{DeviceModel, RoomDeviceModel}\}
-  %   \item \texttt{/update\_device} (POST): Aktualisiert die Gerätedaten. Prüft, ob dass Gerät mit übergener Geräte-ID dem Benutzer gehört.
-  %   \item \texttt{/} ():
-  %   \item \texttt{/} ():
-  % \end{itemize}
   \paragraph{Haus und Raum}
   \par \textbf{}
   \par Die Benutzer können ihre Geräte nach Räumen und die Räume nach Häusern gruppieren. Dies erleichtert die Verwaltung und Überwachung der Geräte. Besonders im Frontend ist dies sehr nützlich, da es eine klare Strukturierung des Hauses geschaffen wird. Dabei kann ein Benutzer mehrere Häuser besitzen.
-  \par Um ein Haus zu anzulegen, muss ein \texttt{POST}-Request an die Route \texttt{add\_house} gesendet werden. Der Request muss im Header ein Bearer-Token und im Body den Namen des Hauses enthalten. Nach Erhalt des Requests wird die Funktion \texttt{add\_house\_post()} aufgerufen. Standardmäßig wird das Token validiert, und die Benutzer-ID wird aus dem Token extrahiert, um das Haus dem entsprechenden Benutzer zuzuordnen. Wenn eine gültige Benutzer-ID aus dem Token erzeugt wurde, wird diese zusammen mit der Instanz der Klasse \texttt{AsyncSession} und dem Namen des Hauses an die Funktion \texttt{services.create\_new\_house()} übergeben.
-  \par Die Funktion \texttt{services.create\_new\_house()} prüft zunächst, ob ein gültiger Hausname übergeben wurde. Anschließend wird mit der Funktion \texttt{queries.add\_new\_house()} ein neuer Eintrag in der Datenbank angelegt und dem Benutzer zugeordnet. Wenn die Erstellung erfolgreich war, gibt die Funktion eine Bestätigung zurück. Andernfalls oder im Fehlerfall wird eine entsprechende Fehlermeldung generiert und geloggt.
-  \par Das Verfahren zum Hinzufügen eines Raumes zu einem House ist im Wesentlichen dasselbe wie bei der Erstellung eines House. An die Route \texttt{add\_room} wird ein \texttt{POST}-Request mit dem Token im Header und mit dem Namen des Raumes sowie der zugehörigen House-ID als \texttt{RoomModel} im Inhalt gesendet. Auch hier wird das JWT-Token standardmäßig validiert, und die Benutzer-ID daraus extrahiert. 
-  \par Die Daten des Raumes und die Benutzer-ID werden an die Funktion \texttt{services.add\_room()} übergeben. Diese Funktion holt zunächst mit dem Befehl \texttt{queries.get\_house()} die Daten des Hauses aus der Datenbank, um den Besitzer des Hauses zu bestätigen. Stimmt die übergebene Benutzer-ID mit der in der Datenbank gespeicherten Benutzer-ID des Hausbesitzers überein, wird mit der Funktion \texttt{queries.add\_new\_room()} ein neuer Eintrag in der Datenbank erstellt. Im Erfolgsfall wird eine Bestätigung zurückgegeben. 
+  % „“ % „“ „\texttt{}“
+  \par Um ein Haus zu anzulegen, muss ein \texttt{POST}-Request an die Route „\texttt{add\_house}“ gesendet werden. Der Request muss im Header ein Bearer-Token und im Body den Namen des Hauses enthalten. Nach Erhalt des Requests wird die Funktion \texttt{add\_house\_post()} aufgerufen. Standardmäßig wird das Token validiert, und die Benutzer-ID wird aus dem Token extrahiert, um das Haus dem entsprechenden Benutzer zuzuordnen. Wenn eine gültige Benutzer-ID aus dem Token erzeugt wurde, wird diese zusammen mit der Instanz der Klasse \texttt{AsyncSession} und dem Namen des Hauses an die Funktion \texttt{services.create\_new\_house()} übergeben.
+  \par Diese Funktion prüft zunächst, ob ein gültiger Hausname übergeben wurde. Anschließend wird mit der Funktion \texttt{queries.add\_new\_house()} ein neuer Eintrag in der Datenbank angelegt und dem Benutzer zugeordnet. 
+  \par Wenn die Erstellung des Hauses erfolgreich war, gibt die Funktion eine Bestätigung zurück. Im Fehlerfall wird eine entsprechende Fehlermeldung generiert und geloggt.
+  \par Das Verfahren zum Hinzufügen eines Raumes zu einem House ist im Wesentlichen dasselbe wie bei der Erstellung eines Houses. An die Route „\texttt{add\_room}“ wird ein \texttt{POST}-Request mit dem Token im Header und mit dem Namen des Raumes sowie der zugehörigen House-ID im Body gesendet. Auch hier wird das JWT-Token standardmäßig validiert, und die Benutzer-ID daraus extrahiert. 
+  \par Die Daten des Raumes und die Benutzer-ID werden an die Funktion \texttt{services.add\_room()} übergeben. Diese Funktion holt zunächst mit dem Befehl \texttt{queries.get\_house()} die Daten des Hauses aus der Datenbank, um den Besitzer des Hauses zu bestätigen. 
+  \par Stimmt die übergebene Benutzer-ID mit der in der Datenbank gespeicherten Benutzer-ID des Hausbesitzers überein, wird mit der Funktion \texttt{queries.add\_new\_room()} das neue Raum in der Datenbank gespeichert. Im Erfolgsfall wird eine Bestätigung zurückgegeben. 
   \par Wenn der Benutzer nicht berechtigt ist, einen Raum zu dem angegebenen Haus hinzuzufügen, gibt die Funktion eine Meldung über unberechtigten Zugriff zurück.
-  \par Das Löschen eines Hauses oder Raumes erfolgt ähnlich wie das Hinzufügen: Es wird ein \texttt{POST}-Request an die entsprechenden Routen (\texttt{/delete\_house} bzw. \texttt{delete\_room}) gesendet, wobei im Header das Bearer-Token und im Inhalt des Requests die zu löschende Haus- bzw. Raum-ID übermittelt wird. Dabei ist zu beachten, dass beim Löschen eines Hauses auch alle zugehörigen Räume gelöscht werden. Dies wird durch die Beziehung \texttt{rooms} in \texttt{HouseModel} in der Datenbank definiert. 
-  \par Beim Löschen eines Hauses wird ein Request mit den Benutzer- und House-ID an die Route \texttt{/delete\_house} gesenden. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_house()} übergeben. Diese Funktion prüft, ob das Haus dem Benutzer gehört und löscht mit dem Befehl \texttt{queries.delete\_house()} den zugehörigen Eintrag aus der Datenbank. Die zugehörigen Räume werden ebenfalls gelöscht. Im Fehlerfall wird der entsprechende Fehler geloggt und ausgegeben. 
-  \par Das Löschen eines Raumes ist ähnlich dem Löschen eines Hauses. Ein Delete-Request mit der Raum- und Haus-ID wird an die Route \texttt{delete\_room} gesendet. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_room()} übergeben. Wenn der Benutzer der Eigentümer des Hauses mit der übergebenen House-ID ist, wird der Raum aus der Datenbank gelöscht. Tritt ein Fehler auf, wird dieser geloggt und die entsprechende Meldung wird ausgegeben.
-  \par Die Route \texttt{/get\_houses} gibt alle Häuser des Benutzers im JSON-Format zurück. Der Request muss im Header nur das Token enthalten, aus dem die Benutzer-ID erzeugt wird. Die Benutzer-ID wird an die Funktion \texttt{services.get\_houses()} übergeben, die Benutzer-ID an die Funktion \texttt{queries.get\_houses\_on\_user()} übergibt. Diese Funktion gibt eine Liste von \texttt{HouseModel} zurück, die dem Benutzer gehören. Diese Liste wird in eine „List of Dictionaries“ umgewandelt, die alle Häuser, die zugehörigen Räume und die Geräte enthält. Anschließend wird ein JSONResponse-Objekt zurückgegeben.
+  \par Der Benutzer hat die Möglichkeit seine Häuser und Räume zu löschen.
+  % \par Das Löschen eines Hauses oder Raumes erfolgt ähnlich wie das Hinzufügen: Es wird ein \texttt{POST}-Request an die entsprechenden Routen („\texttt{/delete\_house}“ bzw. „\texttt{delete\_room}“) gesendet, wobei im Header das Bearer-Token und im Inhalt des Requests die zu löschende Haus- bzw. Raum-ID übermittelt wird. Dabei ist zu beachten, dass beim Löschen eines Hauses auch alle zugehörigen Räume gelöscht werden.
+  \par Beim Löschen eines Hauses wird ein Request mit den Benutzer- und House-ID an die Route „\texttt{/delete\_house}“ gesenden. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_house()} übergeben. Diese Funktion prüft, ob das Haus dem Benutzer gehört und entfernt mit der Funktion \texttt{queries.delete\_house()} den zugehörigen Eintrag aus der Datenbank. Die zugehörigen Räume werden ebenfalls gelöscht. Im Fehlerfall wird der entsprechende Fehler geloggt und ausgegeben. 
+  \par Das Löschen eines Raumes ist ähnlich dem Löschen eines Hauses. Ein Delete-Request mit der Raum- und Haus-ID wird an die Route „\texttt{delete\_room}“ gesendet. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_room()} übergeben. Wenn der Benutzer der Eigentümer des Hauses mit der übergebenen House-ID ist, wird der Raum aus der Datenbank gelöscht. Tritt ein Fehler auf, wird dieser geloggt und die entsprechende Meldung wird ausgegeben.
+  \par Die Route „\texttt{/get\_houses}“ gibt alle von Benutzer erstellten Häuser im JSON-Format zurück. Der Request muss im Header nur das Token enthalten, aus dem die Benutzer-ID erzeugt wird. Die Benutzer-ID wird an die Funktion \texttt{services.get\_houses()} übergeben. Die Funktion \texttt{queries.get\_houses\_on\_user()} gibt eine Liste von Objekten der Klasse \texttt{HouseModel} zurück, die dem jeweiligen Benutzer zugeordnet sind. Diese Liste wird anschließend in das JSON-Format umgewandelt, um eine strukturierte Darstellung der Daten für die weitere Verarbeitung zu ermöglichen.
+  \par Das erstellte Objekt hat folgende Struktur:
+  \begin{Verbatim}[frame=single]
+    {
+      "house1": {
+        "id": 1,
+        "name": Mein Haus,
+        "rooms": [
+          {
+            "id": 1,
+            "name": Wohnzimmer,
+            "devices":[
+              DeviceModel
+            ]
+          }
+        ]
+      }
+    }
+  \end{Verbatim}
+  \par Anschließend wird das erstellte Objekt als \texttt{JSONResponse} zurückgegeben.
   \paragraph{Device}
   \par \textbf{}
-  \par Die zentrale Aufgabe der API ist die Überwachung der angeschlossenen Geräte und die Benachrichtigung der Benutzer über erkannte Gefahren. Damit dieses System genutzt werden kann, muss der Benutzer die Möglichkeit haben, seine Geräte in das System einzubinden.
-  \par Jedes Gerät verfügt über eine eindeutige Geräte-ID, die im Programmcode des Gerätes fest hinterlegt ist und zur Identifikation innerhalb des Systems dient. Die Speicherung der Geräte erfolgt in der Datenbank innerhalb der Tabelle \texttt{device} in Form von \texttt{DeviceModel}-Objekten.
-  \par Das Hinzufügen eines neuen Gerätes erfolgt durch das Senden eines \texttt{POST}-Requests an die Route \texttt{/add\_new\_device}. Der Header des Requests muss ein gültiges JWT-Token enthalten, aus dem die Benutzer-ID ausgelesen wird. Im Body des Requests muss die eindeutige Geräte-ID angegeben werden. Optional kann ein vom Benutzer erstellter Name und eine Beschreibung des Gerätes sowie die Raum-ID für die Zuordnung des Gerätes zum Raum übergeben werden. Der Name dient ausschließlich der Benutzerfreundlichkeit, indem er eine eindeutige Identifikation des Gerätes ermöglicht. Die übergebenen Daten werden innerhalb der API als Instanz \texttt{services.DeviceModel} entgegengenommen und verarbeitet.
-  \par Nach Erhalt des Requests wird die Funktion \texttt{add\_new\_device\_post()} aufgerufen. Zuerst wird das Token validiert und die Benutzer-ID aus dem Token erzeugt. Anschließend werden die Gerätedaten an die Funktion \texttt{services.add\_new\_device()} übergeben. Diese prüft zunächst, ob sowohl die Geräte-ID als auch der Gerätename im Request enthalten sind. Fehlt eine dieser Angaben, wird der Vorgang abgebrochen und eine Fehlermeldung zurückgegeben.
-  \par Zusätzlich hat der Benutzer die Möglichkeit, das Gerät direkt einem bestimmten Raum innerhalb des Hauses zuzuordnen. Dazu muss im Body des Requests die entsprechende Raum-ID angegeben werden. Die Funktion \texttt{services.add\_new\_device()} sucht in diesem Fall, mit dem Befehl \texttt{queries.get\_house\_by\_room} nach dem entsprechenden Haus. Anschließend wird geprüft, ob die aus dem Token extrahierte Benutzer-ID mit der des Hauseigentümers übereinstimmt. Ist dies nicht der Fall, wird der Zugriff verweigert, der Vorgang abgebrochen und eine entsprechende Fehlermeldung zurückgegeben.
-  \par Anschließend wird mit dem Befehl \texttt{queries.add\_new\_device()} das Gerät zunächst ohne direkte Raumzuordnung in der Datenbank gespeichert. Ist eine Raum-ID vorhanden, wird mit dem Befehl \texttt{queries.add\_room\_device()} ein Eintrag in der Tabelle \texttt{roomdevice} erzeugt, der den Primärschlüssel des Gerätes mit der Raum-ID verknüpft.
-  \par Um ein Gerät aus der Datenbank zu Löschen, muss ein Delete-Request mit dem JWT-Token und mit der Geräte-ID auf die Route „\texttt{delete\_device}“ gesendet werden. Die aus dem Token erzeugte Benutzer-ID wird zusammen mit der Geräte-ID an die Funktion \texttt{services.delete\_device()} übergeben. Diese Funktion prüft zunächst, ob das übergebene Geräte-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht. 
-  \par Diese strukturierte Vorgehensweise gewährleistet nicht nur eine sichere und konsistente Registrierung neuer Geräte, sondern bietet dem Benutzer auch die Möglichkeit, seine Smart-Home-Geräte flexibel zu verwalten und eindeutig zu identifizieren.
+  \par Die zentrale Aufgabe der API ist die Überwachung und Steuerung der angeschlossenen Geräte. Damit dieses System genutzt werden kann, muss der Benutzer die Möglichkeit haben, seine Geräte in das System einzubinden und zu verwalten.
+  \par Jedes Gerät verfügt über eine eindeutige Geräte-ID, die im Programmcode des Gerätes fest hinterlegt ist und zur Identifikation innerhalb des Systems dient. Die Geräte werden in der Datenbank in der Tabelle „\texttt{device}“ als \texttt{DeviceModel}-Objekten gespeichert.
+  \par Das Hinzufügen eines neuen Gerätes erfolgt durch das Senden eines \texttt{POST}-Requests an die Route „\texttt{/add\_new\_device}“. Der Header des Requests muss ein gültiges JWT-Token enthalten, aus dem die Benutzer-ID ausgelesen wird. Im Body des Requests muss die eindeutige Geräte-ID und der von Benutzer erstellte Name des Gerätes angegeben werden. Der Name dient ausschließlich der Benutzerfreundlichkeit, indem er eine eindeutige Identifikation des Gerätes ermöglicht.
+  \par Optional kann ein vom Benutzer erstellter Name und eine Beschreibung des Gerätes sowie die Raum-ID für die Zuordnung des Gerätes zum Raum übergeben werden.  
+  %Die übergebenen Daten werden innerhalb der API als Instanz \texttt{services.DeviceModel} entgegengenommen und verarbeitet.
+  \par Nach Erhalt des Requests wird die Funktion \texttt{add\_new\_device\_post()} aufgerufen. Zuerst wird das Token validiert und die Benutzer-ID aus dem Token erzeugt. Anschließend werden die Gerätedaten an die Funktion \texttt{services.add\_new\_device()} übergeben. Diese prüft zunächst, ob sowohl die Geräte-ID als auch der Gerätename übergeben sind. Fehlt eine dieser Angaben, wird der Vorgang abgebrochen und eine Fehlermeldung zurückgegeben.
+  \par Zusätzlich hat der Benutzer die Möglichkeit, das Gerät direkt einem bestimmten Raum innerhalb des Hauses zuzuordnen. Dazu muss im Body des Requests die entsprechende Raum-ID angegeben werden. In diesem Fall wird mit der Funktion \texttt{queries.get\_house\_by\_room()} nach dem entsprechenden Haus gesucht. Anschließend wird geprüft, ob die aus dem Token extrahierte Benutzer-ID mit der des Hauseigentümers übereinstimmt. Ist dies nicht der Fall, wird der Zugriff verweigert, der Vorgang abgebrochen und eine entsprechende Fehlermeldung zurückgegeben.
+  \par Anschließend wird mit dem Befehl \texttt{queries.add\_new\_device()} das Gerät zunächst ohne direkte Raumzuordnung in der Datenbank gespeichert. Ist eine Raum-ID vorhanden, wird mit dem Befehl \texttt{queries.add\_room\_device()} ein Eintrag in der Tabelle „\texttt{roomdevice}“ erstellt, der den Primärschlüssel des Gerätes mit der Raum-ID verknüpft.
+  \par Um ein Gerät aus der Datenbank zu Löschen, muss ein \texttt{Delete}-Request mit dem JWT-Token im Header und mit der Geräte-ID im Body auf die Route „\texttt{/delete\_device}“ gesendet werden. Die aus dem Token erzeugte Benutzer-ID wird zusammen mit der Geräte-ID an die Funktion \texttt{services.delete\_device()} übergeben. Diese Funktion prüft zunächst, ob das übergebene Geräte-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht. 
+  \par Diese strukturierte Vorgehensweise gewährleistet nicht nur eine sichere und konsistente Registrierung neuer Geräte, sondern bietet dem Benutzer auch die Möglichkeit, seine Geräte flexibel zu verwalten und eindeutig zu identifizieren.
   \subsection{Szenario}
   %\par \textbf{}
   \par Der Benutzer hat die Möglichkeit, eigene Szenarien zu definieren. Ein Szenario bezeichnet die automatische Ausführung eines Befehls auf einem Zielgerät, sobald die im Szenario definierte Bedingung erfüllt ist.
@@ -1292,22 +1401,31 @@ captionpos=b,
     \item \textbf{command:} --- Der Befehl, der an das Zielgerät gesendet wird, wenn die Bedingung erfüllt ist
   \end{itemize}
 
-  \par Die im Szenario definierte Bedingung wird beim Empfang der Daten vom Quellgerät geprüft. Die Daten aus dem angegebenen Datenfeld werden mit dem in \texttt{value} gespeicherten Wert verglichen. Ist die Bedingung erfüllt, wird der Steuerbefehl \texttt{command} an das Zielgerät gesendet.
-  \par Die Erstellung eines neuen Szenarios erfolgt durch das Senden eines \texttt{POST}-Requests an die Route \texttt{add\_scenario}. Der Request-Header muss ein gültiges JWT-Token enthalten, während der Request-Body die in der Klasse \texttt{services.ScenarioModel} definierten Daten liefern muss. 
-  \par Nach Erhalt des Requests wird die Funktion \texttt{add\_scenario()} aufgerufen. Zuerst wird das Token validiert und die Benutzer-ID wird aus dem Token erzeugt. Anschließend wird die Benutzer-ID zusammen mit den Szenariodaten an die Funktion \texttt{services.add\_new\_scenario} übergeben.
-  \par Diese Funktion prüft zunächst, ob sowohl das übergebene Quellgerät (\texttt{source\_dev}) als auch das Zielgerät \texttt({target\_dev}) dem Benutzer zugeordnet sind. Ist dies nicht der Fall, so wird der Vorgang abgebrochen und eine Meldung über den unberechtigten Zugriff zurückgegeben.
-  \par Nach erfolgreicher Prüfung werden die Daten des Szenarios an die Funktion \texttt{add\_scenario()} der Klasse \texttt{queries} übergeben, die das neue Szenario in der Datenbank speichert. Abschließend wird mit dem Befehl \texttt{MQTTClient.load\_scenarios()} die Liste der gespeicherten Szenarien in \texttt{MQTTClient} aktualisiert, so dass das System sofort auf die neue Automatisierungsregel reagieren kann.
-  \par Das Löschen eines Szenarios erfolgt durch das Senden eines Delete-Requests an die Route „\texttt{delete\_scenario}“. Der Request muss im Header ein JWT-Token und im Body das Primär\-schlüssel des Szenarios enthalten. Zuerst wird die Benutzer-ID aus dem Token extrahiert und zusammen mit dem Primär\-schlüssel des Szenarios an die Funktion \texttt{services.delete\_scenario()} übergeben. 
-  \par Diese Funktion prüft zunächst, ob die übergebene Szenario-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht.
-  \par 
+  \par Die Logik eines Szenarios kann schematisch dargestellt werden:
+  \begin{Verbatim}[frame=single]
+    IF: source_device.data_field CONDITION value IS TRUE
+    THEN: target_device DO command
+  \end{Verbatim}
+  \par Die im Szenario definierte Bedingung wird beim Empfang der Daten vom Quellgerät geprüft. Die Daten aus dem angegebenen Datenfeld werden mit dem in \texttt{value} gespeicherten Wert unter Verwendung des in \texttt{condition} definierten Vergleichsoperators verglichen. Ist die Bedingung erfüllt, wird der Steuerbefehl \texttt{command} an das Zielgerät gesendet.
+  \par Die Erstellung eines neuen Szenarios erfolgt durch das Senden eines \texttt{POST}-Requests an die Route „\texttt{add\_scenario}“. Der Request-Header muss ein gültiges JWT-Token enthalten, während der Request-Body die in der Klasse \texttt{services.ScenarioModel} definierten Daten liefern muss. 
+  \par Nach Erhalt des Requests wird die Funktion \texttt{add\_scenario()} aufgerufen. Zuerst wird das Token validiert und die Benutzer-ID wird aus dem Token erzeugt. Anschließend wird die Benutzer-ID zusammen mit den Daten des Szenarios an die Funktion \texttt{services.add\_scenario()} übergeben.
+  \par Diese Funktion prüft zunächst, ob sowohl das übergebene Quellgerät (\texttt{source\_dev}) als auch das Zielgerät (\texttt{target\_dev}) dem Benutzer zugeordnet sind. Ist dies nicht der Fall, so wird der Vorgang abgebrochen und eine Meldung über den unberechtigten Zugriff zurückgegeben.
+  \par Nach erfolgreicher Prüfung werden die Daten des Szenarios an die Funktion \texttt{add\_scenario()} der Klasse „\texttt{queries}“ übergeben, die das neue Szenario in der Datenbank speichert. Abschließend wird mit dem Befehl \texttt{MQTTClient.load\_scenarios()} die Liste der gespeicherten Szenarien in \texttt{MQTTClient} aktualisiert, so dass das System sofort auf die neue Automatisierungsregel reagieren kann.
+  \par Das Löschen eines Szenarios erfolgt durch das Senden eines Delete-Requests an die Route „\texttt{/delete\_scenario}“. Der Request muss im Header ein JWT-Token und im Body das Primär\-schlüssel des Szenarios enthalten. Zuerst wird die Benutzer-ID aus dem Token extrahiert und zusammen mit dem Primär\-schlüssel des Szenarios an die Funktion \texttt{services.delete\_scenario()} übergeben. 
+  \par Diese Funktion prüft, ob die übergebene Szenario-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht. Sonst wird eine Meldung über den unberechtigten Zugriff zurückgegeben.
+  \par Durch die Erstellung von Szenarien kann der Benutzer sein Haus automatisieren. Ein Szenario wird automatisch ausgelöst, sobald die darin definierte Bedingung erfüllt ist. Dabei kann ein Gerät sowohl als Quellgerät als auch als Zielgerät fungieren. Außerdem kann ein einzelnes Gerät gleichzeitig in mehreren Szenarien beteiligt sein.
   % „“
   \subsection{MQTT-Client}
   % \par \textbf{}
   \par Die Geräte senden kontinuierlich ihre Daten über die MQTT-Verbindung an den MQTT-Broker. Jedes Gerät nutzt sein separates Topic, das sich auf die Geräte-ID bezieht. Um die Daten eines bestimmten Geräts zu empfangen, muss ein MQTT-Client das entsprechende Topic abonnieren.
-  \par Der MQTT-Client für den Webserver ist im Paket \texttt{mqtt} enthalten. In der Datei \texttt{client.py} ist die Klasse \texttt{MQTTClient} implementiert, die eine asynchrone Schnittstelle zur Verarbeitung von MQTT-Nachrichten bereitstellt. 
+  \par Der MQTT-Client für den Webserver ist im Paket „\texttt{mqtt}“ enthalten. In der Datei „\texttt{client.py}“ ist die Klasse \texttt{MQTTClient} implementiert, die eine asynchrone Schnittstelle zur Verarbeitung von MQTT-Nachrichten bereitstellt. 
+  %zzz „“ „\texttt{}“
   \par Die Implementierung basiert auf der Bibliothek \texttt{aiomqtt}. Durch die asynchrone Architektur kann der Client effizient auf die eingehenden MQTT-Nachrichten reagieren, ohne blockierende Operationen auszuführen.
-  \par Die asynchrone Funktion \texttt{start\_client()} (Listing \ref{lst:startclient}) wird beim Start des Webservers als asynchrone Aufgabe gestartet gestartet. Diese Funktion enthält eine Endlosschleife und erwartet als Parameter eine Liste von Topics, die der Client abonnieren soll. Dadurch wird sichergestellt, dass die MQTT-Verbindung parallel zu anderen asynchronen Aufgaben läuft. Zudem stellt die Endlosschleife sicher, dass die Verbindung nach einer Unterbrechung oder einem Fehler automatisch wiederhergestellt wird.
-  \par Innerhalb der Endlosschleife wird zunächst die Verbindung zu dem MQTT-Broker aufgebaut (Zeile 4). Das Objekt \texttt{Client} der Klasse \texttt{aiomqtt} erwartet als Parameter die IP-Adresse des MQTT-Brokers und den Port. Anschließend werden die übergebenen Topics abonniert (Zeile 5-6). Danach empfängt der Client die MQTT-Nachrichten asynchron über die async for-Schleife, die auf client.messages lauscht (Zeile 7-8). Jede eingehende Nachricht wird an die Funktion \texttt{process\_message()} weitergeleitet, die für die weitere Verarbeitung verantwortlich ist.
+  \par Die asynchrone Funktion \texttt{start\_client()} (Listing \ref{lst:startclient}) wird beim Start des Webservers als asynchrone Aufgabe gestartet. Diese Funktion enthält eine Endlosschleife. Als Parameter erwartet sie eine Liste von Topics, die der Client abonnieren soll. 
+  \par In der Zeile 13 ist die Funktion \texttt{startup()} aus der Datei „routes.py“ dargestellt, die beim Start des Webservers aufgerufen wird. In dieser Funktion wird zunächst ein Objekt der Klasse \texttt{MQTTClient} erstellt. Danach werden die gespeicherten Szenarien geladen. Anschließend wird eine asynchrone Aufgabe gestartet, die die Funktion \texttt{start\_client()} der Klasse \texttt{MQTTClient} ausführt.
+  \par Dadurch wird sichergestellt, dass die MQTT-Verbindung parallel zu anderen asynchronen Aufgaben läuft. Zudem stellt die Endlosschleife sicher, dass die Verbindung nach einer Unterbrechung oder einem Fehler automatisch wiederhergestellt wird.
+  \par Innerhalb der Endlosschleife wird zunächst die Verbindung zu dem MQTT-Broker aufgebaut (Zeile 4). Das Objekt \texttt{Client} der Klasse \texttt{aiomqtt} erwartet als Parameter die IP-Adresse des MQTT-Brokers und den Port. Anschließend werden die übergebenen Topics abonniert (Zeile 5-6). 
+  \par Danach empfängt der Client die MQTT-Nachrichten asynchron über die \texttt{async for}-Schleife, die die eingehenden Nachrichten in \texttt{client.messages} verarbeitet. (Zeile 7-8). Jede eingehende Nachricht wird an die Funktion \texttt{process\_message()} weitergeleitet, die für den Inhalt der Nachricht verarbeitet.
   \par Wenn ein MQTT-Fehler auftritt, wird diese geloggt, aber die Funktion wird nicht abgestürzt.
   \begin{lstlisting}[style=mypython, label={lst:startclient}, caption={client.py: start\_client}]
     async def start_client(cls, topics: list):
@@ -1320,24 +1438,14 @@ captionpos=b,
               await cls.process_message(message)
         except aiomqtt.MqttError as e:
           logger.error(e)
+    
+    # routes.py:
+    async def startup():
+      mqtt_client = MQTTClient()
+      await mqtt_client.load_scenarios()
+      asyncio.create_task(mqtt_client.start_client(TOPIC_LIST)
   \end{lstlisting}
   \par Die Funktion \texttt{process\_message()} (Listing \ref{lst:processmessage}) extrahiert zunächst das Haupttopic und die Geräte-ID aus dem Attribut „\texttt{topic}“ des übergebenen Nachrichtenobjekts (Zeile 3). Anschließend wird die Payload, nämlich der Text, der Nachricht dekodiert und in ein JSON-Objekt „\texttt{data}“ umgewandelt (Zeile 4-5).
-  \paragraph{Handshake}
-  \par \textbf{}
-  \par Die Handshake-Nachricht wird an ein Gerät gesendet, um dessen Konfigurationsdaten zu aktualisieren. Die Klasse MQTT-Client enthält die Funktion \texttt{send\_handshake()}, die eine MQTT-Nachricht in das Topic „\texttt{command/device\_id}“ mit dem Text „handshake“ sendet. Das Gerät antwortet im Topic „handshake“.
-  \par Beim Empfang einer MQTT-Nachricht aus dem Topic „handshake“ wird der Inhalt der Nachricht in der Funktion \texttt{process\_message()} entsprechend verarbeitet (Zeile 8-12). Das JSON-Objekt „\texttt{data}“ enthält die Konfigurationsdaten des Geräts. Die in der Datenbank gespeicherten Datensätze müssen mit diesen Daten aktualisiert werden. 
-  \par Dazu werden die benötigten Funktionen dynamisch aus dem Paket „\texttt{db}“ importiert. Die erhaltenen Konfigurationsdaten werden zusammen mit der Geräte-ID und der Session an die Funktion \texttt{update\_device\_handshake()} aus dem Skript „\texttt{queries.py}“ übergeben, die alle Datensätze mit gegebener Geräte-ID aktualisiert.
-  \par Dieser Vorgang kann jederzeit ausgeführt werden. Damit ist sichergestellt, dass die Daten bei Bedarf aktualisiert werden können.
-  % „“
-  \paragraph{Szenario}
-  \par \textbf{}
-  \par Damit die Szenarien ausgeführt werden können, müssen sie aus der Datenbank geladen und lokal gespeichert werden. 
-  \par Die Funktion \texttt{load\_scenarios()} ruft zunächst die Methode \texttt{get\_all\_scenarios()} aus dem Skript „\texttt{queries.py}“ auf, die alle Szenarien zurückgibt. Jedes geladene Szenario wird um ein Attribut „\texttt{active}“ erweitert, das initial auf „\texttt{False}“ gesetzt wird. 
-  \par Anschließend werden die Szenarien-Objekten als Schlüssel-Wert-Paare in der Klassenvariablen \texttt{saved\_scnearios} gespeichert. Die Schlüssel entsprechen der Geräte-ID, während die Werte Listen von Szenarien enthalten, die die Geräte-ID als \texttt{source\_dev} haben. Existiert bereits ein Eintrag für eine Geräte-ID, wird das Szenario der entsprechenden Liste hinzugefügt, andernfalls wird eine neue Liste erstellt. Damit sind die Szenarien lokal gespeichert und können ausgeführt werden.
-  \par Beim Empfang einer MQTT-Nachricht wird in der Funktion \texttt{process\_message()} zunächst geprüft, ob für die empfangende Geräte-ID ein Eintrag in der Klassenvariablen \texttt{saved\_scenarios} vorhanden ist (Zeile 15). Ist dies der Fall, werden alle zugehörigen Szenarien iteriert und deren jeweilige Bedingung überprüft (Zeile 16-17).
-  \par Die Bedingung wird mit der Funktion \texttt{eval} überprüft (Zeile 18). Wenn die Bedingung erfüllt ist und das Attribut „\texttt{active}“ des Szenarios den Wert „\texttt{False}“ hat, wird es auf „\texttt{True}“ gesetzt und der im Szenario gespeicherte Befehl an das Zielgerät gesendet (Zeile 20-21). 
-  \par Wenn die Bedingung nicht erfüllt ist und das Szenario zuvor aktiv war, so wird das Attribut „\texttt{active}“ auf „\texttt{False}“ gesetzt (Zeile 22). 
-  \par Dieser Vorgang stellt sicher, dass die Szenarien nur dann ausgelöst werden, wenn die definierte Bedingung erfüllt ist, und dass Befehle nur dann gesendet werden, wenn ein Szenario ausgelöst wird. 
   \begin{lstlisting}[style=mypython, numbers=left, label={lst:processmessage}, caption={cleint.py: process\_message}]
     async def process_message(cls, message):
       
@@ -1365,11 +1473,35 @@ captionpos=b,
       from app.webserver.services import WebsocketHandler
       await WebsocketHandler.send_data(device_id, data) 
     \end{lstlisting}
-
+  \paragraph{Handshake}
+  \par \textbf{}
+  \par Die Handshake-Nachricht wird an ein Gerät gesendet, um dessen Konfigurationsdaten zu aktualisieren. Die Klasse MQTT-Client enthält die Funktion \texttt{send\_handshake()}, die die Geräte-ID als Parameter erwartet und eine MQTT-Nachricht in das Topic „\texttt{command/Geräte-ID}“ mit dem Text „handshake“ sendet. Das Gerät antwortet im Topic „\texttt{handshake/Geräte-ID}“.
+  \par Beim Empfang einer MQTT-Nachricht aus dem Topic „\texttt{handshake}“ wird der Inhalt der Nachricht in der Funktion \texttt{process\_message()} entsprechend verarbeitet (Zeile 8-12). Das JSON-Objekt „\texttt{data}“ enthält die Konfigurationsdaten des Geräts. Die in der Datenbank gespeicherten Datensätze müssen mit diesen Daten aktualisiert werden. 
+  \par Dazu werden die benötigten Funktionen dynamisch aus dem Paket „\texttt{db}“ importiert. Die erhaltenen Konfigurationsdaten werden zusammen mit der Geräte-ID und der Session an die Funktion \texttt{update\_device\_handshake()} aus dem Skript „\texttt{queries.py}“ übergeben, die alle Datensätze mit gegebener Geräte-ID aktualisiert.
+  \par Dieser Vorgang kann jederzeit ausgeführt werden. Damit ist sichergestellt, dass die Daten bei Bedarf aktualisiert werden können.
+  % „“
+  \paragraph{Szenario}
+  \par \textbf{}
+  \par Damit die Szenarien ausgeführt werden können, müssen sie aus der Datenbank geladen und lokal gespeichert werden. 
+  \par Die Funktion \texttt{load\_scenarios()} ruft zunächst die Methode \texttt{get\_all\_scenarios()} aus dem Skript „\texttt{queries.py}“ auf, die alle Szenarien zurückgibt. Jedes geladene Szenario wird um ein Attribut „\texttt{active}“ erweitert, das initial auf „\texttt{False}“ gesetzt wird. 
+  \par Anschließend werden die Szenarien-Objekten als Schlüssel-Wert-Paare in der Klassenvariablen \texttt{saved\_scnearios} gespeichert. Die Schlüssel entsprechen der Geräte-ID, während die Werte Listen von Szenarien enthalten, die die Geräte-ID als \texttt{source\_dev} haben. Existiert bereits ein Eintrag für eine Geräte-ID, wird das Szenario der entsprechenden Liste hinzugefügt, andernfalls wird eine neue Liste erstellt. Die Variable \texttt{saved\_scenarios} ist wie folgt strukturiert:
+  \begin{Verbatim}[frame=single]
+    saved_scenarios = {
+      "device1":[ScenarioModel(source_dev == "device1")],
+      "device2":[
+          ScenarioModel(source_dev == "device2"),
+          ScenarioModel(source_dev == "device2")
+      ]
+    }
+  \end{Verbatim}
+  \par Beim Empfang einer MQTT-Nachricht wird in der Funktion \texttt{process\_message()} zunächst geprüft, ob für die empfangende Geräte-ID ein Eintrag in der Klassenvariablen \texttt{saved\_scenarios} vorhanden ist (Zeile 15-16). Ist dies der Fall, werden alle zugehörigen Szenarien iteriert und deren jeweilige Bedingung überprüft (Zeile 17-18).
+  \par Die Bedingung wird mit der Funktion \texttt{eval} überprüft (Zeile 18). Wenn die Bedingung erfüllt ist und das Attribut „\texttt{active}“ des Szenarios den Wert „\texttt{False}“ hat, wird es auf „\texttt{True}“ gesetzt und der im Szenario gespeicherte Befehl an das Zielgerät gesendet (Zeile 20-21). 
+  \par Wenn die Bedingung nicht erfüllt ist und das Szenario zuvor aktiv war, so wird das Attribut „\texttt{active}“ auf „\texttt{False}“ gesetzt (Zeile 22). 
+  \par Dieser Vorgang stellt sicher, dass die Szenarien nur dann ausgelöst werden, wenn die definierte Bedingung erfüllt ist, und dass Befehle nur dann gesendet werden, wenn ein Szenario ausgelöst wird. 
   \paragraph{Bereitstellung der Daten}
   \par \textbf{}
   \par Nach der Verarbeitung und dem Auslösen des Szenarios, werden die Daten über das WebSocket an den Benutzer gesendet. 
-  \par Dazu wird die Klasse WebsocketHandler aus dem Skript \texttt{services.py} importiert (Zeile 24). Mit der Funktion \texttt{send\_data()} dieser Klasse werden die Daten an das aktive WebSocket gesendet (Zeile 25).
+  \par Dazu wird die Klasse WebsocketHandler aus dem Skript \texttt{services.py} importiert (Listing \ref{lst:processmessage} Zeile 24). Mit der Funktion \texttt{send\_data()} dieser Klasse werden die Daten an das aktive WebSocket gesendet (Zeile 25).
   \par Durch diese Architektur kann der Webserver in Echtzeit auf neue MQTT-Nachrichten reagieren und die empfangenen Daten effizient an verbundene Clients weiterleiten.
   
   \subsection{WebSocket}
@@ -1743,8 +1875,6 @@ captionpos=b,
 \par An den ESP-Modulen müssen die erforderlichen Sensoren und Aktoren entsprechend der Beschreibung in Kapitel 4.3 angebunden werden. Der zugehörige Programmcode befindet sich im Projektordner „\texttt{code/esp}“ in jeweils einem Unterordner pro Modul und muss auf das entsprechende Modul übertragen werden.
 \par Damit ist das gesamte System komplett eingerichtet und betriebsbereit.
 \paragraph{Verwendung des Systems}
-
-\paragraph{Verwendung des Systems}
 \par \textbf{}
 \par Nach der Einrichtung aller Komponenten, müssen sich die WLAN-fähigen Module mit dem von Raspberry Pi bereitgestellten Netzwerk verbinden. Das Netzwerk hat folgende Zugangsdaten:
 \begin{Verbatim}[frame=single]
@@ -1784,8 +1914,6 @@ captionpos=b,
 \par Nach dem Speichern wird das Szenario automatisch ausgeführt. Der Benutzer kann es jederzeit über die Schaltfläche „\texttt{Delete}“ löschen. 
 \par Damit wird die Beleuchtung automatisch eingeschaltet, wenn es dunkel wird, und automatisch ausgeschaltet, wenn es hell genug ist.
 \par Mit diesem Verfahren wurde gezeigt, dass das System wie geplant funktioniert. Das System zeigt sich in der Praxis als zuverlässig und stabil. Alle Komponenten konnten erfolgreich eingerichtet und reibungslos in das System integeriert werden. Die Geräte lassen sich ohne Probleme registrieren und steuern. Die Interaktion zwischen Benutzer und seine Geräte erfolgt schnell und stabil. Die erstellte Szenarien werden automatisch und ohne Konflikte ausgelöst. Damit erfüllt das System alle gestellten Anforderungen und ist einsatzbereit.
-
-
 
 % „“
 \subsection{Vorschläge zur Weiterentwicklung und Erweiterung}
@@ -1880,4 +2008,4 @@ captionpos=b,
 
 
 \end{document}
-% „“
+%zzz „“ „\texttt{}“
