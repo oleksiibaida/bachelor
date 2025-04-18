@@ -378,7 +378,7 @@ captionpos=b,
   \subsection{Hardware}
   \par Das Projekt umfasst verschiedene Hardware-Komponenten, darunter Mikrocontroller, Sensoren und einen Einplatinencomputer.
   \subsubsection{Arduino Uno}
-    \par Der Arduino Uno ist ein Mikrocontroller-Board, das sich besonders für die Erfassung und Verarbeitung von Sensordaten eignet. Aufgrund seiner einfachen Programmierbarkeit und vielseitigen Schnittstellen wird es häufig in eingebetteten Systemen sowie in IoT-Anwendungen eingesetzt.
+    \par Der Arduino Uno \cite{arduino} ist ein Mikrocontroller-Board, das sich besonders für die Erfassung und Verarbeitung von Sensordaten eignet. Aufgrund seiner einfachen Programmierbarkeit und vielseitigen Schnittstellen wird es häufig in eingebetteten Systemen sowie in IoT-Anwendungen eingesetzt.
     \par Das Herz des Boards bildet der Mikrocontroller ATmega328P, der über Flash-Speicher und EEPROM\footnote{Electrically Erasable Programmable Read-Only Memory} verfügt. Das EEPROM ermöglicht die nichtflüchtige Speicherung von Daten, so dass diese auch nach dem Ausschalten des Gerätes erhalten bleiben.
     \par Die technischen Spezifikationen des Arduino Uno sind in Tabelle \ref{tab:arduinounotd} dargestellt.
     \begin{table}[h]
@@ -403,7 +403,7 @@ captionpos=b,
   \end{table}
   \par Im Rahmen dieses Projekts wird der Arduino Uno zur Erfassung und Verarbeitung von Sensordaten für die Branderkennung eingesetzt. Darüber hinaus übernimmt er die Steuerung des kontrollierten Zugangs zum Gebäude. Durch die Anbindung an verschiedene Sensoren ermöglicht er eine kontinuierliche Überwachung der Umgebung und kann im Gefahrenfall entsprechende Meldungen auslösen.
   \subsubsection{ESP8266}
-  \par Das ESP8266 ist ein kompakter Mikrocontroller mit integriertem WLAN-Modul. Aufgrund seiner kompakten Größe, seines geringen Stromverbrauchs und seiner integrierten WLAN-Schnittstelle eignet er sich besonders für drahtlose Sensornetzwerke und eingebettete Systeme.
+  \par Das ESP8266 \cite{esp8266} ist ein kompakter Mikrocontroller mit integriertem WLAN-Modul. Aufgrund seiner kompakten Größe, seines geringen Stromverbrauchs und seiner integrierten WLAN-Schnittstelle eignet er sich besonders für drahtlose Sensornetzwerke und eingebettete Systeme.
   \par Ein zentrales Funktionsmerkmal des ESP8266 ist seine integrierte WLAN-Funktionalität. Das Modul kann direkt mit einem WLAN-Netzwerk verbunden werden oder als Access Point ein WLAN-Netzwerk zur Verfügung stellen. Zusätzlich kann auf dem Mikrocontroller ein einfacher Webserver eingerichtet werden. Damit kann es sowohl als eigenständiger Mikrocontroller als auch als Wi-Fi-Erweiterung für andere Mikrocontroller, z.B. einen Arduino, verwendet werden. 
   \par Das Modul basiert auf dem ESP8266 Chip von Espressif Systems. Es verfügt über Flash, SRAM und EEPROM Speicher. Außerdem unterstützt es das UART-Kommunikationsprotokoll.
   \par Die technischen Spezifikationen des ESP8266-01 sind in der Tabelle \ref{tab:esp8266td} dargestellt.
@@ -429,7 +429,7 @@ captionpos=b,
   \end{table}
   \par In meinem Projekt wird das ESP8266 als Schnittstelle zwischen dem Arduino und dem zentralen Server verwendet. Er ermöglicht die drahtlose Übertragung von Sensordaten an das Backend und kann auch Steuerbefehle empfangen, um entsprechende Aktionen auszulösen. Durch die direkte WLAN-Anbindung trägt das ESP8266 wesentlich zur flexiblen und ortsunabhängigen Systemsteuerung bei.
   \subsubsection{ESP32}
-  \par Das ESP32 ist ein leistungsstarker Mikrocontroller von Espressif Systems. In der Literatur wird das Modul auch als SoC\footnote{Eng. System-on-a-Chip, Deutsch: Ein-Chip-System} bezeichnet, was bedeutet, dass alle Funktionen des Moduls auf einem Chip integriert sind.
+  \par Das ESP32 \cite{esp32} ist ein leistungsstarker Mikrocontroller von Espressif Systems. In der Literatur wird das Modul auch als SoC\footnote{Eng. System-on-a-Chip, Deutsch: Ein-Chip-System} bezeichnet, was bedeutet, dass alle Funktionen des Moduls auf einem Chip integriert sind.
   \par Das ESP32 unterstützt WLAN und Bluetooth. Außerdem verfügt es über Schnittstellen wie I2C, UART, GPIOs, die eine flexible Integration mit Sensoren und anderen Peripheriegeräten ermöglichen.
   \par Die technischen Spezifikationen des ESP32 sind in der Tabelle \ref{tab:esp32td} dargestellt.
 
@@ -458,12 +458,12 @@ captionpos=b,
 
   \paragraph{M5StickC}
   \par \textbf{}
-  \par Der M5StickC ist eine kompakte Entwicklungsplattform, die auf dem ESP32 basiert. Er verfügt über ein integriertes Display, eine Batterie und zusätzliche integrierte Sensoren.
+  \par Der M5StickC \cite{m5stickc} ist eine kompakte Entwicklungsplattform, die auf dem ESP32 basiert. Er verfügt über ein integriertes Display, eine Batterie und zusätzliche integrierte Sensoren.
   \par Der M5StickC verfügt über ein 1,14-Zoll großes LCD-Display, das die visuelle Ausgabe von Sensordaten oder Statusmeldungen ermöglicht. Außerdem enthält er eine integrierte IMU (Inertial Measurement Unit) zur Bewegungs- und Lageerkennung. Eine integrierte Lipo-Batterie ermöglicht den kabellosen Betrieb über einen längeren Zeitraum.
   \par Aufgrund seiner kompakten Größe und der langen Batterielaufzeit eignet er sich besonders für IoT-Systeme. 
   \par In diesem Projekt dient der M5StickC als tragbare Steuerungs- und Überwachungseinheit. An das Modul werden Temperatur- und Lichtsensoren angeschlossen. Das Modul wird über WLAN mit dem Server verbunden. Auf dem integrierten Display werden die Daten der Sensoren sowie Verbindungszustände und Meldungen angezeigt. 
   \subsubsection{BME680}
-  \par Der BME680 ist ein kompakter Umweltsensor von Bosh, der mehrere Funktionen in einem Modul vereint. Das Modul ist mit einem Gassensor, einem Feuchtesensor, einem Luftdrucksensor und einem Temperatursensor ausgestattet. Aufgrund seiner kompakten Größe und hohen Genauigkeit wird das Modul häufig im Bereich der Umweltsensorik eingesetzt.
+  \par Der BME680 \cite{bme680} ist ein kompakter Umweltsensor von Bosh, der mehrere Funktionen in einem Modul vereint. Das Modul ist mit einem Gassensor, einem Feuchtesensor, einem Luftdrucksensor und einem Temperatursensor ausgestattet. Aufgrund seiner kompakten Größe und hohen Genauigkeit wird das Modul häufig im Bereich der Umweltsensorik eingesetzt.
   \par Mit Hilfe des eingebauten Gassensors und einer vom Hersteller speziell entwickelten Software kann die Luftqualität (IAQ - Eng. Index of Air Quality) gemessen werden. Grundsätzlich handelt es sich um eine Zahl von 0 bis 500, wobei 0 die beste und 500 die schlechteste Luftqualität darstellt. Eine detaillierte Beschreibung des Sensors sowie der Bestimmung der IAQ ist im Datenblatt zum Modul BME680 \cite{bme680} unter Kapitel 1.2 zu finden. Die Tabelle \ref{tab:bme680td} enthält die wichtigsten technischen Daten des Moduls.
   \par Der BME680 verfügt über I2C- und SPI- Schnittstellen für die Kommunikation mit anderen Geräten. 
   \begin{table}[h!]
@@ -596,7 +596,7 @@ captionpos=b,
   \par Die Programmiersprache C ist eine prozeduale und leistungsfähige Sprache. Sie wurde im Jahr 1972 von Dennis Ritchie entwickelt. Sie zeichnet sich durch ihre Effizienz und direkte Speicherverwaltung aus. Aufgrund ihrer Eigenschaften wird C vorrangig in der Entwicklung von Betriebssystemen sowie in der Embedded-Programmierung eingesetzt. Insbesondere bei Mikrocontrollern findet C häufig Anwendung.
 
   \par In diesem Projekt wurde C zur Programmierung der Mikrocontroller verwendet. Für die Entwicklung, Übersetzung und Übertragung des Codes auf die Mikrocontroller wurde die Entwicklungsumgebung \texttt{PlatformIO} verwendet.
-  \par  \texttt{PlatformIO} ist eine Open-Source-Entwicklungsumgebung für eingebettete Systeme, die als Erweiterung in Visual Studio Code verfügbar ist. Sie unterstützt zahlreiche Mikrocontroller-Plattformen, darunter Arduino und ESP-basierte Module.
+  \par  \texttt{PlatformIO} \cite{platformio} ist eine Open-Source-Entwicklungsumgebung für eingebettete Systeme, die als Erweiterung in Visual Studio Code verfügbar ist. Sie unterstützt zahlreiche Mikrocontroller-Plattformen, darunter Arduino und ESP-basierte Module.
   \par \texttt{PlatformIO} übernimmt den gesamten Build-Prozess: Der Quellcode wird übersetzt, kompiliert und auf das Gerät übertragen. Über die Konfigurationsdatei „\texttt{platformio.ini}“ wird das Projekt konfiguriert.In dieser Datei werden das verwendete Plattform-Framework, das Ziel-Board und die benötigten Bibliotheken angegeben. Weitere Weitere erforderliche Build- und Upload-Optionen können dort ebenfalls festgelegt werden.
   \par Durch die Verwendung von \texttt{PlatformIO} wird die Entwicklung der Software für die Mikrocontroller effizienter. Der Quellcode kann direkt auf dem Rechner kompiliert und gebildet werden. Somit werden die Fehlöer vor dem Laden auf das Gerät erkannt.
   \par Durch die Verwendung von \texttt{PlatformIO} gestaltet sich die Softwareentwicklung für die Mikrocontroller effizienter. Der Quellcode wird direkt auf dem Rechner kompiliert und überprüft. Somit können die Fehler bereits vor dem Hochladen auf das Gerät erkannt werden.
@@ -648,6 +648,7 @@ captionpos=b,
 
   \subsubsection{Webentwicklung}
   \par Die Entwicklung moderner Webanwendungen basiert auf drei zentralen Technologien: HTML, CSS und JavaScript. Diese bilden die Grundlage für die Erstellung interaktiver und ansprechender Webseiten. HTML dient der strukturellen Definition der Inhalte, CSS sorgt für die visuelle Gestaltung und JavaScript ermöglicht dynamische Funktionen und Interaktionen. Durch das Zusammenspiel dieser Technologien können komplexe, dynamische Webanwendungen realisiert werden.
+  \pagebreak
   \paragraph{HTML}
   \par \textbf{}
   \par Die Hypertext Markup Language (HTML) ist die standardisierte Beschreibungssprache zur Strukturierung und Darstellung von Webseiteninhalten. Sie bildet die Grundlage jeder Webseite und definiert deren logischen Aufbau durch eine hierarchische Struktur von Elementen. 
@@ -774,20 +775,22 @@ captionpos=b,
   
   \par Sind die gültigen Werte im EEPROM gespeichert, versucht das Modul, sich mit diesen Zugangsdaten mit dem WLAN zu verbinden (Zeile 13). Die Funktion \texttt{connect\_wifi()} schaltet das WLAN-Modul in den Modus „Station“ um, was die Verbindung mit anderen WLAN-Netzwerken erlaubt. Danach wird es versucht mit dem WLAN mit übergebenen Zugangsdaten zu verbinden. Die Anzahl der Versuche zur Erstellung der Verbindung ist in der Variable \texttt{wifi\_repeat} gespeichert. Ein Mal pro Sekunde versucht das Modul sich mit dem WLAN-Netzwerk zu verbinden. Wenn die Verbindung erfolgreich erstellt wurde, gibt die Funktion ein \texttt{True} zurück. Soll die Anzahl der Versuche überschritten sein, so wird ein \texttt{False} zurückgegeben.
   % „“
+  \pagebreak
   \paragraph{Aktualisierung der gespeicherten WLAN-Daten}
   \par \textbf{}
-  \par Sind die aus dem EEPROM ausgelesenen Daten ungültig oder kann keine erfolgreiche WLAN-Verbindung aufgebaut werden, müssen die WLAN-Daten aktualisiert werden. Zu diesem Zweck wird ein Webserver zur Verfügung gestellt, der ein Formular zur Eingabe der WLAN-Daten bereitstellt.
-  \par Die Funktion \texttt{setup\_ap()} (Listing \ref{lst:espsetupap}) stellt den Webserver bereit. Das WLAN-Modul wird in den Modus „Access Point“ versetzt. Die Konfiguration des WLAN-Zugangspunktes erfolgt über die Befehle \texttt{WiFi.softAP()} und \texttt{WiFi.softAPConfig()} (Zeile 3-4), wobei die Parameter des Access Points in Listing \ref{lst:espdefap} definiert sind.   
-  \par Der Webserver wird durch das Objekt \texttt{server} der Klasse \texttt{AsyncWebServer} zur Verfügung gestellt und mit dem Befehl \texttt{server.begin()} gestartet (Zeile 36).
-  \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espdefap}, caption={ESP: Access Point}]
-    const char AP_SSID[] = DEVICE_ID;
-    const char AP_PASSWORD[] = "setupesp32";
-    // Gleich fuer alle ESP-Module
-    IPAddress ap_ip(10, 0, 0, 1);
-    IPAddress ap_gateway(10, 0, 0, 1);
-    IPAddress ap_subnet(255, 255, 255, 0);
-    AsyncWebServer server(80);
-  \end{lstlisting}
+  \par Sind die aus dem EEPROM ausgelesenen Daten ungültig oder kann keine erfolgreiche WLAN-Verbindung aufgebaut werden, müssen die WLAN-Daten aktualisiert werden. Zu diesem Zweck wird ein Webserver zur Verfügung gestellt, der ein Formular zur Eingabe der WLAN-Daten bereitstellt. 
+  \par Die Funktion \texttt{setup\_ap()} (Listing \ref{lst:espsetupap}) stellt den Webserver bereit. Das WLAN-Modul wird in den Modus „Access Point“ versetzt. Die Konfiguration des WLAN-Zugangspunktes erfolgt über die Befehle \texttt{WiFi.softAP()} und \texttt{WiFi.softAPConfig()} (Zeile 3-4). 
+  \par Der Name des Zugangspunktes entspricht der Geräte-ID. Um auf den Webserver zuzugreifen, soll der Benutzer sich mit dem WLAN-Netzwerk verbinden und die IP-Adresse „\texttt{10.0.0.1}“ im Webbrowser eingeben.
+
+  % \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espdefap}, caption={ESP: Access Point}]
+  %   const char AP_SSID[] = DEVICE_ID;
+  %   const char AP_PASSWORD[] = "setupesp32";
+  %   // Gleich fuer alle ESP-Module
+  %   IPAddress ap_ip(10, 0, 0, 1);
+  %   IPAddress ap_gateway(10, 0, 0, 1);
+  %   IPAddress ap_subnet(255, 255, 255, 0);
+  %   AsyncWebServer server(80);
+  % \end{lstlisting}
   \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espsetupap}, caption={ESP: setup\_ap}]
   void setup_ap()
   {
@@ -828,8 +831,9 @@ captionpos=b,
     server.begin();
   }
   \end{lstlisting}
-  \par Die HTTP-Routen werden innerhalb der Funktion \texttt{server.on()} festgelegt. Beim Aufruf der Root-Route („/“) wird eine HTTP-GET-Anfrage bearbeitet, die mit einer HTML-Seite beantwortet wird (Zeile 6). Diese Seite enthält ein Formular mit Input-Felder zur Eingabe der WLAN-Zugangsdaten. Der Benutzer soll der Name des Netzwerks und das Passwort eingeben.
-  \par Wenn der Benutzer auf die Taste „Submit“ drückt, wird eine HTTP-POST-Anfrage an die Route „\texttt{/save}“ gesendet. Die Zugangsdaten werden aus dem \texttt{request}-Objekt ausgelesen und auf ihre maximale Länge überprüft. Wenn die Daten gültig sind, werden sie im EEPROM gespeichert. Der EEPROM wird initialisiert, die neuen Zugangsdaten werden gespeichert, und die Änderungen mit \texttt{EEPROM.commit()} übernommen (Zeile 26-30). Anschließend wird ein Hinweis zurückgegeben, dass die Daten übernommen wurden. Das ESP-Modul wird mit dem Befehl \texttt{ESP.restart()} neu gestartet, um die neuen WLAN-Daten zu verwenden.
+  \par Der Webserver wird durch das Objekt \texttt{server} der Klasse \texttt{AsyncWebServer} zur Verfügung gestellt und mit dem Befehl \texttt{server.begin()} gestartet (Zeile 36).
+  \par Die HTTP-Routen werden innerhalb der Funktion \texttt{server.on()} festgelegt. Beim Aufruf der Root-Route („/“) wird eine HTTP-GET-Anfrage bearbeitet, die mit einer HTML-Seite beantwortet wird (Zeile 6). Diese Seite enthält ein Formular mit Input-Felder zur Eingabe der WLAN-Zugangsdaten. Der Benutzer soll der Name des vom Raspberry Pi bereitgestellten Netzwerks und das Passwort eingeben.
+  \par Wenn der Benutzer auf die Taste „Submit“ drückt, wird eine HTTP-POST-Anfrage an die Route „\texttt{/save}“ gesendet (Zeile 9-35). Die Zugangsdaten werden aus dem \texttt{request}-Objekt ausgelesen und auf ihre maximale Länge überprüft. \par Wenn die Daten gültig sind, werden sie im EEPROM gespeichert. Der EEPROM wird initialisiert, die neuen Zugangsdaten werden gespeichert, und die Änderungen mit \texttt{EEPROM.commit()} übernommen (Zeile 26-30). Anschließend wird ein Hinweis zurückgegeben, dass die Daten übernommen wurden. Das ESP-Modul wird mit dem Befehl \texttt{ESP.restart()} neu gestartet, um die neuen WLAN-Daten zu verwenden.
   \paragraph{Verbindung mit MQTT-Broker}
   \par \textbf{}
   \par Nach erfolgreicher Verbindung mit dem WLAN, wird die Funktion \texttt{mqtt\_connect()} (Listing \ref{lst:espconnectmqtt}) aufgerufen, um die Verbindung zum MQTT-Broker zu erstellen. Zunächst werden die Topics zum Senden und Empfangen der Nachrichten mit der Funktion \texttt{set\_topics()} erstellt (Zeile 3). Dabei werden die Topics mit \texttt{Geräte-ID} für jedes Modul individuell formuliert.
@@ -853,6 +857,7 @@ captionpos=b,
       return False;
     }f
   \end{lstlisting}
+  \pagebreak
   \paragraph{Verwaltung eingehender MQTT-Nachrichten}
   \par \textbf{}
   \par Die Funktion \texttt{callback} wird beim Empfang einer MQTT-Nachricht aufgerufen. In dieser Funktion sind die Reaktionen auf den erhaltenen Nachrichten aus dem Topic „\texttt{command/ID}“ definiert.  Abhängig vom Gerät wird diese Funktion angepasst und erweitert. 
@@ -909,8 +914,14 @@ captionpos=b,
   \end{lstlisting}
 
 \par Beim Start des Moduls wird die Funktion \texttt{setup()} aufgerufen. Das Modul wird mit dem Befehl \texttt{M5.begin()} initialisiert. Zusätzlich zu den im letzten Abschnitt beschriebenen Einrichtungen müssen auch die beiden angeschlossenen Sensoren eingerichtet und in Betrieb genommen werden. Zum Einstellen der Sensoren werden im Setup die Funktionen \texttt{vcnl\_setup()} und \texttt{bme\_setup()} aufgerufen. Diese Funktionen stellen die I²C-Verbindung zu den Sensoren her und initialisieren diese.
-\par Anschließend wird die WLAN- und MQTT-Verbindung aufgebaut. Der Status der Verbindung wird mit der Funktion \texttt{show\_connections()} bei jedem Programmdurchlauf auf dem Display des Moduls angezeigt. Sollte die Verbindung abbrechen oder nicht aufgebaut werden, wird die entsprechende Meldung ebenfalls angezeigt.
+\par Anschließend wird die WLAN- und MQTT-Verbindung aufgebaut. Der Status der Verbindung wird mit der Funktion \texttt{show\_connections()} bei jedem Programmdurchlauf auf dem Display des Moduls angezeigt. Sollte die Verbindung abbrechen oder nicht aufgebaut werden, wird die in der Abbildung \ref{abb:m5error} dargestellte Meldung angezeigt.
 \par Bei jedem Programmdurchlauf zeigt die Funktion \texttt{show\_sensor\_data()} die von den Sensoren erfassten Daten auf dem Display an. 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\textwidth]{m5error.png}
+  \caption{M5Stick hat keine WLAN-Verbindung}
+  \label{abb:m5error}
+\end{figure}
 \par Mit der Funktion \texttt{send\_mqtt\_data()} werden die Sensordaten erfasst und an dem MQTT-Broker gesendet. Zunächst werden die Messwerte der Sensoren ausgelesen und in einem JSON-Objekt zusammengefasst. Der BME680 liefert die Temperatur in °C sowie die Luftfeuchtigkeit in \%. Der VCNL4040 erfasst die Umgebungshelligkeit in \texttt{Lux} abgelesen. Anschließend wird das JSON-Objekt serialisiert und im Topic „\texttt{data/m5stick}“ an den MQTT-Broker gesendet.  
 \par Das auf dem Modul laufenden MQTT-Client abonniert das Topic „\texttt{command/m5stick}“. Beim Empfang einer MQTT-Nachricht aus diesem Topic mit dem Text „handshake“, werden die Konfigurationsdaten in das Topic „\texttt{handshake/m5stick}“ gesendet. Die Konfigurationsdaten des Moduls sind wie folgt strukturiert:
 \begin{Verbatim}[frame=single]
@@ -935,7 +946,8 @@ captionpos=b,
     "commands": ["light_on", "light_off"]
   }
 \end{Verbatim}
-\par Aus den Konfigurationsdaten ergibt sich, dass das Modul die Werte für die Temperatur und die Luftfeuchtigkeit liefert sowie die Befehle zum Ein- und Ausschalten des Lichts ausführen kann. Beim Empfang einer Nachricht mit dem Text „\texttt{light\_on}“ wird der GPIO-Pin 4 auf HIGH gesetzt, wodurch die angeschlossene Diode eingeschaltet wird. Beim Empfang einer Nachricht mit dem Text „\texttt{"light\_off"}“ wird der GPIO-Pin 4 auf LOW gesetzt und die Diode entsprechend ausgeschaltet.
+\par Aus den Konfigurationsdaten ergibt sich, dass das Modul die Werte für die Temperatur und die Luftfeuchtigkeit liefert sowie die Befehle zum Ein- und Ausschalten des Lichts ausführen kann. 
+\par Beim Empfang einer Nachricht mit dem Text „\texttt{light\_on}“ wird der GPIO-Pin 4 auf HIGH gesetzt, wodurch die angeschlossene Diode eingeschaltet wird. Beim Empfang einer Nachricht mit dem Text „\texttt{"light\_off"}“ wird der GPIO-Pin 4 auf LOW gesetzt und die Diode entsprechend ausgeschaltet.
 \par Das ESP32 liefert kontinuierlich die erfassenen Umweltdaten und reagiert auf die eingehenden Steuerbefehle. Dadurch ist das Modul flexibel in verschiedenen Szenarien einsetzbar.
 % „“
 \newpage
@@ -1075,7 +1087,7 @@ captionpos=b,
   \paragraph{Modelle}
   \par \textbf{}
   \par In der Datei „\texttt{models.py}“ sind die Datenbank-Tabelle als Python-Klassen definiert. 
-  \par Zunächst müssen die benötigten Module importiert werden. Das Modul „\texttt{bcrypt}“ wird für die Entschlüssertung und Verifizierung der Passwörter verwendet. Die Module aus der Bibliothek „\texttt{SQLAlchemy}“ enthalten die Funktionen für die Interaktionen mit der Datenbank. 
+  \par Zunächst müssen die benötigten Module importiert werden. Das Modul „\texttt{bcrypt}“ \cite{bcrypt} wird für die Entschlüssertung und Verifizierung der Passwörter verwendet. Die Module aus der Bibliothek „\texttt{SQLAlchemy}“ enthalten die Funktionen für die Interaktionen mit der Datenbank. 
   \par Das Modul „\texttt{.base}“ entspricht der Datei „\texttt{base.py}“ (Listing \ref{lst:dbbase}). In dieser Datei wird lediglich „\texttt{declarative\_base}“ importiert und in der Variablen \texttt{Base} initialisiert. Dieser Schritt ist notwendig, um auf die \texttt{Base} in anderen Skripten zugreifen zu können.
   \begin{lstlisting}[frame=single, style=py, numbers=left, label={lst:dbbase}, caption={db: base.py}]
     from sqlalchemy.orm import declarative_base
@@ -1387,6 +1399,9 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \par Zusätzlich hat der Benutzer die Möglichkeit, das Gerät direkt einem bestimmten Raum innerhalb des Hauses zuzuordnen. Dazu muss im Body des Requests die entsprechende Raum-ID angegeben werden. In diesem Fall wird mit der Funktion \texttt{queries.get\_house\_by\_room()} nach dem entsprechenden Haus gesucht. Anschließend wird geprüft, ob die aus dem Token extrahierte Benutzer-ID mit der des Hauseigentümers übereinstimmt. Ist dies nicht der Fall, wird der Zugriff verweigert, der Vorgang abgebrochen und eine entsprechende Fehlermeldung zurückgegeben.
   \par Anschließend wird mit dem Befehl \texttt{queries.add\_new\_device()} das Gerät zunächst ohne direkte Raumzuordnung in der Datenbank gespeichert. Ist eine Raum-ID vorhanden, wird mit dem Befehl \texttt{queries.add\_room\_device()} ein Eintrag in der Tabelle „\texttt{roomdevice}“ erstellt, der den Primärschlüssel des Gerätes mit der Raum-ID verknüpft.
   \par Um ein Gerät aus der Datenbank zu Löschen, muss ein \texttt{Delete}-Request mit dem JWT-Token im Header und mit der Geräte-ID im Body auf die Route „\texttt{/delete\_device}“ gesendet werden. Die aus dem Token erzeugte Benutzer-ID wird zusammen mit der Geräte-ID an die Funktion \texttt{services.delete\_device()} übergeben. Diese Funktion prüft zunächst, ob das übergebene Geräte-ID dem Benutzer zugeordnet ist. Im Erfolgsfall wird das Gerät aus der Datenbank gelöscht. 
+  \par Der Benutzer hat die Möglichkeit, Befehle an ein Gerät zu senden. Für diesen Zweck muss ein \texttt{POST}-Request an die Route „\texttt{/send\_command/Geräte-ID/Befehl}“ gesendet werden. Die Geräte-ID sowie der auszuführende Befehl werden dabei direkt in der URL übergeben. Im Header des Requests muss ein gültiges Token vorhanden sein.
+  \par Nach Eingang des Requests wird zunächst die Benutzer-ID aus dem Token extrahiert. Danach wird die Funktion \texttt{services.send\_command()} aufgerufen. Diese erwartet neben der \texttt{AsyncSession} auch die Benutzer-ID, die Geräte-ID und den zu übermittelnden Befehl als Parameter.
+  \par In der Funktion wird zunächst geprüft, ob das übergebene Geräte-ID dem Benutzer zugeordnet ist. Falls ja, werden die Daten an die Funktion \texttt{send\_command\_to\_device()} der Klasse \texttt{MQTTClient} übergeben, die den Befehl über die MQTT-Verbindung an das Gerät übermittelt.
   \par Diese strukturierte Vorgehensweise gewährleistet nicht nur eine sichere und konsistente Registrierung neuer Geräte, sondern bietet dem Benutzer auch die Möglichkeit, seine Geräte flexibel zu verwalten und eindeutig zu identifizieren.
   \subsection{Szenario}
   %\par \textbf{}
@@ -1484,7 +1499,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \par \textbf{}
   \par Damit die Szenarien ausgeführt werden können, müssen sie aus der Datenbank geladen und lokal gespeichert werden. 
   \par Die Funktion \texttt{load\_scenarios()} ruft zunächst die Methode \texttt{get\_all\_scenarios()} aus dem Skript „\texttt{queries.py}“ auf, die alle Szenarien zurückgibt. Jedes geladene Szenario wird um ein Attribut „\texttt{active}“ erweitert, das initial auf „\texttt{False}“ gesetzt wird. 
-  \par Anschließend werden die Szenarien-Objekten als Schlüssel-Wert-Paare in der Klassenvariablen \texttt{saved\_scnearios} gespeichert. Die Schlüssel entsprechen der Geräte-ID, während die Werte Listen von Szenarien enthalten, die die Geräte-ID als \texttt{source\_dev} haben. Existiert bereits ein Eintrag für eine Geräte-ID, wird das Szenario der entsprechenden Liste hinzugefügt, andernfalls wird eine neue Liste erstellt. Die Variable \texttt{saved\_scenarios} ist wie folgt strukturiert:
+  \par Anschließend werden die Szenarien-Objekten als Schlüssel-Wert-Paare in der Klassenvariablen „\texttt{saved\_scnearios}“ gespeichert. Die Schlüssel entsprechen der Geräte-ID, während die Werte Listen von Szenarien enthalten, die die Geräte-ID als Quellgerät „\texttt{source\_dev}“ haben. Existiert bereits ein Eintrag für eine Geräte-ID, wird das Szenario der entsprechenden Liste hinzugefügt, andernfalls wird eine neue Liste erstellt. Die Variable „\texttt{saved\_scenarios}“ ist wie folgt strukturiert:
   \begin{Verbatim}[frame=single]
     saved_scenarios = {
       "device1":[ScenarioModel(source_dev == "device1")],
@@ -1494,32 +1509,32 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
       ]
     }
   \end{Verbatim}
-  \par Beim Empfang einer MQTT-Nachricht wird in der Funktion \texttt{process\_message()} zunächst geprüft, ob für die empfangende Geräte-ID ein Eintrag in der Klassenvariablen \texttt{saved\_scenarios} vorhanden ist (Zeile 15-16). Ist dies der Fall, werden alle zugehörigen Szenarien iteriert und deren jeweilige Bedingung überprüft (Zeile 17-18).
-  \par Die Bedingung wird mit der Funktion \texttt{eval} überprüft (Zeile 18). Wenn die Bedingung erfüllt ist und das Attribut „\texttt{active}“ des Szenarios den Wert „\texttt{False}“ hat, wird es auf „\texttt{True}“ gesetzt und der im Szenario gespeicherte Befehl an das Zielgerät gesendet (Zeile 20-21). 
+  \par Beim Empfang einer MQTT-Nachricht wird in der Funktion \texttt{process\_message()} zunächst geprüft, ob in der Klassenvariablen „\texttt{saved\_scenarios}“ ein Schlüssel vorhanden ist, der dem empfangenden Geräte-ID entspricht  (Zeile 15-16). Ist dies der Fall, werden alle zugehörigen Szenarien iteriert und deren jeweilige Bedingung überprüft (Zeile 17-18).
+  \par Die Bedingung wird mit der Funktion \texttt{eval} überprüft (Zeile 18). Wenn die Bedingung erfüllt ist und das Attribut „\texttt{active}“ des Szenarios den Wert „\texttt{False}“ hat, wird es auf „\texttt{True}“ gesetzt und der im Szenario gespeicherte Befehl an das Zielgerät gesendet (Zeile 20-21). Damit wurde das Szenario ausgeführt.
   \par Wenn die Bedingung nicht erfüllt ist und das Szenario zuvor aktiv war, so wird das Attribut „\texttt{active}“ auf „\texttt{False}“ gesetzt (Zeile 22). 
   \par Dieser Vorgang stellt sicher, dass die Szenarien nur dann ausgelöst werden, wenn die definierte Bedingung erfüllt ist, und dass Befehle nur dann gesendet werden, wenn ein Szenario ausgelöst wird. 
   \paragraph{Bereitstellung der Daten}
   \par \textbf{}
   \par Nach der Verarbeitung und dem Auslösen des Szenarios, werden die Daten über das WebSocket an den Benutzer gesendet. 
-  \par Dazu wird die Klasse WebsocketHandler aus dem Skript \texttt{services.py} importiert (Listing \ref{lst:processmessage} Zeile 24). Mit der Funktion \texttt{send\_data()} dieser Klasse werden die Daten an das aktive WebSocket gesendet (Zeile 25).
+  \par Dazu wird die Klasse WebsocketHandler aus dem Skript „\texttt{services.py}“ importiert (Listing \ref{lst:processmessage} Zeile 24). Mit der Funktion \texttt{send\_data()} dieser Klasse werden die Daten an das aktive WebSocket gesendet (Zeile 25).
   \par Durch diese Architektur kann der Webserver in Echtzeit auf neue MQTT-Nachrichten reagieren und die empfangenen Daten effizient an verbundene Clients weiterleiten.
-  
+
   \subsection{WebSocket}
   % \par \textbf{}
-  \par Die Geräte senden kontinuierlich Daten über die MQTT-Verbindung an den MQTT-Broker. Diese Daten müssen verarbeitet und dem Benutzer in Echtzeit angezeigt werden. Zu diesem Zweck wird eine WebSocket-Schnittstelle bereitgestellt, die eine direkte und effiziente bidirektionale Kommunikation ermöglicht.
-  \par Die Route \texttt{mqtt/device/<device\_id>} stellt eine WebSocket-Verbindung zur Verfügung, wobei \texttt{device\_id} für die eindeutige Geräte-ID steht. Die Klasse \texttt{WebsocketHandler} in der Datei \texttt{services.py} verwaltet sämtliche WebSocket-Verbindungen und deren Lebenszyklus. Das Feldattribut \texttt{active\_connections} speichert alle aktiven WebSocket-Verbindungen in Form einer „List of Dictionaries“, wobei jedes Dictionary eine bestehende Verbindung mit der zugehörigen \texttt{device\_id} sowie dem WebSocket-Objekt enthält.
-  \par Die Autorisierung des Benutzers, der eine Verbindung zum WebSocket aufbauen möchte, erfolgt über die Funktion \texttt{auth\_websocket()}. Diese akzeptiert zunächst die WebSocket-Verbindung und wartet asynchron auf die erste Nachricht. Die erste Nachricht, die an dem WebSocket gesendet wird, dient als Initialisierungsnachricht und muss ein Token erhalten, das ähnlich wie ein HTTP-Header aufgebaut ist:
+  \par Die von Geräten gesendeten Daten werden den Benutzern in Echtzeit bereitgestellt. Zu diesem Zweck wird eine WebSocket-Schnittstelle bereitgestellt, die eine direkte bidirektionale Kommunikation ermöglicht.
+  \par Die Route „\texttt{mqtt/device/<device\_id>}“ stellt eine WebSocket-Verbindung zur Verfügung, wobei „\texttt{device\_id}“ für die eindeutige Geräte-ID steht. Die Klasse \texttt{WebsocketHandler} in der Datei „\texttt{services.py}“ verwaltet sämtliche WebSocket-Verbindungen und deren Lebenszyklus. Die Klassenvariable „\texttt{active\_connections}“ speichert alle aktiven WebSocket-Verbindungen in Form einer „List of Dictionaries“, wobei jedes Dictionary eine bestehende Verbindung mit dem zugehörigen Gerät sowie dem WebSocket-Objekt enthält.
+  \par Die Autorisierung des Benutzers, der eine Verbindung zum WebSocket aufbauen möchte, erfolgt über die Funktion \texttt{auth\_websocket()}. Diese akzeptiert zunächst die WebSocket-Verbindung und wartet asynchron auf die erste Nachricht. Die erste Nachricht, die an dem WebSocket gesendet wird, dient als Initialisierungsnachricht. Sie muss ein Token erhalten, das ähnlich wie ein HTTP-Header aufgebaut ist:
   \begin{Verbatim}[frame=single]
     "auth": "Bearer <TOKEN>"
   \end{Verbatim}
-  \par Aus dem übergebenen Token wird die Benutzer-ID extrahiert. Anschließend wird mit dem Befehl \texttt{queries.verify\_user\_device(...)} geprüft, ob der authentifizierte Benutzer berechtigt ist, auf das angegebene Gerät zuzugreifen. Fehlt das Token oder besitzt der Benutzer keine Zugriffsrechte auf das Gerät, wird eine entsprechende Fehlermeldung ausgegeben und geloggt.
+  \par Aus dem übergebenen Token wird die Benutzer-ID extrahiert. Anschließend wird mit der Funktion \texttt{queries.verify\_user\_device()} geprüft, ob der authentifizierte Benutzer berechtigt ist, auf das angegebene Gerät zuzugreifen. Fehlt das Token oder besitzt der Benutzer keine Zugriffsrechte auf das Gerät, wird eine entsprechende Fehlermeldung ausgegeben und geloggt.
   \par Nach erfolgreicher Autorisierung des Benutzers wird die Funktion \texttt{connect()} aus der Klasse \texttt{WebsocketHandler} aufgerufen. Diese fügt die neue Verbindung in die Liste von aktiven Verbindungen hinzu. Die Verbindung bleibt bestehen, bis sie entweder vom Benutzer geschlossen oder durch einen Netzwerkfehler unterbrochen wird.
-  \par Die Kommunikation über das WebSocket-Protokoll erfolgt in einer Endlosschleife, die ständig auf eingehende Nachrichten wartet. Wird die Verbindung vom Benutzer oder durch andere Ereignisse unterbrochen, wird diese mit der Funktion \texttt{disconnect} aus der Liste der aktiven Verbindungen entfernt.
-  \par Die Funktion \texttt{send\_data()} ermöglicht dNas gezielte Senden von Daten über die WebSocket-Schnittstelle. Dabei wird geprüft, ob eine aktive WebSocket-Verbindung mit der entsprechenden \texttt{device\_id} existiert. Falls ja, werden die zu sendenden Daten als JSON-Objekt über die WebSocket-Schnittstelle an das Gerät übertragen. Tritt ein Übertragungsfehler auf, wird die Verbindung geschlossen und aus der Liste der aktiven Verbindungen entfernt.
+  \par Die Kommunikation über das WebSocket-Protokoll erfolgt in einer Endlosschleife, die ständig auf eingehende Nachrichten wartet. Wird die Verbindung vom Benutzer oder durch andere Ereignisse unterbrochen, wird diese mit der Funktion \texttt{disconnect()} aus der Liste der aktiven Verbindungen entfernt.
+  \par Die Funktion \texttt{send\_data()} ermöglicht das gezielte Senden von Daten über die WebSocket-Schnittstelle. Dabei wird geprüft, ob eine aktive WebSocket-Verbindung mit der entsprechenden „\texttt{device\_id}“ existiert. Falls ja, werden die zu sendenden Daten als JSON-Objekt an die WebSocket-Schnittstelle gesendet. Tritt ein Übertragungsfehler auf, wird die Verbindung geschlossen und aus der Liste der aktiven Verbindungen entfernt.
   \par Die Implementierung dieser WebSocket-Schnittstelle ermöglicht eine effiziente und latenzarme Datenübertragung zwischen dem MQTT-Broker und den angebundenen Geräten.
- 
+     % „“
   \subsection{Frontend}
-  \par \textbf{TODO}  Das Frontend der Webanwendung ist als Single Page Application (SPA\footnote{Eng. Single Page Applicaiton}) implementiert. Eine SPA ist eine Webanwendung, die auf einer einzigen HTML-Seite geladen wird und deren Inhalt dynamisch durch JavaScript aktualisiert wird. Dies führt zu einer verbesserten Benutzererfahrung, da der Wechsel zwischen verschiedenen Ansichten schneller erfolgt und weniger Serveranfragen notwendig sind. 
+  \par Das Frontend der Webanwendung ist als Single Page Application (SPA\footnote{Eng. Single Page Applicaiton}) implementiert. Eine SPA ist eine Webanwendung, die auf einer einzigen HTML-Seite geladen wird und deren Inhalt dynamisch durch JavaScript aktualisiert wird. Dies führt zu einer verbesserten Benutzererfahrung, da der Wechsel zwischen verschiedenen Ansichten schneller erfolgt und weniger Serveranfragen notwendig sind. 
   \par Das Frontend der Anwendung besteht aus einer HTML-Seite zur Strukturierung der Inhalte, JavaScript für die interaktive Funktionalität sowie CSS-Dateien zur Gestaltung und Formatierung. Diese Komponenten sind im Paket \texttt{Webserver} organisiert und befinden sich in den Verzeichnissen „\texttt{templates}“ und „\texttt{static}“.
   \par 
   \subsubsection{Dynamische Datendarstellung mit JavaScript}
@@ -1528,9 +1543,14 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \paragraph{Asynchronen Serveranfragen}
   \par \textbf{}
   \par Da sowohl das Backend als auch die Datenbank asynchron implementiert sind, müssen auch die Anfragen im Frontend asynchron verarbeitet werden. Dies wird durch die Verwendung von asynchronen HTTP-Anfragen mittels der \texttt{fetch}-API realisiert. Dadurch wird verhindert, dass die Benutzeroberfläche während der Kommunikation mit dem Server blockiert wird. Antworten des Servers werden mittels Promises verarbeitet, wodurch das Frontend flexibel auf unterschiedliche Antwortzeiten reagieren kann.
-  \par Im Listing \ref{lst:jsgetuserdata} ist die Funktion \texttt{get\_user\_data} dargestellt. Diese Funktion dient als Beispiel für die asynchrone Verarbeitung von Server-Anfragen im Frontend. Sie nutzt \texttt{async} und \texttt{await}, um eine GET-Anfrage an die Route „\texttt{/get\_user\_data}“ zu senden. Dabei wird das Token aus dem „\texttt{localStorage}“ als Bearer-Token im Authorisation-Header der Anfrage übermittelt.
-  \par Die Serverantwort wird in einem \texttt{try-catch}-Block verarbeitet, um potenzielle Fehler abzufangen und die Anwendung vor unerwarteten Abstürzen zu schützen. Falls die Antwort des Servers nicht den Status ok aufweist, wird eine Fehlermeldung generiert. Anschließend wird der zurückgegebene JSON-Inhalt geprüft. Falls ein Fehler im Antwortobjekt enthalten ist, wird dieser ebenfalls als Exception geworfen. Nur wenn die Serverantwort gültig ist und keine Fehlermeldung enthält, wird das empfangene Benutzerobjekt zurückgegeben. Im Fehlerfall wird die Funktion \texttt{errorHandler()} aufgerufen, um eine entsprechende Fehlerbehandlung vorzunehmen.
-  \begin{lstlisting}[frame=single, style=htmlcssjs, label={lst:jsgetuserdata}, caption={script.js: get\_user\_data}]
+  \par Im Listing \ref{lst:jsgetuserdata} ist die Funktion \texttt{get\_user\_data()} dargestellt. Diese Funktion dient als Beispiel für die asynchrone Verarbeitung von Server-Anfragen im Frontend. Sie nutzt \texttt{async} und \texttt{await}, um eine GET-Anfrage an die Route „\texttt{/get\_user\_data}“ zu senden (Zeile 3-11). Dabei wird das Token aus dem \texttt{localStorage} als Bearer-Token im Authorisation-Header der Anfrage übermittelt (Zeile 7-9).
+  \par Die Serverantwort wird in einem \texttt{try-catch}-Block verarbeitet, um potenzielle Fehler abzufangen und die Anwendung vor unerwarteten Abstürzen zu schützen. 
+  % „“
+  \par Falls die Antwort des Servers nicht den Status „\texttt{ok}“ aufweist, wird eine Fehlermeldung generiert (Zeile 12-13). Anschließend wird der empfangende JSON-Inhalt geprüft. 
+  \par Die Serverantwort auf diese Anfrage besteht aus einem JSON-Objekt, das Listen der gespeicherten Häuser, Geräte und Szenarien enthält.
+  \par Falls ein Fehler im Antwortobjekt enthalten ist, wird ebenfalls eine Fehlermeldung geworfen (Zeile 16-17). Nur wenn die Serverantwort gültig ist und keine Fehlermeldung enthält, wird das empfangene JSON-Objekt zurückgegeben (Zeile 19). 
+  \par Wenn ein Fehle auftritt, wird die Funktion \texttt{errorHandler()} aufgerufen, um den Fehler entsprechend zu behandeln (Zeile 21-22).
+  \begin{lstlisting}[frame=single, style=htmlcssjs, numbers=left, label={lst:jsgetuserdata}, caption={script.js: get\_user\_data}]
     async function get_user_data() {
       try {
         const response = await fetch(
@@ -1554,14 +1574,16 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
       } catch (error) {
         errorHandler();
       }
-  }
+    }
   \end{lstlisting}
   \paragraph{Benutzerinteraktion}
-  \par Die Reaktionen auf die Benutzerinteraktionen sind mittels Event-Listener impementiert. Event-Listener ermöglichen es, auf Benutzerinteraktionen wie Klicks, Tastendrücke oder Mausbewegungen zu reagieren. In JavaScript werden sie mit der Funktion \texttt{addEventListener} an ein HTML-Element gebunden. Dabei wird das gewünschte Ereignis und eine Callback-Funktion angegeben, die beim Auftreten des Ereignisses ausgeführt wird.
+  \par \textbf{}
+  \par Die Reaktionen auf die Benutzerinteraktionen sind mittels Event-Listener impementiert. Event-Listener ermöglichen es, auf Benutzerinteraktionen wie Klicks, Tastendrücke oder Mausbewegungen zu reagieren. In JavaScript werden sie mit der Funktion \texttt{addEventListener} an jeweiliges HTML-Element gebunden. Dabei wird das gewünschte Ereignis und eine Callback-Funktion angegeben, die beim Auftreten des Ereignisses ausgeführt wird.
   \par Event-Listener können nicht nur für einzelne Elemente, sondern auch für übergeordnete Container genutzt werden. Dies ist besonders nützlich, wenn neue Elemente dynamisch hinzugefügt oder gelöscht werden. 
-  \par Das Listing \ref{lst:jsmncreatehouse} zeigt den Prozess der Erstellung eines Formulars zum Hinzufügen eines neuen Hauses. In der ersten Zeile wird ein Event-Listener auf das Element mit der ID „BTNcreateHouse“ gesetzt. Beim Anklicken wird die Funktion \texttt{mnCreateHouse} aufgerufen, die das Eingabeformular erstellt. Dieser Funktion wird als Parameter ein \texttt{div}-Element übergeben, in dem das Formular angezeigt wird. Die HTML-Struktur des Formulars wird in den Zeilen 8 bis 15 definiert.
-  \par Anschließend wird ein Event-Listener für die Schaltfläche „BTNcloseHouseMN“ registriert, der das Formular schließt, indem er den Inhalt des \texttt{div}-Elements entfernt und dessen CSS-Klassen zurücksetzt.
-  \par Die Schaltfläche „BTNaddHouse“ erhält einen asynchronen Event-Listener, der die Funktion \texttt{addHouse} aufruft. Als Parameter wird der Name des Hauses übergeben, den der Benutzer im Eingabefeld „houseName“ eingegeben hat.
+  \par Das Listing \ref{lst:jsmncreatehouse} zeigt den Prozess der Erstellung eines Formulars zum Hinzufügen eines neuen Hauses. 
+  \par In Zeile 1 wird ein Event-Listener auf das Element mit der ID „\texttt{BTNcreateHouse}“ gesetzt. Beim Anklicken wird die Funktion \texttt{mnCreateHouse} aufgerufen, die das Eingabeformular erstellt. Dieser Funktion wird als Parameter ein \texttt{div}-Element übergeben, in dem das Formular angezeigt wird. Die HTML-Struktur des Formulars ist in den Zeilen 8 bis 15 definiert.
+  \par Anschließend wird ein Event-Listener für die Schaltfläche „\texttt{BTNcloseHouseMN}“ registriert, der das Formular schließt, indem er den Inhalt des \texttt{div}-Elements entfernt und dessen CSS-Klassen zurücksetzt.
+  \par Die Schaltfläche „\texttt{BTNaddHouse}“ erhält einen asynchronen Event-Listener, der die Funktion \texttt{addHouse()} aufruft. Als Parameter wird der Name des Hauses übergeben, den der Benutzer im Eingabefeld „houseName“ eingegeben hat.
   
   \begin{lstlisting}[frame=single, numbers=left, style=htmlcssjs, label={lst:jsmncreatehouse}, caption={script.js: mnCreateHouse}]
     document.getElementById("BTNcreateHouse").addEventListener("click", 
@@ -1618,67 +1640,69 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \par Beim Laden der Seite überprüft die Anwendung, ob ein gültiges Token im \texttt{localStorage} vorhanden ist. Falls kein Token existiert oder es ungültig ist, wird der Nutzer automatisch zur Login-Seite weitergeleitet. Andernfalls werden die Benutzerdaten von dem Server abgefragt und die Hauptseite wird geladen.
   \par Die Login-Seite wird in der Funktion „\texttt{renderLoginForm()}“ (Listing \ref{lst:loginhtml}) erstellt. Dabei wird das \texttt{div}-Element „\texttt{app}“ mit einem Formular versehen, das Eingabefelder für den Benutzernamen und das Passwort enthält (Zeile 1-18). 
   % „“
-  \par Die Schaltfläche „Login“ ist mit einem Event-Listener für das Ereignis „submit“ verknüpft. Durch Drücken des Login-Buttons werden die Daten aus den Eingabefeldern abgelesen und in den Variablen „username“ und „password“ gespeichert (Zeile 22-23). Anschließend wird eine asynchrone Post-Anfrage an die Route „/login“. Im \texttt{header}-Objekt wird der \texttt{Content-Type} auf „application/json“ gesetzt, damit der Server weiß, dass die übermittelten Daten im JSON-Format vorliegen (Zeile 30). Die Anmeldedaten werden mit \texttt{JSON.stringify()} in eine JSON-Zeichenkette umgewandelt und im \texttt{body} der Anfrage übermittelt (Zeile 32). 
+  \par Die Schaltfläche „\texttt{Login}“ ist mit einem Event-Listener für das Ereignis „\texttt{submit}“ verknüpft. Durch Drücken des Login-Buttons werden die Daten aus den Eingabefeldern abgelesen und in den Variablen „username“ und „password“ gespeichert (Zeile 22-23). Anschließend wird eine asynchrone Post-Anfrage an die Route „\texttt{/login}“ gesendet. Im \texttt{header}-Objekt wird der \texttt{Content-Type} auf „\texttt{application/json}“ gesetzt, damit der Server weiß, dass die übermittelten Daten im JSON-Format vorliegen (Zeile 30). Die Anmeldedaten werden mit \texttt{JSON.stringify()} in eine JSON-Zeichenkette umgewandelt und im \texttt{body} der Anfrage übermittelt (Zeile 32). 
   \par Nach dem Senden der Anfrage wartet die Anwendung mit \texttt{await} auf die Antwort des Servers. Sobald die Antwort eingetroffen ist, wird sie mit der Funktion \texttt{response.json()} in ein JSON-Objekt umgewandelt und in der Variablen \texttt{response\_data} gespeichert (Zeile 35).
-  \par Stimmen die übermittelten Anmeldedaten mit den hinterlegten Benutzerinformationen überein, antwortet der Server mit einem JWT-Token. Dieses Token wird im localStorage gespeichert, wodurch der Benutzer authentifiziert und angemeldet wird (Zeile 37). Andernfalls antwortet der Server mit einem Fehler, dass die falschen Daten eingegeben wurden und die entsprechende Meldung wird ausgegeben.
+  \par Stimmen die übermittelten Anmeldedaten mit den gespeicherten Benutzerinformationen überein, antwortet der Server mit einem JWT-Token. Dieses Token wird im localStorage gespeichert, wodurch der Benutzer authentifiziert und angemeldet wird (Zeile 37). Andernfalls antwortet der Server mit einem Fehler, dass die falschen Daten eingegeben wurden und die entsprechende Meldung wird ausgegeben.
+  \pagebreak
   \begin{lstlisting}[style=htmlcssjs, numbers=left, label={lst:loginhtml}, caption={script.js: renderLoginForm}]
-      app.innerHTML = `
-      <div class="flex items-center justify-center h-screen">
-        <h2>LOGIN</h2>
-        <form id="loginForm" class="space-y-4">
-          <div>
-            <label for="username">Username</label>
-            <input type="text" id="username">
-          </div>
-          <div>
-            <label for="password">Password</label>
-            <input type="password" id="password">
-          </div>
-          <button type="submit">LOGIN</button>
-        </form>
-        <div>
-          <button id="BTNsignup">SignUp here</button>
-        </div>
-      </div>`;
+  app.innerHTML = `
+  <div class="flex items-center justify-center h-screen">
+    <h2>LOGIN</h2>
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username">
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password">
+      </div>
+      <button type="submit">LOGIN</button>
+    </form>
+    <div>
+      <button id="BTNsignup">SignUp here</button>
+    </div>
+  </div>`;
 
-      document.getElementById('loginForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+  document.getElementById('loginForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-        // asynchrone Anfrage auf die Route "login"
-        try {
-          const response = await fetch('/login', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ username, password })
-          });
-          // 
-          const response_data = await response.json();
-          if ('token' in response_data) {
-                localStorage.setItem('token', response_data['token']);
-                appRouter();
-          }
-        } catch(error){ errorHandler(error);}
+    // asynchrone Anfrage auf die Route "login"
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ username, password })});
+
+      const response_data = await response.json();
+      if ('token' in response_data) {
+            localStorage.setItem('token', response_data['token']);
+      }
+    } catch(error){ errorHandler(error);}
   }
   \end{lstlisting}
-  % \begin{figure}[h]
-  %   \centering
-  %   \includegraphics[width=0.75\textwidth]{login.png}
-  %   \caption{Login-Seite}
-  %   \label{abb:login}
-  % \end{figure}
-  \par Unter dem Login-Button befindet sich ein Link zur Registrierungsseite. Ein Klick auf diesen Link ruft die Funktion \texttt{renderSignUpPage} auf, die das \texttt{div}-Element „\texttt{app}“ mit einem Formular für die Benutzerregistrierung füllt. Das Formular enthält Eingabefelder für den Benutzernamen, die E-Mail-Adresse und das Passwort. Durch Drücken der Taste „Sign Up“ werden die Anmeldedaten an die Route „\texttt{/sign\_up}“ mittels einer Post-Anfrage gesendet. Wenn die Registrierungsdaten gültig sind, antwortet der Server mit einem JWT-Token und der Benutzer wird im System registriert.
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{login.png}
+    \caption{Login-Seite}
+    \label{abb:login}
+  \end{figure}
+  \pagebreak
+  \par Die Abbildung \ref{abb:login} zeigt das im Listing \ref{lst:loginhtml} definierte Formular in der Weboberfläche.
+  \par Unter dem Login-Button befindet sich ein Link zur Registrierungsseite. Ein Klick auf diesen Link ruft die Funktion \texttt{renderSignUpPage()} auf, die das \texttt{div}-Element „\texttt{app}“ mit einem Formular für die Benutzerregistrierung füllt. 
+  \par Das Formular enthält Eingabefelder für den Benutzernamen, die E-Mail-Adresse und das Passwort. Durch Drücken der Taste „\texttt{Sign Up}“ werden die Anmeldedaten an die Route „\texttt{/sign\_up}“ mittels einer Post-Anfrage gesendet. Wenn die Registrierungsdaten gültig sind, antwortet der Server mit einem JWT-Token und der Benutzer wird im System registriert.
   \paragraph{Navigationsleiste}
   \par \textbf{}
   \par Die Funktion \texttt{renderNavbar} füllt das \texttt{div}-Element „navbar“ mit einer Navigationsleiste. Diese enthält einen Link zur Hauptseite sowie die Schaltflächen „My Devices“, „My Scenarios“ und „Logout“. 
-  \par Ein Klick auf „Logout“  löscht das gespeicherte Token und leitet den Benutzer zur Anmeldeseite weiter. Die Schaltfläche „My Devices“ ruft die Funktion \texttt{renderMyDevicePage} auf, die die gespeicherten Geräte des Benutzers anzeigt. Mit „My Scenarios“ wird die Funktion \texttt{renderMyScenariosPage} aufgerufen, die die vom Benutzer erstellten Szenarien darstellt.
+  \par Ein Klick auf „Logout“  löscht das gespeicherte Token und leitet den Benutzer zur Anmeldeseite weiter. Die Schaltfläche „My Devices“ ruft die Funktion \texttt{renderMyDevicePage()} auf, die die gespeicherten Geräte des Benutzers anzeigt. Mit „My Scenarios“ wird die Funktion \texttt{renderMyScenariosPage()} aufgerufen, die die vom Benutzer erstellten Szenarien darstellt.
   \paragraph{Hauptseite}
   \par \textbf{}
-  \par Nach erfolgreicher Anmeldung und Erhalt des JWT-Tokens wird der Benutzer zur Hauptseite der Anwendung weitergeleitet. Dort erfolgt eine Anfrage an die Route „\texttt{/get\_user\_data}“, um die relevanten Benutzerdaten vom Server abzurufen. Die Serverantwort auf diese Anfrage besteht aus einem JSON-Objekt, das Listen der gespeicherten Häuser, Geräte und Szenarien enthält. Diese Daten werden anschließend in der lokalen Variablen „\texttt{stored\_data}“ gespeichert und zur dynamischen Darstellung der Benutzeroberfläche verwendet. Falls die Token-Validierung fehlschlägt, wird der Benutzer automatisch zur Anmeldeseite zurückgeleitet. Nach Erhalt der Benutzerdaten wird die Hauptseite generiert.
-  \par Die Funktion \texttt{renderMainPage()} füllt das \texttt{div}-Element „app“ mit der im Listing \ref{lst:mainhtml} dargestellten HTML-Struktur. 
+  \par Nach erfolgreicher Anmeldung und Erhalt des JWT-Tokens wird der Benutzer zur Hauptseite der Anwendung weitergeleitet.
+
+  \par Beim Öffnen dieser Seite wird zunächst die im Listing \ref{lst:lst:jsgetuserdata} dargestellte Funktion aufgerufen, die die relevanten Benutzerdaten an dem Server anfragt und speichert diese lokal. Nach Erhalt der Benutzerdaten wird die Hauptseite generiert.
+  \par Die Funktion \texttt{renderMainPage()} füllt das \texttt{div}-Element „app“ mit der im Listing \ref{lst:mainhtml} dargestellten HTML-Struktur. Die Abbildung \ref{abb:hpempty} stellt die Seite in der Weboberfläche dar.
   \begin{lstlisting}[style=htmlcssjs, label={lst:mainhtml}, caption={html: renderMainPage}]
     <div id="main_page">
         <div id="main_header">
@@ -1689,7 +1713,20 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
         <div id="houseList"></div>
     </div>
   \end{lstlisting}
-  \par Oben auf der Seite wird eine Willkommensnachricht zusammen mit einer Schaltfläche zum Erstellen eines neuen Hauses angezeigt. Durch Anklicken des Buttons wird das \texttt{div}-Element „MNcreateHouse“ mit einem Formular befüllt, in das der Benutzer den Namen des Hauses eingeben kann. Mit der Schaltfläche „Save“ wird das Haus gespeichert. Dabei wird eine asynchrone Anfrage an die Route „\texttt{add\_house}“ gesendet, die das Token und den Hausnamen enthält, und das Haus wird in der Datenbank gespeichert. Nach Abschluss wird die Seite neu geladen und das neue Haus erscheint.
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{hp_empty.png}
+    \caption{Leere Hauptseite}
+    \label{abb:hpempty}
+  \end{figure}
+  \par Oben auf der Seite wird eine Willkommensnachricht zusammen mit einer Schaltfläche zum Erstellen eines neuen Hauses angezeigt. Durch Anklicken an die Taste wird das \texttt{div}-Element „\texttt{MNcreateHouse}“ mit einem Formular befüllt, in das der Benutzer den Namen des Hauses eingeben kann. Das Formular ist in der Abbildung \ref{abb:createhouse} dargestellt.
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{createhouse.png}
+    \caption{Formular zum Erstellen neues Hauses}
+    \label{abb:createhouse}
+  \end{figure}
+  \par Mit der Schaltfläche „Save“ wird das Haus gespeichert. Dabei wird eine asynchrone Anfrage an die Route „\texttt{/add\_house}“ gesendet, die das Token und den Hausnamen enthält. Dadurch wird das Haus in der Datenbank gespeichert. Nach Abschluss wird die Seite neu geladen und das neue Haus erscheint.
   \par In das \texttt{div}-Element „houseList“ werden die vom Benutzer erstellten Häuser, einschließlich der Räume und zugehörigen Geräte, geladen. Diese Daten sind in der lokalen Variablen „\texttt{stored\_data}“ unter dem Schlüssel „houses“ gespeichert. Für jedes Haus wird ein \texttt{div}-Element mit der im Listing \ref{lst:houseelement} dargestellten HTML-Struktur erstellt und an das \texttt{div}-Element „houseList“ angehängt. Dabei wird jede ID um die ID des jeweiligen Hauses erweitert, um die spätere Zuordnung der Räume und Geräte zu ermöglichen.
   \begin{lstlisting}[style=htmlcssjs, label={lst:houseelement}, caption={html: house\_element}]
   <div id="header${house.id}">${house.name} </div>
@@ -1705,19 +1742,35 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \end{lstlisting}
   \par Im \texttt{header}-Element wird der Name des Hauses angezeigt. Unterhalb des Headers befindet sich eine Schaltfläche zum Anlegen eines neuen Raumes sowie der Bereich für die Auflistung der Räume. Zusätzlich gibt es eine Schaltfläche zum Löschen des Hauses. Der Button „\texttt{create\_room}“ öffnet ein Formular, in dem der Benutzer den Namen des Raumes eingeben und speichern kann.
   \par Anschließend wird das \texttt{div}-Element „room\_list“ mit den Räumen des Hauses gefüllt. Dieser Vorgang ist ähnlich wie bei der Anzeige der Häuser. Für jeden Raum wird ein \texttt{div}-Element „room\_element“ mit der ID des Raumes erzeugt. Dieses Element enthält den Namen des Raumes, eine Schaltfläche zum Hinzufügen eines Gerätes, den Bereich zur Auflistung der Geräte und eine Schaltfläche zum Löschen des Raumes. 
-  \par Die Schaltfläche zum Hinzufügen eines Geräts öffnet ein Formular, in das der Benutzer die ID und den Namen des Gerätes eingeben soll. Durch Bestätigen der Schaltfläche „Speichern“ wird das Gerät gespeichert und dem Raum zugeordnet. 
-  \par Die zu dem Raum zugeordneten Geräte müssen auch angezeigt werden. Für jedes Gerät wird ein \texttt{div}-Element „device\_element“ mit der Geräte-ID erzeugt, wie in der Abbildung \ref{abb:devel} gezeigt. Eine detaillierte Beschreibung des Elements folgt weiter unten.
+  \par In Abbildung \ref{abb:hphouserooomempty} ist das Haus „MeinHouse“ mit zwei zugehörigen Zimmern dargestellt.
+    % „“
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{hp_houseroomempty.png}
+    \caption{Hauptseite mit erstelltem House}
+    \label{abb:hphouserooomempty}
+  \end{figure}
+  \par Die Schaltfläche „Add Device“ öffnet das in der Abbildung \ref{abb:adddevform1} dargestellte Formular zum Hinzufügen eines Geräts. 
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{adddevform1.png}
+    \caption{Formular zum Hinzufügen eines Gerätes}
+    \label{abb:adddevform1}
+  \end{figure}
+  \par In das Formular gibt der Benutzer die ID und den Namen des Gerätes ein. Durch Bestätigen der Schaltfläche „Save“ wird das Gerät gespeichert und dem Raum zugeordnet. 
+  \par Die zu dem Raum zugeordneten Geräte werden ebenfalls angezeigt. Für jedes Gerät wird ein \texttt{div}-Element „device\_element“ mit der Geräte-ID erzeugt. Eine detaillierte Beschreibung des Elements folgt weiter unten.
+  \pagebreak
+  \paragraph{My Devices}
+  \par \textbf{}
+  \par Durch das Anklicken an die Schaltfläche „\texttt{My Devices}“ an der Navigationsleiste, wird die Funktion \texttt{renderMyDevicesPage()} aufgerufen, die die vom Benutzer angemeldeten Geräte darstellt. 
+  %\par Das \texttt{div}-Element „app“ wird mit den auf der Abbildung \ref{} dargestellten Device-Blocks mit den Daten der Geräte befüllt. 
+  \par Für jedes gespeicherten Gerät wird ein \texttt{div}-Element „device\_element“ mit der im Listing \ref{lst:deviceelement} dargestellten HTML-Struktur erstellt. Das \texttt{div}-Element ist in der Abbildung \ref{abb:devel} dargestellt.
   \begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{deviceelement.png}
     \caption{device\_element}
     \label{abb:devel}
   \end{figure}
-  \paragraph{My Devices}
-  \par \textbf{}
-  \par Durch das Anklicken an die Schaltfläche „My Devices“ an der Navigationsleiste, wird die Funktion \texttt{renderMyDevicesPage()} aufgerufen, die die vom Benutzer angemeldeten Geräte darstellt. 
-  %\par Das \texttt{div}-Element „app“ wird mit den auf der Abbildung \ref{} dargestellten Device-Blocks mit den Daten der Geräte befüllt. 
-  \par Für jedes gespeicherten Gerät wird ein \texttt{div}-Element „device\_element“ mit der im Listing \ref{lst:deviceelement} dargestellten HTML-Struktur erstellt. Das \texttt{div}-Element ist auf der Abbildung \ref{abb:devel} dargestellt.
   \par Die vom Gerät empfangenen Daten werden im \texttt{div}-Element „\texttt{deviceData}“ dargestellt. Über eine WebSocket-Verbindung werden die Daten in Echtzeit empfangen, angezeigt und kontinuierlich aktualisiert. Eine detaillierte Beschreibung folgt im Paragraph „WebSocket“ dieses Abschnitts.
   \begin{lstlisting}[style=htmlcssjs, label={lst:deviceelement}, caption={html: device\_element}]
   <div id="device_element${device.dev_id}">
@@ -1734,11 +1787,18 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
     <button id="BTNdeleteDevice${device.dev_id}">Delete</button>
   </div>
   \end{lstlisting} 
-  \par 
+  \par Die Abbildung \ref{abb:mydevices} stellt die Seite „\texttt{My Devices}“ mit einem angemeldeten Gerät dar.
+  \begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{mydevices.png}
+    \caption{My Devices}
+    \label{abb:mydevices}
+  \end{figure}
   % „“
+  \pagebreak
   \paragraph{My Scenarios}
   \par \textbf{}
-  \par Durch das Anklicken an die Schaltfläche „My Scenarios“ an der Navigationsleiste, wird die Funktion \texttt{renderMyScenariosPage()} aufgerufen, die die vom Benutzer erstellten Szenarien darstellt. 
+  \par Durch das Anklicken an die Schaltfläche „\texttt{My Scenarios}“ an der Navigationsleiste, wird die Funktion \texttt{renderMyScenariosPage()} aufgerufen, die die vom Benutzer erstellten Szenarien darstellt. 
   \par Das \texttt{div}-Element „app“ wird mit der im Listing \ref{lst:myscenarios} dargestellten HTML-Struktur befüllt. 
   \begin{lstlisting}[style=htmlcssjs, label={lst:myscenarios}, caption={html: renderMyScenariosPage}]
     <div class="main_page">
@@ -1749,36 +1809,41 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
       <div id="scenarioList" class="device_list"></div>
     </div>
   \end{lstlisting}
-  \par Ein Klick auf die Schaltfläche mit der ID „\texttt{BTNcreateScenario}“ füllt das \texttt{div}-Element „\texttt{MNcreateScenario}“ mit dem auf die Abbildung \ref{abb:createscenario} dargestellten Formular zur Erstellung eines neuen Szenarios. Das Formular enthält die Felder zur Eingabe der nötigen Szenariodaten. 
-  \par Das Szenario kann ein beliebiger Name haben. In den Auswahllisten „\texttt{Source Device}“ und „\texttt{Target Device}“ werden die Namen der bereits registrierten Geräte angezeigt. Nach dem Auswahl des Quellgeräts werden die zugehörigen Datenfelder dynamisch in der Auswahlliste „\texttt{Data Field}“ geladen. 
-  \par \par Als Bedingung („\texttt{Condition}“) kann der Benutzer zwischen den Vergleichsoperatoren „\texttt{<}“, „\texttt{>}“ und „\texttt{=}“ wählen. Im Feld „\texttt{Value}“ wird eine Zahl eingegeben, der als Vergleichswert in der Bedingung dient. 
-  \par Nach Auswahl des Zielgeräts werden in die Liste „\texttt{Command}“ die gespeicherten Befehle geladen, die das Zielgerät ausführen kann.
-  \par Dabei werden Quell- und Zielgerät sowie ihre Datenfelder und Befehle dynamisch aus der lokalen Variable \texttt{stored\_data} geladen. 
-  \par Durch das Anklicken auf die Schaltfläche „\texttt{BTNaddScenario}“ des Formulars wird ein Post-Request auf die Route „add\_scenario“ mit der Szenariodaten im Body gesendet. Damit wird das Szenario in der Datenbank gespeichert.
-  \begin{figure}[h]
+  \par Ein Klick auf die Schaltfläche mit der ID „\texttt{BTNcreateScenario}“ füllt das \texttt{div}-Element „\texttt{MNcreateScenario}“ mit dem in der Abbildung \ref{abb:createscenario} dargestellten Formular zur Erstellung eines neuen Szenarios. Das Formular enthält die Felder zur Eingabe der nötigen Szenariodaten. 
+  \begin{figure}[h!]
     \centering
     \includegraphics[width=0.75\textwidth]{createscenario.png}
     \caption{Formular zur Erstellung eines Szenarios}
     \label{abb:createscenario}
   \end{figure}
+  \par Das Szenario kann ein beliebiger eindeutiger Name haben. In den Auswahllisten „\texttt{Source Device}“ und „\texttt{Target Device}“ werden die Namen der bereits registrierten Geräte angezeigt. Nach dem Auswahl des Quellgeräts werden die zugehörigen Datenfelder dynamisch in der Auswahlliste „\texttt{Data Field}“ geladen. 
+  \par \par Als Bedingung („\texttt{Condition}“) kann der Benutzer zwischen den Vergleichsoperatoren „\texttt{<}“, „\texttt{>}“ und „\texttt{=}“ wählen. Im Feld „\texttt{Value}“ wird eine Zahl eingegeben, der als Vergleichswert in der Bedingung dient. 
+  \par Nach Auswahl des Zielgeräts werden in die Liste „\texttt{Command}“ die gespeicherten Befehle geladen, die das Zielgerät ausführen kann.
+  \par Dabei werden Quell- und Zielgerät sowie ihre Datenfelder und Befehle dynamisch aus der lokalen Variable \texttt{stored\_data} geladen. 
+  \par Durch das Anklicken auf die Schaltfläche „\texttt{BTNaddScenario}“ des Formulars wird ein Post-Request auf die Route „\texttt{/add\_scenario}“ mit der Szenariodaten im Body gesendet. Damit wird das Szenario in der Datenbank gespeichert.
+
   \par Das \texttt{div}-Element „\texttt{scenarioList}“ wird mit den von Benutzer erstellten Szenarien befüllt. Für jedes Szenario wird ein \texttt{div}-Element „\texttt{scenario\_element}“ mit der ID des Szenarios erstellt. 
-  \par Die Abbildung \ref{abb:scenarioelement} stellt ein „\texttt{scenario\_element}“ dar. Das dargestellte Szenario hat den Namen „Abend“. Wenn das Datenfeld „\texttt{light}“ des Gerätes mit der ID „\texttt{m5bmevcnl}“ den Wert unter 20 liefert, so wird das Befehl „\texttt{light\_turn\_on}“ an das Gerät mit der ID „\texttt{esp32light}“ gesendet. 
-  \par Durch das Anklicken auf die Schaltfläche „Delete“ wird ein Delete-Request auf die Route „delete\_scenario“ mit dem Primärschlüssel des Szenarios gesendet und das Szenario wird damit aus der Datenbank gelöscht.
+  \par Die Abbildung \ref{abb:scenarioelement} stellt die Seite „\texttt{My Scenarios}“ mit einem Szenario dar. 
+  \par Das dargestellte Szenario hat den Namen „Abend“. Wenn das Datenfeld „\texttt{light}“ des Gerätes mit der ID „\texttt{m5bmevcnl}“ den Wert unter 20 liefert, so wird das Befehl „\texttt{light\_on}“ an das Gerät mit der ID „\texttt{esp32light}“ gesendet. 
+  \par Durch das Anklicken auf die Schaltfläche „\texttt{Delete}“ wird ein \texttt{Delete}-Request an die Route „\texttt{/delete\_scenario}“ mit dem Primärschlüssel des Szenarios gesendet und das Szenario wird damit aus der Datenbank gelöscht.
   \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{scenarioelement.png}
-    \caption{scenario\_element}
+    \includegraphics[width=\textwidth]{myscenarios.png}
+    \caption{My Scenarios}
     \label{abb:scenarioelement}
   \end{figure}
   % „“
   \paragraph{WebSocket}
   \par \textbf{}
-  \par Im \texttt{div}-Element „deviceData“ werden die vom Gerät empfangenen Daten angezeigt. Dazu wird eine WebSocket-Verbindung aufgebaut. Das Listing \ref{lst:jswebsocket} zeigt die Initialisierung der Verbindung sowie die Verarbeitung der eingehenden Daten.
+  \par Die Darstellung der vom Gerät empfangenen Daten erfolgt über eine WebSocket-Verbindung. 
+  \par Das Listing \ref{lst:jswebsocket} zeigt die Initialisierung der Verbindung sowie die Verarbeitung der eingehenden Daten.
   \par Zunächst wird ein WebSocket-Objekt mit der URL der WebSocket-Route erzeugt (Zeile 1-3). Sobald die Verbindung erfolgreich hergestellt wurde, sendet das Skript das Authentifizierungstoken an den Server (Zeile 5-8), um die Verbindung zu autorisieren.
   \par Bei jeder eingehenden Nachricht wird das Ereignis \texttt{onmessage} ausgelöst (Zeile 10). Die empfangenen Daten werden in ein JavaScript-Objekt umgewandelt (Zeile 11) und anschließend wird das \texttt{div}-Element mit der ID „deviceData“ für das entsprechende Gerät abgerufen (Zeile 12).  
   \par Wenn das Gerät keine vordefinierten Datenfelder hat, werden die Schlüssel des empfangenen Datenobjekts extrahiert und als Datenfelder verwendet (Zeilen 13-16). In diesem Fall werden alle empfangenen Daten angezeigt.
-  \par Für jedes dieser Datenfelder wird geprüft, ob es im empfangenen Datenobjekt vorhanden ist (Zeile 17-18). Ist dies der Fall, sucht das Skript nach einem \texttt{p}-Element, dessen ID den Namen des Datenfelds und die Geräte-ID enthält (Zeile 19-20). Ist ein solches Element nicht vorhanden, wird es dynamisch erzeugt und in das \texttt{div}-Element eingefügt (Zeile 21-25). Schließlich wird der Inhalt des Elements mit dem Schlüssel und dem entsprechenden Wert aus den empfangenen Daten aktualisiert (Zeile 26).
-  \par Wenn die Verbindung unterbrochen wird, wird eine Meldung an die Konsole ausgegeben.
+  \par Für jedes dieser Datenfelder wird geprüft, ob es im empfangenen Datenobjekt vorhanden ist (Zeile 17-18). Ist dies der Fall, sucht das Skript nach einem \texttt{p}-Element, dessen ID den Namen des Datenfelds und die Geräte-ID enthält (Zeile 19-20). 
+  \par Ist ein solches Element nicht vorhanden, wird es dynamisch erzeugt und in das \texttt{div}-Element eingefügt (Zeile 21-25). Schließlich wird der Inhalt des Elements mit dem Schlüssel und dem entsprechenden Wert aus den empfangenen Daten aktualisiert (Zeile 26).
+  \par Beim Ausfall der Verbindung, wird eine Meldung an die Konsole ausgegeben.
+  \pagebreak
   \begin{lstlisting}[style=htmlcssjs, numbers=left, label={lst:jswebsocket}, caption={script.js: websocket}]
   const ws = new WebSocket(
     `ws://127.0.0.1:8000/mqtt/device/${device.dev_id}`
@@ -1910,7 +1975,13 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
 \par In diesem Beispiel wird ein Szenario zum Einschalten der Beleuchtung erstellt. Das Ziel ist es, die Beleuchtung einzuschalten, wenn das Datenfeld „light“ einen Wert kleiner als 20 aufweist.
 \par Das Szenario wurde „Abend“ genannt. Als Quellgerät wurde das Modul „\texttt{M5StickC}“ ausgewählt, das Helligkeitswerte liefert. Als Datenfeld wurde „light“ und als „\texttt{Condition}“ das Symbol „\texttt{<}“ ausgewählt. Im Feld „\texttt{Value}“ wurde der Wert 20 eingegeben. Als Zielgerät wurde das \texttt{ESP32} gewählt, und als „\texttt{Command}“ wurde „\texttt{light\_on}“ ausgewählt, um die Beleuchtung einzuschalten. Die Abbildung stellt das ausgefüllte Formular dar.
 \par In diesem Beispiel wäre es sinnvoll, ein zusätzliches Szenario zum Ausschalten des Lichts zu erstellen. Als „\texttt{Condition}“ wird hierfür das Symbol „\texttt{>}“ gewählt und im Feld „\texttt{Value}“ der Wert 30 eingetragen. Das Zielgerät \texttt{ESP32} soll in diesem Fall den Befehl „\texttt{light\_off}“ ausführen.
-\par Die beiden Szenarien werden wie auf der Abbildung 111 an der Benutzeroberfläche dargestellt.
+\par Die beiden Szenarien werden wie in der Abbildung \ref{abb:2scenarios} an der Benutzeroberfläche dargestellt.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{2scenarios.png}
+  \caption{Szenarien „Abend“ und „Morgen“}
+  \label{abb:2scenarios}
+\end{figure}
 \par Nach dem Speichern wird das Szenario automatisch ausgeführt. Der Benutzer kann es jederzeit über die Schaltfläche „\texttt{Delete}“ löschen. 
 \par Damit wird die Beleuchtung automatisch eingeschaltet, wenn es dunkel wird, und automatisch ausgeschaltet, wenn es hell genug ist.
 \par Mit diesem Verfahren wurde gezeigt, dass das System wie geplant funktioniert. Das System zeigt sich in der Praxis als zuverlässig und stabil. Alle Komponenten konnten erfolgreich eingerichtet und reibungslos in das System integeriert werden. Die Geräte lassen sich ohne Probleme registrieren und steuern. Die Interaktion zwischen Benutzer und seine Geräte erfolgt schnell und stabil. Die erstellte Szenarien werden automatisch und ohne Konflikte ausgelöst. Damit erfüllt das System alle gestellten Anforderungen und ist einsatzbereit.
@@ -1926,70 +1997,87 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
 \newpage
 \section{Quellen}
 \begin{thebibliography}{20}
+  \bibitem{bachelor}
+  O. Baida, Bachelorarbeit \textit{Entwicklung eines Mikrocontrollersystems für Steuerungs- und Überwachungsaufgaben innerhalb von Häusern}, 2025 \\ \url{https://github.com/oleksiibaida/bachelor}
   \bibitem{pa1}
-  O. Baida,  \textit{Anbindung der Sensoren und Aktoren an den Arduino zur Realisierung eines Sicherheitssystems},
-  Projektarbeit 1, 2024.
-
+  O. Baida, Projektarbeit 1 \textit{Anbindung der Sensoren und Aktoren an den Arduino zur Realisierung eines Sicherheitssystems}, 2024.
   \bibitem{pa2}
-  O. Baida, Projektarbeit 2 \textit{Sicherheitssystem fur das Haus basierend auf Arduino, ESP8266 \& Raspberry Pi} \url{https://github.com/oleksiibaida/PA2.git}
+  O. Baida, Projektarbeit 2 \textit{Sicherheitssystem fur das Haus basierend auf Arduino, ESP8266 \& Raspberry Pi}, 2024 \url{https://github.com/oleksiibaida/PA2}
   
   \bibitem{statita_smhomes}
-  Statista, \textit{„Smart Home - Anzahl der Haushalte in Deutschland 2028“},  Verfügbar unter \url{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland} Zugriff: 13. Januar 2025. [Online].
+  Statista, \textit{„Smart Home - Anzahl der Haushalte in Deutschland 2028“},\\
+  \href{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}, Zugriff am: 18. April 2025 [Online].
+  
   \bibitem{espbuch}
-  Udo Brandes: \textit{Mikrocontroller ESP32: Das Umfassende Handbuch}. Bonn: Rheinwerk Verlag, 2024, ISBN 9783367102860. 
-
-
+  Udo Brandes: \textit{Mikrocontroller ESP32: Das Umfassende Handbuch}. \\Bonn: Rheinwerk Verlag, 2024, ISBN 9783367102860, \\ Zugriff am: 18. April 2025 [Online].
+  \bibitem{pythonbook}
+  Gary Smart: \textit{Practical Python Programming for IoT : Build Advanced IoT Projects Using a Raspberry Pi 4, MQTT, RESTful APIs, WebSockets, and Python 3}. \\ Birmingham, United Kingdom: Packt Publishing, Limited, 2020, \\ ISBN 9781838982836, \\Zugriff am: 18. April 2025 [Online].
+  \bibitem{fastapibook}
+  Giunio De Luca und Antonio Ferraro: \textit{FastAPI Cookbook : Develop High-Performance APIs and Web Applications with Python}.\\  Birmingham, United Kingdom: Packt Publishing, Limited, 2024,\\ ISBN 9781805129776,\\ Zugriff am: 18. April 2025 [Online].
   \par \textbf{Links zur verwendeten Hardware:}
   \bibitem{arduino}
-  Arduino.cc, \textit{Arduino UNO}, \url{https://docs.arduino.cc/hardware/uno-rev3/}
+  Arduino.cc, \textit{Arduino UNO}, \\ \url{https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf}, \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{raspi}
-  Raspberry Pi Foundation, \textit{Raspberry Pi 1 B+}, \url{https://www.raspberrypi.com/products/raspberry-pi-1-model-b-plus/}
+  Raspberry Pi Foundation, \textit{Raspberry Pi 1 B+},\\ \url{https://www.raspberrypi.com/products/raspberry-pi-1-model-b-plus/}, \\ Zugriff am: 18. April 2025 [Online].
+  \bibitem{esp32}
+  Espressif, \textit{ESP32}, \\ \url{https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf} \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{esp8266}
-  Espressif, \textit{ESP8266}, \url{https://www.espressif.com/}, \url{https://www.electronicwings.com/sensors-modules/esp8266-wifi-module}
+  Espressif, \textit{ESP8266}, \\ \url{https://www.electronicwings.com/sensors-modules/esp8266-wifi-module}, \\ Zugriff am: 18. April 2025 [Online].
+  \bibitem{m5stickc}
+  M5Stack, \textit{M5StickC}, \\ \url{https://docs.m5stack.com/en/core/m5stickc}, \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{bme680}
-  Bosh, \textit{BME680 - Datasheet}, \url{https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf}, Zugriff: 4. Februar 2025.
+  Bosh, \textit{BME680 - Datasheet}, \\ \url{https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf}, \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{vcnl4040}
-  Vishay, \textit{VCNL4040 - Datasheet}, \url{https://www.vishay.com/docs/84274/vcnl4040.pdf}, Zugriff: 5. Februar 2025.
+  Vishay, \textit{VCNL4040 - Datasheet}, \\ \url{https://www.vishay.com/docs/84274/vcnl4040.pdf}, \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{docdisplay}
-  Adafruit, \textit{OlED FeatherWing}, \url{https://learn.adafruit.com/adafruit-128x64-oled-featherwing/downloads}, Zugriff: 16. Januar 2025 [Online].
+  Adafruit, \textit{OlED FeatherWing}, \\ \url{https://learn.adafruit.com/adafruit-128x64-oled-featherwing/downloads}, \\ Zugriff am: 18. April 2025 [Online].
   \par \textbf{Links zur verwendeten Software:}
   \bibitem{mqtt}
-  Dr Andy Stanford-Clark, Arlen Nipper, \textit{Message Queuing Telemetry Transport}, \url{https://mqtt.org/} Zugriff am 15. Februar 2025 [Online].
+  Dr Andy Stanford-Clark, Arlen Nipper, \textit{Message Queuing Telemetry Transport}, \\ \url{https://mqtt.org/}, \\ Zugriff am: 18. April 2025 [Online].
 
   \bibitem{i2c}
-  NXP Semiconductors, \textit{I2C-bus specification and user manual}, \url{https://www.nxp.com/docs/en/user-guide/UM10204.pdf} Zugriff am 15. Februar 2025 [Online].
+  NXP Semiconductors, \textit{I2C-bus specification and user manual}, \\  \url{https://www.nxp.com/docs/en/user-guide/UM10204.pdf} \\ Zugriff am: 18. April 2025 [Online].
 
+  \bibitem{js}
+  MDN, \textit{JavaScript}, \\ \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript}, \\ Zugriff am: 18. April 2025 [Online].
+  \bibitem{http}
+  MDN, \textit{HTTP}, \\ \url{https://developer.mozilla.org/en-US/docs/Web/HTTP}, \\ Zugriff am: 18. April 2025.
+  \bibitem{Tailwind}
+  Tailwind, \textit{TailwindCSS} \\ \url{https://tailwindcss.com/docs/}, \\ Zugriff am: 18. April 2025 [Online].
+  \bibitem{platformio}
+  PlatformIO, \\ \url{https://docs.platformio.org/}, \\ Zugriff am: 18. April 2025 [Online].
 
-
-  
   \par \textbf{Linux-Packete}:
   \bibitem{hostapd}
-  Jouni Malinen, \textit{hostapd}, \url{https://w1.fi/hostapd/}, Zugriff am: 19. September 2024.
+  Jouni Malinen, \textit{hostapd}, \\ \url{https://w1.fi/hostapd/},  \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{dnsmasq}
-  Simon Kelley, \textit{dnsmasq}, \url{https://dnsmasq.org/doc.html}, Zugriff am: 20. September 2024.
+  Simon Kelley, \textit{dnsmasq},\\ \url{https://dnsmasq.org/doc.html}, \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{mosquitto}
-  Eclipse Foundation, \textit{Eclipse Mosquitto}, \url{https://mosquitto.org/}
+  Eclipse Foundation, \textit{Eclipse Mosquitto}, \\ \url{https://mosquitto.org/}, \\ Zugriff am: 18. April 2025 [Online].
   \par \textbf{ESP- und Arduino-Bibliotheken}
   \bibitem{scholz}
   R. Scholz, \textit{Syncloop}, Persönliche Mitteilungen
   \bibitem{pubsub} 
-  Knolleary, \textit{PubSubClient}, \url{https://pubsubclient.knolleary.net/}, Zugriff am: 12. Februar 2025 [Online].
+  Knolleary, \textit{PubSubClient}, \\\url{https://pubsubclient.knolleary.net/},  \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{espwifi}
-  ESPWIFI.h, \url{https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html}
+  ESPWIFI.h, \\\url{https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html},  \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{eeprom}
-  EEPROM.h, \url{https://docs.arduino.cc/learn/built-in-libraries/eeprom/}
+  EEPROM.h, \\ \url{https://docs.arduino.cc/learn/built-in-libraries/eeprom/},  \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{easdisplay}
-  M. Carbou, \textit{MycilaEasyDisplay}, \url{https://github.com/mathieucarbou/MycilaEasyDisplay}, Zugriff: 16. Januar 2025. [Online]. 
+  M. Carbou, \textit{MycilaEasyDisplay}, \\ \url{https://github.com/mathieucarbou/MycilaEasyDisplay},  \\ Zugriff am: 18. April 2025 [Online].
 
   \par \textbf{Python-Bibliotheken}
   \bibitem{python}
-  Guido van Rossum, Python Software Foundation, \textit{Python}, \url{https://www.python.org/} Zugriff am 10. Februar 2025 [Online].
+  Guido van Rossum, Python Software Foundation, \textit{Python}, \\ \url{https://www.python.org/},  \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{json}
-  Python Software Foundation, \textit{json}, \url{https://docs.python.org/3/library/json.html} Zugriff am: 23. Februar 2025 [Online].
+  Python Software Foundation, \textit{json}, \\ \url{https://docs.python.org/3/library/json.html},  \\ Zugriff am: 18. April 2025 [Online].
+  \bibitem{bcrypt}
+  Python Software Foundation, \textit{bcrypt}, \\ \url{https://pypi.org/project/bcrypt/}, \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{sqlalchemy}
-  Mike Bayer, \textit{SQLAlchemy}, \url{https://www.sqlalchemy.org} Zugriff am: 11. März 2025 [Online].
+  Mike Bayer, \textit{SQLAlchemy}, \\ \url{https://www.sqlalchemy.org}, \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{fastapidoc}
-  Sebastián Ramírez (Tiangolo), \textit{FastAPI}, \url{https://fastapi.tiangolo.com/} Zugriff am: 24. März 2025 [Online].
+  Sebastián Ramírez (Tiangolo), \textit{FastAPI}, \\ \url{https://fastapi.tiangolo.com/}, \\ Zugriff am: 18. April 2025 [Online].
+  
 
 \end{thebibliography}
 
