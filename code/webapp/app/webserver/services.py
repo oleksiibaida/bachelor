@@ -441,7 +441,7 @@ async def send_command(db_sesion, user_id, device_id, command):
     try:
         device = await queries.verify_user_device(db_sesion, user_id, device_id)
         if device is None:
-            _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO DEVICE')
+            _logger.error(f'U_ID {user_id} UNAUTHORIZED ACCESS TO DEV_ID {device_id}')
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of device')
         await MQTTClient.send_command_to_device(device_id, command)
     except HTTPException as e:

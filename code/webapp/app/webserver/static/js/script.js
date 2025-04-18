@@ -248,17 +248,6 @@ async function renderMainPage(data) {
         document.getElementById("BTNcreateHouse").classList.add('hidden')
     });
 
-    // // close form if clicked outside
-    // document.addEventListener("click", (event) => {
-    //     if (!BTNcreateHouse.contains(event.target) && !document.getElementById('MNcreateHouse').contains(event.target)) {
-    //         // MNcreateHouse.style.display = "none";
-    //         // BTNcreateHouse.style.display = "block";
-    //         MNcreateHouse.classList.add("hidden");
-    //         BTNcreateHouse.classList.remove("hidden");
-    //     }
-
-    // })
-
     function mnCreateHouse(parent_div) {
         parent_div.classList.add("mn-createhouse")
         parent_div.innerHTML = `
@@ -289,7 +278,7 @@ async function renderMainPage(data) {
     }
 
     function displayHouses(house_list, parent_div) {
-        parent_div.innerHTML = '<p> Create new House! </p>';
+        parent_div.innerHTML = '<p class="text-4xl items-center"> Create new House! </p>';
         if (house_list.length > 0) {
             parent_div.innerHTML = '';
             for (let i = 0; i < house_list.length; i++) {
