@@ -294,7 +294,7 @@ captionpos=b,
 \section{Einleitung}
 \par In einer Welt, die zunehmend von vernetzten Geräten und dem Internet der Dinge geprägt ist, wird die Entwicklung effizienter und benutzerfreundlicher Systeme zur Steuerung und Überwachung von Gebäuden immer relevanter. Im Jahr 2024 wurde in Deutschland die Anzahl von über 19 Millionen Haushalten, die ein oder mehrere smarte Geräte besaßen, verzeichnet. Prognosen zufolge wird sich diese Zahl in den nächsten drei Jahren verdoppeln \cite{statita_smhomes}.
 \par Moderne Steuerungs- und Überwachungssysteme tragen zur Effizienzsteigerung und Ressourcenschonung bei. Diese Systeme übernehmen einen Teil der täglichen Aufgaben, wie das Ein- und Ausschalten des Lichts, die Regelung der Raumtemperatur oder das Aufräumen des Hauses. Die möglichen Funktionen sind dabei nur durch die Bedürfnisse der Benutzerinnen und Benutzer begrenzt.
-\par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Es wird eine Web-Schnittstelle erstellt, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht. Über diese Schnittstelle werden die von Geräten erfassenen Daten dargestellt und die Benutzer werden über gefährliche Vorgänge im Haus informiert. Außerdem haben die Benutzer die Möglichkeit eigene Szenarien basierend auf den erfassenen Daten zu erstellen.
+\par Im Rahmen meiner Bachelorarbeit wird ein System zur Steuerung und Überwachung des Hauses entwickelt. Es wird eine Web-Schnittstelle erstellt, die die Interaktion des Benutzers mit den Geräten in seinem Haushalt ermöglicht. Über diese Schnittstelle werden die von Geräten erfassten Daten dargestellt und die Benutzer werden über gefährliche Vorgänge im Haus informiert. Außerdem haben die Benutzer die Möglichkeit eigene Szenarien basierend auf den erfassten Daten zu erstellen.
 \par Zur Erfassung und Verarbeitung der Sensordaten werden Mikrocontroller eingesetzt. Diese sind entsprechend programmiert, um die Sensordaten zu erfassen und die Daten über das Netzwerk an den zentralen Server zu übermitteln.
 \par Im Rahmen der Entwicklung dieses Systems wurden die aktuellen Technologien zur Erstellung eines Webinterfaces und zur Kommunikation zwischen den Geräten eingesetzt. Das System bleibt dabei flexibel und erweiterbar. 
 \par Die Bachelorarbeit gliedert sich in mehrere Kapitel. Kapitel 2 behandelt die Ziele des Projekts sowie die allgemeine Systemarchitektur und die einzelnen Komponenten des Systems.
@@ -304,11 +304,11 @@ captionpos=b,
 \newpage
 
 \section{Ziel des Projekts}
-\par Das im Rahmen dieser Arbeit entwickelte System stellt einen Prototyp für ein Smart-Home-System dar. Ziel des Projekts ist die Realisierung eines intelligenten Heimsystems, das verschiedene Technologien integeriert und flexibel erweiterbar ist. Die Architektur des Systems ist modular aufgebaut, sodass die Geräte hinzugefügt und eingebunden werden können. Dies erlaubt eine skalierbare und anpassbare Nutzung in unterschiedlichen Anwendungsfällen.
+\par Das im Rahmen dieser Arbeit entwickelte System stellt einen Prototyp für ein Smart-Home-System dar. Ziel des Projekts ist die Realisierung eines intelligenten Heimsystems, das verschiedene Technologien integriert und flexibel erweiterbar ist. Die Architektur des Systems ist modular aufgebaut, sodass die Geräte hinzugefügt und eingebunden werden können. Dies erlaubt eine skalierbare und anpassbare Nutzung in unterschiedlichen Anwendungsfällen.
 \par Das entwickelte System dient der Überwachung und Steuerung von vernetzten Geräten innerhalb eines Hauses. Ziel des Systems ist es, Sensordaten zu erfassen, diese zu verarbeiten und eine benutzerfreundliche Interaktionsmöglichkeit zu bieten. Dabei kommen verschiedene Hardware- und Softwarekomponenten zum Einsatz, die eine nahtlose Kommunikation zwischen den einzelnen Modulen gewährleisten.
 \par Das System erfüllt mehrere wesentliche Aufgaben:
 \begin{enumerate}
-  \item \textbf{Sensordatenerfassung}: Die an den Mikrocontrollern angeschlossenen Sensoren übermitteln die erfassenen Daten an dem zentralen Server.
+  \item \textbf{Sensordatenerfassung}: Die an den Mikrocontrollern angeschlossenen Sensoren übermitteln die erfassten Daten an dem zentralen Server.
   \item \textbf{Sicherheitsaspekt}: Das System ist mit den Sensoren für die Erkennung des Brandes ausgestattet. Außerdem bietet das System gesicherter Zugang zu dem Haus.
   \item \textbf{Datenverarbeitung und Speicherung}: Der zentrale Server stellt die empfangenen Daten zur Analyse bereit und speichert die Benutzer- und Geräteinformationen in der Datenbank.
   \item \textbf{Benutzerinteraktion}: Über die Weboberfläche können die Nutzer das System konfigurieren, Messwerte einsehen und Aktoren steuern. Außerdem werden die Nutzer über das Brand im Haus informiert.
@@ -459,11 +459,12 @@ captionpos=b,
   \paragraph{M5StickC}
   \par \textbf{}
   \par Der M5StickC \cite{m5stickc} ist eine kompakte Entwicklungsplattform, die auf dem ESP32 basiert. Er verfügt über ein integriertes Display, eine Batterie und zusätzliche integrierte Sensoren.
-  \par Der M5StickC verfügt über ein 1,14-Zoll großes LCD-Display, das die visuelle Ausgabe von Sensordaten oder Statusmeldungen ermöglicht. Außerdem enthält er eine integrierte IMU (Inertial Measurement Unit) zur Bewegungs- und Lageerkennung. Eine integrierte Lipo-Batterie ermöglicht den kabellosen Betrieb über einen längeren Zeitraum.
+  \par Der M5StickC verfügt über ein 1,14-Zoll großes LCD-Display, das die visuelle Ausgabe von Sensordaten oder Statusmeldungen ermöglicht. 
+ \par Eine integrierte Lipo-Batterie ermöglicht den kabellosen Betrieb für eine gewisse Zeit.
   \par Aufgrund seiner kompakten Größe und der langen Batterielaufzeit eignet er sich besonders für IoT-Systeme. 
   \par In diesem Projekt dient der M5StickC als tragbare Steuerungs- und Überwachungseinheit. An das Modul werden Temperatur- und Lichtsensoren angeschlossen. Das Modul wird über WLAN mit dem Server verbunden. Auf dem integrierten Display werden die Daten der Sensoren sowie Verbindungszustände und Meldungen angezeigt. 
   \subsubsection{BME680}
-  \par Der BME680 \cite{bme680} ist ein kompakter Umweltsensor von Bosh, der mehrere Funktionen in einem Modul vereint. Das Modul ist mit einem Gassensor, einem Feuchtesensor, einem Luftdrucksensor und einem Temperatursensor ausgestattet. Aufgrund seiner kompakten Größe und hohen Genauigkeit wird das Modul häufig im Bereich der Umweltsensorik eingesetzt.
+  \par Der BME680 \cite{bme680} ist ein kompakter Umweltsensor von Bosh, der mehrere Funktionen in einem Modul vereint. Das Modul ist mit einem Gassensor, einem Luftfeuchtigkeitssensor, einem Luftdrucksensor und einem Temperatursensor ausgestattet. Aufgrund seiner kompakten Größe und hohen Genauigkeit wird das Modul häufig im Bereich der Umweltsensorik eingesetzt.
   \par Mit Hilfe des eingebauten Gassensors und einer vom Hersteller speziell entwickelten Software kann die Luftqualität (IAQ - Eng. Index of Air Quality) gemessen werden. Grundsätzlich handelt es sich um eine Zahl von 0 bis 500, wobei 0 die beste und 500 die schlechteste Luftqualität darstellt. Eine detaillierte Beschreibung des Sensors sowie der Bestimmung der IAQ ist im Datenblatt zum Modul BME680 \cite{bme680} unter Kapitel 1.2 zu finden. Die Tabelle \ref{tab:bme680td} enthält die wichtigsten technischen Daten des Moduls.
   \par Der BME680 verfügt über I2C- und SPI- Schnittstellen für die Kommunikation mit anderen Geräten. 
   \begin{table}[h!]
@@ -484,7 +485,7 @@ captionpos=b,
     \end{table}
   \par In meinem Projekt wird das Modul BME680 zur Messung von Temperatur und Luftqualität eingesetzt.
   \subsubsection{VCNL4040}
-  \par Der VCNL4040 ist ein hochpräzises optisches Modul. Das Modul enthält einen Näherungssensor (Proximity Sensor PR), einen Lichtsensor (Ambient Light Sensor) und eine Infrarot-Leuchtdiode (IRED). 
+  \par Der VCNL4040 ist ein hoch präzises optisches Modul. Das Modul enthält einen Näherungssensor (Proximity Sensor PR), einen Lichtsensor (Ambient Light Sensor) und eine Infrarot-Leuchtdiode (IRED). 
   \par Mit Hilfe des Näherungssensors und der IRED kann das Modul den Abstand zu einem Objekt bis zu einer Entfernung von 200 mm in Echtzeit messen. Der Lichtsensor misst die Helligkeit der Umgebung. 
   \par Das VCNL4040 verfügt über eine I2C-Schnittstelle zur Kommunikation mit anderen Geräten. 
   \par Eine detaillierte Beschreibung des Moduls sowie die technischen Daten sind dem Datenblatt \cite{vcnl4040} zu entnehmen. In der Tabelle \ref{tab:vcnl4040td} sind die wichtigsten Daten aufgelistet.
@@ -506,7 +507,7 @@ captionpos=b,
 
   \par In diesem Projekt wird das Modul als Lichtsensor zur Bestimmung der Umgebungshelligkeit eingesetzt. %Außerdem wird es zur Näherungserkennung verwendet, um berührungslose Steuerungen zu ermöglichen.
   \subsubsection{Raspberry Pi}
-  \par Der Raspberry Pi \cite{raspi} ist ein Einplatinencomputer, der von der Raspberry Pi foundation entwickelt wurde. Dieser Minicomputer verfügt über einen leistungsfähigen ARM-Prozessor. Dank seiner geringen Größe und hohe Rechenleistung wird er häufig in IoT-Systemen eingesetzt.
+  \par Der Raspberry Pi \cite{raspi} ist ein Einplatinencomputer, der von der Raspberry Pi Foundation entwickelt wurde. Dieser Minicomputer verfügt über einen leistungsfähigen ARM-Prozessor. Dank seiner geringen Größe und hohe Rechenleistung wird er häufig in IoT-Systemen eingesetzt.
   \par Die technische Daten sind in der Tabelle \ref{tbl:raspberry_tech} gelistet.
   \begin{table}[h!]
     \centering
@@ -577,9 +578,9 @@ captionpos=b,
   % \end{itemize}
 % „“
   \subsubsection{Asynchrone serielle Kommunikation}
-  \par In dieser Arbeit erfolgt die Kommunikation zwsichen Arduino und ESP8266 über eine serielle asynchrone Schnittstelle. Die Daten werden zwsichen den Komponenten bidirektional übertragen. 
+  \par In dieser Arbeit erfolgt die Kommunikation zwischen Arduino und ESP8266 über eine serielle asynchrone Schnittstelle. Die Daten werden zwischen den Komponenten bidirektional übertragen. 
   \par UART\footnote{Universal Asynchronous Receiver Transmitter} ist eine Hardwarekomponente, die die serielle Datenübertragung bei der Kommunikation zwischen Mikrocontrollern und anderen Geräten ermöglicht. Eine UART-Schnittstelle ist der Standard für serielle Schnittstellen an PCs und Mikrocontrollern und wird zum Senden und Empfangen von Daten über eine Datenleitung verwendet.
-  \par UART arbeitet asynchron, d.h. es gibt keine gemeinsame Taktverbindung zwischen den kommunizierenden Geräten. Stattdessen wird die Datenübertragung durch Start- und Stoppbits synchronisiert. Diese ermöglichen es dem Empfänger, den Beginn und das Ende eines Datenpakets zu erkennen. Ein typisches Datenpaket besteht aus einem Startbit, gefolgt von einer festgelegten Anzahl von Datenbits (normalerweise 8), einem optionalen Paritätsbit zur Fehlerkontrolle und einem oder mehreren Stoppbits. Der Vorteil besteht darin, dass keine permanente Synchronisation zwischen Empfänger und Sender erforderlich ist. Sie müssen nur für die Dauer der Übertragung synchronisiert sein. Wenn keine Daten zu übertragen sind, setzt der Sender die Leitung auf die Polarität des Stopbits.
+  \par UART arbeitet asynchron, d.h. es gibt keine gemeinsame Taktverbindung zwischen den kommunizierenden Geräten. Stattdessen wird die Datenübertragung durch Start- und Stopbits synchronisiert. Diese ermöglichen es dem Empfänger, den Beginn und das Ende eines Datenpakets zu erkennen. Ein typisches Datenpaket besteht aus einem Startbit, gefolgt von einer festgelegten Anzahl von Datenbits (normalerweise 8), einem optionalen Paritätsbit zur Fehlerkontrolle und einem oder mehreren Stopbits. Der Vorteil besteht darin, dass keine permanente Synchronisation zwischen Empfänger und Sender erforderlich ist. Sie müssen nur für die Dauer der Übertragung synchronisiert sein. Wenn keine Daten zu übertragen sind, setzt der Sender die Leitung auf die Polarität des Stopbits.
   \par Ein Vorteil der seriellen Kommunikation ist ihre Einfachheit in der Verkabelung. Um die Kommunikation zwischen den Geräten herzustellen, wird die Rx-Leitung eines Gerätes mit der Tx-Leitung des anderen Gerätes verbunden und umgekehrt: Die Tx-Leitung des ersten Gerätes wird mit der Rx-Leitung des zweiten Gerätes verbunden. Dadurch entsteht eine Master-Slave-Beziehung zwischen den beiden Geräten, auch wenn die Geräte gleichberechtigt kommunizieren können. Zudem ist UART in den meisten Mikrocontrollern integriert, was die Anwendung vereinfacht und die Kosten minimiert.
   \par Eine detaillierte Beschreibung der UART-Schnittstelle in ESP-Modulen erfolgt in Kapitel 8.6 des Buches von Brandes \cite[S. 500]{espbuch}.
   
@@ -593,12 +594,12 @@ captionpos=b,
   \par In diesem Projekt wird I²C verwendet, um die Sensoren mit den ESP-Modulen zu verbinden.
   \subsection{Software}
   \subsubsection{C-Programme}
-  \par Die Programmiersprache C ist eine prozeduale und leistungsfähige Sprache. Sie wurde im Jahr 1972 von Dennis Ritchie entwickelt. Sie zeichnet sich durch ihre Effizienz und direkte Speicherverwaltung aus. Aufgrund ihrer Eigenschaften wird C vorrangig in der Entwicklung von Betriebssystemen sowie in der Embedded-Programmierung eingesetzt. Insbesondere bei Mikrocontrollern findet C häufig Anwendung.
+  \par Die Programmiersprache C ist eine prozedurale und leistungsfähige Sprache. Sie wurde im Jahr 1972 von Dennis Ritchie entwickelt. Sie zeichnet sich durch ihre Effizienz und direkte Speicherverwaltung aus. Aufgrund ihrer Eigenschaften wird C vorrangig in der Entwicklung von Betriebssystemen sowie in der Embedded-Programmierung eingesetzt. Insbesondere bei Mikrocontrollern findet C häufig Anwendung.
 
   \par In diesem Projekt wurde C zur Programmierung der Mikrocontroller verwendet. Für die Entwicklung, Übersetzung und Übertragung des Codes auf die Mikrocontroller wurde die Entwicklungsumgebung \texttt{PlatformIO} verwendet.
   \par  \texttt{PlatformIO} \cite{platformio} ist eine Open-Source-Entwicklungsumgebung für eingebettete Systeme, die als Erweiterung in Visual Studio Code verfügbar ist. Sie unterstützt zahlreiche Mikrocontroller-Plattformen, darunter Arduino und ESP-basierte Module.
   \par \texttt{PlatformIO} übernimmt den gesamten Build-Prozess: Der Quellcode wird übersetzt, kompiliert und auf das Gerät übertragen. Über die Konfigurationsdatei „\texttt{platformio.ini}“ wird das Projekt konfiguriert.In dieser Datei werden das verwendete Plattform-Framework, das Ziel-Board und die benötigten Bibliotheken angegeben. Weitere Weitere erforderliche Build- und Upload-Optionen können dort ebenfalls festgelegt werden.
-  \par Durch die Verwendung von \texttt{PlatformIO} wird die Entwicklung der Software für die Mikrocontroller effizienter. Der Quellcode kann direkt auf dem Rechner kompiliert und gebildet werden. Somit werden die Fehlöer vor dem Laden auf das Gerät erkannt.
+  \par Durch die Verwendung von \texttt{PlatformIO} wird die Entwicklung der Software für die Mikrocontroller effizienter. Der Quellcode kann direkt auf dem Rechner kompiliert und gebildet werden. Somit werden die Fehler vor dem Laden auf das Gerät erkannt.
   \par Durch die Verwendung von \texttt{PlatformIO} gestaltet sich die Softwareentwicklung für die Mikrocontroller effizienter. Der Quellcode wird direkt auf dem Rechner kompiliert und überprüft. Somit können die Fehler bereits vor dem Hochladen auf das Gerät erkannt werden.
 
 
@@ -648,7 +649,7 @@ captionpos=b,
 
   \subsubsection{Webentwicklung}
   \par Die Entwicklung moderner Webanwendungen basiert auf drei zentralen Technologien: HTML, CSS und JavaScript. Diese bilden die Grundlage für die Erstellung interaktiver und ansprechender Webseiten. HTML dient der strukturellen Definition der Inhalte, CSS sorgt für die visuelle Gestaltung und JavaScript ermöglicht dynamische Funktionen und Interaktionen. Durch das Zusammenspiel dieser Technologien können komplexe, dynamische Webanwendungen realisiert werden.
-  \pagebreak
+  
   \paragraph{HTML}
   \par \textbf{}
   \par Die Hypertext Markup Language (HTML) ist die standardisierte Beschreibungssprache zur Strukturierung und Darstellung von Webseiteninhalten. Sie bildet die Grundlage jeder Webseite und definiert deren logischen Aufbau durch eine hierarchische Struktur von Elementen. 
@@ -670,14 +671,12 @@ captionpos=b,
   \par Eine Alternative zu klassischem CSS ist \texttt{Tailwind CSS}. Es vereinfacht die Gestaltung von Webseiten durch vordefinierte Klassen. 
   \par Im \texttt{Tailwind CSS} hat jede Klasse eine spezifische Funktion, so dass komplexe Designs ohne eigene Stylesheets möglich sind. Außerdem bietet es eine Konfigurationsdatei, in der Farben, Abstände und andere Designparameter individuell angepasst werden können.
   \par Anstatt für jedes Element individuelle CSS-Regeln zu schreiben, werden Style-Sheets direkt durch CSS-Klassen im \texttt{class}-Attribut eines HTML-Elements definiert. Beispielsweise erzeugt die Klasse \texttt{class="bg-green-500 text-blue p-4"} ein grünes Hintergrundfeld mit blauer Schrift und einem Innenabstand von 16 Pixeln.
-    
-  \par Ein Vorteil von Tailwind CSS ist die hohe Flexibilität und Wiederverwendbarkeit der Klassen. Das Styling kann direkt in den Komponenten definiert werden. Außerdem bietet Tailwind CSS eine \textbf{Purge-Funktion}, die nicht verwendete Klassen aus der endgültigen CSS-Datei entfernt, um die Ladezeiten zu optimieren. 
 
 
   \paragraph{JavaScript}  
   \par \textbf{}
   \par JavaScript ist eine dynamische Programmiersprache, die zur Interaktivität und Behandlung von Webseiteninhalten verwendet wird. Sie ermöglicht die Erstellung dynamischer, benutzerinteraktiver Webseiten. Mit JavaScript können HTML-Elemente zur Laufzeit verändert und Reaktionen auf Benutzereingaben definiert werden.  Die Grundstruktur von JavaScript basiert auf Anweisungen, die sequentiell ausgeführt werden.
-  \par JavaScript ist eine ereignisgesteuerte Sprache, in der viele Prozesse durch Ereignisse wie Klicks, Tastatureingaben oder Zeitabläufe ausgelöst werden. In JavaScript wird der Code in Funktionen organisiert, die bestimmte Aufgaben ausführen. Diese Funktionen können bei Bedarf aufgerufen werden. 
+  \par JavaScript ist eine ereignisorientierte Sprache, in der viele Prozesse durch Ereignisse wie Klicks, Tastatureingaben oder Zeitabläufe ausgelöst werden. In JavaScript wird der Code in Funktionen organisiert, die bestimmte Aufgaben ausführen. Diese Funktionen können bei Bedarf aufgerufen werden. 
   \par JavaScript unterstützt asynchronen Programmcode. Asynchrone Funktionen ermöglichen lange Operationen im Hintergrund, ohne die Benutzeroberfläche zu blockieren. Asynchrone Funktionen werden mit dem Schlüsselwort \texttt{async} deklariert. Das Schlüsselwort \texttt{await} wird verwendet, um auf das Ergebnis einer anderen asynchronen Funktion zu warten. Ein einfaches Beispiel für eine asynchrone Funktion ist:
   \begin{lstlisting}[frame=single, style=htmlcssjs]
   async function ladeDaten() {
@@ -693,7 +692,7 @@ captionpos=b,
   \par \textbf{}
   \par WebSocket ist ein Kommunikationsprotokoll, das eine dauerhafte, bidirektionale Verbindung zwischen einem Client und einem Server ermöglicht. Im Gegensatz zu klassischen HTTP-Verbindungen, die nach jeder Anfrage und Antwort geschlossen werden, bleibt bei WebSocket die Verbindung offen, so dass beide Parteien jederzeit Daten austauschen können. Dies ermöglicht eine Echtzeit-Kommunikation, ohne dass ständig neue Verbindungen aufgebaut werden müssen. 
   \par WebSocket ermöglicht das Senden von Daten in beide Richtungen: vom Client zum Server und umgekehrt. Dies ist besonders nützlich für Anwendungen, die eine kontinuierliche Datenübertragung benötigen, wie z.B. Echtzeit-Datenvisualisierungen.  
-  \par In JavaScript kann WebSocket einfach mit der WebSocket-API verwendet werden. Eine WebSocket-Verbindung wird hergestellt, indem ein neues \texttt{WebSocket}-Objekt instanziiert wird, das die URL des WebSocket-Servers als Parameter erhält. Sobald die Verbindung hergestellt ist, können Nachrichten gesendet und empfangen werden.
+  \par In JavaScript kann WebSocket einfach mit der WebSocket-API verwendet werden. Eine WebSocket-Verbindung wird hergestellt, indem ein neues \texttt{WebSocket}-Objekt mit der URL des WebSocket-Servers als Parameter erstellt wird. Sobald die Verbindung hergestellt ist, können Nachrichten gesendet und empfangen werden.
 \newpage
   \section{Einrichtung der Hardwarekomponenten}
   \par In diesem Kapitel wird die Einrichtung der im System verwendeten Hardwarekomponenten beschrieben. 
@@ -746,7 +745,7 @@ captionpos=b,
   \par \textbf{}
   \par Anschließend werden mit der Funktion \texttt{connect\_wifi\_mqtt} (Listing \ref{lst:espconnwifimqtt}) die WLAN- und MQTT-Verbindungen aufgebaut. Zunächst wird versucht die WLAN-Daten aus dem EEPROM zu laden. Bevor die Daten aus dem EEPROM gelesen werden können, muss es mit einer Buffer-Größe von 64 bit initialisiert werden (Zeile 3). 
   \par Es werden zwei Felder vom Typ \texttt{char} mit vordefinierten maximalen Längen zum Speichern der Daten aus dem EEPROM erstellt (Zeile 4-5). Der Name des WLAN-Netzes (SSID) wird ab Adresse 0 bis 31 des EEPROM ausgelesen und mit der Funktion \texttt{EEPROM.get(0, eeprom\_ssid)} im Char-Feld gespeichert. Das Passwort wird ab Adresse 32 aus dem EEPROM ausgelesen und in das zweite Char-Feld gespeichert.
-  \par Anschließend wird mit der Boolean-Funktion \texttt{is\_valid\_string()} geprüft, ob die aus dem EEPROM abgelesenen Daten sinvoll sind. Die Funktion gibt den Wert \texttt{False} zurück, wenn ein Standard-EEPROM-Zeichen mit dem Wert \texttt{0xFF} gefunden wurde. Dies bedeutet, dass EEPROM noch leer ist und es keine gültigen WLAN-Daten im EEPROM vorhanden sind.
+  \par Anschließend wird mit der Boolean-Funktion \texttt{is\_valid\_string()} geprüft, ob die aus dem EEPROM abgelesenen Daten sinnvoll sind. Die Funktion gibt den Wert \texttt{False} zurück, wenn ein Standard-EEPROM-Zeichen mit dem Wert \texttt{0xFF} gefunden wurde. Dies bedeutet, dass EEPROM noch leer ist und es keine gültigen WLAN-Daten im EEPROM vorhanden sind.
   \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnwifimqtt}, caption={ESP: connect\_wifi\_mqtt()}]
     void connect_wifi_mqtt()
     {
@@ -838,7 +837,7 @@ captionpos=b,
   \par \textbf{}
   \par Nach erfolgreicher Verbindung mit dem WLAN, wird die Funktion \texttt{mqtt\_connect()} (Listing \ref{lst:espconnectmqtt}) aufgerufen, um die Verbindung zum MQTT-Broker zu erstellen. Zunächst werden die Topics zum Senden und Empfangen der Nachrichten mit der Funktion \texttt{set\_topics()} erstellt (Zeile 3). Dabei werden die Topics mit \texttt{Geräte-ID} für jedes Modul individuell formuliert.
   \par Der \texttt{mqttClient} ist ein Objekt der Klasse \texttt{PubSubClient}. Die Funktion \texttt{setServer()} erhält als Parameter die IP-Adresse des MQTT-Brokers sowie den Port, auf dem der Broker lauscht (Zeile 4). Diese Parameter sind als Konstanten im Programmcode definiert. Die \texttt{callback}-Funktion muss definiert werden und wird beim Empfang einer MQTT-Nachricht ausgeführt. 
-  \par Es wird maximal \texttt{wifi\_repeat}-mal versucht, die Verbindung zum MQTT-Broker herzustellen. Solltedies nicht erfolgreich sein, wird \texttt{False} zurückgegeben. Andernfalls abonniert der \texttt{mqttClient} das \texttt{SUBSCRIBE\_TOPIC} und die Funktion gibt \texttt{True} zurück.
+  \par Es wird maximal \texttt{wifi\_repeat}-mal versucht, die Verbindung zum MQTT-Broker herzustellen. Sollte dies nicht erfolgreich sein, wird \texttt{False} zurückgegeben. Andernfalls abonniert der \texttt{mqttClient} das \texttt{SUBSCRIBE\_TOPIC} und die Funktion gibt \texttt{True} zurück.
   \begin{lstlisting}[frame=single, style=cpp, numbers=left, label={lst:espconnectmqtt}, caption={ESP: mqtt\_connect}]
     void mqtt_connect()
     {
@@ -938,7 +937,8 @@ captionpos=b,
 \par Nach dem Setup werden bei jedem Programmdurchlauf die Funktionen \texttt{show\_connections()} und \texttt{show\_sensordata()} aufgerufen. 
 \par Die Funktion \texttt{show\_connections()} gibt den aktuellen Status der WLAN- und MQTT-Verbindung auf dem Display aus. Bei einem Verbindungsausfall wird eine Meldung mit den Daten des erstellten Zugangspunktes angezeigt.
 \par Die Funktion \texttt{show\_sensordata()} liest die aktuellen Werte für die Luftfeuchtigkeit und die Raumtemperatur vom BME680-Sensor aus und stellt diese auf dem Display dar.
-\par Die Funktion \texttt{send\_mqtt\_sensor\_data()} liest die von dem BME680-Sensor erfassten Daten aus und überträgt diese über die bestehende MQTT-Verbindung. Die Sensordaten werden zunächst ausgelesen und in den lokalen Variablen gespeichert. Anschließend wird ein JSON-Objekt erzeugt, in dem die Messwerte den entsprechenden Feldern zugewiesen werden. Dieses JSON-Objekt wird serialisiert und an das Topic „\texttt{data/esp32}“ gesendet.
+\par Die Funktion \texttt{send\_mqtt\_sensor\_data()} liest die von dem BME680-Sensor erfassten Daten aus und überträgt diese über die bestehende MQTT-Verbindung. Diese Funktion wird bei jedem Programmdurchlauf ausgeführt.
+\par Die Sensordaten werden zunächst ausgelesen und in den lokalen Variablen gespeichert. Anschließend wird ein JSON-Objekt erzeugt, in dem die Messwerte den entsprechenden Feldern zugewiesen werden. Dieses JSON-Objekt wird serialisiert und an das Topic „\texttt{data/esp32}“ gesendet. 
 \par Der auf dem Modul laufende MQTT-Client abonniert das Topic „\texttt{command/esp32}“. Beim Empfang einer MQTT-Nachricht aus diesem Topic mit dem Text „handshake“, antwortet der Client mit den Konfigurationsdaten. Die Konfigurationsdaten des Moduls haben folgende Struktur:
 \begin{Verbatim}[frame=single]
   {
@@ -946,9 +946,9 @@ captionpos=b,
     "commands": ["light_on", "light_off"]
   }
 \end{Verbatim}
-\par Aus den Konfigurationsdaten ergibt sich, dass das Modul die Werte für die Temperatur und die Luftfeuchtigkeit liefert sowie die Befehle zum Ein- und Ausschalten des Lichts ausführen kann. 
+\par Aus den Konfigurationsdaten ergibt sich, dass das Modul die Werte für die Temperatur und die Luftfeuchtigkeit liefert sowie die Befehle zum Ein- und Ausschalten des Lichts ausführen kann.
 \par Beim Empfang einer Nachricht mit dem Text „\texttt{light\_on}“ wird der GPIO-Pin 4 auf HIGH gesetzt, wodurch die angeschlossene Diode eingeschaltet wird. Beim Empfang einer Nachricht mit dem Text „\texttt{"light\_off"}“ wird der GPIO-Pin 4 auf LOW gesetzt und die Diode entsprechend ausgeschaltet.
-\par Das ESP32 liefert kontinuierlich die erfassenen Umweltdaten und reagiert auf die eingehenden Steuerbefehle. Dadurch ist das Modul flexibel in verschiedenen Szenarien einsetzbar.
+\par Das ESP32 liefert kontinuierlich die erfassten Umweltdaten und reagiert auf die eingehenden Steuerbefehle. Dadurch ist das Modul flexibel in verschiedenen Szenarien einsetzbar.
 % „“
 \newpage
 \section{Softwareentwicklung}
@@ -969,7 +969,7 @@ captionpos=b,
   |--- tailwind.config.js  
 \end{Verbatim}
 \begin{itemize}
-  \item \textbf{app/} --- Haputmodul des Programms. Enthält die Startdatei \texttt{\_\_main\_\_.py} sowie eine Initialisierungsdatei \texttt{\_\_init\_\_.py}, um das gesamte Modul als Package erkennbar zu machen.
+  \item \textbf{app/} --- Hauptmodul des Programms. Enthält die Startdatei \texttt{\_\_main\_\_.py} sowie eine Initialisierungsdatei \texttt{\_\_init\_\_.py}, um das gesamte Modul als Package erkennbar zu machen.
   \item \textbf{config/} --- Enthält die Einstellungen für die Datenbankverbindungen, MQTT-Client, Logger und den Webserver.
   \item \textbf{db/} --- Verwaltet der Datenbank. Enthält die Funktionen für die Verbindung zur Datenbank, die Erstellung von Tabellen und die Interaktion mit der Datenbank.
   \item \textbf{mqtt/} --- Enthält die Logik für die Kommunikation über das MQTT-Protokoll. Enthält Code für den Empfang, die Verarbeitung und das Senden von MQTT-Nachrichten.
@@ -982,7 +982,7 @@ captionpos=b,
   \subsection{Datenbank}
   \paragraph{Struktur der Datenbank}
   \par \textbf{}
-  \par Die Datenbank für dieses Projekt wurde mit \texttt{SQLAlchemy} implementiert. Ziel war es, eine relationale Datenbank zu erstellen, die modular und flexibel aufgebaut ist, sowie die Möglichkeit bietet die Datenbankoperationen ohne direkten SQL-Abfragen durchzufüchren.
+  \par Die Datenbank für dieses Projekt wurde mit \texttt{SQLAlchemy} implementiert. Ziel war es, eine relationale Datenbank zu erstellen, die modular und flexibel aufgebaut ist, sowie die Möglichkeit bietet die Datenbankoperationen ohne direkten SQL-Abfragen durchzuführen.
   \par Die Funktionen zur Verwaltung der Datenbank sind in dem Paket „db“ zusammengefasst. Dieses Paket bündelt alle relevanten Komponenten, wie die Konfiguration der Datenbankverbindung, das Session-Management sowie die Definition der Datenbankmodelle. Durch diese modulare Struktur kann das Datenbankpaket in anderen Klassen importiert werden, um eine zentrale und einheitliche Interaktion mit der Datenbank zu ermöglichen.
   \par Die Struktur des Packets sieht wie folgt aus:
   \begin{Verbatim}[frame=single]
@@ -1087,7 +1087,7 @@ captionpos=b,
   \paragraph{Modelle}
   \par \textbf{}
   \par In der Datei „\texttt{models.py}“ sind die Datenbank-Tabelle als Python-Klassen definiert. 
-  \par Zunächst müssen die benötigten Module importiert werden. Das Modul „\texttt{bcrypt}“ \cite{bcrypt} wird für die Entschlüssertung und Verifizierung der Passwörter verwendet. Die Module aus der Bibliothek „\texttt{SQLAlchemy}“ enthalten die Funktionen für die Interaktionen mit der Datenbank. 
+  \par Zunächst müssen die benötigten Module importiert werden. Das Modul „\texttt{bcrypt}“ \cite{bcrypt} wird für die Entschlüsselung und Verifizierung der Passwörter verwendet. Die Module aus der Bibliothek „\texttt{SQLAlchemy}“ enthalten die Funktionen für die Interaktionen mit der Datenbank. 
   \par Das Modul „\texttt{.base}“ entspricht der Datei „\texttt{base.py}“ (Listing \ref{lst:dbbase}). In dieser Datei wird lediglich „\texttt{declarative\_base}“ importiert und in der Variablen \texttt{Base} initialisiert. Dieser Schritt ist notwendig, um auf die \texttt{Base} in anderen Skripten zugreifen zu können.
   \begin{lstlisting}[frame=single, style=py, numbers=left, label={lst:dbbase}, caption={db: base.py}]
     from sqlalchemy.orm import declarative_base
@@ -1113,7 +1113,7 @@ captionpos=b,
 
     __table_args__ = (UniqueConstraint('name', 'user_id'),)
   \end{lstlisting}
-  \par Die Klasse „\texttt{UserModel}“ (Listing \ref{lst:usermodel}) repräsentiert die Tabelle „\texttt{user}“. Neben der Definition der Spaltenenthält enthält diese Klasse eine Funktion zur Validierung von Passwörtern. Die Funktion erhält ein Passwort als Parameter und vergleicht es mit dem im Modell gespeicherten und verschlüsselten Passwort. Dadurch muss das gespeicherte Passwort nicht entschlüsselt werden.
+  \par Die Klasse „\texttt{UserModel}“ (Listing \ref{lst:usermodel}) repräsentiert die Tabelle „\texttt{user}“. Neben der Definition der Spalten enthält diese Klasse eine Funktion zur Validierung von Passwörtern. Die Funktion erhält ein Passwort als Parameter und vergleicht es mit dem im Modell gespeicherten und verschlüsselten Passwort. Dadurch muss das gespeicherte Passwort nicht entschlüsselt werden.
   \begin{lstlisting}[style=mypython, label={lst:usermodel},caption={models.py: UserModel}]
     class UserModel(Base):
     __tablename__ = 'user'
@@ -1197,7 +1197,7 @@ captionpos=b,
   \par Die Spalte „\texttt{source\_dev}“ (Zeile 15-17) speichert die Geräte-ID des Quellgeräts. In der Spalte „\texttt{target\_dev}“ (Zeile 21-23) wird die Geräte-ID des Zielgeräts gespeichert. Beide Spalten verweisen auf die Spalte „\texttt{dev\_id}“ der Tabelle „\texttt{device}“.
   \par In der Spalte „\texttt{data\_field}“ (Zeile 18) wird das Datenfeld gespeichert, dessen Wert als Auslöser für das Szenario geprüft wird.
   \par Die Spalte „\texttt{condition}“ (Zeile 19) stellt die Bedingung, die erfüllt sein muss, damit das Szenario ausgelöst wird. Mögliche Vergleichsoperatoren sind in der zugehörigen Enum-Klasse „\texttt{ScenarioConditionsEnum}“ (Zeile 2-5) festgelegt.
-  \par Die Beziehungen „\texttt{if\_device}“ und „\texttt{then\_device}“ verweisen auf die Spalte „\texttt{device\_id}“ der Klasse „\texttt{DeviceModel}“. Sie ermöglichen den direkten Zugriff auf die zugehörigen Geräte. In der Klasse „\texttt{DeviceModel}“ sind diese unter den Bezeichungen „\texttt{scenarios\_if}“ und „\texttt{scenarios\_then}“ (Listing \ref{lst:devicemodel}, Zeile 18–25) definiert.
+  \par Die Beziehungen „\texttt{if\_device}“ und „\texttt{then\_device}“ verweisen auf die Spalte „\texttt{device\_id}“ der Klasse „\texttt{DeviceModel}“. Sie ermöglichen den direkten Zugriff auf die zugehörigen Geräte. In der Klasse „\texttt{DeviceModel}“ sind diese unter den Bezeichnungen „\texttt{scenarios\_if}“ und „\texttt{scenarios\_then}“ (Listing \ref{lst:devicemodel}, Zeile 18–25) definiert.
   \begin{lstlisting}[style=mypython, label={lst:scenariomodel}, caption={models.py: ScenarioModel}]
   class ScenarioModel(Base):
     class ScenarioConditionsEnum(enum.Enum):
@@ -1275,7 +1275,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \subsection{Webbasierte Schnittstelle (API)} 
   \par Um die Benutzerinteraktionen mit dem System zu ermöglichen, muss eine Schnittstelle gebaut werden. Diese Schnittstelle muss den gesicherten Zugriff zu dem System bieten, die notwendigen Informationen bereitstellen, auf die Benutzerinteraktionen reagieren und die Daten verwalten. Nach sorgfältiger Abwägung verschiedener Optionen habe ich mich für die Implementierung einer webbasierten Schnittstelle auf Basis von \texttt{FastAPI} entschieden.
   \par Die zentrale Idee hinter der Entwicklung der API besteht darin, dem Benutzer eine effiziente und sichere Möglichkeit zu bieten, IoT-Geräte in einer strukturierten Umgebung zu verwalten. Dies umfasst das Hinzufügen neuer Geräte, die Gruppierung dieser Geräte in Räumen sowie die Verwaltung mehrerer Räume innerhalb eines Hauses. Darüber hinaus ermöglicht die API die kontinuierliche Überwachung und Steuerung der hinzugefügten Geräte.
-  \par Der Webserver ist, wie auch anderen Komponenten, in einem Paket namens „\texttt{webserver}“ srukturiert. Die Struktur des Packets ist wie folgt aufgebaut:
+  \par Der Webserver ist, wie auch anderen Komponenten, in einem Paket namens „\texttt{webserver}“ strukturiert. Die Struktur des Packets ist wie folgt aufgebaut:
   \begin{Verbatim}[frame=single]
     bachelor/code/spa/webserver
     |
@@ -1292,7 +1292,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \subsubsection{Sicherheit}
   \par \textbf{}
   \par Sicherheit spielt in diesem System eine wichtige Rolle. Für die API gibt es zwei kritische Sicherheitspunkte: die Übertragung sensibler Daten und die Authentifizierung der Benutzer.
-  \par Um sensible Daten, wie Passwörter, sicher zu speichern, wird der Algorithmus „\texttt{bcrypt}“ verwendet. Anstatt Passwörter im Klartext zu speichern, wird bei der Registrierung eines Benutzers das Passwort gehasht. Der Hash wird in der Datenbank gespeichert, nicht das Passwort selbst. Bei der Anmeldung wird das eingegebene Passwort mit dem gespeicherten Hash verglichen, ohne dass das Originalpasswort jemals entschlüsselt wird. Dadurch sind die Benutzerdaten auch dann geschützt, wenn die Datenbank kompromittiert wird.
+  \par Um sensible Daten, wie Passwörter, sicher zu speichern, wird der Algorithmus „\texttt{bcrypt}“ verwendet. Anstatt Passwörter im Klartext zu speichern, wird bei der Registrierung eines Benutzers das Passwort gehascht. Der Hash wird in der Datenbank gespeichert, nicht das Passwort selbst. Bei der Anmeldung wird das eingegebene Passwort mit dem gespeicherten Hash verglichen, ohne dass das Originalpasswort jemals entschlüsselt wird. Dadurch sind die Benutzerdaten auch dann geschützt, wenn die Datenbank kompromittiert wird.
   \par Zur Authentifizierung und Identifizierung des Benutzers nach erfolgreicher Anmeldung wird das JWT-Verfahren\footnote{JSON Web Token} verwendet. Die Funktion \texttt{create\_jwt\_token()} in der Datei „\texttt{services.py}“ generiert ein JWT-Token, das an den Benutzer zurückgegeben wird. Dieses Token enthält die Benutzer-ID in verschlüsselter Form, besitzt eine in der Konfigurationsdatei definierte Ablaufzeit und wird mit einem geheimen Schlüssel signiert.
   \par Das Token muss clientseitig gespeichert und bei jeder Anfrage im HTTP-Header mitgesendet werden, um die Authentifizierung des Benutzers sicherzustellen. Der entsprechende Header muss dabei die folgende Struktur aufweisen:
   \begin{Verbatim}[frame=single]
@@ -1317,12 +1317,12 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \par Anschließend wird mit der Funktion \texttt{queries.get\_user\_data()} geprüft, ob ein Benutzer mit dem angegebenen \texttt{username} in der Datenbank existiert. Wird kein entsprechender Datensatz gefunden, wird eine \texttt{HTTPException} mit dem Statuscode \texttt{401} und der Meldung „Invalid username“ ausgelöst.
   \par Wenn der Benutzer existiert, wird das eingegebene Passwort mit der gespeicherten verschlüsselten Version verglichen. Ist die Prüfung erfolgreich, gibt die Funktion den Primärschlüssel zurück. Andernfalls wird die Fehlermeldung „Wrong password“ zurückgegeben.
   \par Nach erfolgreicher Authentifizierung wird in der Funktion \texttt{loin\_post()} ein JWT-Token erzeugt und zurückgegeben. Tritt während des Prozesses eine Exception auf, wird diese protokolliert und eine entsprechende Fehlermeldung ausgegeben.
-  \par Nach dem erfolgreichen Eingloggen und Erhalt des Tokens, kann der Benutzer zu den Funktionen der API zugreifen. 
+  \par Nach dem erfolgreichen Einloggen und Erhalt des Tokens, kann der Benutzer zu den Funktionen der API zugreifen. 
   \subsubsection{API-Endpunkte}
   \par In der Datei „\texttt{routes.py}“ sind die API-Endpunkte definiert, die verschiedene Funktionen des Systems bereitstellen. Jeder Endpunkt ist dabei einer bestimmten Aufgabe zugeordnet. 
   \par Zur besseren Strukturierung und Modularisierung des Codes wurden die Hilfsfunktionen in das Skript \texttt{services.py} ausgelagert. Diese Funktionen enthalten die Anwendungslogik, verarbeiten die Daten und stellen sie zur Verfügung, verwalten die Verbindungen zum WebSocket.
   \par Nach dem Import der erforderlichen Module wird ein Router mit \texttt{APIRouter()} erstellt, der die API-Endpunkte verwaltet. Die API-Endpunkte werden am Router registriert und anschließend mit der Funktion \texttt{include\_router()} in das Anwendungsobjekt angebunden. Durch die Verwendung von FastAPI-Routern und einer klar strukturierten Modulanordnung bleibt die API übersichtlich, leicht wartbar und erweiterbar.
-  \par Um auf Anfragen mit HTML-Dateien zu antworten, wi rd ein \texttt{Jinja2Templates}-Objekt erstellt. Dabei wird der Pfad zum Ordner „\texttt{templates/}“ angegeben, der die HTML-Vorlagen enthält. Dieses Objekt ermöglicht es, dynamische HTML-Antworten zu generieren, indem Daten aus den Endpunkten in die Vorlagen eingebunden werden.
+  \par Um auf Anfragen mit HTML-Dateien zu antworten, wird ein \texttt{Jinja2Templates}-Objekt erstellt. Dabei wird der Pfad zum Ordner „\texttt{templates/}“ angegeben, der die HTML-Vorlagen enthält. Dieses Objekt ermöglicht es, dynamische HTML-Antworten zu generieren, indem Daten aus den Endpunkten in die Vorlagen eingebunden werden.
   \par Jede Funktion, die auf die Datenbank zugreift, benötigt als Parameter eine Instanz der Klasse \texttt{AsyncSession}. Im der Datei „\texttt{routes.py}“ wird dazu die Funktion \texttt{get\_session()} aus dem Paket „\texttt{db}“ verwendet, die für die Erzeugung der Datenbanksitzungen zuständig ist. 
   \par Durch die Verwendung des Abhängigkeitsmechanismus \texttt{Depends(get\_session)} wird bei jedem Aufruf einer Router-Funktion automatisch eine neue Datenbanksitzung erzeugt und an die entsprechenden Unterfunktionen weitergegeben. 
   \par Dies ermöglicht eine effiziente und asynchrone Kommunikation mit der Datenbank, wodurch mehrere Anfragen gleichzeitig ohne blockierende Wartezeiten bearbeitet werden können.
@@ -1360,14 +1360,14 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \par Um ein Haus zu anzulegen, muss ein \texttt{POST}-Request an die Route „\texttt{add\_house}“ gesendet werden. Der Request muss im Header ein Bearer-Token und im Body den Namen des Hauses enthalten. Nach Erhalt des Requests wird die Funktion \texttt{add\_house\_post()} aufgerufen. Standardmäßig wird das Token validiert, und die Benutzer-ID wird aus dem Token extrahiert, um das Haus dem entsprechenden Benutzer zuzuordnen. Wenn eine gültige Benutzer-ID aus dem Token erzeugt wurde, wird diese zusammen mit der Instanz der Klasse \texttt{AsyncSession} und dem Namen des Hauses an die Funktion \texttt{services.create\_new\_house()} übergeben.
   \par Diese Funktion prüft zunächst, ob ein gültiger Hausname übergeben wurde. Anschließend wird mit der Funktion \texttt{queries.add\_new\_house()} ein neuer Eintrag in der Datenbank angelegt und dem Benutzer zugeordnet. 
   \par Wenn die Erstellung des Hauses erfolgreich war, gibt die Funktion eine Bestätigung zurück. Im Fehlerfall wird eine entsprechende Fehlermeldung generiert und geloggt.
-  \par Das Verfahren zum Hinzufügen eines Raumes zu einem House ist im Wesentlichen dasselbe wie bei der Erstellung eines Houses. An die Route „\texttt{add\_room}“ wird ein \texttt{POST}-Request mit dem Token im Header und mit dem Namen des Raumes sowie der zugehörigen House-ID im Body gesendet. Auch hier wird das JWT-Token standardmäßig validiert, und die Benutzer-ID daraus extrahiert. 
+  \par Das Verfahren zum Hinzufügen eines Raumes zu einem Haus ist im Wesentlichen dasselbe wie bei der Erstellung eines Hauses. An die Route „\texttt{add\_room}“ wird ein \texttt{POST}-Request mit dem Token im Header und mit dem Namen des Raumes sowie der zugehörigen Haus-ID im Body gesendet. Auch hier wird das JWT-Token standardmäßig validiert, und die Benutzer-ID daraus extrahiert. 
   \par Die Daten des Raumes und die Benutzer-ID werden an die Funktion \texttt{services.add\_room()} übergeben. Diese Funktion holt zunächst mit dem Befehl \texttt{queries.get\_house()} die Daten des Hauses aus der Datenbank, um den Besitzer des Hauses zu bestätigen. 
   \par Stimmt die übergebene Benutzer-ID mit der in der Datenbank gespeicherten Benutzer-ID des Hausbesitzers überein, wird mit der Funktion \texttt{queries.add\_new\_room()} das neue Raum in der Datenbank gespeichert. Im Erfolgsfall wird eine Bestätigung zurückgegeben. 
   \par Wenn der Benutzer nicht berechtigt ist, einen Raum zu dem angegebenen Haus hinzuzufügen, gibt die Funktion eine Meldung über unberechtigten Zugriff zurück.
   \par Der Benutzer hat die Möglichkeit seine Häuser und Räume zu löschen.
   % \par Das Löschen eines Hauses oder Raumes erfolgt ähnlich wie das Hinzufügen: Es wird ein \texttt{POST}-Request an die entsprechenden Routen („\texttt{/delete\_house}“ bzw. „\texttt{delete\_room}“) gesendet, wobei im Header das Bearer-Token und im Inhalt des Requests die zu löschende Haus- bzw. Raum-ID übermittelt wird. Dabei ist zu beachten, dass beim Löschen eines Hauses auch alle zugehörigen Räume gelöscht werden.
-  \par Beim Löschen eines Hauses wird ein Request mit den Benutzer- und House-ID an die Route „\texttt{/delete\_house}“ gesenden. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_house()} übergeben. Diese Funktion prüft, ob das Haus dem Benutzer gehört und entfernt mit der Funktion \texttt{queries.delete\_house()} den zugehörigen Eintrag aus der Datenbank. Die zugehörigen Räume werden ebenfalls gelöscht. Im Fehlerfall wird der entsprechende Fehler geloggt und ausgegeben. 
-  \par Das Löschen eines Raumes ist ähnlich dem Löschen eines Hauses. Ein Delete-Request mit der Raum- und Haus-ID wird an die Route „\texttt{delete\_room}“ gesendet. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_room()} übergeben. Wenn der Benutzer der Eigentümer des Hauses mit der übergebenen House-ID ist, wird der Raum aus der Datenbank gelöscht. Tritt ein Fehler auf, wird dieser geloggt und die entsprechende Meldung wird ausgegeben.
+  \par Beim Löschen eines Hauses wird ein Request mit den Benutzer- und Haus-ID an die Route „\texttt{/delete\_house}“ gesendet. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_house()} übergeben. Diese Funktion prüft, ob das Haus dem Benutzer gehört und entfernt mit der Funktion \texttt{queries.delete\_house()} den zugehörigen Eintrag aus der Datenbank. Die zugehörigen Räume werden ebenfalls gelöscht. Im Fehlerfall wird der entsprechende Fehler geloggt und ausgegeben. 
+  \par Das Löschen eines Raumes ist ähnlich dem Löschen eines Hauses. Ein Delete-Request mit der Raum- und Haus-ID wird an die Route „\texttt{delete\_room}“ gesendet. Nach der Validierung des Tokens und Erzeugung der Benutzer-ID werden die Daten an die Funktion \texttt{services.delete\_room()} übergeben. Wenn der Benutzer der Eigentümer des Hauses mit der übergebenen Haus-ID ist, wird der Raum aus der Datenbank gelöscht. Tritt ein Fehler auf, wird dieser geloggt und die entsprechende Meldung wird ausgegeben.
   \par Die Route „\texttt{/get\_houses}“ gibt alle von Benutzer erstellten Häuser im JSON-Format zurück. Der Request muss im Header nur das Token enthalten, aus dem die Benutzer-ID erzeugt wird. Die Benutzer-ID wird an die Funktion \texttt{services.get\_houses()} übergeben. Die Funktion \texttt{queries.get\_houses\_on\_user()} gibt eine Liste von Objekten der Klasse \texttt{HouseModel} zurück, die dem jeweiligen Benutzer zugeordnet sind. Diese Liste wird anschließend in das JSON-Format umgewandelt, um eine strukturierte Darstellung der Daten für die weitere Verarbeitung zu ermöglichen.
   \par Das erstellte Objekt hat folgende Struktur:
   \begin{Verbatim}[frame=single]
@@ -1578,7 +1578,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \end{lstlisting}
   \paragraph{Benutzerinteraktion}
   \par \textbf{}
-  \par Die Reaktionen auf die Benutzerinteraktionen sind mittels Event-Listener impementiert. Event-Listener ermöglichen es, auf Benutzerinteraktionen wie Klicks, Tastendrücke oder Mausbewegungen zu reagieren. In JavaScript werden sie mit der Funktion \texttt{addEventListener} an jeweiliges HTML-Element gebunden. Dabei wird das gewünschte Ereignis und eine Callback-Funktion angegeben, die beim Auftreten des Ereignisses ausgeführt wird.
+  \par Die Reaktionen auf die Benutzerinteraktionen sind mittels Event-Listener implementiert. Event-Listener ermöglichen es, auf Benutzerinteraktionen wie Klicks, Tastendrücke oder Mausbewegungen zu reagieren. In JavaScript werden sie mit der Funktion \texttt{addEventListener()} an jeweiliges HTML-Element gebunden. Dabei wird das gewünschte Ereignis und eine Callback-Funktion angegeben, die beim Auftreten des Ereignisses ausgeführt wird.
   \par Event-Listener können nicht nur für einzelne Elemente, sondern auch für übergeordnete Container genutzt werden. Dies ist besonders nützlich, wenn neue Elemente dynamisch hinzugefügt oder gelöscht werden. 
   \par Das Listing \ref{lst:jsmncreatehouse} zeigt den Prozess der Erstellung eines Formulars zum Hinzufügen eines neuen Hauses. 
   \par In Zeile 1 wird ein Event-Listener auf das Element mit der ID „\texttt{BTNcreateHouse}“ gesetzt. Beim Anklicken wird die Funktion \texttt{mnCreateHouse} aufgerufen, die das Eingabeformular erstellt. Dieser Funktion wird als Parameter ein \texttt{div}-Element übergeben, in dem das Formular angezeigt wird. Die HTML-Struktur des Formulars ist in den Zeilen 8 bis 15 definiert.
@@ -1923,10 +1923,10 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
 \newpage
 \section{Ergebnisse und Diskussion}
 \par Das in dieser Bachelorarbeit entwickelte System dient der Steuerung und Überwachung von Umgebungsbedingungen im Haus. Für diese Aufgaben wurden verschiedene Komponenten und Technologien eingesetzt.
-\par Im Zentrum des Systems liegt ein Raspberry Pi, der als WLAN-Access-Point konfiguriert wurde. Gleichzeitig fungiert er als MQTT-Broker bereitstellt und hostet einen Webserver. Dadruch funktioniert das System vollständig lokal und ist unabhängig von der Internetverbindung.
-\par Die Kommunikation zwischen den Komponenten erfolgt über das MQTT-Protkoll. Die Geräte verbinden sich mit dem WLAN-Access-Point und senden ihre Daten in eigenen Topics an den MQTT-Broker. Zudem können sie die Steuerbefehle empfangen, die über das Webinterface von Benutzer gesendet werden. 
+\par Im Zentrum des Systems liegt ein Raspberry Pi, der als WLAN-Access-Point konfiguriert wurde. Gleichzeitig fungiert er als MQTT-Broker bereitstellt und hostet einen Webserver. Dadurch funktioniert das System vollständig lokal und ist unabhängig von der Internetverbindung.
+\par Die Kommunikation zwischen den Komponenten erfolgt über das MQTT-Protokoll. Die Geräte verbinden sich mit dem WLAN-Access-Point und senden ihre Daten in eigenen Topics an den MQTT-Broker. Zudem können sie die Steuerbefehle empfangen, die über das Webinterface von Benutzer gesendet werden. 
 \par Zur Verwaltung der Geräte und zur Darstellung der empfangenen Daten wurde eine Webschnittstelle entwickelt. Diese Schnittstelle bietet eine intuitive Bedingung des Systems. Die Benutzer können sich registrieren, eigene Häuser mit Räumen anlegen und die Geräte hinzufügen. Die von Geräten gesendeten Daten werden auf der Weboberfläche dargestellt. Darüber hinaus haben die Benutzer die Möglichkeit eigene Szenarien zu erstellen, die bei Erfüllung eingegebener Bedingungen automatisch ausgeführt werden.
-\par Die modulare Architektur des Sytems erlaub es, verschiedene Mikrocontroller und Sensoren flexibel in das System zu integrieren. Prinzipiell kann jedes Gerät, das sich mit dem WLAN verbindet und MQTT unterstützt, in das System integriert werden. 
+\par Die modulare Architektur des Systems erlaubt es, verschiedene Mikrocontroller und Sensoren flexibel in das System zu integrieren. Prinzipiell kann jedes Gerät, das sich mit dem WLAN verbindet und MQTT unterstützt, in das System integriert werden. 
 \par Im Folgenden wird ein Anwendungsfall beschrieben, der exemplarisch zeigt, wie das entwickelte System in der Praxis eingesetzt werden kann.
 \subsection{Anwendung des Systems}
 \paragraph{Vorbereitung der Komponenten}
@@ -1956,12 +1956,12 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{adddevform.png}
-  \caption{Formular zur Anmeldenung eines Geräts im Raum}
+  \caption{Formular zur Anmeldung eines Geräts im Raum}
   \label{abb:adddevform}
 \end{figure}
 \par Der Benutzer gibt die Geräte-ID und einen eindeutigen Namen ein und speichert diese. Damit ist das Gerät registriert und dem Raum zugeordnet. 
 \par In diesem Beispiel wird ein ESP-Modul mit dem Namen „\texttt{ESP32}“ und mit der Geräte-ID „\texttt{esp32}“ registriert. Die Abbildung \ref{abb:deviceinroom} zeigt das angemeldete Gerät in dem Raum-Block. 
-\par Links im Geräte-Block sind die Gerätedaten angezeigt. In der Mitte sind die Befehle gelistet, die das Gerät ausführen kann. Das Befehl wird bein Klick sofort an das Gerät gesendet. Rechts gibt es eine Schaltfläche zum manuellen Senden der Handshake-Nachricht sowie zum Löschen des Geräts.
+\par Links im Geräte-Block sind die Gerätedaten angezeigt. In der Mitte sind die Befehle gelistet, die das Gerät ausführen kann. Das Befehl wird beim Klick sofort an das Gerät gesendet. Rechts gibt es eine Schaltfläche zum manuellen Senden der Handshake-Nachricht sowie zum Löschen des Geräts.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{deviceinroom.png}
@@ -1984,16 +1984,23 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
 \end{figure}
 \par Nach dem Speichern wird das Szenario automatisch ausgeführt. Der Benutzer kann es jederzeit über die Schaltfläche „\texttt{Delete}“ löschen. 
 \par Damit wird die Beleuchtung automatisch eingeschaltet, wenn es dunkel wird, und automatisch ausgeschaltet, wenn es hell genug ist.
-\par Mit diesem Verfahren wurde gezeigt, dass das System wie geplant funktioniert. Das System zeigt sich in der Praxis als zuverlässig und stabil. Alle Komponenten konnten erfolgreich eingerichtet und reibungslos in das System integeriert werden. Die Geräte lassen sich ohne Probleme registrieren und steuern. Die Interaktion zwischen Benutzer und seine Geräte erfolgt schnell und stabil. Die erstellte Szenarien werden automatisch und ohne Konflikte ausgelöst. Damit erfüllt das System alle gestellten Anforderungen und ist einsatzbereit.
+\par Mit diesem Verfahren wurde gezeigt, dass das System wie geplant funktioniert. Das System zeigt sich in der Praxis als zuverlässig und stabil. Alle Komponenten konnten erfolgreich eingerichtet und reibungslos in das System integriert werden. Die Geräte lassen sich ohne Probleme registrieren und steuern. Die Interaktion zwischen Benutzer und seine Geräte erfolgt schnell und stabil. Die erstellte Szenarien werden automatisch und ohne Konflikte ausgelöst. Damit erfüllt das System alle gestellten Anforderungen und ist einsatzbereit.
 
 % „“
 \subsection{Vorschläge zur Weiterentwicklung und Erweiterung}
 \par Das in dieser Bachelorarbeit entwickelte System stell t eine Grundlage für ein großes Smart-Home-System dar. Das System eignet sich besonders für die Häuser mit weniger als 10 gleichzeitig verwendeten Geräten. Für die Anwendung im realen Betrieb muss das System noch weiterentwickelt werden.
-\par Derzeit dient der Raspberry Pi als zentraler Server des Systems und das System ist ausschließlich über das lokale Netzwerk erreichbar. Für die Weiterentwicklung ist es sinvoll das System über das Internet erreichbar zu machen. Dadurch könnten die Benutzer ihre Geräte aus der Ferne steuern und überwachen. Zu diesem Zweck müssten der Webserver sowie der MQTT-Broker auf einen externen Server mit fester IP-Adresse und Domainnamen ausgelagert werden. Die Geräte würden sich dann mit dem Internetrouter im Haus verbinden und über das Internet mit dem MQTT-Broker kommunizieren.
+\par Derzeit dient der Raspberry Pi als zentraler Server des Systems und das System ist ausschließlich über das lokale Netzwerk erreichbar. Für die Weiterentwicklung ist es sinnvoll das System über das Internet erreichbar zu machen. Dadurch könnten die Benutzer ihre Geräte aus der Ferne steuern und überwachen. Zu diesem Zweck müssten der Webserver sowie der MQTT-Broker auf einen externen Server mit fester IP-Adresse und Domainnamen ausgelagert werden. Die Geräte würden sich dann mit dem Internetrouter im Haus verbinden und über das Internet mit dem MQTT-Broker kommunizieren.
 \par Dabei sind verschiedene Sicherheitsaspekte zu berücksichtigen. Das System muss zuverlässig gegen externe Angriffe geschützt werden. 
-\par Einer dieser Aspekten betrifft die Anmeldenung neuer Geräte im System. Derzeit kann jeder, der die Geräte-ID eingibt, das Gerät anmelden und steuern. Angreifer könnten durch sogenanntes „Brute-Forcing“ eine gültige Geräte-ID finden und somit die Kontrolle über ein Gerät übernehemen. 
+\par Einer dieser Aspekten betrifft die Anmeldung neuer Geräte im System. Derzeit kann jeder, der die Geräte-ID eingibt, das Gerät anmelden und steuern. Angreifer könnten durch sogenanntes „Brute-Forcing“ eine gültige Geräte-ID finden und somit die Kontrolle über ein Gerät übernehemen. 
 \par Um das zu verhindern, könnte eine physische Taste am Gerät angebracht werden, die das Gerät in den Anmeldungsmodus umschaltet. Nach dem Drücken dieser Taste hätte der Benutzer ein begrenztes Zeitfenster, um das Gerät im System anzumelden. Dadurch muss der Benutzer physischen Zugriff auf das Gerät haben, um es anmelden zu können.
-
+\par Zudem könnte eine Protokollierung (Logging) aller Systemaktivitäten implementiert werden. Das umfasst unter anderem das Ein- und Ausschalten von Geräten, die von und an Geräten gesendeten Daten und Befehle, Verbindungsaufbauten oder Anmeldeversuche. Diese Logs könnten bei der Fehlersuche helfen und potenzielle Angriffe schneller erkennbar machen.
+\par Eine Erweiterung des Systems um zusätzlichen Sensoren und Aktoren ist auch denkbar. Beispielweise können die Geräte zur Klimasteuerung eingebunden werden. Mit den erstellten Szenarien, kann die gewünschte Temperatur im Raum automatisch eingestellt werden.
+\par Schließlich wäre auch die Entwicklung einer Smartphone-Anwendung eine sinnvolle Ergänzung. Über diese App könnten Benutzer ihre Geräte bequem von unterwegs steuern. Die Push-Benachrichtigungen würden die Benutzer in Echtzeit über gefährlichen Vorgänge im Haus informieren.  
+\section{Fazit}
+\par In dieser Bachelorarbeit wurde ein funktionierender Prototyp für ein Smart-Home-System entwickelt. Die Steuerung und Überwachung der Geräte im lokalen Netzwerk konnte erfolgreich umgesetzt werden. Damit sind alle in dieser Arbeit definierte Ziele erreicht.
+\par Bei der Entwicklung des Systems lag der Fokus auf die Integration von IoT-Geräten in das System sowie auf der Gestaltung einer benutzerfreundlichen Schnittstelle. Damit ist eine einfache und intuitive Steuerung der Geräte sowie deren Integration in das System ermöglicht. 
+\par Durch die modulare Architektur des Systems wurde eine hohe Flexibilität erreicht. Der entwickelte Prototyp ist skalierbar und kann problemlos um zusätzliche Geräte und Funktionen erweitert werden. Dies bietet eine Grundlage für zukünftige Erweiterungen. 
+\par Das System zeigt großes Potenzial für den Einsatz in Smart-Home-Anwendungen, insbesondere für kleinere Haushalte. Zukünftige Verbesserungen könnten die Sicherheit erhöhen, die Benutzerfreundlichkeit weiter steigern und eine noch größere Anzahl von Geräten integrieren.
 \newpage
 \section{Quellen}
 \begin{thebibliography}{20}
