@@ -1372,7 +1372,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \par Das erstellte Objekt hat folgende Struktur:
   \begin{Verbatim}[frame=single]
     {
-      "house1": {
+      {
         "id": 1,
         "name": Mein Haus,
         "rooms": [
@@ -1384,10 +1384,11 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
             ]
           }
         ]
-      }
+      },
     }
   \end{Verbatim}
   \par Anschließend wird das erstellte Objekt als \texttt{JSONResponse} zurückgegeben.
+  \pagebreak
   \paragraph{Device}
   \par \textbf{}
   \par Die zentrale Aufgabe der API ist die Überwachung und Steuerung der angeschlossenen Geräte. Damit dieses System genutzt werden kann, muss der Benutzer die Möglichkeit haben, seine Geräte in das System einzubinden und zu verwalten.
