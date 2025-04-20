@@ -1,3 +1,8 @@
+"""
+    Author: O. Baida
+
+    Enthält Funktionen zur Verwaltung der Daten aus HTTP-Requests
+"""
 from ..config import Config
 from app.db import queries
 import time
@@ -139,7 +144,7 @@ class WebsocketHandler:
     @classmethod
     def test(cls):
         
-        print(cls.active_connections)
+        print(cls.active_connections) # DEBUG
 
 
 def create_jwt_token(data: dict):
@@ -199,7 +204,6 @@ async def signup_user(db_session, username: str, email: str, password: str):
         _logger.error("EMPTY DATA")
         return {'error': "All user data mus be provided"}
     try:
-        print("SIGNUP")
         new_user_primary = await queries.add_user(db_session, username, email, password)
         if not new_user_primary:
             return False
@@ -454,20 +458,12 @@ async def send_command(db_sesion, user_id, device_id, command):
 
 async def delete_device(db_session, user_id: int, device_id: str, room_id: int = None):
     try:
-        # if room_id:
-        #     house_id = await queries.get_house_by_room(db_session, room_id)
-        #     if not house_id: return False
-        #     owner = await queries.verify_house_owner(db_session,user_id, house_id)
-        #     if not owner: 
-        #         _logger.critical(f'U_ID {user_id} UNAUTHORIZED ACCESS TO HOUSE_ID {house_id}')
-        #         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User is not owner of this house')
         device = await queries.get_device(db_session, user_id, dev_id=device_id)
         if not device:
             raise HTTPException(404, f"DEV_ID {device_id} with U_ID {user_id} NOT FOUND")
         if room_id:
             await queries.delete_room_device(db_session, room_id, device.primary_key)
         res = await queries.delete_device(db_session, device_primary_key=device.primary_key)
-        # print(res)
         if not res:
             return False 
         return {'success': 'Device deleted from room and database'}

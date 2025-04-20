@@ -1,3 +1,9 @@
+/*
+  Author: O. Baida
+
+  Programmcode für ESP32
+  Auskommentierte Serial.print() für Debug nutzen
+*/
 #include <Arduino.h>
 #include <Wire.h>
 #include <WiFi.h>
@@ -47,7 +53,6 @@ const String html_page = R"rawliteral(
 // MQTT
 const char MQTT_BROKER_ADRRESS[] = "192.168.1.10"; // IP von MQTT-BROKER
 const int MQTT_PORT = 1883;
-const char *TOPIC_COMMAND = "command";
 char *SUBSCRIBE_TOPIC;
 char *PUBLISH_TOPIC;
 char *HANDSHAKE_TOPIC;
@@ -125,6 +130,9 @@ void setup_esp()
   digitalWrite(LIGHT_PIN, HIGH);
 }
 
+/*
+  Erstellt WLAN und Webseite zur Eingabe der WLAN-Daten
+*/
 void setup_ap()
 {
   WiFi.mode(WIFI_AP);
@@ -165,7 +173,10 @@ void setup_ap()
   server.begin();
 }
 
-/*===WIFI===*/
+/*
+  Verbindet mit dem WLAN
+  Abbruch nach wifi_repeat Versuche
+*/
 bool wifi_connect(char *ssid, char *password)
 {
   WiFi.mode(WIFI_STA);
@@ -186,7 +197,9 @@ bool wifi_connect(char *ssid, char *password)
   return false;
 }
 
-/*===DISPLAY===*/
+/*
+  Zeigt Status von WLAN- und MQTT- Verbindung auf dem Display
+*/
 void show_connections()
 {
   display.home.clear();
@@ -212,6 +225,9 @@ void show_connections()
   }
 }
 
+/*
+  Zeigt die von Sensoren abgelesenen Daten
+*/
 void show_sensordata()
 {
   if (!bme_sensor.performReading())
@@ -226,7 +242,9 @@ void show_sensordata()
 }
 
 /*===MQTT===*/
-/*Wird beim Empfang der MQTT-Nachricht aufgerufen*/
+/*
+  Wird beim Empfang einer MQTT-Nachricht aufgerufen
+*/
 void callback(char *topic, byte *payload, unsigned int length)
 {
   Serial.println();
@@ -256,11 +274,13 @@ void callback(char *topic, byte *payload, unsigned int length)
     JsonArray json_data_fields = data.createNestedArray("data_fields");
     JsonArray json_commands = data.createNestedArray("commands");
 
-    for (const char* df: data_fields){
+    for (const char *df : data_fields)
+    {
       json_data_fields.add(df);
     }
 
-    for (const char* a: commands){
+    for (const char *a : commands)
+    {
       json_commands.add(a);
     }
 
@@ -269,6 +289,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.println(HANDSHAKE_TOPIC);
     mqttClient.publish(HANDSHAKE_TOPIC, json);
   }
+  // Weitere Befehle hier einfügen
   else if (message == "light_on")
   {
     light_on_off(true);
@@ -279,14 +300,17 @@ void callback(char *topic, byte *payload, unsigned int length)
   }
 }
 
+/*
+  Erstellt Subscribe- und Publish-Topics mit DEVICE_ID
+*/
 void set_topics()
 {
-  SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(DEVICE_ID) + 2);
+  SUBSCRIBE_TOPIC = (char *)malloc(strlen("command") + strlen(DEVICE_ID) + 2);
   // PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
   PUBLISH_TOPIC = (char *)malloc(strlen("data") + strlen(DEVICE_ID) + 2);
   HANDSHAKE_TOPIC = (char *)malloc(strlen("handshake") + strlen(DEVICE_ID) + 2);
 
-  strcpy(SUBSCRIBE_TOPIC, TOPIC_COMMAND);
+  strcpy(SUBSCRIBE_TOPIC, "command");
   strcat(SUBSCRIBE_TOPIC, "/");
   strcat(SUBSCRIBE_TOPIC, DEVICE_ID);
 
@@ -337,8 +361,8 @@ void send_mqtt_sensor_data()
 
   sensor_data["temperature"] = temperature;
   sensor_data["humidity"] = humidity;
-  sensor_data["pressure"] = pressure;
-  sensor_data["gas_resistance"] = gas_resistance;
+  // sensor_data["pressure"] = pressure;
+  // sensor_data["gas_resistance"] = gas_resistance;
 
   serializeJson(sensor_data, json, sizeof(json));
 
@@ -352,7 +376,9 @@ void send_mqtt_sensor_data()
   Serial.print(json);
 }
 
-/*===BME===*/
+/*
+  Initialisierung von BME680
+*/
 void bme_setup()
 {
   while (!bme_sensor.begin(I2C_BME_HEX))
@@ -368,6 +394,10 @@ void bme_setup()
   bme_sensor.setGasHeater(320, 150); // 320°C for 150ms
 }
 
+/*
+  Hilfsfunktion zur Suche über I2C angeschlossener Geräte
+  Aus dem Buch von Udo Brandes
+*/
 void i2c_scan(int kanal)
 {
   int nDevices = 0;
@@ -413,7 +443,9 @@ void i2c_scan(int kanal)
   return;
 }
 
-/*===LIGHT===*/
+/*
+  When on == True schaltet die Diode ein, sonst aus
+*/
 void light_on_off(bool on)
 {
   if (on)
@@ -428,21 +460,26 @@ void light_on_off(bool on)
   }
 }
 
-/*===EEPROM===*/
+/*
+  Prüft die Länge und gültiges Ende von String aus EEPROM
+*/
 bool is_valid_string(char *data, int max_length)
 {
   if (strlen(data) == 0 or strlen(data) > max_length)
     return false;
   for (int i = 0; i < max_length; i++)
   {
-    if (data[i] == '\0')
-      return true; // End of valid String
+    if (data[i] == '\0') // Gültiges Ende
+      return true; 
     if (data[i] == 0xFF)
       return false;
   }
   return false;
 }
 
+/*
+  Verbindet mit im EEPROM gespeicherten Daten
+*/
 void connect_wifi_mqtt()
 {
   if (!ap_on)
@@ -479,6 +516,8 @@ void connect_wifi_mqtt()
   }
 }
 /*
+DEBUG
+Ausgabe aus EEPROM in die Konsole
   for (int i = 0; i < 128; i++)
   {
     byte value = EEPROM.read(i); // Read each byte

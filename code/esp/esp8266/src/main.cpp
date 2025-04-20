@@ -1,3 +1,9 @@
+/*
+  Author: O. Baida
+
+  Programmcode für ESP8266
+  Auskommentierte Serial.print() für Debug nutzen
+*/
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <ESPAsyncWebServer.h>
@@ -44,6 +50,7 @@ unsigned long lastMsg = 0;
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
 
+/* Topics erstellen */
 void setup_subscribe()
 {
   SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(CLIENT_ID) + 2);
@@ -60,6 +67,9 @@ void setup_subscribe()
   }
 }
 
+/*
+  Verbinden mit WLAN
+*/
 boolean connect_wifi(char *ssid, char *password)
 {
   delay(10);
@@ -80,6 +90,9 @@ boolean connect_wifi(char *ssid, char *password)
   return false;
 }
 
+/*
+  Erstellt WLAN und Webseite zur Eingabe der WLAN-Daten
+*/
 void setup_ap()
 {
   WiFi.mode(WIFI_AP);
@@ -121,10 +134,12 @@ void setup_ap()
   server.begin();
 }
 
+/*
+  Wird beim Empfang einer MQTT-Nachricht aufgerufen
+*/
 void callback(char *topic, byte *payload, unsigned int length)
 {
   // Serial.println("RECEIVED MQTT");
-  // String id = String(topic).substring(String(topic).indexOf('/') + 1);
 
   String text = "";
   for (int i = 0; i < length; i++)
@@ -137,6 +152,9 @@ void callback(char *topic, byte *payload, unsigned int length)
   // }
 }
 
+/*
+  Mit MQTT-Broker verbinden
+*/
 void connect_mqtt()
 {
   // Loop bis verbunden
@@ -158,7 +176,10 @@ void connect_mqtt()
   }
 }
 
-// Format topic:message
+/*
+  Empfängt Daten von Arduino
+  Format topic:message
+*/
 void readSerialData()
 {
   if (Serial.available() > 0)
@@ -177,10 +198,12 @@ void readSerialData()
     // String in char - Feld konvertieren
     char readSerialChar[readString.length() + 1];
     readString.toCharArray(readSerialChar, readString.length() + 1);
-    for (unsigned int i = 0; i < sizeof readSerialChar; i++)
-    {
-      // Serial.print(readSerialChar[i]);
-    }
+
+    // In die Konsole printen
+    // for (unsigned int i = 0; i < sizeof readSerialChar; i++)
+    // {
+    //   Serial.print(readSerialChar[i]);
+    // }
 
     // Suche Position von ':'
     char *delim_pos = strchr(readSerialChar, ':');
@@ -218,14 +241,17 @@ void readSerialData()
   }
 }
 
+/*
+  Prüft die Länge und gültiges Ende von String aus EEPROM
+*/
 bool is_valid_string(char *data, int max_length)
 {
   if (strlen(data) == 0 or strlen(data) > max_length)
     return false;
   for (int i = 0; i < max_length; i++)
   {
-    if (data[i] == '\0')
-      return true; // End of valid String
+    if (data[i] == '\0') // End of valid String
+      return true;
     if (data[i] == 0xFF)
       return false;
   }
@@ -276,15 +302,36 @@ void loop()
 {
   if (WiFi.status() != WL_CONNECTED)
   {
-    // connect_wifi();
-    // Serial.println("NO WIFI");
-    digitalWrite(2, HIGH);
+    // Erneut mit WLAN verbinden
+    EEPROM.begin(128);
+    char eeprom_ssid[MAX_SSID_LENGTH] = {0};
+    char eeprom_password[MAX_PASSWORD_LENGTH] = {0};
+    EEPROM.get(0, eeprom_ssid);
+    EEPROM.get(32, eeprom_password);
+    EEPROM.end();
+    // Daten gefunden
+    if (is_valid_string(eeprom_ssid, MAX_SSID_LENGTH) && is_valid_string(eeprom_password, MAX_PASSWORD_LENGTH))
+    {
+      if (connect_wifi(eeprom_ssid, eeprom_password))
+      {
+        mqttClient.setServer(WiFi.gatewayIP(), MQTT_PORT);
+        mqttClient.setCallback(callback);
+        connect_mqtt();
+        digitalWrite(2, LOW);
+      }
+      // Serial.println("NO WIFI");
+      else
+      {
+        setup_ap();
+        digitalWrite(2, HIGH);
+      }
+    }
   }
   if (!mqttClient.connected())
   {
     connect_mqtt();
   }
-  
+
   mqttClient.loop();
   readSerialData();
 }

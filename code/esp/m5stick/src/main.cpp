@@ -1,3 +1,10 @@
+/*
+  Author: O. Baida
+
+  Programmcode für M5StickC
+  Auskommentierte Serial.print() für Debug nutzen
+*/
+
 #include <params.h>
 
 // Functions
@@ -12,7 +19,7 @@ void bme_setup();
 void vcnl_setup();
 void show_connection();
 void show_sensor_data();
-void eeprom_connect_wifi_mqtt();
+void connect_wifi_mqtt();
 void i2c_scan(int kanal);
 
 // Access Point (AP) konfigurieren
@@ -59,7 +66,9 @@ Adafruit_BME680 bme_sensor;
 // VCNL4040
 Adafruit_VCNL4040 vcnl4040 = Adafruit_VCNL4040();
 
-/*Wird beim Empfang der MQTT-Nachricht aufgerufen*/
+/*
+  Wird beim Empfang der MQTT-Nachricht aufgerufen
+*/
 void callback(char *topic, byte *payload, unsigned int length)
 {
   Serial.println();
@@ -114,7 +123,7 @@ void setup()
   m5_setup();
   vcnl_setup();
   bme_setup();
-  eeprom_connect_wifi_mqtt();
+  connect_wifi_mqtt();
 }
 
 void loop()
@@ -126,7 +135,7 @@ void loop()
   if (WiFi.status() != WL_CONNECTED)
   {
     Serial.println("WIFI NOT CONNECTED");
-    eeprom_connect_wifi_mqtt();
+    connect_wifi_mqtt();
   }
   else if (!mqttClient.connected())
   {
@@ -137,6 +146,9 @@ void loop()
   delay(1000);
 }
 
+/*
+  Initialisiert Modul und Display
+*/
 void m5_setup()
 {
   M5.begin();
@@ -148,7 +160,9 @@ void m5_setup()
   M5.Lcd.println("Loading...");
 }
 
-/*===WIFI===*/
+/*
+  Verbinden mit WLAN
+*/
 bool wifi_connect(char *ssid, char *password)
 {
   WiFi.mode(WIFI_STA);
@@ -167,6 +181,9 @@ bool wifi_connect(char *ssid, char *password)
   return false;
 }
 
+/*
+  Erstellt WLAN und Webseite zur Eingabe der WLAN-Daten
+*/
 void setup_ap()
 {
   WiFi.mode(WIFI_AP);
@@ -211,6 +228,9 @@ void setup_ap()
   server.begin();
 }
 
+/*
+  Prüft die Länge und gültiges Ende von String aus EEPROM
+*/
 bool is_valid_string(char *data, int max_length)
 {
   if (strlen(data) == 0 or strlen(data) > max_length)
@@ -225,7 +245,9 @@ bool is_valid_string(char *data, int max_length)
   return false;
 }
 
-/*===MQTT===*/
+/*
+  Verbindet mit MQTT-Broker
+*/
 void mqtt_connect()
 {
   set_topics();
@@ -252,6 +274,9 @@ void mqtt_connect()
   }
 }
 
+/*
+  Erstellt Subscribe- und Publish-Topics
+*/
 void set_topics()
 {
   SUBSCRIBE_TOPIC = (char *)malloc(strlen(TOPIC_COMMAND) + strlen(DEVICE_ID) + 2);
@@ -272,6 +297,9 @@ void set_topics()
   strcat(HANDSHAKE_TOPIC, DEVICE_ID);
 }
 
+/*
+  Sendet Sensordaten über MQTT
+*/
 void send_mqtt_data()
 {
   if (!bme_sensor.performReading())
@@ -310,7 +338,9 @@ void send_mqtt_data()
   Serial.print(json);
 }
 
-/*===BME===*/
+/*
+  Initialisiert BME680
+*/
 void bme_setup()
 {
   while (!bme_sensor.begin(I2C_BME_HEX))
@@ -324,7 +354,9 @@ void bme_setup()
   bme_sensor.setGasHeater(320, 150); // 320°C for 150ms
 }
 
-/*===VCNL===*/
+/*
+  Initialisiert VCNL4040
+*/
 void vcnl_setup()
 {
   if (!vcnl4040.begin(I2C_VCNL_HEX))
@@ -335,27 +367,9 @@ void vcnl_setup()
   Serial.println("VCNL FOUND");
 }
 
-void vcnl_sendmqtt()
-{
-  float prox = vcnl4040.getProximity();
-  float ambient = vcnl4040.getLux();
-  float white_light = vcnl4040.getWhiteLight();
-  char json[128]; // Allocate a buffer for the JSON string
-  snprintf(json,
-           sizeof(json),
-           "{\"id\":\"vcnl\",\"proximity\":%.1f,\"ambient\":%.1f,\"white\":%.1f}",
-           prox, ambient, white_light);
-  if (mqttClient.connected())
-  {
-    mqttClient.publish(PUBLISH_TOPIC, json);
-    Serial.println("\nMQTT SENT:");
-  }
-  else
-    Serial.println("\nNO MQTT SENT:");
-  Serial.print(json);
-}
-
-/*===DISPLAY===*/
+/*
+  Zeigt Status von WLAN- und MQTT- Verbindung auf dem Display
+*/
 void show_connection()
 {
   M5.Lcd.setCursor(X_OFFSET, 0);
@@ -391,6 +405,9 @@ void show_connection()
   }
 }
 
+/*
+  Zeigt die von Sensoren abgelesenen Daten
+*/
 void show_sensor_data()
 {
   M5.Lcd.setCursor(X_OFFSET, ++cursor_line * FONT_SIZE);
@@ -403,8 +420,11 @@ void show_sensor_data()
   uint8_t ambient_light = vcnl4040.getLux();
   M5.Lcd.printf("Light: %d", ambient_light);
 }
-/*===EEPROM===*/
-void eeprom_connect_wifi_mqtt()
+
+/*
+  Verbindet mit im EEPROM gespeicherten Daten
+*/
+void connect_wifi_mqtt()
 {
   if (!ap_on)
   {
@@ -440,7 +460,10 @@ void eeprom_connect_wifi_mqtt()
   }
 }
 
-/*===SCANNER===*/
+/*
+  Hilfsfunktion zur Suche über I2C angeschlossener Geräte
+  Aus dem Buch von Udo Brandes
+*/
 void i2c_scan(int kanal)
 {
   int nDevices = 0;

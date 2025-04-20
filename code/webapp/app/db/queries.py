@@ -1,3 +1,8 @@
+"""
+    Author: O. Baida
+
+    Enthält Funktionen für Verwaltung der Daten in DB
+"""
 import bcrypt
 from app.config import Config
 from sqlalchemy import select, insert, update, delete, func
@@ -139,7 +144,6 @@ async def get_houses_on_user(db_session: AsyncSession, user_primary: int):
             )
             .filter(HouseModel.user_id == user_primary)
         )
-        # print(str(stmt))
         houses = await db_session.execute(stmt)
         houses = houses.scalars().unique().all()
         return houses
@@ -258,7 +262,6 @@ async def add_new_device(db_session: AsyncSession, user_id: int, device_data):
     try:
         if device_data.dev_id is None or device_data.name is None or user_id is None:
             return False
-        # print(DeviceModel.__table__.columns.keys())
         new_dev = DeviceModel(
             dev_id = device_data.dev_id,
             name = device_data.name,

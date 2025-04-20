@@ -1,3 +1,8 @@
+/**
+ * Author: O. Baida
+ * 
+ * Verwaltet Webseite
+ */
 const app = document.getElementById('app');
 let stored_data;
 // Start function

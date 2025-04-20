@@ -1,3 +1,9 @@
+"""
+    Author: O. Baida
+
+   Skript für DEBUG Verwaltung der Datenbank 
+   Gibt Inhalt aller Tabellen in die Konsole
+"""
 import sqlite3
 
 class db:

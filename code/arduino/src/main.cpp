@@ -1,4 +1,10 @@
+/*
+  Author: O. Baida
 
+  Programmcode für ESP8266
+  Auskommentierte Serial.print() für Debug nutzen
+  Nicht an ESP8266 printen!
+*/
 // Include-Dateien
 #include "pinout.h"
 #include <stdio.h>
@@ -298,7 +304,7 @@ void feuerMelder()
   if (flameRead && !flameState)   // Sensor gibt HIGH aus => Feuer erkannt
   {
     flameState = HIGH;
-    // send_mqtt_message(TOPIC_ALARM, message_text);
+    // send Alarm to ESP
     Serial.println("alarm:FIRE");
     alarm_free = true;
     // Serial.println("Feuer erkannt!");
@@ -365,9 +371,6 @@ void alarm(uint8_t count)
   {
     if (flameState) // Feuer
     {
-      // 1 Mal pro Sekunde MQTT-Nachricht senden
-      // if (count == 0)
-      //   send_mqtt_message(TOPIC_ALARM, FIRE_GO);
       if (count <= 8)
         tone(BUZ, 500);
       else
@@ -376,12 +379,6 @@ void alarm(uint8_t count)
 
     else if (gasState) // Gas
     {
-      // 1 Mal pro Sekunde MQTT-Nachricht senden
-      // if (count == 0)
-      // {
-      //   send_mqtt_message(TOPIC_ALARM, GAS_GO);
-      // }
-
       if (count % 4 == 0 && alarm_free)
         tone(BUZ, 100);
       else
@@ -406,13 +403,14 @@ void readSerialData()
     Serial.println("RECEIVIED SERIAL: ");
     Serial.println(readString);
     readString.trim();
+    // Alarm ausschalten
     if (readString == "alarm_off")
     {
       alarm_free = false;
       noTone(BUZ);
     }
-    // TODO handshake
-    if (readString == "handshake")
+    // Handshake
+    else if (readString == "handshake")
     {
       JsonDocument data;
 
@@ -436,6 +434,7 @@ void readSerialData()
       String message = "handshake:" + message_text;
       Serial.println(message);
     }
+    // Weitere Befehle mit else if einfügen
   }
 }
 

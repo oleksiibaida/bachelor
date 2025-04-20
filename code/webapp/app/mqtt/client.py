@@ -1,3 +1,8 @@
+"""
+    Author: O. Baida
+
+    MQTT-Client für Kommunikation mit Geräten
+"""
 import aiomqtt
 import os
 import json

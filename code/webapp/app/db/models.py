@@ -1,3 +1,8 @@
+"""
+    Author: O. Baida
+
+    Enthält Modelle für Tabelle in DB
+"""
 import bcrypt
 import enum
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint, Enum

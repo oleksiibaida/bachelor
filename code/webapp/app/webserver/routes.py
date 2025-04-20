@@ -1,3 +1,9 @@
+"""
+    Author: O. Baida
+
+    Enthät HTTP-Routen der Anwendung
+"""
+
 import os
 import asyncio
 from app.config import Config
@@ -24,7 +30,6 @@ async def startup():
     logger.info(f"Startup called in process: {os.getpid()}")
     mqtt_client = MQTTClient()
     await mqtt_client.load_scenarios()
-    print("S")
     asyncio.create_task(mqtt_client.start_client(Config.MQTT_SUBSCRIBE_TOPICS_LIST))
 
 async def get_token(request: Request):
@@ -76,8 +81,9 @@ async def user_get(requset: Request, token: str = Depends(get_token), db_session
         if not user_id:
             return {'error': 'TOKEN INVALID'}
         res = await services.get_user_data(db_session, user_id)
-        for _ in res:
-            print(_,res[_])
+        # DEBUG print in console
+        # for _ in res:
+        #    print(_,res[_])
         return JSONResponse(res)
     except HTTPException as e:
         return {'error': e.detail}
@@ -124,7 +130,7 @@ async def get_houses(request: Request, token: str = Depends(get_token),db_sessio
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         house_list = await services.get_houses(db_session, user_id)
-        print(house_list)
+        # print(house_list) # DEBUG 
         return JSONResponse(house_list)
     except HTTPException as e:
         logger.error(e)
@@ -240,7 +246,7 @@ async def get_devices(request: Request, token: str = Depends(get_token),db_sessi
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER UNAUTHORIZED")
         device_list = await services.get_devices(db_session, user_id)
-        print(device_list)
+        # print(device_list) # DEBUG
         return JSONResponse(device_list)
     except HTTPException as e:
         logger.error(e)
@@ -281,12 +287,9 @@ async def send_command(request: Request, token: str = Depends(get_token), device
 @router.delete('/delete_device')
 async def del_room_device(request: Request, room_device: services.RoomDeviceModel, token: str = Depends(get_token),db_session: AsyncSession = Depends(get_session)):
     try:
-        print("ALALALA")
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
-        print("DEV DATA", room_device)
         res = await services.delete_device(db_session, user_id, device_id=room_device.device_id, room_id=room_device.room_id)
-        print("RES:", res)
         if not res:
             return {'error': 'Error on the server side'}
         return res
@@ -297,8 +300,8 @@ async def del_room_device(request: Request, room_device: services.RoomDeviceMode
 @router.websocket('/mqtt/device/{device_id}')
 async def websocket_mqtt(ws: WebSocket,  device_id: str = Path(...), db_session: AsyncSession = Depends(get_session)):
     try:
-        print("WEBSOCKET")
-        print(device_id)
+        #print("WEBSOCKET") # DEBUG
+        #print(device_id) # DEBUG
         auth = await services.WebsocketHandler.auth_websocket(db_session, ws, device_id)
         if auth:
             await services.WebsocketHandler.connect(ws, device_id)
@@ -318,9 +321,9 @@ async def add_scenario(request: Request, scenario_data: services.ScenarioModel, 
     try:
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
-        print("SCENARIO DATA:", scenario_data)
+        # print("SCENARIO DATA:", scenario_data) # DEBUG
         res = await services.add_scenario(db_session, user_id, scenario_data)
-        print(res)
+        # print(res) # DEBUG
         return res
     except HTTPException as e:
         logger.error(e)
@@ -335,7 +338,6 @@ async def add_scenario(request: Request, scenario_data: services.ScenarioModel, 
 @router.delete('/delete_scenario')
 async def delete_scenario(request: Request, token: str = Depends(get_token), db_session: AsyncSession = Depends(get_session)):
     try:
-        print(request)
         user_id = services.verify_token(token)
         if user_id is None or user_id < 0: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="USER NOT FOUND")
         body = await request.json()

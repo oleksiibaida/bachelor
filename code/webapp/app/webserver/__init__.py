@@ -1,3 +1,8 @@
+"""
+    Author: O. Baida
+
+    Initialisiert FastAPI
+"""
 import os
 import uvicorn
 from fastapi import FastAPI

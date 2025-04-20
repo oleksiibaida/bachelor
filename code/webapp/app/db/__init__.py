@@ -1,3 +1,8 @@
+"""
+    Author: O. Baida
+
+    Initialisierung der Datenbank
+"""
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from app.config import Config
