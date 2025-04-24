@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.25)  20 APR 2025 21:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.25)  24 APR 2025 23:00
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -720,7 +720,11 @@ Package: lipsum 2021-09-20 v2.7 150 paragraphs of Lorem Ipsum dummy text
 \g__lipsum_par_int=\count381
 \l__lipsum_a_int=\count382
 \l__lipsum_b_int=\count383
- (E:\Soft\MikTex\tex/latex/lipsum\lipsum.ltd.tex)) (ba_bericht.aux (titelseite.aux))
+ (E:\Soft\MikTex\tex/latex/lipsum\lipsum.ltd.tex)) (ba_bericht.aux (titelseite.aux)
+
+LaTeX Warning: Label `lst:startclient' multiply defined.
+
+)
 \openout1 = `ba_bericht.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 266.
@@ -830,7 +834,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.78 ...Anwendung des Systems}{63}{subsection.6.1}
+l.78 ...Anwendung des Systems}{64}{subsection.6.1}
                                                   % [1
 
 
@@ -1054,154 +1058,154 @@ Overfull \hbox (8.13826pt too wide) in paragraph at lines 1437--1439
  []
 
 [47]
-Overfull \hbox (2.02579pt too wide) in paragraph at lines 1495--1496
+Overfull \hbox (2.02579pt too wide) in paragraph at lines 1503--1504
 \OT1/cmr/m/n/12 Nach-richt in der Funk-ti-on \OT1/cmtt/m/n/12 process[]message() \OT1/cmr/m/n/12 ent-spre-chend ver-ar-bei-tet (Zei-le 8-12). Das JSON-
  []
 
 [48] [49]
-Overfull \hbox (5.48123pt too wide) in paragraph at lines 1527--1528
+Overfull \hbox (5.48123pt too wide) in paragraph at lines 1535--1536
 \OT1/cmr/m/n/12 folgt []uber die Funk-ti-on \OT1/cmtt/m/n/12 auth[]websocket()\OT1/cmr/m/n/12 . Die-se ak-zep-tiert zun[]achst die WebSocket-Verbindung
  []
 
 
-Overfull \hbox (1.72173pt too wide) in paragraph at lines 1533--1534
+Overfull \hbox (1.72173pt too wide) in paragraph at lines 1541--1542
 []\OT1/cmr/m/n/12 Die Kom-mu-ni-ka-ti-on []uber das WebSocket-Protokoll er-folgt in ei-ner End-los-schlei-fe, die st[]andig
  []
 
-[50] [51] [52] [53]
-<./Bilder/login.png, id=1015, 825.83531pt x 403.5075pt>
+[50] [51] [52] [53] [54]
+<./Bilder/login.png, id=1027, 825.83531pt x 403.5075pt>
 File: ./Bilder/login.png Graphic file (type png)
 <use ./Bilder/login.png>
-Package pdftex.def Info: ./Bilder/login.png  used on input line 1689.
+Package pdftex.def Info: ./Bilder/login.png  used on input line 1697.
 (pdftex.def)             Requested size: 362.77264pt x 177.25447pt.
- [54 <./Bilder/login.png>]
-Overfull \hbox (12.1399pt too wide) in paragraph at lines 1696--1697
+ [55 <./Bilder/login.png>]
+Overfull \hbox (12.1399pt too wide) in paragraph at lines 1704--1705
 \OT1/cmr/m/n/12 Pass-wort. Durch Dr[]ucken der Tas-te []\OT1/cmtt/m/n/12 Sign Up\OT1/cmr/m/n/12 \ wer-den die An-mel-de-da-ten an die Rou-te []\OT1/cmtt/m/n/12 /sign[]up\OT1/cmr/m/n/12 \
  []
 
 
-LaTeX Warning: Reference `lst:lst:jsgetuserdata' on page 55 undefined on input line 1705.
+LaTeX Warning: Reference `lst:lst:jsgetuserdata' on page 56 undefined on input line 1713.
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-1.5}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1712         </div>
+l.1720         </div>
                      
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-1.8}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1715     </div>
+l.1723     </div>
                  
-<./Bilder/hp_empty.png, id=1064, 837.88031pt x 326.72063pt>
+<./Bilder/hp_empty.png, id=1075, 837.88031pt x 326.72063pt>
 File: ./Bilder/hp_empty.png Graphic file (type png)
 <use ./Bilder/hp_empty.png>
-Package pdftex.def Info: ./Bilder/hp_empty.png  used on input line 1719.
+Package pdftex.def Info: ./Bilder/hp_empty.png  used on input line 1727.
 (pdftex.def)             Requested size: 386.95897pt x 150.88657pt.
-<./Bilder/createhouse.png, id=1066, 256.70906pt x 196.48407pt>
+<./Bilder/createhouse.png, id=1077, 256.70906pt x 196.48407pt>
 File: ./Bilder/createhouse.png Graphic file (type png)
 <use ./Bilder/createhouse.png>
-Package pdftex.def Info: ./Bilder/createhouse.png  used on input line 1726.
+Package pdftex.def Info: ./Bilder/createhouse.png  used on input line 1734.
 (pdftex.def)             Requested size: 241.84843pt x 185.11177pt.
- [55 <./Bilder/hp_empty.png>]
-<./Bilder/hp_houseroomempty.png, id=1084, 836.3747pt x 542.025pt>
+ [56 <./Bilder/hp_empty.png>]
+<./Bilder/hp_houseroomempty.png, id=1095, 836.3747pt x 542.025pt>
 File: ./Bilder/hp_houseroomempty.png Graphic file (type png)
 <use ./Bilder/hp_houseroomempty.png>
-Package pdftex.def Info: ./Bilder/hp_houseroomempty.png  used on input line 1750.
+Package pdftex.def Info: ./Bilder/hp_houseroomempty.png  used on input line 1758.
 (pdftex.def)             Requested size: 483.69687pt x 313.47322pt.
- [56 <./Bilder/createhouse.png>]
-<./Bilder/adddevform1.png, id=1103, 630.85687pt x 210.7875pt>
+ [57 <./Bilder/createhouse.png>]
+<./Bilder/adddevform1.png, id=1114, 630.85687pt x 210.7875pt>
 File: ./Bilder/adddevform1.png Graphic file (type png)
 <use ./Bilder/adddevform1.png>
-Package pdftex.def Info: ./Bilder/adddevform1.png  used on input line 1757.
+Package pdftex.def Info: ./Bilder/adddevform1.png  used on input line 1765.
 (pdftex.def)             Requested size: 483.69687pt x 161.61858pt.
- [57 <./Bilder/hp_houseroomempty.png> <./Bilder/adddevform1.png>]
-<./Bilder/deviceelement.png, id=1114, 718.18312pt x 120.45pt>
+ [58 <./Bilder/hp_houseroomempty.png> <./Bilder/adddevform1.png>]
+<./Bilder/deviceelement.png, id=1125, 718.18312pt x 120.45pt>
 File: ./Bilder/deviceelement.png Graphic file (type png)
 <use ./Bilder/deviceelement.png>
-Package pdftex.def Info: ./Bilder/deviceelement.png  used on input line 1771.
+Package pdftex.def Info: ./Bilder/deviceelement.png  used on input line 1779.
 (pdftex.def)             Requested size: 483.69687pt x 81.12563pt.
 
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-1.8}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1784   </div>
+l.1792   </div>
                
-<./Bilder/mydevices.png, id=1116, 836.3747pt x 279.29344pt>
+<./Bilder/mydevices.png, id=1127, 836.3747pt x 279.29344pt>
 File: ./Bilder/mydevices.png Graphic file (type png)
 <use ./Bilder/mydevices.png>
-Package pdftex.def Info: ./Bilder/mydevices.png  used on input line 1794.
+Package pdftex.def Info: ./Bilder/mydevices.png  used on input line 1802.
 (pdftex.def)             Requested size: 483.69687pt x 161.52579pt.
- [58 <./Bilder/deviceelement.png> <./Bilder/mydevices.png>]
+ [59 <./Bilder/deviceelement.png> <./Bilder/mydevices.png>]
 pdfTeX warning (ext4): destination with the same identifier (name{lstnumber.-1.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1808       </div>
+l.1816       </div>
                    
-<./Bilder/createscenario.png, id=1141, 440.39531pt x 320.69812pt>
+<./Bilder/createscenario.png, id=1152, 440.39531pt x 320.69812pt>
 File: ./Bilder/createscenario.png Graphic file (type png)
 <use ./Bilder/createscenario.png>
-Package pdftex.def Info: ./Bilder/createscenario.png  used on input line 1816.
+Package pdftex.def Info: ./Bilder/createscenario.png  used on input line 1824.
 (pdftex.def)             Requested size: 362.77264pt x 264.18283pt.
- [59 <./Bilder/createscenario.png>]
-<./Bilder/myscenarios.png, id=1157, 952.30782pt x 258.9675pt>
+ [60 <./Bilder/createscenario.png>]
+<./Bilder/myscenarios.png, id=1169, 952.30782pt x 258.9675pt>
 File: ./Bilder/myscenarios.png Graphic file (type png)
 <use ./Bilder/myscenarios.png>
-Package pdftex.def Info: ./Bilder/myscenarios.png  used on input line 1832.
+Package pdftex.def Info: ./Bilder/myscenarios.png  used on input line 1840.
 (pdftex.def)             Requested size: 483.69687pt x 131.53821pt.
 
-Overfull \hbox (1.28008pt too wide) in paragraph at lines 1839--1840
+Overfull \hbox (1.28008pt too wide) in paragraph at lines 1847--1848
 []\OT1/cmr/m/n/12 Die Dar-stel-lung der vom Ger[]at emp-fan-ge-nen Da-ten er-folgt []uber ei-ne WebSocket-Verbindung. 
  []
 
-[60 <./Bilder/myscenarios.png>] [61] [62]
-Overfull \hbox (7.99005pt too wide) in paragraph at lines 1940--1941
+[61 <./Bilder/myscenarios.png>] [62] [63]
+Overfull \hbox (7.99005pt too wide) in paragraph at lines 1948--1949
 \OT1/cmr/m/n/12 be-schrie-ben. Der Pro-gramm-co-de f[]ur den Ar-dui-no be-fin-det sich im Pro-jek-t-ord-ner []\OT1/cmtt/m/n/12 code/arduino\OT1/cmr/m/n/12 \
  []
 
-[63]
-<./Bilder/adddevform.png, id=1235, 837.88031pt x 477.28313pt>
+[64]
+<./Bilder/adddevform.png, id=1246, 837.88031pt x 477.28313pt>
 File: ./Bilder/adddevform.png Graphic file (type png)
 <use ./Bilder/adddevform.png>
-Package pdftex.def Info: ./Bilder/adddevform.png  used on input line 1959.
+Package pdftex.def Info: ./Bilder/adddevform.png  used on input line 1967.
 (pdftex.def)             Requested size: 483.69687pt x 275.52808pt.
- [64 <./Bilder/adddevform.png>]
-<./Bilder/deviceinroom.png, id=1243, 838.63312pt x 434.37282pt>
+ [65 <./Bilder/adddevform.png>]
+<./Bilder/deviceinroom.png, id=1254, 838.63312pt x 434.37282pt>
 File: ./Bilder/deviceinroom.png Graphic file (type png)
 <use ./Bilder/deviceinroom.png>
-Package pdftex.def Info: ./Bilder/deviceinroom.png  used on input line 1968.
+Package pdftex.def Info: ./Bilder/deviceinroom.png  used on input line 1976.
 (pdftex.def)             Requested size: 483.69687pt x 250.53127pt.
- [65 <./Bilder/deviceinroom.png>]
-<./Bilder/2scenarios.png, id=1252, 878.53218pt x 245.41687pt>
+ [66 <./Bilder/deviceinroom.png>]
+<./Bilder/2scenarios.png, id=1264, 878.53218pt x 245.41687pt>
 File: ./Bilder/2scenarios.png Graphic file (type png)
 <use ./Bilder/2scenarios.png>
-Package pdftex.def Info: ./Bilder/2scenarios.png  used on input line 1982.
+Package pdftex.def Info: ./Bilder/2scenarios.png  used on input line 1990.
 (pdftex.def)             Requested size: 483.69687pt x 135.12198pt.
- [66 <./Bilder/2scenarios.png>]
-Overfull \hbox (11.1605pt too wide) in paragraph at lines 1999--2000
+ [67 <./Bilder/2scenarios.png>]
+Overfull \hbox (11.1605pt too wide) in paragraph at lines 2007--2008
 []\OT1/cmr/m/n/12 Schlie^^Ylich w[]are auch die Ent-wick-lung ei-ner Smartphone-Anwendung ei-ne sinn-vol-le Erg[]anzung.
  []
 
-[67]
-Underfull \hbox (badness 10000) in paragraph at lines 2016--2018
+[68]
+Underfull \hbox (badness 10000) in paragraph at lines 2024--2026
 [][]\OT1/cmr/m/n/12 https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2031--2032
+Underfull \hbox (badness 10000) in paragraph at lines 2039--2040
 [][]$\OT1/cmtt/m/n/12 https : / / www . espressif . com / sites / default / files / documentation /
  []
 
-[68]
-Underfull \hbox (badness 10000) in paragraph at lines 2037--2038
+
+Underfull \hbox (badness 10000) in paragraph at lines 2045--2046
 [][]$\OT1/cmtt/m/n/12 https : / / www . bosch-[]sensortec . com / media / boschsensortec / downloads / datasheets /
  []
 
-[69] (ba_bericht.lof [70])
+[69] [70] (ba_bericht.lof)
 \tf@lof=\write8
 \openout8 = `ba_bericht.lof'.
 
- (ba_bericht.lot)
+ [71] (ba_bericht.lot)
 \tf@lot=\write9
 \openout9 = `ba_bericht.lot'.
 
@@ -1209,7 +1213,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 2037--2038
 \tf@lol=\write10
 \openout10 = `ba_bericht.lol'.
 
- [71] [72] (ba_bericht.aux (titelseite.aux))
+ [72] (ba_bericht.aux (titelseite.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -1218,21 +1222,24 @@ L3 programming layer <2024-01-04>
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `ba_bericht.out' has not changed.
 (rerunfilecheck)             Checksum: 17A2ACD1C88D64A1F5E427B9192CE0C5;6797.
  ) 
 Here is how much of TeX's memory you used:
- 38647 strings out of 474486
- 799991 string characters out of 5757825
+ 38655 strings out of 474486
+ 800098 string characters out of 5757825
  2233542 words of memory out of 5000000
- 59644 multiletter control sequences out of 15000+600000
+ 59645 multiletter control sequences out of 15000+600000
  570002 words of font info for 82 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 98i,14n,101p,1650b,2122s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 98i,14n,101p,1650b,2169s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\baida\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt1000.pk> <C:\Users\baida\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmitt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr6.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmr8.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmti12.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt10.pfb><E:/Soft/MikTex/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on ba_bericht.pdf (73 pages, 2242663 bytes).
+Output written on ba_bericht.pdf (73 pages, 2244954 bytes).
 PDF statistics:
- 1596 PDF objects out of 1728 (max. 8388607)
- 735 named destinations out of 1000 (max. 500000)
+ 1605 PDF objects out of 1728 (max. 8388607)
+ 742 named destinations out of 1000 (max. 500000)
  485 words of extra memory for PDF output out of 10000 (max. 10000000)
 

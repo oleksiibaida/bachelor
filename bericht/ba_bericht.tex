@@ -286,10 +286,10 @@ captionpos=b,
 \pagebreak
 \section*{Eigenständigkeitserklärung}
 \addcontentsline{toc}{section}{Eigenständigkeitserklärung}
-\par Hiermit versichere ich, dass ich die vorliegende Arbeit selbständig angefertigt und mich keiner fremden Hilfe bedient sowie keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe.
+\par Hiermit versichere ich, dass ich die vorliegende Bachelorarbeit selbständig angefertigt und mich keiner fremden Hilfe bedient sowie keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe.
 \par Alle Stellen, die wörtlich oder sinngemäß veröffentlichten oder nicht veröffentlichten Schriften und anderen Quellen entnommen sind, habe ich als solche kenntlich gemacht. 
 \par Soweit Sprachmodelle für die Texterstellung (z.B. ChatGPT) verwendet wurden, sind die entsprechenden Textstellen gekennzeichnet. Die Nutzung von Korrekturservices ist ebenfalls kenntlich gemacht.
-\par Diese Arbeit hat in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegen.
+\par Diese Bachelorarbeit hat in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegen.
 \pagebreak
 \section{Einleitung}
 \par In einer Welt, die zunehmend von vernetzten Geräten und dem Internet der Dinge geprägt ist, wird die Entwicklung effizienter und benutzerfreundlicher Systeme zur Steuerung und Überwachung von Gebäuden immer relevanter. Im Jahr 2024 wurde in Deutschland die Anzahl von über 19 Millionen Haushalten, die ein oder mehrere smarte Geräte besaßen, verzeichnet. Prognosen zufolge wird sich diese Zahl in den nächsten drei Jahren verdoppeln \cite{statita_smhomes}.
@@ -322,7 +322,7 @@ captionpos=b,
   \item \textbf{Raspberry Pi:} Der zentrale Server. Stellt das lokale WLAN-Netzwerk bereit, hostet den MQTT-Broker und führt die Webanwendung aus. 
   \item \textbf{Arduino:} Ausgestattet mit mehreren Sensoren, die Gefahren wie Feuer und Gas erkennen und den Zugang zum Haus sichern. Entsprechende Meldungen werden an den Server gesendet.
   \item \textbf{M5Stick:} Angeschlossen an die Temperatur- und Lichtsensoren und sendet die aufgezeichneten Daten auf den Server. 
-  \item \textbf{ESP32:} Angeschlossen an Display und Temperatursensor dient zur Anzeige der Umgebungsdaten und sendet diese an den Server. 
+  \item \textbf{ESP32:} Angeschlossen an Display und Temperatursensor dient zur Anzeige der Umgebungsdaten und sendet diese an den Server. Steuert zudem die Beleuchtung.
   \item \textbf{Webserver:} Eine auf FastAPI basierende RESTful API, die Benutzern den Zugriff auf das System und die Steuerung von Geräten ermöglicht. 
   \item \textbf{Datenbank:} Eine lokale Datenbank zur Speicherung von Benutzerinformationen und Gerätekonfigurationen.
   \item \textbf{Web-Anwendung:} Eine browserbasierte Benutzeroberfläche, die den Benutzern eine intuitive Steuerung und Visualisierung der Daten ermöglicht. 
@@ -921,7 +921,7 @@ captionpos=b,
   \caption{M5Stick hat keine WLAN-Verbindung}
   \label{abb:m5error}
 \end{figure}
-\par Mit der Funktion \texttt{send\_mqtt\_data()} werden die Sensordaten erfasst und an dem MQTT-Broker gesendet. Zunächst werden die Messwerte der Sensoren ausgelesen und in einem JSON-Objekt zusammengefasst. Der BME680 liefert die Temperatur in °C sowie die Luftfeuchtigkeit in \%. Der VCNL4040 erfasst die Umgebungshelligkeit in \texttt{Lux} abgelesen. Anschließend wird das JSON-Objekt serialisiert und im Topic „\texttt{data/m5stick}“ an den MQTT-Broker gesendet.  
+\par Mit der Funktion \texttt{send\_mqtt\_data()} werden die Sensordaten erfasst und an dem MQTT-Broker gesendet. Zunächst werden die Messwerte der Sensoren ausgelesen und in einem JSON-Objekt zusammengefasst. Der BME680 liefert die Temperatur in °C sowie die Luftfeuchtigkeit in \%. Der VCNL4040 erfasst die Umgebungshelligkeit in \texttt{Lux}. Anschließend wird das JSON-Objekt serialisiert und im Topic „\texttt{data/m5stick}“ an den MQTT-Broker gesendet.  
 \par Das auf dem Modul laufenden MQTT-Client abonniert das Topic „\texttt{command/m5stick}“. Beim Empfang einer MQTT-Nachricht aus diesem Topic mit dem Text „handshake“, werden die Konfigurationsdaten in das Topic „\texttt{handshake/m5stick}“ gesendet. Die Konfigurationsdaten des Moduls sind wie folgt strukturiert:
 \begin{Verbatim}[frame=single]
   {
@@ -953,9 +953,9 @@ captionpos=b,
 \newpage
 \section{Softwareentwicklung}
 \par In diesem Abschnitt wird die Aufbau und Entwicklung der Software für das System beschrieben. Für die Entwicklung wurden Programmiersprachen Python und JavaScript mit mehreren Bibliotheken sowie die Markierungssprache HTML und CSS für die Visualisierung der Webseite verwendet.
-\par Das Programm läuft auf dem Raspberry Pi. Der Programmcode ist in dem Projektordner unter \texttt{bachelor/code/spa} zu finden. Das Programm ist modular aufgebaut, wobei jedes Paket (Package) in einem eigenen Unterordner organisiert ist und eine spezifische Aufgabe erfüllt. Die Struktur des Programms sieht wie folgt aus:
+\par Das Programm läuft auf dem Raspberry Pi. Der Programmcode ist in dem Projektordner unter \texttt{bachelor/code/webapp} zu finden. Das Programm ist modular aufgebaut, wobei jedes Paket (Package) in einem eigenen Unterordner organisiert ist und eine spezifische Aufgabe erfüllt. Die Struktur des Programms sieht wie folgt aus:
 \begin{Verbatim}[frame=single]
-  bachelor/code/spa/
+  bachelor/code/webapp/
   |
   |--- app/
   |   |--- config/
@@ -986,7 +986,7 @@ captionpos=b,
   \par Die Funktionen zur Verwaltung der Datenbank sind in dem Paket „db“ zusammengefasst. Dieses Paket bündelt alle relevanten Komponenten, wie die Konfiguration der Datenbankverbindung, das Session-Management sowie die Definition der Datenbankmodelle. Durch diese modulare Struktur kann das Datenbankpaket in anderen Klassen importiert werden, um eine zentrale und einheitliche Interaktion mit der Datenbank zu ermöglichen.
   \par Die Struktur des Packets sieht wie folgt aus:
   \begin{Verbatim}[frame=single]
-    bachelor/code/spa/db/
+    bachelor/code/webapp/db/
     |
     |--- __init__.py
     |--- base.py
@@ -1277,7 +1277,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \par Die zentrale Idee hinter der Entwicklung der API besteht darin, dem Benutzer eine effiziente und sichere Möglichkeit zu bieten, IoT-Geräte in einer strukturierten Umgebung zu verwalten. Dies umfasst das Hinzufügen neuer Geräte, die Gruppierung dieser Geräte in Räumen sowie die Verwaltung mehrerer Räume innerhalb eines Hauses. Darüber hinaus ermöglicht die API die kontinuierliche Überwachung und Steuerung der hinzugefügten Geräte.
   \par Der Webserver ist, wie auch anderen Komponenten, in einem Paket namens „\texttt{webserver}“ strukturiert. Die Struktur des Packets ist wie folgt aufgebaut:
   \begin{Verbatim}[frame=single]
-    bachelor/code/spa/webserver
+    bachelor/code/webapp/webserver
     |
     |--- __init__.py
     |--- routes.py
@@ -1441,8 +1441,6 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   \par In der Zeile 13 ist die Funktion \texttt{startup()} aus der Datei „routes.py“ dargestellt, die beim Start des Webservers aufgerufen wird. In dieser Funktion wird zunächst ein Objekt der Klasse \texttt{MQTTClient} erstellt. Danach werden die gespeicherten Szenarien geladen. Anschließend wird eine asynchrone Aufgabe gestartet, die die Funktion \texttt{start\_client()} der Klasse \texttt{MQTTClient} ausführt.
   \par Dadurch wird sichergestellt, dass die MQTT-Verbindung parallel zu anderen asynchronen Aufgaben läuft. Zudem stellt die Endlosschleife sicher, dass die Verbindung nach einer Unterbrechung oder einem Fehler automatisch wiederhergestellt wird.
   \par Innerhalb der Endlosschleife wird zunächst die Verbindung zu dem MQTT-Broker aufgebaut (Zeile 4). Das Objekt \texttt{Client} der Klasse \texttt{aiomqtt} erwartet als Parameter die IP-Adresse des MQTT-Brokers und den Port. Anschließend werden die übergebenen Topics abonniert (Zeile 5-6). 
-  \par Danach empfängt der Client die MQTT-Nachrichten asynchron über die \texttt{async for}-Schleife, die die eingehenden Nachrichten in \texttt{client.messages} verarbeitet. (Zeile 7-8). Jede eingehende Nachricht wird an die Funktion \texttt{process\_message()} weitergeleitet, die für den Inhalt der Nachricht verarbeitet.
-  \par Wenn ein MQTT-Fehler auftritt, wird diese geloggt, aber die Funktion wird nicht abgestürzt.
   \begin{lstlisting}[style=mypython, label={lst:startclient}, caption={client.py: start\_client}]
     async def start_client(cls, topics: list):
       while True:
@@ -1461,6 +1459,16 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
       await mqtt_client.load_scenarios()
       asyncio.create_task(mqtt_client.start_client(TOPIC_LIST)
   \end{lstlisting}
+  \begin{lstlisting}[style=mypython, label={lst:startclient}, caption={client.py: start\_client}]
+    async def publish(cls, topic, message):
+      async with aiomqtt.Client(
+        hostname=Config.MQTT_BROKER_ADDRESS, 
+        port=Config.MQTT_PORT) as client:
+        print(f'PUBLISH {topic}:{message}')
+        client.publish(topic=topic, payload=message)
+  \end{lstlisting}
+  \par Danach empfängt der Client die MQTT-Nachrichten asynchron über die \texttt{async for}-Schleife, die die eingehenden Nachrichten in \texttt{client.messages} verarbeitet. (Zeile 7-8). Jede eingehende Nachricht wird an die Funktion \texttt{process\_message()} weitergeleitet, die für den Inhalt der Nachricht verarbeitet.
+  \par Wenn ein MQTT-Fehler auftritt, wird diese geloggt, aber die Funktion wird nicht abgestürzt.
   \par Die Funktion \texttt{process\_message()} (Listing \ref{lst:processmessage}) extrahiert zunächst das Haupttopic und die Geräte-ID aus dem Attribut „\texttt{topic}“ des übergebenen Nachrichtenobjekts (Zeile 3). Anschließend wird die Payload, nämlich der Text, der Nachricht dekodiert und in ein JSON-Objekt „\texttt{data}“ umgewandelt (Zeile 4-5).
   \begin{lstlisting}[style=mypython, numbers=left, label={lst:processmessage}, caption={cleint.py: process\_message}]
     async def process_message(cls, message):
@@ -1949,7 +1957,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
 \end{Verbatim}
 \par Wie auf an der Seite 24 beschrieben, müssen die Daten des Netzwerks an die Geräten übergeben werden. Geräte mit integriertem Display zeigen einen entsprechenden Hinweis zur Verbindung an.
 \par Sobald die Geräte mit dem Netzwerk verbunden sind, beginnen sie ihre Daten zu senden. Die Steuerung der Geräte und die Überwachung der Daten ist jedoch erst möglich, wenn sowohl der Benutzer als auch die Geräte im System registriert sind.
-\par Der Benutzer verbindet sich mit seinem eigenem Smartphone oder Laptop mit dem vom Raspberry Pi bereitgestellten WLAN und ruft im Webbrowser die Adresse \texttt{127.0.0.1:8000} auf. Es wird dem Benutzer angeboten ein Benutzerkonto anzulegen oder sich mit bereits erstellten Konto anzumelden.
+\par Der Benutzer verbindet sich mit seinem eigenem Smartphone oder Laptop mit dem vom Raspberry Pi bereitgestellten WLAN und ruft im Webbrowser die IP-Adresse von Raspberry Pi \texttt{192.168.1.10:8000} auf. Es wird dem Benutzer angeboten ein Benutzerkonto anzulegen oder sich mit bereits erstellten Konto anzumelden.
 \par Für die Registrierung gibt der Benutzer einen beliebigen Benutzernamen, seine Email-Adresse und ein beliebiges Passwort ein. Damit ist das Konto erstellt und der Benutzer wird eingeloggt und zur Hauptseite weitergeleitet.
 \par Auf der Hauptseite kann der Benutzer ein neues Haus anlegen. Durch das Anklicken auf die Schaltfläche „\texttt{Create New House}“ öffnet sich ein Formular, in das der Benutzer einen beliebigen Namen für das Haus eingeben kann. Der Benutzer kann mehrere Häuser anlegen.
 \par Wenn der Benutzer auf den Haus-Block klickt, erscheint eine Schaltfläche, mit der ein Raum im Haus erstellt werden kann. Der Benutzer kann ein Raum mit eindeutigen Namen hinzufügen. In einem Haus können mehrere Räume erstellt werden.
@@ -2004,7 +2012,7 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
 \par Das System zeigt großes Potenzial für den Einsatz in Smart-Home-Anwendungen, insbesondere für kleinere Haushalte. Zukünftige Verbesserungen könnten die Sicherheit erhöhen, die Benutzerfreundlichkeit weiter steigern und eine noch größere Anzahl von Geräten integrieren.
 \newpage
 \section{Quellen}
-\begin{thebibliography}{20}
+\begin{thebibliography}{40}
   \bibitem{bachelor}
   O. Baida, Bachelorarbeit \textit{Entwicklung eines Mikrocontrollersystems für Steuerungs- und Überwachungsaufgaben innerhalb von Häusern}, 2025 \\ \url{https://github.com/oleksiibaida/bachelor}
   \bibitem{pa1}
@@ -2014,14 +2022,14 @@ async def add_user(db_session: AsyncSession, username: str, email: str, password
   
   \bibitem{statita_smhomes}
   Statista, \textit{„Smart Home - Anzahl der Haushalte in Deutschland 2028“},\\
-  \href{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}, Zugriff am: 18. April 2025 [Online].
+  \href{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}{https://de.statista.com/prognosen/885611/anzahl-der-smart-home-haushalte-in-deutschland}, \\ Zugriff am: 18. April 2025 [Online].
   
   \bibitem{espbuch}
   Udo Brandes: \textit{Mikrocontroller ESP32: Das Umfassende Handbuch}. \\Bonn: Rheinwerk Verlag, 2024, ISBN 9783367102860, \\ Zugriff am: 18. April 2025 [Online].
   \bibitem{pythonbook}
-  Gary Smart: \textit{Practical Python Programming for IoT : Build Advanced IoT Projects Using a Raspberry Pi 4, MQTT, RESTful APIs, WebSockets, and Python 3}. \\ Birmingham, United Kingdom: Packt Publishing, Limited, 2020, \\ ISBN 9781838982836, \\Zugriff am: 18. April 2025 [Online].
+  Gary Smart: \textit{Practical Python Programming for IoT : Build Advanced IoT Projects Using a Raspberry Pi 4, MQTT, RESTful APIs, WebSockets, and Python 3}. \\ Birmingham, United Kingdom: Packt Publishing, Limited, 2020, ISBN 9781838982836, \\Zugriff am: 18. April 2025 [Online].
   \bibitem{fastapibook}
-  Giunio De Luca und Antonio Ferraro: \textit{FastAPI Cookbook : Develop High-Performance APIs and Web Applications with Python}.\\  Birmingham, United Kingdom: Packt Publishing, Limited, 2024,\\ ISBN 9781805129776,\\ Zugriff am: 18. April 2025 [Online].
+  Giunio De Luca und Antonio Ferraro: \textit{FastAPI Cookbook: Develop High-Performance APIs and Web Applications with Python}.\\  Birmingham, United Kingdom: Packt Publishing, Limited, 2024, ISBN 9781805129776, \\ Zugriff am: 18. April 2025 [Online].
   \par \textbf{Links zur verwendeten Hardware:}
   \bibitem{arduino}
   Arduino.cc, \textit{Arduino UNO}, \\ \url{https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf}, \\ Zugriff am: 18. April 2025 [Online].
