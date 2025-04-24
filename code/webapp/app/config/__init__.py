@@ -10,8 +10,8 @@ class Config:
     SQLALCHEMY_DATABASE_URL = os.environ.get('DATABASE_URL') or 'sqlite+aiosqlite:///app/db/database.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_SECRET_KEY = 'mysercret' 
-    MQTT_BROKER_ADDRESS = '192.144.1.10' # Webserver on Raspberry Pi
-    # MQTT_BROKER_ADDRESS = '169.254.182.194' # DEBUG Webserver on computer, Raspberry Pi connected via Ethernet
+    #MQTT_BROKER_ADDRESS = '192.144.1.10' # Webserver on Raspberry Pi
+    MQTT_BROKER_ADDRESS = '169.254.182.194' # DEBUG Webserver on computer, Raspberry Pi connected via Ethernet
     MQTT_PORT = 1883
     MQTT_SUBSCRIBE_TOPICS_LIST = ["data/#", "handshake/#", "test/#", "status/#", "alarm/#"] #, "alarm/#"
 
